@@ -1,0 +1,178 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// User Management
+// ============================================================================
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  googleId          String              @unique @map("google_id")
+  email             String
+  name              String?
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  // Relations
+  routines          Routine[]
+  workouts          Workout[]
+  personalRecords   PersonalRecord[]
+  bodyweightHistory BodyweightHistory[]
+
+  @@map("users")
+}
+
+// ============================================================================
+// Exercise Library
+// ============================================================================
+
+model Exercise {
+  id             Int               @id @default(autoincrement())
+  name           String
+  recordingType  String            @map("recording_type") // "weight", "time", "weight_time", "offset_weight"
+  muscleGroups   Json?             @map("muscle_groups") // { "primary": ["chest"], "secondary": ["triceps"] }
+  bodyAreas      Json?             @map("body_areas") // { "primary": ["upper"], "secondary": [] }
+  benefits       String?
+  formTips       String?           @map("form_tips")
+  isSeedData     Boolean           @default(false) @map("is_seed_data")
+  createdAt      DateTime          @default(now()) @map("created_at")
+
+  // Relations
+  routineExercises RoutineExercise[]
+  workoutSets      WorkoutSet[]
+  personalRecords  PersonalRecord[]
+
+  @@map("exercises")
+}
+
+// ============================================================================
+// Routines
+// ============================================================================
+
+model Routine {
+  id               Int               @id @default(autoincrement())
+  userId           Int?              @map("user_id") // NULL for seed data
+  name             String
+  isSeedData       Boolean           @default(false) @map("is_seed_data")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user             User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routineExercises RoutineExercise[]
+
+  @@index([userId])
+  @@map("routines")
+}
+
+model RoutineExercise {
+  id         Int      @id @default(autoincrement())
+  routineId  Int      @map("routine_id")
+  exerciseId Int      @map("exercise_id")
+  orderIndex Int      @map("order_index")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  routine    Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([routineId])
+  @@map("routine_exercises")
+}
+
+// ============================================================================
+// Workouts
+// ============================================================================
+
+model Workout {
+  id                    Int            @id @default(autoincrement())
+  userId                Int            @map("user_id")
+  routineSnapshot       Json           @map("routine_snapshot") // Snapshot of routine at workout time
+  bodyweightSnapshot    Decimal?       @map("bodyweight_snapshot") @db.Decimal(5, 2) // User's weight at workout time
+  startedAt             DateTime       @map("started_at")
+  completedAt           DateTime?      @map("completed_at")
+  durationSeconds       Int?           @map("duration_seconds")
+  totalWeightKg         Decimal?       @map("total_weight_kg") @db.Decimal(10, 2)
+  recordsBroken         Json?          @map("records_broken") // Array of record IDs broken
+  muscleGroupBreakdown  Json?          @map("muscle_group_breakdown") // { "chest": 35, "triceps": 20, ... }
+  createdAt             DateTime       @default(now()) @map("created_at")
+
+  // Relations
+  user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutSets           WorkoutSet[]
+  personalRecords       PersonalRecord[]
+
+  @@index([userId])
+  @@index([completedAt])
+  @@map("workouts")
+}
+
+model WorkoutSet {
+  id                  Int       @id @default(autoincrement())
+  workoutId           Int       @map("workout_id")
+  exerciseId          Int?      @map("exercise_id")
+  reps                Int?
+  weightKg            Decimal?  @map("weight_kg") @db.Decimal(6, 2)
+  durationSeconds     Int?      @map("duration_seconds")
+  isWarmup            Boolean   @default(false) @map("is_warmup")
+  isFailure           Boolean   @default(false) @map("is_failure")
+  restDurationSeconds Int?      @map("rest_duration_seconds")
+  setOrder            Int       @map("set_order") // Order within workout
+  createdAt           DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  workout             Workout   @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise            Exercise? @relation(fields: [exerciseId], references: [id])
+
+  @@index([workoutId])
+  @@map("workout_sets")
+}
+
+// ============================================================================
+// Personal Records
+// ============================================================================
+
+model PersonalRecord {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  exerciseId Int       @map("exercise_id")
+  recordType String    @map("record_type") // "max_weight", "max_volume", "max_duration"
+  value      Decimal   @db.Decimal(10, 2)
+  achievedAt DateTime  @map("achieved_at")
+  workoutId  Int?      @map("workout_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise   Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  workout    Workout?  @relation(fields: [workoutId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, exerciseId, recordType])
+  @@index([userId])
+  @@map("personal_records")
+}
+
+// ============================================================================
+// Bodyweight Tracking
+// ============================================================================
+
+model BodyweightHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  weightKg   Decimal  @map("weight_kg") @db.Decimal(5, 2)
+  recordedAt DateTime @default(now()) @map("recorded_at")
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([recordedAt])
+  @@map("bodyweight_history")
+}

@@ -1,0 +1,25 @@
+{
+  "projectInfo": {
+    "name": "Gym PWA",
+    "description": "Progressive Web App for gym workout tracking"
+  },
+  "preferences": {
+    "alwaysApproveTools": true,
+    "defaultModel": "sonnet"
+  },
+  "customInstructions": [
+    "This is a React PWA project using TypeScript and Vite",
+    "Follow existing code patterns and conventions in the codebase",
+    "Ensure all changes maintain PWA functionality and offline capabilities",
+    "Write tests for new features using Vitest and React Testing Library"
+  ],
+  "commands": {},
+  "mcp": {
+    "servers": {
+      "chrome-devtools": {
+        "command": "npx",
+        "args": ["chrome-devtools-mcp@latest", "--autoConnect", "--channel=beta"]
+      }
+    }
+  }
+}

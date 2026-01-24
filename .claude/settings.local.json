@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp add:*)",
+      "Bash(grep:*)",
+      "Bash(for file in /Users/jonwyatt/Sites/gym-pwa/specs/technical/client-app/*.md /Users/jonwyatt/Sites/gym-pwa/specs/technical/api-db/*.md /Users/jonwyatt/Sites/gym-pwa/specs/technical/deploy/*.md /Users/jonwyatt/Sites/gym-pwa/specs/technical/*.md)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
