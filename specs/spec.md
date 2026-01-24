@@ -81,3 +81,6 @@ The user will be able to enter their body weight in Kg which will be stored with
 
 ## Technical approach and specs
 See [specs/technical](./technical/index.md)
+
+## Development plan
+See [specs/development-plan](./development-plan/goal-1-api-returns-data.md)

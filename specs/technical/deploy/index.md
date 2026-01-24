@@ -30,7 +30,7 @@ GitHub Repository
 
 ### CI Pipeline Configuration
 
-See [ci.yml](code/ci.yml) for the complete GitHub Actions CI workflow with:
+See [ci.yml](./code/github-actions/ci.yml) for the complete GitHub Actions CI workflow with:
 - Separate jobs for frontend and API testing
 - PostgreSQL service for API tests
 - Linting, type-checking, and testing

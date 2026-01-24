@@ -21,5 +21,10 @@
         "args": ["chrome-devtools-mcp@latest", "--autoConnect", "--channel=beta"]
       }
     }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
   }
 }
