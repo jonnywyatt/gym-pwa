@@ -6,34 +6,59 @@ Minimal Express API with Prisma and PostgreSQL for Goal 1.
 
 ### Prerequisites
 - Node.js 24+
-- Railway PostgreSQL database
+- Docker (for local PostgreSQL database)
 
 ### Setup
 
-1. **Install dependencies:**
+1. **Start local PostgreSQL database:**
+   ```bash
+   docker run --name gym-postgres \
+     -e POSTGRES_PASSWORD=localdev \
+     -e POSTGRES_DB=gym_dev \
+     -p 5432:5432 \
+     -d postgres:16
+   ```
+
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Configure environment:**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your Railway DATABASE_URL
-   ```
+3. **Environment files:**
+   - `.env` - Active configuration (points to local DB)
+   - `.env.local` - Local development config (same as .env)
+   - `.env.production` - Railway production credentials (for reference)
+   - `.env.example` - Template
 
-3. **Set up database:**
+4. **Set up database:**
    ```bash
    npm run prisma:generate
    npm run prisma:push
    npm run seed
    ```
 
-4. **Start development server:**
+5. **Start development server:**
    ```bash
    npm run dev
    ```
 
    API runs on http://localhost:3000
+
+### Managing Docker PostgreSQL
+
+```bash
+# Start existing container
+docker start gym-postgres
+
+# Stop container
+docker stop gym-postgres
+
+# View logs
+docker logs gym-postgres
+
+# Remove container (deletes all data!)
+docker rm -f gym-postgres
+```
 
 ## Endpoints
 
