@@ -5,6 +5,11 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
+  // Clear existing exercises
+  await prisma.exercise.deleteMany({});
+  console.log('🗑️  Cleared existing exercises');
+
+  // Seed new exercise
   const exercise = await prisma.exercise.create({
     data: {
       name: 'Assisted pull up'
