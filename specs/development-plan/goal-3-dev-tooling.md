@@ -1,8 +1,9 @@
 # Goal 3 - dev tooling
 
-- CSS modules
 - linting - biome
 - tests - vitest & svelte testing library
+- pre-commit hook
+- CSS modules
 - auth
 
 Then:
