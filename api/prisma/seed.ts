@@ -12,8 +12,8 @@ async function main() {
   // Seed new exercise
   const exercise = await prisma.exercise.create({
     data: {
-      name: 'Assisted pull up'
-    }
+      name: 'Assisted pull up',
+    },
   });
 
   console.log('✅ Seeded exercise:', exercise);

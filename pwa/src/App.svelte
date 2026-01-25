@@ -1,33 +1,33 @@
 <script lang="ts">
-  interface Exercise {
-    id: number;
-    name: string;
-    createdAt: string;
-  }
+interface Exercise {
+  id: number;
+  name: string;
+  createdAt: string;
+}
 
-  let exercises: Exercise[] = $state([]);
-  let loading = $state(true);
-  let error: string | null = $state(null);
+let _exercises: Exercise[] = $state([]);
+let _loading = $state(true);
+let _error: string | null = $state(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
-  async function fetchExercises() {
-    try {
-      const response = await fetch(`${apiUrl}/exercises`);
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.status}`);
-      }
-      exercises = await response.json();
-    } catch (e) {
-      error = e instanceof Error ? e.message : 'Failed to fetch exercises';
-    } finally {
-      loading = false;
+async function fetchExercises() {
+  try {
+    const response = await fetch(`${apiUrl}/exercises`);
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
     }
+    _exercises = await response.json();
+  } catch (e) {
+    _error = e instanceof Error ? e.message : 'Failed to fetch exercises';
+  } finally {
+    _loading = false;
   }
+}
 
-  $effect(() => {
-    fetchExercises();
-  });
+$effect(() => {
+  fetchExercises();
+});
 </script>
 
 <main>

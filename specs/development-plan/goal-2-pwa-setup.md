@@ -11,5 +11,5 @@
 - write the absolute minimum code and config required to achieve this goal
 
 ## Testing / confirmation
-Hit the local and deployed endpoints to verify that data is returned.
+Hit the local and deployed apps to verify that data is displayed.
 

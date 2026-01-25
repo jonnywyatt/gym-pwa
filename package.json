@@ -4,13 +4,18 @@
   "scripts": {
     "dev": "concurrently -n api,pwa -c blue,green \"npm run dev -w api\" \"npm run dev -w pwa\"",
     "build": "npm run build -w pwa",
-    "build:api": "npm run build -w api"
+    "build:api": "npm run build -w api",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "check": "biome check --write ."
   },
   "workspaces": [
     "api",
     "pwa"
   ],
   "devDependencies": {
+    "@biomejs/biome": "2.3.12",
     "concurrently": "^9.1.2"
   }
 }

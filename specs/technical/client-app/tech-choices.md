@@ -9,6 +9,7 @@
 - oauth4webapi (OAuth 2.0 PKCE flow for Google login)
 - Dexie.js (IndexedDB wrapper for offline storage)
 - workbox-window (Service Worker communication)
+- testing - vitest and Svelte testing library
 
 ## Why Vanilla Svelte + Vite (Not SvelteKit)
 
