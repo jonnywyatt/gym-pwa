@@ -46,7 +46,7 @@ Configuration file location: `.github/workflows/ci.yml`
 2. **Click "Add new site" → "Import an existing project"**
 3. **Connect to GitHub** and select your repository
 4. **Configure build settings:**
-   - Base directory: (src)
+   - Base directory: (pwa)
    - Build command: `npm run build`
    - Publish directory: `dist`
 
