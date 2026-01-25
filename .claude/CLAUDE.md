@@ -4,3 +4,6 @@
 [Technical approach and specs](./technical/index.md)
 
 [Development plan](./development-plan/goal-1-api-returns-data.md)
+
+## Rules
+- when asked to open a URL, always use Chrome devtools MCP server

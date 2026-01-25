@@ -18,13 +18,13 @@
     "servers": {
       "chrome-devtools": {
         "command": "npx",
-        "args": ["chrome-devtools-mcp@latest", "--autoConnect", "--channel=beta"]
+        "args": ["-y", "chrome-devtools-mcp@latest", "--autoConnect", "--channel=beta"]
       }
     }
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline.sh",
+    "command": "./.claude/statusline.sh",
     "padding": 0
   }
 }

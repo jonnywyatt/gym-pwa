@@ -20,4 +20,4 @@ Using [Folder structure](../technical/folder-structure.md) and [API / DB](../tec
 Using [Folder structure](../technical/folder-structure.md) and [deploy](../technical/deploy/index.md) for reference, create the `.github` top level folder only and add the minimum amount of config so that when changes are pushed to the repo, the API will be deployed to Railway and seeded
 
 ## Testing / confirmation
-Use chrome devtools MCP to open a Chrome browser and hit the local and deployed endpoints to verify that data is returned.
+Hit the local and deployed endpoints to verify that data is returned.

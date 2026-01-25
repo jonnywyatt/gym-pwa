@@ -46,13 +46,13 @@ Configuration file location: `.github/workflows/ci.yml`
 2. **Click "Add new site" → "Import an existing project"**
 3. **Connect to GitHub** and select your repository
 4. **Configure build settings:**
-   - Base directory: (leave empty - root)
+   - Base directory: (src)
    - Build command: `npm run build`
    - Publish directory: `dist`
 
 ### Netlify Configuration File
 
-See [netlify.toml](code/netlify.toml) for the complete configuration with:
+See [netlify.toml](./code/netlify/netlify.toml) for the complete configuration with:
 - Build settings and Node version
 - SPA routing redirects
 - Security headers (CSP, X-Frame-Options, etc.)

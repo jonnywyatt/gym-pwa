@@ -1,0 +1,13 @@
+[build]
+  base = "pwa"
+  command = "npm run build"
+  publish = "pwa/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA routing - redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -67,6 +67,8 @@ docker rm -f gym-postgres
 
 ## Deployment to Railway
 
+API - https://gym-pwa-production.up.railway.app/exercises
+
 ### Initial Setup
 
 1. **Connect to GitHub:**
