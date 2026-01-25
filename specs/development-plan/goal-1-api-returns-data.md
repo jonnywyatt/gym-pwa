@@ -7,7 +7,7 @@
 ### Sign up for Railway
 [Instructions](../technical/deploy/index.md)
 
-### Create basic API locally
+### Create basic API and database locally
 Using [Folder structure](../technical/folder-structure.md) and [API / DB](../technical/api-db/index.md) for reference, create the `api` top level folder only and populate it with the minimum amount of code to:
 - add NPM tasks to package.json
 - basic Prisma and PostgreSQL setup, for the Exercise data type and table only
@@ -20,4 +20,4 @@ Using [Folder structure](../technical/folder-structure.md) and [API / DB](../tec
 Using [Folder structure](../technical/folder-structure.md) and [deploy](../technical/deploy/index.md) for reference, create the `.github` top level folder only and add the minimum amount of config so that when changes are pushed to the repo, the API will be deployed to Railway and seeded
 
 ## Testing / confirmation
-Use chrome devtools MCP to open a Chrome browser and hit the deployed endpoint to verify that data is returned.
+Use chrome devtools MCP to open a Chrome browser and hit the local and deployed endpoints to verify that data is returned.

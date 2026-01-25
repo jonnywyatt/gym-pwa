@@ -30,3 +30,6 @@ npm-debug.log*
 # Prisma
 api/prisma/migrations/dev.db
 api/prisma/migrations/dev.db-journal
+
+# Claude code
+.claude/settings.local.json
