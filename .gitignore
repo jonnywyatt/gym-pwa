@@ -36,4 +36,3 @@ api/prisma/migrations/dev.db-journal
 # Test coverage
 coverage/
 *.lcov
-.env.test

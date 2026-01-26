@@ -133,7 +133,7 @@ describe('My Integration Test', () => {
 ### Environment Variables
 
 - **Development**: Uses `api/.env` with `DATABASE_URL` pointing to `gym_dev`
-- **Testing**: Uses `api/.env.test` with `DATABASE_URL` pointing to `gym_test`
+- **Testing**: Environment variables set in `api/vitest.config.ts` (DATABASE_URL points to `gym_test`)
 - **CI**: Set `DATABASE_URL` environment variable in CI pipeline
 
 ### Troubleshooting
