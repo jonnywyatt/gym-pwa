@@ -5,9 +5,9 @@ interface Exercise {
   createdAt: string;
 }
 
-let _exercises: Exercise[] = $state([]);
-let _loading = $state(true);
-let _error: string | null = $state(null);
+let exercises: Exercise[] = $state([]);
+let loading = $state(true);
+let error: string | null = $state(null);
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -17,11 +17,11 @@ async function fetchExercises() {
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
     }
-    _exercises = await response.json();
+    exercises = await response.json();
   } catch (e) {
-    _error = e instanceof Error ? e.message : 'Failed to fetch exercises';
+    error = e instanceof Error ? e.message : 'Failed to fetch exercises';
   } finally {
-    _loading = false;
+    loading = false;
   }
 }
 

@@ -32,3 +32,8 @@ api/prisma/migrations/dev.db-journal
 
 # Claude code
 .claude/settings.local.json
+
+# Test coverage
+coverage/
+*.lcov
+.env.test

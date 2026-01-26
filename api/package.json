@@ -9,26 +9,46 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "pretest": "npm run docker:start && npm run db:test:ensure",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "npm run docker:start && npm run db:test:ensure && vitest run",
+    "test:coverage": "npm run docker:start && npm run db:test:ensure && vitest run --coverage",
+    "test:integration": "npm run docker:start && npm run db:test:ensure && vitest run src/test/integration",
+    "docker:start": "docker compose up -d && docker compose exec -T postgres pg_isready -U postgres || (sleep 2 && docker compose exec -T postgres pg_isready -U postgres)",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f postgres",
+    "db:test:ensure": "docker exec gym-postgres psql -U postgres -c 'CREATE DATABASE gym_test' 2>/dev/null || true",
+    "db:test:drop": "docker exec gym-postgres psql -U postgres -c 'DROP DATABASE IF EXISTS gym_test'",
+    "db:test:reset": "npm run db:test:drop && npm run db:test:ensure && prisma db push --accept-data-loss --url='postgresql://postgres:localdev@localhost:5432/gym_test'",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate deploy",
+    "prisma:push": "prisma db push --url='postgresql://postgres:localdev@localhost:5432/gym_dev'",
+    "prisma:migrate": "prisma migrate deploy --url='postgresql://postgres:localdev@localhost:5432/gym_dev'",
     "seed": "tsx prisma/seed.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.17.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
-    "prisma": "^5.22.0",
+    "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
+    "@vitest/ui": "^4.0.18",
+    "prisma": "^7.3.0",
+    "supertest": "^7.2.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^4.0.18"
   }
 }

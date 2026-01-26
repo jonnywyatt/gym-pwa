@@ -1,104 +1,149 @@
 # Gym PWA API
 
-Minimal Express API with Prisma and PostgreSQL for Goal 1.
+## Database Setup
 
-## Local Development
+This project uses a shared Postgres Docker container for both local development and integration tests, following [Prisma's integration testing approach](https://www.prisma.io/docs/orm/prisma-client/testing/integration-testing).
 
-### Prerequisites
-- Node.js 24+
-- Docker (for local PostgreSQL database)
+### Architecture
 
-### Setup
+- **Single Docker Container**: One Postgres container (`gym-postgres`) runs on port 5432
+- **Two Databases**:
+  - `gym_dev` - Used for local development
+  - `gym_test` - Used for integration tests
+- **Docker Compose**: `docker-compose.yml` lives in the `api/` directory
 
-1. **Start local PostgreSQL database:**
+### Quick Start
+
+**The Docker container starts automatically when you run tests!** No manual setup required.
+
+1. **Run tests** (Docker starts automatically):
    ```bash
-   docker run --name gym-postgres \
-     -e POSTGRES_PASSWORD=localdev \
-     -e POSTGRES_DB=gym_dev \
-     -p 5432:5432 \
-     -d postgres:16
+   npm test                     # From root
+   npm run test:run -w api      # API only from root
+   npm run test:run             # From api/ directory
    ```
 
-2. **Install dependencies:**
+2. **Or run the API locally** (Docker must be started manually):
    ```bash
-   npm install
+   npm run docker:up -w api     # Start Docker from root
+   # OR
+   cd api && npm run docker:up  # Start Docker from api/
+
+   npm run dev -w api           # Start API
    ```
 
-3. **Environment files:**
-   - `.env` - Active configuration (points to local DB)
-   - `.env.local` - Local development config (same as .env)
-   - `.env.production` - Railway production credentials (for reference)
-   - `.env.example` - Template
+### Docker Commands
 
-4. **Set up database:**
-   ```bash
-   npm run prisma:generate
-   npm run prisma:push
-   npm run seed
-   ```
-
-5. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-   API runs on http://localhost:3000
-
-### Managing Docker PostgreSQL
-
+From the root directory:
 ```bash
-# Start existing container
-docker start gym-postgres
+# Start Postgres container
+npm run docker:up -w api
 
-# Stop container
-docker stop gym-postgres
+# Stop container (preserves data)
+npm run docker:down -w api
 
-# View logs
-docker logs gym-postgres
-
-# Remove container (deletes all data!)
-docker rm -f gym-postgres
+# View container logs
+npm run docker:logs -w api
 ```
 
-## Endpoints
+Or from the `api/` directory:
+```bash
+# Start Postgres container
+npm run docker:up
 
-- `GET /health` - Health check
-- `GET /exercises` - Get all exercises
+# Stop container (preserves data)
+npm run docker:down
 
-## Deployment to Railway
+# View container logs
+npm run docker:logs
+```
 
-API - https://gym-pwa-production.up.railway.app/exercises
+### Database Commands
 
-### Initial Setup
+```bash
+# Create test database
+npm run db:test:create -w api
 
-1. **Connect to GitHub:**
-   - Go to Railway dashboard
-   - Click "+ New" → "GitHub Repo"
-   - Select this repository
-   - Set root directory to `api`
+# Drop test database
+npm run db:test:drop -w api
 
-2. **Environment Variables:**
-   - `DATABASE_URL` - Auto-filled by Railway when you add PostgreSQL
-   - `PORT` - Auto-set by Railway
-   - `NODE_ENV` - Set to `production`
-   - `CORS_ORIGIN` - Your frontend URL (add later)
+# Reset test database (drop, create, push schema)
+npm run db:test:reset -w api
 
-3. **Deploy Settings:**
-   Railway will automatically use `railway.json` which:
-   - Builds with Nixpacks
-   - Runs `prisma:push` to sync schema
-   - Runs `seed` to populate initial data
-   - Starts the server
+# Push schema to development database
+npm run prisma:push -w api
 
-### Auto-Deployment
+# Generate Prisma client
+npm run prisma:generate -w api
+```
 
-Once connected, Railway automatically deploys when you push to the `main` branch.
+### Testing
 
-## Scripts
+**Docker Compose starts automatically before tests run**, so you can just run:
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build TypeScript to JavaScript
-- `npm start` - Run production server
-- `npm run prisma:generate` - Generate Prisma Client
-- `npm run prisma:push` - Push schema to database
-- `npm run seed` - Seed database with initial data
+```bash
+# Run all tests (unit + integration) - from root
+npm test
+
+# Run all tests (unit + integration) - API only
+npm run test:run -w api
+
+# Run only integration tests
+npm run test:integration -w api
+
+# Run tests in watch mode
+npm run test -w api
+
+# Run with coverage
+npm run test:coverage -w api
+```
+
+All test commands automatically:
+1. Start Docker Compose (if not running)
+2. Wait for Postgres to be ready
+3. Create the test database (if needed)
+4. Run the tests
+
+### How Integration Tests Work
+
+1. **Setup** (`beforeAll`): Creates/updates the test database schema
+2. **Cleanup** (`beforeEach`): Truncates all tables between tests
+3. **Tests**: Each test runs against a clean database
+4. **Teardown** (`afterAll`): Disconnects from the database
+
+Example integration test:
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { getTestPrismaClient } from '../db-setup';
+
+describe('My Integration Test', () => {
+  it('should interact with the database', async () => {
+    const prisma = getTestPrismaClient();
+    
+    const exercise = await prisma.exercise.create({
+      data: { name: 'Test Exercise' },
+    });
+    
+    expect(exercise.id).toBeDefined();
+  });
+});
+```
+
+### Environment Variables
+
+- **Development**: Uses `api/.env` with `DATABASE_URL` pointing to `gym_dev`
+- **Testing**: Uses `api/.env.test` with `DATABASE_URL` pointing to `gym_test`
+- **CI**: Set `DATABASE_URL` environment variable in CI pipeline
+
+### Troubleshooting
+
+**Tests fail with connection errors:**
+- Ensure Docker container is running: `docker ps | grep gym-postgres`
+- Create test database: `npm run db:test:create -w api`
+- Reset test database: `npm run db:test:reset -w api`
+
+**Schema changes not reflected:**
+- Push schema to dev: `npm run prisma:push -w api`
+- Reset test DB: `npm run db:test:reset -w api`
+- Regenerate client: `npm run prisma:generate -w api`
