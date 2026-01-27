@@ -11,7 +11,7 @@
     }
   },
   "deploy": {
-    "preDeployCommand": "npx prisma migrate deploy --schema=./api/prisma/schema.prisma && npm run seed -w api",
+    "preDeployCommand": "npx prisma migrate deploy --schema=./api/prisma/schema.prisma --config=./api/prisma.config.ts && npm run seed -w api",
     "startCommand": "npm run start -w api",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
