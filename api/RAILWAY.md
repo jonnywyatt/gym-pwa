@@ -11,12 +11,10 @@ Before deploying, configure these in Railway dashboard:
 4. Set **Root Directory**: `api`
 5. Click **Deploy** (or changes auto-deploy)
 
-### Step 2: Node Version (Auto-Detected ✅)
-Railway will automatically detect Node 24 from the `.node-version` file at the repo root.
+### Step 2: Node Version (Dockerfile ✅)
+The API now uses a **Dockerfile** for building, which explicitly specifies Node 24.
 
-**No manual configuration needed!**
-
-_(Optional: If auto-detection doesn't work, you can manually set `NIXPACKS_NODE_VERSION=24` in the Variables tab)_
+**No manual configuration needed!** Node 24 is hardcoded in the Dockerfile.
 
 ### Step 3: Configure Environment Variables
 Go to the **Variables** tab and ensure you have:
@@ -29,18 +27,27 @@ Go to the **Variables** tab and ensure you have:
 ## Why These Settings Are Required
 
 ### Root Directory
-This is a **monorepo** with the API in the `api/` subdirectory. Setting the root directory tells Railway where to find `package.json` and build the project.
+This is a **monorepo** with the API in the `api/` subdirectory. Setting the root directory tells Railway where to find the `Dockerfile` and build the project.
 
 ### Node Version
-**Node 24+ is required for Prisma 7.** The `engines` field in `package.json` specifies `"node": ">=24.0.0"`. Building with Node 18 will fail with "Unsupported engine" error.
+**Node 24+ is required for Prisma 7.** The `engines` field in `package.json` specifies `"node": ">=24.0.0"`.
 
-Railway automatically detects the `.node-version` file at the repository root (which contains `24`), so Node 24 will be used without any manual configuration.
+The **Dockerfile** explicitly uses `FROM node:24-alpine`, guaranteeing Node 24 is used for the build.
+
+## Build Method: Dockerfile
+
+The API now uses a **Dockerfile** for deployment instead of Nixpacks. This provides:
+- ✅ Explicit Node 24 version control
+- ✅ Reproducible builds
+- ✅ No auto-detection issues
+- ✅ Full control over build process
 
 ## Configuration Files
 
-- **`railway.json`** - Main Railway configuration (takes precedence)
+- **`Dockerfile`** - Defines the build image (Node 24 Alpine)
+- **`.dockerignore`** - Excludes unnecessary files from Docker build
+- **`railway.json`** - Railway configuration (uses Dockerfile builder)
 - **`railway.toml`** - Legacy configuration (kept for reference)
-- **`.node-version`** - At repo root and in `api/` - both specify Node 24 (auto-detected by Nixpacks)
 
 ## Environment Variables (Set in Railway Dashboard)
 
@@ -50,11 +57,13 @@ Required environment variables to configure in Railway:
 - `CORS_ORIGIN` - Frontend URL (e.g., `https://gym-pwa-321.netlify.app`)
 - `NODE_ENV` - Set to `production`
 
-## Build Process
+## Build Process (Dockerfile)
 
-1. Install dependencies: `npm install`
-2. Generate Prisma client: `npm run prisma:generate`
-3. Build TypeScript: `npm run build`
+1. Use Node 24 Alpine base image
+2. Copy package files and install dependencies: `npm ci`
+3. Generate Prisma client: `npm run prisma:generate`
+4. Build TypeScript: `npm run build`
+5. Expose port 3000
 
 ## Deploy Process
 
