@@ -3,7 +3,7 @@
   publish = "pwa/dist"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "24"
 
 # SPA routing - redirect all routes to index.html
 [[redirects]]
