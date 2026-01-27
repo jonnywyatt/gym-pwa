@@ -2,4 +2,4 @@
 
 - linting - biome
 - pre-commit hook
-- tests - vitest & svelte testing library
+- tests - vitest & Vue testing library

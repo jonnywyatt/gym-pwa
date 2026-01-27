@@ -18,7 +18,7 @@ See also:
 ┌─────────────────────────────────────────────────────────┐
 │ Browser (Client-side)                                   │
 │                                                         │
-│  Svelte App ──→ Dexie.js ──→ IndexedDB                 │
+│  Vue App ──→ Dexie.js ──→ IndexedDB                    │
 │                                                         │
 │  Purpose: Offline workout data during active session    │
 │  Schema: Defined in TypeScript with Dexie             │

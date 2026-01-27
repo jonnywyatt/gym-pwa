@@ -499,7 +499,7 @@ const workouts = await prisma.workout.findMany({
 
 ### Frontend Performance
 - Service Worker caches app shell
-- Lazy load routes with svelte-spa-router
+- Lazy load routes with vue-router
 - IndexedDB for offline data
 - Optimistic UI updates
 

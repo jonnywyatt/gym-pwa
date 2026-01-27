@@ -1,6 +1,6 @@
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [svelte()],
+  plugins: [vue()],
 });

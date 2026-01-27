@@ -6,13 +6,13 @@
 
 ### Core
 ```bash
-npm create vite@latest gym-pwa -- --template svelte-ts
+npm create vite@latest gym-pwa -- --template vue-ts
 cd gym-pwa
 ```
 
 ### Required Dependencies
 ```bash
-npm install svelte-spa-router    # Client-side routing
+npm install vue-router           # Client-side routing
 npm install dexie                # IndexedDB wrapper
 npm install workbox-window       # Service Worker communication
 ```
@@ -20,7 +20,7 @@ npm install workbox-window       # Service Worker communication
 ### Dev Dependencies
 ```bash
 npm install -D vite-plugin-pwa   # PWA generation
-npm install -D @sveltejs/vite-plugin-svelte
+npm install -D @vitejs/plugin-vue
 ```
 
 ## PWA Configuration
@@ -48,7 +48,7 @@ The frontend lives in the `src/` directory with the following key folders:
 - **lib/auth/** - OAuth service and authentication
 - **lib/api/** - API client with auth headers
 - **lib/db/** - Dexie IndexedDB setup
-- **lib/stores/** - Svelte stores (workout, user state)
+- **lib/stores/** - Vue composables (workout, user state)
 - **routes/** - Page components
 - **components/** - Reusable UI components
 

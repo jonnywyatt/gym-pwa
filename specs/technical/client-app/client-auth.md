@@ -71,14 +71,14 @@ See [api-client.ts](code/api-client.ts) - HTTP client with automatic auth header
 
 ### 3. Login Page
 
-See [Login.svelte](code/Login.svelte) - Simple login page with:
+See [Login.vue](code/Login.vue) - Simple login page with:
 - "Sign in with Google" button
 - Calls `authService.initiateLogin()` to start OAuth flow
 - Styled with Google blue branding
 
 ### 4. Auth Callback Handler
 
-See [AuthCallback.svelte](code/AuthCallback.svelte) - Handles OAuth redirect:
+See [AuthCallback.vue](code/AuthCallback.vue) - Handles OAuth redirect:
 - Extracts authorization code from URL params
 - Calls `authService.handleCallback()` to exchange for tokens
 - Shows loading spinner during exchange
@@ -87,15 +87,15 @@ See [AuthCallback.svelte](code/AuthCallback.svelte) - Handles OAuth redirect:
 
 ### 5. Routing with Auth Guards
 
-See [routes.ts](code/routes.ts) - Route configuration with auth protection:
-- `requireAuth()` condition checks authentication
+See [routes.ts](code/routes.ts) - Route configuration with auth protection using vue-router:
+- `requireAuth()` navigation guard checks authentication
 - Protected routes: `/`, `/routines`, `/workout/:id`, `/history`
 - Public routes: `/login`, `/auth/callback`
-- `conditionsFailed()` redirects to login
+- Navigation guard redirects to login when not authenticated
 
-See [App.svelte](code/App.svelte) - Main app component:
-- Sets up `svelte-spa-router` with route config
-- Handles failed auth conditions
+See [App.vue](code/App.vue) - Main app component:
+- Sets up `vue-router` with `<router-view>`
+- Integrates with route guards
 
 ## Backend Token Verification (Express)
 

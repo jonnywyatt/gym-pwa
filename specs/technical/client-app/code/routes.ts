@@ -1,42 +1,55 @@
-// src/routes.ts
-import { wrap } from 'svelte-spa-router/wrap';
+// src/router.ts
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { authService } from './lib/auth/oauth';
 
-import Home from './routes/Home.svelte';
-import Login from './routes/Login.svelte';
-import AuthCallback from './routes/AuthCallback.svelte';
-import Routines from './routes/Routines.svelte';
-import Workout from './routes/Workout.svelte';
-import WorkoutHistory from './routes/WorkoutHistory.svelte';
+import Home from './routes/Home.vue';
+import Login from './routes/Login.vue';
+import AuthCallback from './routes/AuthCallback.vue';
+import Routines from './routes/Routines.vue';
+import Workout from './routes/Workout.vue';
+import WorkoutHistory from './routes/WorkoutHistory.vue';
 
-function requireAuth(detail: any) {
-  if (!authService.isAuthenticated()) {
-    return false; // Redirect handled by conditionsFailed
-  }
-  return true;
-}
-
-export const routes = {
-  '/': wrap({
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
     component: Home,
-    conditions: [requireAuth]
-  }),
-  '/login': Login,
-  '/auth/callback': AuthCallback,
-  '/routines': wrap({
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/auth/callback',
+    component: AuthCallback
+  },
+  {
+    path: '/routines',
     component: Routines,
-    conditions: [requireAuth]
-  }),
-  '/workout/:id': wrap({
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/workout/:id',
     component: Workout,
-    conditions: [requireAuth]
-  }),
-  '/history': wrap({
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/history',
     component: WorkoutHistory,
-    conditions: [requireAuth]
-  }),
-};
+    meta: { requiresAuth: true }
+  }
+];
 
-export function conditionsFailed() {
-  window.location.hash = '/login';
-}
+export const router = createRouter({
+  history: createWebHistory(),
+  routes
+});
+
+// Navigation guard for auth
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+    next('/login');
+  } else {
+    next();
+  }
+});

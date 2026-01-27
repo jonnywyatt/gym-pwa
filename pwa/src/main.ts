@@ -1,11 +1,5 @@
-import { mount } from 'svelte';
-import App from './App.svelte';
+import { createApp } from 'vue';
+import App from './App.vue';
 
-const target = document.getElementById('app');
-if (!target) {
-  throw new Error('App element not found');
-}
-
-const app = mount(App, { target });
-
-export default app;
+const app = createApp(App);
+app.mount('#app');

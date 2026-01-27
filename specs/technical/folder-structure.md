@@ -10,7 +10,7 @@ gym-pwa/
 │   └── workflows/
 │       └── ci.yml                     # CI pipeline (see deploy/index.md)
 │
-├── src/                               # Svelte PWA (Frontend)
+├── src/                               # Vue 3 PWA (Frontend)
 │   ├── lib/
 │   │   ├── auth/
 │   │   │   └── oauth.ts              # OAuth service (see client-app/client-auth.md)
@@ -22,17 +22,17 @@ gym-pwa/
 │   │       ├── workout.ts            # Workout state
 │   │       └── user.ts               # User state
 │   ├── routes/
-│   │   ├── Home.svelte
-│   │   ├── Login.svelte              # See client-app/client-auth.md
-│   │   ├── AuthCallback.svelte       # See client-app/client-auth.md
-│   │   ├── Routines.svelte
-│   │   ├── Workout.svelte
-│   │   └── WorkoutHistory.svelte
+│   │   ├── Home.vue
+│   │   ├── Login.vue              # See client-app/client-auth.md
+│   │   ├── AuthCallback.vue       # See client-app/client-auth.md
+│   │   ├── Routines.vue
+│   │   ├── Workout.vue
+│   │   └── WorkoutHistory.vue
 │   ├── components/
-│   │   ├── Timer.svelte
-│   │   ├── SetLogger.svelte
-│   │   └── ExerciseCard.svelte
-│   ├── App.svelte
+│   │   ├── Timer.vue
+│   │   ├── SetLogger.vue
+│   │   └── ExerciseCard.vue
+│   ├── App.vue
 │   ├── routes.ts                     # Route config with auth guards
 │   └── main.ts
 │
@@ -73,7 +73,7 @@ gym-pwa/
 ## Architecture Overview
 
 This is a **monorepo** structure with:
-- **Frontend** in `src/` - Svelte PWA deployed to Netlify
+- **Frontend** in `src/` - Vue 3 PWA deployed to Netlify
 - **Backend** in `api/` - Express + Prisma API deployed to Railway
 - **CI/CD** in `.github/workflows/` - GitHub Actions for testing
 
@@ -83,8 +83,8 @@ This is a **monorepo** structure with:
 - **lib/auth/** - OAuth 2.0 PKCE authentication
 - **lib/api/** - HTTP client with automatic auth headers
 - **lib/db/** - IndexedDB for offline workout storage
-- **lib/stores/** - Svelte stores for reactive state
-- **routes/** - Page components (using svelte-spa-router)
+- **lib/stores/** - Vue composables for reactive state
+- **routes/** - Page components (using vue-router)
 - **components/** - Reusable UI components
 
 ### Backend (`api/`)
