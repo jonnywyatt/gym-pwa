@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "steps": {
+    "install": {
+      "commands": ["npm ci"]
+    },
+    "build": {
+      "builder": "RAILPACK",
+      "inputs": [{ "step": "install"}],
+      "commands": ["npm run prisma:generate -w api", "npm run build:api"]
+    }
+  },
+  "deploy": {
+    "preDeployCommand": "npx prisma migrate deploy --schema=./api/prisma/schema.prisma && npm run seed -w api",
+    "startCommand": "npm run start -w api",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
