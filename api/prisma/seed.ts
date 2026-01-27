@@ -20,6 +20,8 @@ async function main() {
       name: 'Assisted pull up',
     },
   });
+
+  console.log('🗑️  Exercises loaded');
 }
 
 main()
