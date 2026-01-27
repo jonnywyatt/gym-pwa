@@ -7,7 +7,7 @@
     "build": {
       "builder": "RAILPACK",
       "inputs": [{ "step": "install"}],
-      "commands": ["npm run prisma:generate -w api", "npm run build:api"]
+      "commands": ["npm run build:api"]
     }
   },
   "deploy": {

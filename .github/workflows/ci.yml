@@ -29,9 +29,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Generate Prisma Client
-        run: npm run prisma:generate -w api
-
       - name: Run tests
         run: npm test
 
