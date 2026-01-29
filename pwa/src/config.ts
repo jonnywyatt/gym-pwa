@@ -11,15 +11,13 @@ function getRequiredEnv(key: string): string {
   return value;
 }
 
-function getEnv(key: string, defaultValue: string): string {
+function _getEnv(key: string, defaultValue: string): string {
   return import.meta.env[key] || defaultValue;
 }
 
 export const config = {
   apiUrl: getRequiredEnv('VITE_API_URL'),
-  // Add more config values as needed
-  // isDev: import.meta.env.DEV,
-  // isProd: import.meta.env.PROD,
+  googleClientId: getRequiredEnv('VITE_GOOGLE_CLIENT_ID'),
 } as const;
 
 export type Config = typeof config;

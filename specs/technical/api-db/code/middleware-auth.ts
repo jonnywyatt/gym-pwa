@@ -22,7 +22,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   const token = authHeader.substring(7);
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
       userId: number;
       email: string;
     };

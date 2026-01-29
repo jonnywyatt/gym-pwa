@@ -1,18 +1,31 @@
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
-import { describe, expect, it, vi } from 'vitest';
-import App from './App.vue';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import ExercisesPage from './pages/ExercisesPage.vue';
 import { server } from './test/msw';
 
 // Mock the config module
 vi.mock('./config', () => ({
   config: {
     apiUrl: 'http://localhost:3000',
+    googleClientId: 'test-client-id',
   },
 }));
 
-describe('Exercises Page', () => {
+// Mock vue-router
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    replace: vi.fn(),
+  }),
+}));
+
+describe('ExercisesPage', () => {
   const mockApiUrl = 'http://localhost:3000';
+
+  beforeEach(() => {
+    // Set up a valid token for authenticated tests
+    localStorage.setItem('access_token', 'test-token');
+  });
 
   it('should display loading state initially', async () => {
     server.use(
@@ -22,7 +35,7 @@ describe('Exercises Page', () => {
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
@@ -35,12 +48,16 @@ describe('Exercises Page', () => {
     ];
 
     server.use(
-      http.get(`${mockApiUrl}/exercises`, () => {
+      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
         return HttpResponse.json(mockExercises);
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -54,12 +71,16 @@ describe('Exercises Page', () => {
 
   it('should display empty state when no exercises exist', async () => {
     server.use(
-      http.get(`${mockApiUrl}/exercises`, () => {
+      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
         return HttpResponse.json([]);
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -70,12 +91,16 @@ describe('Exercises Page', () => {
 
   it('should display error message when API call fails with HTTP error', async () => {
     server.use(
-      http.get(`${mockApiUrl}/exercises`, () => {
+      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
         return new HttpResponse(null, { status: 500 });
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -91,7 +116,7 @@ describe('Exercises Page', () => {
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -107,12 +132,16 @@ describe('Exercises Page', () => {
     ];
 
     server.use(
-      http.get(`${mockApiUrl}/exercises`, () => {
+      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
         return HttpResponse.json(mockExercises);
       })
     );
 
-    render(App);
+    render(ExercisesPage);
 
     await waitFor(() => {
       const listItems = screen.getAllByRole('listitem');
@@ -120,5 +149,25 @@ describe('Exercises Page', () => {
       expect(listItems[0]).toHaveTextContent('Push-ups');
       expect(listItems[1]).toHaveTextContent('Pull-ups');
     });
+  });
+
+  it('should display logout button', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        return HttpResponse.json([]);
+      })
+    );
+
+    render(ExercisesPage);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Logout')).toBeInTheDocument();
   });
 });

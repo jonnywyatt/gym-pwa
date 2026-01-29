@@ -1,5 +1,5 @@
-// src/lib/auth/oauth.ts
 import * as oauth from 'oauth4webapi';
+import { config } from '../../config';
 
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
@@ -11,7 +11,7 @@ export class OAuthService {
 
   constructor() {
     this.client = {
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      client_id: config.googleClientId,
       token_endpoint_auth_method: 'none', // PKCE (public client)
     };
 
@@ -31,7 +31,12 @@ export class OAuthService {
     sessionStorage.setItem('pkce_code_verifier', codeVerifier);
 
     // Build authorization URL
-    const authUrl = new URL(this.authServer.authorization_endpoint);
+    const endpoint = this.authServer.authorization_endpoint;
+    if (!endpoint) {
+      throw new Error('Authorization endpoint not configured');
+    }
+
+    const authUrl = new URL(endpoint);
     authUrl.searchParams.set('client_id', this.client.client_id);
     authUrl.searchParams.set('redirect_uri', `${window.location.origin}/auth/callback`);
     authUrl.searchParams.set('response_type', 'code');
@@ -51,14 +56,14 @@ export class OAuthService {
     }
 
     // Exchange code for tokens at your backend
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+    const response = await fetch(`${config.apiUrl}/auth/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code,
         codeVerifier,
-        redirectUri: `${window.location.origin}/auth/callback`
-      })
+        redirectUri: `${window.location.origin}/auth/callback`,
+      }),
     });
 
     if (!response.ok) {

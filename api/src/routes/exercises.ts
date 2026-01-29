@@ -1,9 +1,10 @@
 import { Router } from 'express';
+import { authenticate } from '../middleware/auth';
 import { prisma } from '../utils/prisma';
 
 const router = Router();
 
-router.get('/exercises', async (_req, res) => {
+router.get('/exercises', authenticate, async (_req, res) => {
   try {
     const exercises = await prisma.exercise.findMany();
     res.json(exercises);

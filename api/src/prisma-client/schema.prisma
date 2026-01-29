@@ -15,3 +15,13 @@ model Exercise {
 
   @@map("exercises")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  googleId  String   @unique @map("google_id")
+  email     String
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}

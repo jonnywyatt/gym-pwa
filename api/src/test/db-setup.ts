@@ -10,7 +10,7 @@ export async function setupTestDatabase() {
   // Set test database URL
   process.env.DATABASE_URL = 'postgresql://postgres:localdev@localhost:5432/gym_test';
 
-  // Push schema to test database
+  // Push schema to test database (idempotent)
   const dbUrl = process.env.DATABASE_URL;
   execSync(`npx prisma db push --accept-data-loss --url="${dbUrl}"`, {
     env: { ...process.env },
@@ -42,8 +42,10 @@ export async function cleanupTestDatabase() {
 }
 
 export async function teardownTestDatabase() {
-  await prisma.$disconnect();
-  await pool.end();
+  if (prisma) {
+    await prisma.$disconnect();
+    await pool.end();
+  }
 }
 
 export function getTestPrismaClient() {

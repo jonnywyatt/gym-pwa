@@ -1,11 +1,13 @@
-// api/src/routes/auth.ts
 import { Router } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../utils/prisma';
 
 const router = Router();
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 // POST /api/auth/google - Exchange OAuth code for JWT
 router.post('/google', async (req, res, next) => {
@@ -16,8 +18,12 @@ router.post('/google', async (req, res, next) => {
     const { tokens } = await googleClient.getToken({
       code,
       codeVerifier,
-      redirect_uri: redirectUri
+      redirect_uri: redirectUri,
     });
+
+    if (!tokens.id_token) {
+      throw new Error('No ID token received');
+    }
 
     // Verify ID token
     const ticket = await googleClient.verifyIdToken({
@@ -26,7 +32,9 @@ router.post('/google', async (req, res, next) => {
     });
 
     const payload = ticket.getPayload();
-    if (!payload) throw new Error('Invalid token');
+    if (!payload?.email) {
+      throw new Error('Invalid token payload');
+    }
 
     // Upsert user (find or create)
     const user = await prisma.user.upsert({
@@ -39,24 +47,26 @@ router.post('/google', async (req, res, next) => {
         googleId: payload.sub,
         email: payload.email,
         name: payload.name,
-      }
+      },
     });
 
     // Generate JWT
-    const accessToken = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    const jwtSecret = process.env.JWT_SECRET;
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 
-    const refreshToken = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: '30d' }
+    if (!jwtSecret || !jwtRefreshSecret) {
+      throw new Error('JWT secrets not configured');
+    }
+
+    const accessToken = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, {
+      expiresIn: '7d',
+    });
+
+    const refreshToken = jwt.sign({ userId: user.id }, jwtRefreshSecret, {
+      expiresIn: '30d',
     });
 
     res.json({ accessToken, refreshToken, user });
-
   } catch (error) {
     next(error);
   }
