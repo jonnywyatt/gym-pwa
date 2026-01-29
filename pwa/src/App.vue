@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import type { Exercise } from 'gym-pwa-api/types';
+import { fetchExercises } from './utils/api';
 
 const exercises = ref<Exercise[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
-async function fetchExercises() {
+async function loadExercises() {
   try {
-    const response = await fetch(`${apiUrl}/exercises`);
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
-    }
-    exercises.value = await response.json();
+    exercises.value = await fetchExercises();
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to fetch exercises';
   } finally {
@@ -23,14 +18,14 @@ async function fetchExercises() {
 }
 
 onMounted(() => {
-  fetchExercises();
+  loadExercises();
 });
+
 </script>
 
 <template>
   <main>
     <h1>Exercises</h1>
-
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <p v-else-if="exercises.length === 0">No exercises found.</p>

@@ -1,15 +1,18 @@
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
 import { server } from './test/msw';
 
+// Mock the config module
+vi.mock('./config', () => ({
+  config: {
+    apiUrl: 'http://localhost:3000',
+  },
+}));
+
 describe('Exercises Page', () => {
   const mockApiUrl = 'http://localhost:3000';
-
-  beforeEach(() => {
-    import.meta.env.VITE_API_URL = mockApiUrl;
-  });
 
   it('should display loading state initially', async () => {
     server.use(
