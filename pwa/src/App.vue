@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-
-interface Exercise {
-  id: number;
-  name: string;
-  createdAt: string;
-}
+import type { Exercise } from 'gym-pwa-api/types';
 
 const exercises = ref<Exercise[]>([]);
 const loading = ref(true);
