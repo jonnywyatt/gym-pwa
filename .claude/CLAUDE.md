@@ -8,3 +8,4 @@
 ## Rules
 - when asked to open a URL, always use Chrome devtools MCP server
 - when researching and installing NPM libraries, always use the latest stable major version
+- only add code comments if the code is not self-explanatory. Favour descriptive variable names and readable code, over code comments
