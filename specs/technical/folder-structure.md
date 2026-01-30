@@ -101,7 +101,7 @@ This is a **monorepo** structure with:
 ## Documentation References
 
 - Frontend setup: [client-app/index.md](client-app/index.md)
-- Authentication: [client-app/client-auth.md](client-app/client-auth.md)
+- Authentication: [client-app/client-auth.md](auth/auth-tech-choices.md)
 - Offline data: [client-app/offline.md](client-app/offline.md)
 - Backend API: [api-db/index.md](api-db/index.md)
 - Deployment: [deploy/index.md](deploy/index.md)

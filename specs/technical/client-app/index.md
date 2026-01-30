@@ -1,7 +1,6 @@
 # Client App Technical Specification
 
 - [Technology choices](./tech-choices.md)
-- [Authentication implementation](./client-auth.md)
 - [Offline data](./offline.md)
 
 ### Core
@@ -72,5 +71,3 @@ Test offline:
 1. Open DevTools → Application → Service Workers
 2. Check "Offline" checkbox
 3. Verify app still works during workout
-
-For authentication testing and security considerations, see [client-auth.md](client-auth.md).
