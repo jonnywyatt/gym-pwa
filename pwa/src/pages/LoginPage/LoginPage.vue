@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { authService } from '../../lib/auth/oauth';
-import styles from './LoginPage.module.css';
+import baseStyles from '../../styles/base-classes.module.css';
 
 function handleLogin() {
   authService.initiateLogin();
@@ -8,9 +8,11 @@ function handleLogin() {
 </script>
 
 <template>
-  <main :class="styles.main">
-    <h1 :class="styles.heading">Gym PWA</h1>
-    <p :class="styles.description">Track your workouts and progress</p>
-    <button @click="handleLogin" :class="styles.loginButton">Sign in with Google</button>
+  <main class="main-centered">
+    <div class="flexVerticalColumnSpaced">
+    <h1 :class="baseStyles.heading">Gym PWA</h1>
+    <p>Track your workouts and progress</p>
+    <button @click="handleLogin" class="buttonPrimary">Sign in with Google</button>
+    </div>
   </main>
 </template>

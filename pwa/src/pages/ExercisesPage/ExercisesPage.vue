@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 import type { Exercise } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import { authService } from '../../lib/auth/oauth';
-import styles from './ExercisesPage.module.css';
 import baseStyles from '../../styles/base-classes.module.css';
 
 const router = useRouter();
@@ -33,16 +32,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <main :class="styles.main">
-    <header :class="styles.header">
+  <main class="main">
+    <header class="header">
       <h1 :class="baseStyles.heading">Exercises</h1>
-      <button @click="handleLogout" :class="styles.logoutButton">Logout</button>
+      <button @click="handleLogout" class="buttonSecondary">Logout</button>
     </header>
     <p v-if="loading">Loading...</p>
-    <p v-else-if="error" :class="styles.error">Error: {{ error }}</p>
+    <p v-else-if="error" class="error">Error: {{ error }}</p>
     <p v-else-if="exercises.length === 0">No exercises found.</p>
-    <ul v-else :class="styles.list">
-      <li v-for="exercise in exercises" :key="exercise.id" :class="styles.listItem">
+    <ul v-else class="list">
+      <li v-for="exercise in exercises" :key="exercise.id" class="listItem">
         {{ exercise.name }}
       </li>
     </ul>

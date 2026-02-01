@@ -1,3 +1,30 @@
+.buttonPrimary {
+  padding: var(--spacing-unit-3) var(--spacing-unit-6);
+  font-size: var(--font-size-16);
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.buttonPrimary:hover {
+  opacity: 0.9;
+}
+
+.buttonSecondary {
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--background-secondary);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.buttonSecondary:hover {
+  background: var(--grey-6b);
+}
+
 .buttonLink {
   color: var(--blue);
   text-decoration: none;

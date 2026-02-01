@@ -2,6 +2,10 @@
   color: var(--text-secondary);
 }
 
+.error {
+  color: var(--text-error);
+}
+
 .visuallyHidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);

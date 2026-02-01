@@ -2,12 +2,13 @@
   --max-width: 1100px;
   --border-radius: 12px;
   --font-stack: Verdana, sans-serif;
-  --font-stack-heading: TimesNewRoman, 'Times New Roman', Times, serif;
+  --font-stack-heading: Verdana, sans-serif;
 
   --white: #ffffff;
   --green-dark: #0c6b58;
   --green-pale: rgba(142, 237, 199, 0.2);
   --blue: #0d3aad;
+  --red: #cc0000;
 
   --grey-1: #222222;
   --grey-1b: #333333;
@@ -26,6 +27,7 @@
   --text-primary: var(--grey-2b);
   --text-primary-active: var(--grey-1);
   --text-secondary: var(--grey-3);
+  --text-error: var(--red);
   --heading: var(--grey-2);
   --background-primary: var(--white);
   --background-secondary: var(--grey-7);

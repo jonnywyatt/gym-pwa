@@ -34,3 +34,10 @@
 .flexAlignSelfStretch {
   align-self: stretch;
 }
+
+.flexVerticalColumnSpaced {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-6);
+    align-items: center;
+}

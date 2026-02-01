@@ -1,0 +1,21 @@
+.main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-unit-4);
+  font-family: var(--font-stack);
+}
+
+.main-centered {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-unit-8) var(--spacing-unit-4);
+  text-align: center;
+  font-family: var(--font-stack);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-unit-2);
+}
