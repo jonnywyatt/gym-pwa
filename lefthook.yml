@@ -1,9 +1,13 @@
 pre-commit:
   commands:
-    check:
+    format:
       glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
       stage_fixed: true
+    lint:
+      glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: npx @biomejs/biome check --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      fail_text: "Biome lint check failed. Fix the errors above and try again."
     typecheck-pwa:
       glob: "pwa/**/*.{ts,vue}"
       run: npm run type-check:pwa
