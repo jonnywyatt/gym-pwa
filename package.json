@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n api,pwa -c blue,green \"npm run dev -w api\" \"npm run dev -w pwa\"",
+    "dev-built": "concurrently -n api,pwa -c blue,green \"npm run start -w api\" \"npm run preview -w pwa\"",
     "build": "npm run build -w pwa",
     "build:api": "npm run build -w api",
     "test": "npm run test:run -w api && npm run test:run -w pwa",

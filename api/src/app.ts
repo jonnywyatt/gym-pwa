@@ -5,9 +5,11 @@ import routes from './routes';
 const app = express();
 
 // Middleware
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim());
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: allowedOrigins,
   })
 );
 app.use(express.json());
