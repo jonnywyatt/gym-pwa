@@ -5,7 +5,9 @@ import routes from './routes';
 const app = express();
 
 // Middleware
-const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim());
+const allowedOrigins = Array.isArray(process.env.CORS_ORIGIN)
+  ? process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim())
+  : process.env.CORS_ORIGIN;
 
 app.use(
   cors({
