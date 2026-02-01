@@ -10,3 +10,11 @@ pre-commit:
     typecheck-api:
       glob: "api/**/*.ts"
       run: npm run type-check:api
+    test-pwa:
+      glob: "pwa/**/*.{ts,vue}"
+      run: npm run test:run -w pwa
+      interactive: true
+    test-api:
+      glob: "api/**/*.ts"
+      run: npm run test:run -w api
+      interactive: true
