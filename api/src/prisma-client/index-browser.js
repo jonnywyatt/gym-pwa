@@ -120,10 +120,32 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.BodyAreaScalarFieldEnum = {
+  id: 'id',
+  label: 'label'
+};
+
+exports.Prisma.MuscleGroupScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  bodyAreaId: 'bodyAreaId'
+};
+
 exports.Prisma.ExerciseScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  label: 'label',
+  recordSetsType: 'recordSetsType',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ExercisePrimaryMuscleGroupScalarFieldEnum = {
+  exerciseId: 'exerciseId',
+  muscleGroupId: 'muscleGroupId'
+};
+
+exports.Prisma.ExerciseSecondaryMuscleGroupScalarFieldEnum = {
+  exerciseId: 'exerciseId',
+  muscleGroupId: 'muscleGroupId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -148,10 +170,48 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.BodyAreaLabel = exports.$Enums.BodyAreaLabel = {
+  CHEST: 'CHEST',
+  BACK: 'BACK',
+  SHOULDERS: 'SHOULDERS',
+  ARMS: 'ARMS',
+  CORE: 'CORE',
+  LEGS: 'LEGS'
+};
 
+exports.MuscleGroupLabel = exports.$Enums.MuscleGroupLabel = {
+  PECTORALIS_MAJOR: 'PECTORALIS_MAJOR',
+  PECTORALIS_MINOR: 'PECTORALIS_MINOR',
+  LATISSIMUS_DORSI: 'LATISSIMUS_DORSI',
+  TRAPEZIUS: 'TRAPEZIUS',
+  RHOMBOIDS: 'RHOMBOIDS',
+  LOWER_BACK: 'LOWER_BACK',
+  REAR_DELTOIDS: 'REAR_DELTOIDS',
+  FRONT_DELTOIDS: 'FRONT_DELTOIDS',
+  BICEPS: 'BICEPS',
+  TRICEPS: 'TRICEPS',
+  FOREARMS: 'FOREARMS',
+  ABDOMINALS: 'ABDOMINALS',
+  OBLIQUES: 'OBLIQUES',
+  GLUTES: 'GLUTES',
+  HAMSTRINGS: 'HAMSTRINGS',
+  QUADRICEPS: 'QUADRICEPS',
+  CALVES: 'CALVES'
+};
+
+exports.RecordSetsType = exports.$Enums.RecordSetsType = {
+  WEIGHT: 'WEIGHT',
+  WEIGHT_OFFSET_FROM_BODY: 'WEIGHT_OFFSET_FROM_BODY',
+  TIME: 'TIME',
+  WEIGHT_AND_TIME: 'WEIGHT_AND_TIME'
+};
 
 exports.Prisma.ModelName = {
+  BodyArea: 'BodyArea',
+  MuscleGroup: 'MuscleGroup',
   Exercise: 'Exercise',
+  ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
+  ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
   User: 'User'
 };
 

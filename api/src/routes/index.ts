@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import authRouter from './auth';
-import exercisesRouter from './exercises';
+import exercisesRouter from './exercises/exercises';
 import healthRouter from './health';
 
 const router = Router();

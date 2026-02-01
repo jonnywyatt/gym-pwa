@@ -12,14 +12,8 @@ I want to build a Progressive Web App that will be for people to use in the gym 
 
 ### Exercise library
 The app will be pre-seeded with a library of common exercises (in the remote DB).
-Each exercise should have the following data:
-- how does the exercise record its sets? eg -
-  - weight moved by the user (eg bench press or lat pulldown). Reps are required.
-  - weight offset from body weight (eg assisted pull up - if the pull up machine assistance weight is set to 10kg, and the user's recorded body weight is 80kg, then for each pull up the user has moved weight of 70kg (80kg minus 10kg). Reps are required
-  - with time eg dead hang, plank. Reps not required
-  - with weight and time eg farmers carry - you carry an amount of weight for a period of time - both should be recorded in that set. Reps not required.
-- muscle groups worked, and for each group, whether it's primary or secondary (see the glossary for details)
-- body areas focussed on, and for each area, whether it's of primary or secondary focus
+See [Data Models](development-plan/epic-2-exercise-library/goal-1-data-models.md)
+Additional fields for later -
 - benefits / why this is better than alternatives
 - form tips
 
@@ -83,4 +77,4 @@ The user will be able to enter their body weight in Kg which will be stored with
 See [specs/technical](./technical/index.md)
 
 ## Development plan
-See [specs/development-plan](./development-plan/goal-1-api-returns-data.md)
+See [specs/development-plan](./development-plan/index.md)

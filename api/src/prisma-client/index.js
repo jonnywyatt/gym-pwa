@@ -93,10 +93,32 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.BodyAreaScalarFieldEnum = {
+  id: 'id',
+  label: 'label'
+};
+
+exports.Prisma.MuscleGroupScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  bodyAreaId: 'bodyAreaId'
+};
+
 exports.Prisma.ExerciseScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  label: 'label',
+  recordSetsType: 'recordSetsType',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ExercisePrimaryMuscleGroupScalarFieldEnum = {
+  exerciseId: 'exerciseId',
+  muscleGroupId: 'muscleGroupId'
+};
+
+exports.Prisma.ExerciseSecondaryMuscleGroupScalarFieldEnum = {
+  exerciseId: 'exerciseId',
+  muscleGroupId: 'muscleGroupId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -121,10 +143,48 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.RecordSetsType = exports.$Enums.RecordSetsType = {
+  WEIGHT: 'WEIGHT',
+  WEIGHT_OFFSET_FROM_BODY: 'WEIGHT_OFFSET_FROM_BODY',
+  TIME: 'TIME',
+  WEIGHT_AND_TIME: 'WEIGHT_AND_TIME'
+};
 
+exports.BodyAreaLabel = exports.$Enums.BodyAreaLabel = {
+  CHEST: 'CHEST',
+  BACK: 'BACK',
+  SHOULDERS: 'SHOULDERS',
+  ARMS: 'ARMS',
+  CORE: 'CORE',
+  LEGS: 'LEGS'
+};
+
+exports.MuscleGroupLabel = exports.$Enums.MuscleGroupLabel = {
+  PECTORALIS_MAJOR: 'PECTORALIS_MAJOR',
+  PECTORALIS_MINOR: 'PECTORALIS_MINOR',
+  LATISSIMUS_DORSI: 'LATISSIMUS_DORSI',
+  TRAPEZIUS: 'TRAPEZIUS',
+  RHOMBOIDS: 'RHOMBOIDS',
+  LOWER_BACK: 'LOWER_BACK',
+  REAR_DELTOIDS: 'REAR_DELTOIDS',
+  FRONT_DELTOIDS: 'FRONT_DELTOIDS',
+  BICEPS: 'BICEPS',
+  TRICEPS: 'TRICEPS',
+  FOREARMS: 'FOREARMS',
+  ABDOMINALS: 'ABDOMINALS',
+  OBLIQUES: 'OBLIQUES',
+  GLUTES: 'GLUTES',
+  HAMSTRINGS: 'HAMSTRINGS',
+  QUADRICEPS: 'QUADRICEPS',
+  CALVES: 'CALVES'
+};
 
 exports.Prisma.ModelName = {
+  BodyArea: 'BodyArea',
+  MuscleGroup: 'MuscleGroup',
   Exercise: 'Exercise',
+  ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
+  ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
   User: 'User'
 };
 /**
@@ -135,10 +195,10 @@ const config = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/prisma-client/\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n// Minimal Exercise model for Goal 1\nmodel Exercise {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"exercises\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  googleId  String   @unique @map(\"google_id\")\n  email     String\n  name      String?\n  createdAt DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"users\")\n}\n"
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/prisma-client/\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum RecordSetsType {\n  WEIGHT\n  WEIGHT_OFFSET_FROM_BODY\n  TIME\n  WEIGHT_AND_TIME\n}\n\nenum BodyAreaLabel {\n  CHEST\n  BACK\n  SHOULDERS\n  ARMS\n  CORE\n  LEGS\n}\n\nenum MuscleGroupLabel {\n  PECTORALIS_MAJOR\n  PECTORALIS_MINOR\n  LATISSIMUS_DORSI\n  TRAPEZIUS\n  RHOMBOIDS\n  LOWER_BACK\n  REAR_DELTOIDS\n  FRONT_DELTOIDS\n  BICEPS\n  TRICEPS\n  FOREARMS\n  ABDOMINALS\n  OBLIQUES\n  GLUTES\n  HAMSTRINGS\n  QUADRICEPS\n  CALVES\n}\n\nmodel BodyArea {\n  id           Int           @id @default(autoincrement())\n  label        BodyAreaLabel @unique\n  muscleGroups MuscleGroup[]\n\n  @@map(\"body_areas\")\n}\n\nmodel MuscleGroup {\n  id         Int              @id @default(autoincrement())\n  label      MuscleGroupLabel @unique\n  bodyAreaId Int              @map(\"body_area_id\")\n  bodyArea   BodyArea         @relation(fields: [bodyAreaId], references: [id])\n\n  primaryExercises   ExercisePrimaryMuscleGroup[]\n  secondaryExercises ExerciseSecondaryMuscleGroup[]\n\n  @@map(\"muscle_groups\")\n}\n\nmodel Exercise {\n  id             Int            @id @default(autoincrement())\n  label          String\n  recordSetsType RecordSetsType @map(\"record_sets_type\")\n  createdAt      DateTime       @default(now()) @map(\"created_at\")\n\n  primaryMuscleGroups   ExercisePrimaryMuscleGroup[]\n  secondaryMuscleGroups ExerciseSecondaryMuscleGroup[]\n\n  @@map(\"exercises\")\n}\n\nmodel ExercisePrimaryMuscleGroup {\n  exerciseId    Int         @map(\"exercise_id\")\n  muscleGroupId Int         @map(\"muscle_group_id\")\n  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)\n\n  @@id([exerciseId, muscleGroupId])\n  @@map(\"exercise_primary_muscle_groups\")\n}\n\nmodel ExerciseSecondaryMuscleGroup {\n  exerciseId    Int         @map(\"exercise_id\")\n  muscleGroupId Int         @map(\"muscle_group_id\")\n  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)\n  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)\n\n  @@id([exerciseId, muscleGroupId])\n  @@map(\"exercise_secondary_muscle_groups\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  googleId  String   @unique @map(\"google_id\")\n  email     String\n  name      String?\n  createdAt DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"users\")\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Exercise\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"exercises\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"googleId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"google_id\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"BodyArea\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"label\",\"kind\":\"enum\",\"type\":\"BodyAreaLabel\"},{\"name\":\"muscleGroups\",\"kind\":\"object\",\"type\":\"MuscleGroup\",\"relationName\":\"BodyAreaToMuscleGroup\"}],\"dbName\":\"body_areas\"},\"MuscleGroup\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"label\",\"kind\":\"enum\",\"type\":\"MuscleGroupLabel\"},{\"name\":\"bodyAreaId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"body_area_id\"},{\"name\":\"bodyArea\",\"kind\":\"object\",\"type\":\"BodyArea\",\"relationName\":\"BodyAreaToMuscleGroup\"},{\"name\":\"primaryExercises\",\"kind\":\"object\",\"type\":\"ExercisePrimaryMuscleGroup\",\"relationName\":\"ExercisePrimaryMuscleGroupToMuscleGroup\"},{\"name\":\"secondaryExercises\",\"kind\":\"object\",\"type\":\"ExerciseSecondaryMuscleGroup\",\"relationName\":\"ExerciseSecondaryMuscleGroupToMuscleGroup\"}],\"dbName\":\"muscle_groups\"},\"Exercise\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recordSetsType\",\"kind\":\"enum\",\"type\":\"RecordSetsType\",\"dbName\":\"record_sets_type\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"primaryMuscleGroups\",\"kind\":\"object\",\"type\":\"ExercisePrimaryMuscleGroup\",\"relationName\":\"ExerciseToExercisePrimaryMuscleGroup\"},{\"name\":\"secondaryMuscleGroups\",\"kind\":\"object\",\"type\":\"ExerciseSecondaryMuscleGroup\",\"relationName\":\"ExerciseToExerciseSecondaryMuscleGroup\"}],\"dbName\":\"exercises\"},\"ExercisePrimaryMuscleGroup\":{\"fields\":[{\"name\":\"exerciseId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"exercise_id\"},{\"name\":\"muscleGroupId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"muscle_group_id\"},{\"name\":\"exercise\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"ExerciseToExercisePrimaryMuscleGroup\"},{\"name\":\"muscleGroup\",\"kind\":\"object\",\"type\":\"MuscleGroup\",\"relationName\":\"ExercisePrimaryMuscleGroupToMuscleGroup\"}],\"dbName\":\"exercise_primary_muscle_groups\"},\"ExerciseSecondaryMuscleGroup\":{\"fields\":[{\"name\":\"exerciseId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"exercise_id\"},{\"name\":\"muscleGroupId\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"muscle_group_id\"},{\"name\":\"exercise\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"ExerciseToExerciseSecondaryMuscleGroup\"},{\"name\":\"muscleGroup\",\"kind\":\"object\",\"type\":\"MuscleGroup\",\"relationName\":\"ExerciseSecondaryMuscleGroupToMuscleGroup\"}],\"dbName\":\"exercise_secondary_muscle_groups\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"googleId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"google_id\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
       getRuntime: async () => require('./query_compiler_fast_bg.js'),

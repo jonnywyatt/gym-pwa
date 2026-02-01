@@ -42,7 +42,9 @@ onMounted(() => {
     <p v-else-if="exercises.length === 0">No exercises found.</p>
     <ul v-else class="list">
       <li v-for="exercise in exercises" :key="exercise.id" class="listItem">
-        {{ exercise.name }}
+        <strong>{{ exercise.label }}</strong>
+        <div>Primary: {{ exercise.primaryMuscleGroups.join(', ') }}</div>
+        <div>Secondary: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
       </li>
     </ul>
   </main>

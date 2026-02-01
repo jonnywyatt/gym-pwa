@@ -42,9 +42,27 @@ describe('ExercisesPage', () => {
 
   it('should display exercises when API call succeeds', async () => {
     const mockExercises = [
-      { id: 1, name: 'Bench Press', createdAt: '2024-01-01T00:00:00Z' },
-      { id: 2, name: 'Squats', createdAt: '2024-01-02T00:00:00Z' },
-      { id: 3, name: 'Deadlift', createdAt: '2024-01-03T00:00:00Z' },
+      {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Pectoralis Major', 'Triceps'],
+        secondaryMuscleGroups: ['Front Deltoids'],
+      },
+      {
+        id: 2,
+        label: 'Squats',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Quadriceps', 'Glutes'],
+        secondaryMuscleGroups: ['Hamstrings'],
+      },
+      {
+        id: 3,
+        label: 'Deadlift',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Lower Back', 'Hamstrings'],
+        secondaryMuscleGroups: ['Glutes'],
+      },
     ];
 
     server.use(
@@ -127,8 +145,20 @@ describe('ExercisesPage', () => {
 
   it('should render exercises in a list', async () => {
     const mockExercises = [
-      { id: 1, name: 'Push-ups', createdAt: '2024-01-01T00:00:00Z' },
-      { id: 2, name: 'Pull-ups', createdAt: '2024-01-02T00:00:00Z' },
+      {
+        id: 1,
+        label: 'Push-ups',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Pectoralis Major', 'Triceps'],
+        secondaryMuscleGroups: ['Front Deltoids'],
+      },
+      {
+        id: 2,
+        label: 'Pull-ups',
+        recordSetsType: 'WEIGHT_OFFSET_FROM_BODY',
+        primaryMuscleGroups: ['Latissimus Dorsi', 'Biceps'],
+        secondaryMuscleGroups: ['Rhomboids'],
+      },
     ];
 
     server.use(

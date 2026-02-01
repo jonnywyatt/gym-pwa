@@ -22,7 +22,7 @@ export class OAuthService {
     };
   }
 
-  async initiateLogin() {
+  async initiateLogin(): Promise<void> {
     // Generate PKCE challenge
     const codeVerifier = oauth.generateRandomCodeVerifier();
     const codeChallenge = await oauth.calculatePKCECodeChallenge(codeVerifier);
@@ -88,7 +88,7 @@ export class OAuthService {
     return localStorage.getItem('access_token');
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
   }

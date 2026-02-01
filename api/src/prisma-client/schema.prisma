@@ -7,13 +7,92 @@ datasource db {
   provider = "postgresql"
 }
 
-// Minimal Exercise model for Goal 1
+enum RecordSetsType {
+  WEIGHT
+  WEIGHT_OFFSET_FROM_BODY
+  TIME
+  WEIGHT_AND_TIME
+}
+
+enum BodyAreaLabel {
+  CHEST
+  BACK
+  SHOULDERS
+  ARMS
+  CORE
+  LEGS
+}
+
+enum MuscleGroupLabel {
+  PECTORALIS_MAJOR
+  PECTORALIS_MINOR
+  LATISSIMUS_DORSI
+  TRAPEZIUS
+  RHOMBOIDS
+  LOWER_BACK
+  REAR_DELTOIDS
+  FRONT_DELTOIDS
+  BICEPS
+  TRICEPS
+  FOREARMS
+  ABDOMINALS
+  OBLIQUES
+  GLUTES
+  HAMSTRINGS
+  QUADRICEPS
+  CALVES
+}
+
+model BodyArea {
+  id           Int           @id @default(autoincrement())
+  label        BodyAreaLabel @unique
+  muscleGroups MuscleGroup[]
+
+  @@map("body_areas")
+}
+
+model MuscleGroup {
+  id         Int              @id @default(autoincrement())
+  label      MuscleGroupLabel @unique
+  bodyAreaId Int              @map("body_area_id")
+  bodyArea   BodyArea         @relation(fields: [bodyAreaId], references: [id])
+
+  primaryExercises   ExercisePrimaryMuscleGroup[]
+  secondaryExercises ExerciseSecondaryMuscleGroup[]
+
+  @@map("muscle_groups")
+}
+
 model Exercise {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
+  id             Int            @id @default(autoincrement())
+  label          String
+  recordSetsType RecordSetsType @map("record_sets_type")
+  createdAt      DateTime       @default(now()) @map("created_at")
+
+  primaryMuscleGroups   ExercisePrimaryMuscleGroup[]
+  secondaryMuscleGroups ExerciseSecondaryMuscleGroup[]
 
   @@map("exercises")
+}
+
+model ExercisePrimaryMuscleGroup {
+  exerciseId    Int         @map("exercise_id")
+  muscleGroupId Int         @map("muscle_group_id")
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, muscleGroupId])
+  @@map("exercise_primary_muscle_groups")
+}
+
+model ExerciseSecondaryMuscleGroup {
+  exerciseId    Int         @map("exercise_id")
+  muscleGroupId Int         @map("muscle_group_id")
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, muscleGroupId])
+  @@map("exercise_secondary_muscle_groups")
 }
 
 model User {
