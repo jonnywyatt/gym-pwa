@@ -1,0 +1,17 @@
+.grid {
+  display: grid;
+}
+
+.fullWidthWithMargins {
+  display: grid;
+  grid-template-columns: var(--grid-gutter-width) 1fr var(--grid-gutter-width);
+  grid-template-rows: min-content;
+}
+
+.gridColumnCenter {
+  grid-column: 2;
+}
+
+.fullBleed {
+  grid-column: 1/4;
+}

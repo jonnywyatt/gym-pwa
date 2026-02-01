@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { authService } from '../lib/auth/oauth';
+import { authService } from '../../lib/auth/oauth';
+import styles from './AuthCallbackPage.module.css';
 
 const router = useRouter();
 const error = ref<string | null>(null);
@@ -25,22 +26,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <p v-if="error" class="error">{{ error }}</p>
+  <main :class="styles.main">
+    <p v-if="error" :class="styles.error">{{ error }}</p>
     <p v-else>Signing in...</p>
   </main>
 </template>
-
-<style scoped>
-main {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-  text-align: center;
-  font-family: system-ui, sans-serif;
-}
-
-.error {
-  color: #c00;
-}
-</style>

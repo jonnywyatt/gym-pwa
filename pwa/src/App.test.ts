@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import ExercisesPage from './pages/ExercisesPage.vue';
+import ExercisesPage from './pages/ExercisesPage/ExercisesPage.vue';
 import { server } from './test/msw';
 
 // Mock the config module

@@ -1,0 +1,24 @@
+.buttonLink {
+  color: var(--blue);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.buttonLink:hover {
+  color: var(--grey-4b);
+}
+
+.buttonIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textLink {
+  text-decoration: underline;
+}
+
+.infoLink {
+  border-bottom: 1px dashed var(--grey-3b);
+}

@@ -7,17 +7,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'login',
-      component: () => import('./pages/LoginPage.vue'),
+      component: () => import('./pages/LoginPage/LoginPage.vue'),
     },
     {
       path: '/auth/callback',
       name: 'auth-callback',
-      component: () => import('./pages/AuthCallbackPage.vue'),
+      component: () => import('./pages/AuthCallbackPage/AuthCallbackPage.vue'),
     },
     {
       path: '/exercises',
       name: 'exercises',
-      component: () => import('./pages/ExercisesPage.vue'),
+      component: () => import('./pages/ExercisesPage/ExercisesPage.vue'),
       meta: { requiresAuth: true },
     },
   ],

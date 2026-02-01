@@ -1,0 +1,36 @@
+.flexSpaceBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flexVerticalCenter {
+  display: flex;
+  align-items: center;
+}
+
+.flexVerticalEnd {
+  display: flex;
+  align-items: flex-end;
+}
+
+.flexVerticalSpaceBetween {
+  display: flex;
+  align-items: stretch;
+}
+
+.flexGap1Unit {
+  gap: var(--spacing-unit-1);
+}
+
+.flexGap2Units {
+  gap: var(--spacing-unit-2);
+}
+
+.flexGap4Units {
+  gap: var(--spacing-unit-4);
+}
+
+.flexAlignSelfStretch {
+  align-self: stretch;
+}

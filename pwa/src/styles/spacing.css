@@ -1,0 +1,27 @@
+.marginBottom2 {
+  margin-bottom: var(--spacing-unit-2);
+}
+
+.marginBottom3 {
+  margin-bottom: var(--spacing-unit-3);
+}
+
+.marginBottom4 {
+  margin-bottom: var(--spacing-unit-4);
+}
+
+.marginBottom5 {
+  margin-bottom: var(--spacing-unit-5);
+}
+
+.marginBottom6 {
+  margin-bottom: var(--spacing-unit-6);
+}
+
+.paddingBottom4 {
+  padding-bottom: var(--spacing-unit-4);
+}
+
+.paddingBottom10 {
+  padding-bottom: var(--spacing-unit-10);
+}

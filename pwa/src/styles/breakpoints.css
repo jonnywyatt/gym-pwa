@@ -1,0 +1,4 @@
+@value bp-xsmall: (min-width: 480px);
+@value bp-small: (min-width: 555px);
+@value bp-medium: (min-width: 768px);
+@value bp-large: (min-width: 1024px);
