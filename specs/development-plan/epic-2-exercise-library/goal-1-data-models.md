@@ -21,7 +21,7 @@ Muscle Group → Body Area mappings:
 - Shoulders: Rear Deltoids, Front Deltoids
 - Arms: Biceps, Triceps, Forearms
 - Core: Abdominals, Obliques
-- Legs: Glutes, Hamstrings, Quadriceps, Calves
+- Legs: Glutes, Hamstrings, Quadriceps, Calves, Adductors
 
 ## Body areas
 Fields:
@@ -43,13 +43,4 @@ Fields:
 
 Note - Use 2 join tables to achieve the mappings of primaryMuscleGroups and secondaryMuscleGroups
 
-Seed data -
-### Pull up (assisted)
-- recordSetsType - WEIGHT_OFFSET_FROM_BODY
-- primaryMuscleGroups - Latissimus Dorsi, Biceps
-- secondaryMuscleGroups - Rhomboids, Trapezius, Rear Deltoids, Forearms, Abdominals
-
-### Chest press (machine)
-- recordSetsType - WEIGHT
-- primaryMuscleGroups - Pectoralis Major, Front Deltoids, Triceps
-- secondaryMuscleGroups - Pectoralis Minor, Abdominals
+[Seed data for exercises](./exercises-seed-data.md)

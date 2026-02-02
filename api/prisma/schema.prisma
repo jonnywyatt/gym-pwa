@@ -9,9 +9,10 @@ datasource db {
 
 enum RecordSetsType {
   WEIGHT
-  WEIGHT_OFFSET_FROM_BODY
+  BODYWEIGHT_MINUS_OFFSET
   TIME
   WEIGHT_AND_TIME
+  BODYWEIGHT_PLUS_WEIGHT
 }
 
 enum BodyAreaLabel {
@@ -40,12 +41,13 @@ enum MuscleGroupLabel {
   GLUTES
   HAMSTRINGS
   QUADRICEPS
+  ADDUCTORS
   CALVES
 }
 
 model BodyArea {
-  id           Int            @id @default(autoincrement())
-  label        BodyAreaLabel  @unique
+  id           Int           @id @default(autoincrement())
+  label        BodyAreaLabel @unique
   muscleGroups MuscleGroup[]
 
   @@map("body_areas")

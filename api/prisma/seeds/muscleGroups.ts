@@ -28,5 +28,6 @@ export const muscleGroups: MuscleGroupSeed[] = [
   { label: MuscleGroupLabel.GLUTES, bodyAreaLabel: BodyAreaLabel.LEGS },
   { label: MuscleGroupLabel.HAMSTRINGS, bodyAreaLabel: BodyAreaLabel.LEGS },
   { label: MuscleGroupLabel.QUADRICEPS, bodyAreaLabel: BodyAreaLabel.LEGS },
+  { label: MuscleGroupLabel.ADDUCTORS, bodyAreaLabel: BodyAreaLabel.LEGS },
   { label: MuscleGroupLabel.CALVES, bodyAreaLabel: BodyAreaLabel.LEGS },
 ];

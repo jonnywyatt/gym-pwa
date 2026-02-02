@@ -25,6 +25,7 @@ export const muscleGroupDisplayNames: Record<MuscleGroupLabel, string> = {
   [MuscleGroupLabel.OBLIQUES]: 'Obliques',
   [MuscleGroupLabel.GLUTES]: 'Glutes',
   [MuscleGroupLabel.HAMSTRINGS]: 'Hamstrings',
+  [MuscleGroupLabel.ADDUCTORS]: 'Adductors',
   [MuscleGroupLabel.QUADRICEPS]: 'Quadriceps',
   [MuscleGroupLabel.CALVES]: 'Calves',
 } as const;

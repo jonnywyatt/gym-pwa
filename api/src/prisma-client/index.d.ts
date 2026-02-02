@@ -50,9 +50,10 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 export namespace $Enums {
   export const RecordSetsType: {
   WEIGHT: 'WEIGHT',
-  WEIGHT_OFFSET_FROM_BODY: 'WEIGHT_OFFSET_FROM_BODY',
+  BODYWEIGHT_MINUS_OFFSET: 'BODYWEIGHT_MINUS_OFFSET',
   TIME: 'TIME',
-  WEIGHT_AND_TIME: 'WEIGHT_AND_TIME'
+  WEIGHT_AND_TIME: 'WEIGHT_AND_TIME',
+  BODYWEIGHT_PLUS_WEIGHT: 'BODYWEIGHT_PLUS_WEIGHT'
 };
 
 export type RecordSetsType = (typeof RecordSetsType)[keyof typeof RecordSetsType]
@@ -87,6 +88,7 @@ export const MuscleGroupLabel: {
   GLUTES: 'GLUTES',
   HAMSTRINGS: 'HAMSTRINGS',
   QUADRICEPS: 'QUADRICEPS',
+  ADDUCTORS: 'ADDUCTORS',
   CALVES: 'CALVES'
 };
 
