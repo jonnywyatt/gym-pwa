@@ -17,7 +17,7 @@ onMounted(async () => {
 
   try {
     await authService.handleCallback(code);
-    router.replace('/exercises');
+    router.replace('/routines');
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Authentication failed';
   }

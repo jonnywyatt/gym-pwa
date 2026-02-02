@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { bodyAreas } from './seeds/bodyAreas';
 import { exercises } from './seeds/exercises';
 import { muscleGroups } from './seeds/muscleGroups';
+import { routines } from './seeds/routines';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -14,7 +15,9 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  // Clear existing data
+  // Clear existing data (order matters due to FK constraints)
+  await prisma.routineExercise.deleteMany({});
+  await prisma.routine.deleteMany({});
   await prisma.exerciseSecondaryMuscleGroup.deleteMany({});
   await prisma.exercisePrimaryMuscleGroup.deleteMany({});
   await prisma.exercise.deleteMany({});
@@ -52,6 +55,7 @@ async function main() {
 
   // Seed exercises
   const muscleGroupMap = new Map(createdMuscleGroups.map((mg) => [mg.label, mg.id]));
+  const exerciseMap = new Map<string, number>();
   for (const exercise of exercises) {
     const createdExercise = await prisma.exercise.create({
       data: {
@@ -59,6 +63,7 @@ async function main() {
         recordSetsType: exercise.recordSetsType,
       },
     });
+    exerciseMap.set(createdExercise.label, createdExercise.id);
 
     // Create primary muscle group relationships
     await Promise.all(
@@ -93,6 +98,33 @@ async function main() {
     );
   }
   console.log(`✅ Seeded ${exercises.length} exercises`);
+
+  // Seed routines
+  for (const routine of routines) {
+    const createdRoutine = await prisma.routine.create({
+      data: {
+        label: routine.label,
+      },
+    });
+
+    // Create routine exercise relationships with position
+    await Promise.all(
+      routine.exerciseLabels.map((label, index) => {
+        const exerciseId = exerciseMap.get(label);
+        if (!exerciseId) {
+          throw new Error(`Exercise not found: ${label}`);
+        }
+        return prisma.routineExercise.create({
+          data: {
+            routineId: createdRoutine.id,
+            exerciseId,
+            position: index,
+          },
+        });
+      })
+    );
+  }
+  console.log(`✅ Seeded ${routines.length} routines`);
 }
 
 main()

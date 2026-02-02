@@ -20,6 +20,18 @@ const router = createRouter({
       component: () => import('./pages/ExercisesPage/ExercisesPage.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/routines',
+      name: 'routines',
+      component: () => import('./pages/RoutinesPage/RoutinesPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/routines/:routineId',
+      name: 'routine-detail',
+      component: () => import('./pages/RoutinePage/RoutinePage.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 

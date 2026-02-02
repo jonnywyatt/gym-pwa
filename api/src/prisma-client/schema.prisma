@@ -73,8 +73,30 @@ model Exercise {
 
   primaryMuscleGroups   ExercisePrimaryMuscleGroup[]
   secondaryMuscleGroups ExerciseSecondaryMuscleGroup[]
+  routineExercises      RoutineExercise[]
 
   @@map("exercises")
+}
+
+model Routine {
+  id    Int    @id @default(autoincrement())
+  label String
+
+  routineExercises RoutineExercise[]
+
+  @@map("routines")
+}
+
+model RoutineExercise {
+  routineId  Int      @map("routine_id")
+  exerciseId Int      @map("exercise_id")
+  position   Int
+  routine    Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([routineId, exerciseId])
+  @@unique([routineId, position])
+  @@map("routine_exercises")
 }
 
 model ExercisePrimaryMuscleGroup {

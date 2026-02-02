@@ -138,6 +138,17 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.RoutineScalarFieldEnum = {
+  id: 'id',
+  label: 'label'
+};
+
+exports.Prisma.RoutineExerciseScalarFieldEnum = {
+  routineId: 'routineId',
+  exerciseId: 'exerciseId',
+  position: 'position'
+};
+
 exports.Prisma.ExercisePrimaryMuscleGroupScalarFieldEnum = {
   exerciseId: 'exerciseId',
   muscleGroupId: 'muscleGroupId'
@@ -212,6 +223,8 @@ exports.Prisma.ModelName = {
   BodyArea: 'BodyArea',
   MuscleGroup: 'MuscleGroup',
   Exercise: 'Exercise',
+  Routine: 'Routine',
+  RoutineExercise: 'RoutineExercise',
   ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
   ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
   User: 'User'
