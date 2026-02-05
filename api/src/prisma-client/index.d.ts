@@ -53,6 +53,11 @@ export type ExerciseSecondaryMuscleGroup = $Result.DefaultSelection<Prisma.$Exer
  * 
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model UserBodyWeight
+ * 
+ */
+export type UserBodyWeight = $Result.DefaultSelection<Prisma.$UserBodyWeightPayload>
 
 /**
  * Enums
@@ -67,6 +72,13 @@ export namespace $Enums {
 };
 
 export type RecordSetsType = (typeof RecordSetsType)[keyof typeof RecordSetsType]
+
+
+export const WeightUnit: {
+  KG: 'KG'
+};
+
+export type WeightUnit = (typeof WeightUnit)[keyof typeof WeightUnit]
 
 
 export const BodyAreaLabel: {
@@ -109,6 +121,10 @@ export type MuscleGroupLabel = (typeof MuscleGroupLabel)[keyof typeof MuscleGrou
 export type RecordSetsType = $Enums.RecordSetsType
 
 export const RecordSetsType: typeof $Enums.RecordSetsType
+
+export type WeightUnit = $Enums.WeightUnit
+
+export const WeightUnit: typeof $Enums.WeightUnit
 
 export type BodyAreaLabel = $Enums.BodyAreaLabel
 
@@ -314,6 +330,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userBodyWeight`: Exposes CRUD operations for the **UserBodyWeight** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserBodyWeights
+    * const userBodyWeights = await prisma.userBodyWeight.findMany()
+    * ```
+    */
+  get userBodyWeight(): Prisma.UserBodyWeightDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -755,7 +781,8 @@ export namespace Prisma {
     RoutineExercise: 'RoutineExercise',
     ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
     ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
-    User: 'User'
+    User: 'User',
+    UserBodyWeight: 'UserBodyWeight'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -771,7 +798,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "user"
+      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "user" | "userBodyWeight"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1367,6 +1394,80 @@ export namespace Prisma {
           }
         }
       }
+      UserBodyWeight: {
+        payload: Prisma.$UserBodyWeightPayload<ExtArgs>
+        fields: Prisma.UserBodyWeightFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserBodyWeightFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserBodyWeightFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          findFirst: {
+            args: Prisma.UserBodyWeightFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserBodyWeightFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          findMany: {
+            args: Prisma.UserBodyWeightFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>[]
+          }
+          create: {
+            args: Prisma.UserBodyWeightCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          createMany: {
+            args: Prisma.UserBodyWeightCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserBodyWeightCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>[]
+          }
+          delete: {
+            args: Prisma.UserBodyWeightDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          update: {
+            args: Prisma.UserBodyWeightUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserBodyWeightDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserBodyWeightUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserBodyWeightUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserBodyWeightUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBodyWeightPayload>
+          }
+          aggregate: {
+            args: Prisma.UserBodyWeightAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserBodyWeight>
+          }
+          groupBy: {
+            args: Prisma.UserBodyWeightGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserBodyWeightGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserBodyWeightCountArgs<ExtArgs>
+            result: $Utils.Optional<UserBodyWeightCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1483,6 +1584,7 @@ export namespace Prisma {
     exercisePrimaryMuscleGroup?: ExercisePrimaryMuscleGroupOmit
     exerciseSecondaryMuscleGroup?: ExerciseSecondaryMuscleGroupOmit
     user?: UserOmit
+    userBodyWeight?: UserBodyWeightOmit
   }
 
   /* Types for Logging */
@@ -1706,6 +1808,37 @@ export namespace Prisma {
    */
   export type RoutineCountOutputTypeCountRoutineExercisesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoutineExerciseWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    bodyWeights: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bodyWeights?: boolean | UserCountOutputTypeCountBodyWeightsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBodyWeightsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBodyWeightWhereInput
   }
 
 
@@ -9528,6 +9661,8 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     createdAt?: boolean
+    bodyWeights?: boolean | User$bodyWeightsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9555,10 +9690,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "googleId" | "email" | "name" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bodyWeights?: boolean | User$bodyWeightsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      bodyWeights: Prisma.$UserBodyWeightPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       googleId: string
@@ -9959,6 +10102,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    bodyWeights<T extends User$bodyWeightsArgs<ExtArgs> = {}>(args?: Subset<T, User$bodyWeightsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10010,6 +10154,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -10028,6 +10176,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -10045,6 +10197,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -10094,6 +10250,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -10142,6 +10302,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -10184,6 +10348,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to create a User.
      */
@@ -10232,6 +10400,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -10299,6 +10471,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -10325,6 +10501,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -10345,6 +10525,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.bodyWeights
+   */
+  export type User$bodyWeightsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    where?: UserBodyWeightWhereInput
+    orderBy?: UserBodyWeightOrderByWithRelationInput | UserBodyWeightOrderByWithRelationInput[]
+    cursor?: UserBodyWeightWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBodyWeightScalarFieldEnum | UserBodyWeightScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10356,6 +10560,1110 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserBodyWeight
+   */
+
+  export type AggregateUserBodyWeight = {
+    _count: UserBodyWeightCountAggregateOutputType | null
+    _avg: UserBodyWeightAvgAggregateOutputType | null
+    _sum: UserBodyWeightSumAggregateOutputType | null
+    _min: UserBodyWeightMinAggregateOutputType | null
+    _max: UserBodyWeightMaxAggregateOutputType | null
+  }
+
+  export type UserBodyWeightAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    weight: Decimal | null
+  }
+
+  export type UserBodyWeightSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    weight: Decimal | null
+  }
+
+  export type UserBodyWeightMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    weight: Decimal | null
+    unit: $Enums.WeightUnit | null
+    recordedAt: Date | null
+  }
+
+  export type UserBodyWeightMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    weight: Decimal | null
+    unit: $Enums.WeightUnit | null
+    recordedAt: Date | null
+  }
+
+  export type UserBodyWeightCountAggregateOutputType = {
+    id: number
+    userId: number
+    weight: number
+    unit: number
+    recordedAt: number
+    _all: number
+  }
+
+
+  export type UserBodyWeightAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    weight?: true
+  }
+
+  export type UserBodyWeightSumAggregateInputType = {
+    id?: true
+    userId?: true
+    weight?: true
+  }
+
+  export type UserBodyWeightMinAggregateInputType = {
+    id?: true
+    userId?: true
+    weight?: true
+    unit?: true
+    recordedAt?: true
+  }
+
+  export type UserBodyWeightMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    weight?: true
+    unit?: true
+    recordedAt?: true
+  }
+
+  export type UserBodyWeightCountAggregateInputType = {
+    id?: true
+    userId?: true
+    weight?: true
+    unit?: true
+    recordedAt?: true
+    _all?: true
+  }
+
+  export type UserBodyWeightAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBodyWeight to aggregate.
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBodyWeights to fetch.
+     */
+    orderBy?: UserBodyWeightOrderByWithRelationInput | UserBodyWeightOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserBodyWeightWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBodyWeights from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBodyWeights.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserBodyWeights
+    **/
+    _count?: true | UserBodyWeightCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserBodyWeightAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserBodyWeightSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserBodyWeightMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserBodyWeightMaxAggregateInputType
+  }
+
+  export type GetUserBodyWeightAggregateType<T extends UserBodyWeightAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserBodyWeight]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserBodyWeight[P]>
+      : GetScalarType<T[P], AggregateUserBodyWeight[P]>
+  }
+
+
+
+
+  export type UserBodyWeightGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBodyWeightWhereInput
+    orderBy?: UserBodyWeightOrderByWithAggregationInput | UserBodyWeightOrderByWithAggregationInput[]
+    by: UserBodyWeightScalarFieldEnum[] | UserBodyWeightScalarFieldEnum
+    having?: UserBodyWeightScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserBodyWeightCountAggregateInputType | true
+    _avg?: UserBodyWeightAvgAggregateInputType
+    _sum?: UserBodyWeightSumAggregateInputType
+    _min?: UserBodyWeightMinAggregateInputType
+    _max?: UserBodyWeightMaxAggregateInputType
+  }
+
+  export type UserBodyWeightGroupByOutputType = {
+    id: number
+    userId: number
+    weight: Decimal
+    unit: $Enums.WeightUnit
+    recordedAt: Date
+    _count: UserBodyWeightCountAggregateOutputType | null
+    _avg: UserBodyWeightAvgAggregateOutputType | null
+    _sum: UserBodyWeightSumAggregateOutputType | null
+    _min: UserBodyWeightMinAggregateOutputType | null
+    _max: UserBodyWeightMaxAggregateOutputType | null
+  }
+
+  type GetUserBodyWeightGroupByPayload<T extends UserBodyWeightGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserBodyWeightGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserBodyWeightGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserBodyWeightGroupByOutputType[P]>
+            : GetScalarType<T[P], UserBodyWeightGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserBodyWeightSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    weight?: boolean
+    unit?: boolean
+    recordedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBodyWeight"]>
+
+  export type UserBodyWeightSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    weight?: boolean
+    unit?: boolean
+    recordedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBodyWeight"]>
+
+  export type UserBodyWeightSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    weight?: boolean
+    unit?: boolean
+    recordedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBodyWeight"]>
+
+  export type UserBodyWeightSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    weight?: boolean
+    unit?: boolean
+    recordedAt?: boolean
+  }
+
+  export type UserBodyWeightOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "weight" | "unit" | "recordedAt", ExtArgs["result"]["userBodyWeight"]>
+  export type UserBodyWeightInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserBodyWeightIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserBodyWeightIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserBodyWeightPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserBodyWeight"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      weight: Prisma.Decimal
+      unit: $Enums.WeightUnit
+      recordedAt: Date
+    }, ExtArgs["result"]["userBodyWeight"]>
+    composites: {}
+  }
+
+  type UserBodyWeightGetPayload<S extends boolean | null | undefined | UserBodyWeightDefaultArgs> = $Result.GetResult<Prisma.$UserBodyWeightPayload, S>
+
+  type UserBodyWeightCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserBodyWeightFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserBodyWeightCountAggregateInputType | true
+    }
+
+  export interface UserBodyWeightDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserBodyWeight'], meta: { name: 'UserBodyWeight' } }
+    /**
+     * Find zero or one UserBodyWeight that matches the filter.
+     * @param {UserBodyWeightFindUniqueArgs} args - Arguments to find a UserBodyWeight
+     * @example
+     * // Get one UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserBodyWeightFindUniqueArgs>(args: SelectSubset<T, UserBodyWeightFindUniqueArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserBodyWeight that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserBodyWeightFindUniqueOrThrowArgs} args - Arguments to find a UserBodyWeight
+     * @example
+     * // Get one UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserBodyWeightFindUniqueOrThrowArgs>(args: SelectSubset<T, UserBodyWeightFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBodyWeight that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightFindFirstArgs} args - Arguments to find a UserBodyWeight
+     * @example
+     * // Get one UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserBodyWeightFindFirstArgs>(args?: SelectSubset<T, UserBodyWeightFindFirstArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBodyWeight that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightFindFirstOrThrowArgs} args - Arguments to find a UserBodyWeight
+     * @example
+     * // Get one UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserBodyWeightFindFirstOrThrowArgs>(args?: SelectSubset<T, UserBodyWeightFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserBodyWeights that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserBodyWeights
+     * const userBodyWeights = await prisma.userBodyWeight.findMany()
+     * 
+     * // Get first 10 UserBodyWeights
+     * const userBodyWeights = await prisma.userBodyWeight.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userBodyWeightWithIdOnly = await prisma.userBodyWeight.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserBodyWeightFindManyArgs>(args?: SelectSubset<T, UserBodyWeightFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserBodyWeight.
+     * @param {UserBodyWeightCreateArgs} args - Arguments to create a UserBodyWeight.
+     * @example
+     * // Create one UserBodyWeight
+     * const UserBodyWeight = await prisma.userBodyWeight.create({
+     *   data: {
+     *     // ... data to create a UserBodyWeight
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserBodyWeightCreateArgs>(args: SelectSubset<T, UserBodyWeightCreateArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserBodyWeights.
+     * @param {UserBodyWeightCreateManyArgs} args - Arguments to create many UserBodyWeights.
+     * @example
+     * // Create many UserBodyWeights
+     * const userBodyWeight = await prisma.userBodyWeight.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserBodyWeightCreateManyArgs>(args?: SelectSubset<T, UserBodyWeightCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserBodyWeights and returns the data saved in the database.
+     * @param {UserBodyWeightCreateManyAndReturnArgs} args - Arguments to create many UserBodyWeights.
+     * @example
+     * // Create many UserBodyWeights
+     * const userBodyWeight = await prisma.userBodyWeight.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserBodyWeights and only return the `id`
+     * const userBodyWeightWithIdOnly = await prisma.userBodyWeight.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserBodyWeightCreateManyAndReturnArgs>(args?: SelectSubset<T, UserBodyWeightCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserBodyWeight.
+     * @param {UserBodyWeightDeleteArgs} args - Arguments to delete one UserBodyWeight.
+     * @example
+     * // Delete one UserBodyWeight
+     * const UserBodyWeight = await prisma.userBodyWeight.delete({
+     *   where: {
+     *     // ... filter to delete one UserBodyWeight
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserBodyWeightDeleteArgs>(args: SelectSubset<T, UserBodyWeightDeleteArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserBodyWeight.
+     * @param {UserBodyWeightUpdateArgs} args - Arguments to update one UserBodyWeight.
+     * @example
+     * // Update one UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserBodyWeightUpdateArgs>(args: SelectSubset<T, UserBodyWeightUpdateArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserBodyWeights.
+     * @param {UserBodyWeightDeleteManyArgs} args - Arguments to filter UserBodyWeights to delete.
+     * @example
+     * // Delete a few UserBodyWeights
+     * const { count } = await prisma.userBodyWeight.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserBodyWeightDeleteManyArgs>(args?: SelectSubset<T, UserBodyWeightDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBodyWeights.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserBodyWeights
+     * const userBodyWeight = await prisma.userBodyWeight.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserBodyWeightUpdateManyArgs>(args: SelectSubset<T, UserBodyWeightUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBodyWeights and returns the data updated in the database.
+     * @param {UserBodyWeightUpdateManyAndReturnArgs} args - Arguments to update many UserBodyWeights.
+     * @example
+     * // Update many UserBodyWeights
+     * const userBodyWeight = await prisma.userBodyWeight.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserBodyWeights and only return the `id`
+     * const userBodyWeightWithIdOnly = await prisma.userBodyWeight.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserBodyWeightUpdateManyAndReturnArgs>(args: SelectSubset<T, UserBodyWeightUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserBodyWeight.
+     * @param {UserBodyWeightUpsertArgs} args - Arguments to update or create a UserBodyWeight.
+     * @example
+     * // Update or create a UserBodyWeight
+     * const userBodyWeight = await prisma.userBodyWeight.upsert({
+     *   create: {
+     *     // ... data to create a UserBodyWeight
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserBodyWeight we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserBodyWeightUpsertArgs>(args: SelectSubset<T, UserBodyWeightUpsertArgs<ExtArgs>>): Prisma__UserBodyWeightClient<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserBodyWeights.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightCountArgs} args - Arguments to filter UserBodyWeights to count.
+     * @example
+     * // Count the number of UserBodyWeights
+     * const count = await prisma.userBodyWeight.count({
+     *   where: {
+     *     // ... the filter for the UserBodyWeights we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserBodyWeightCountArgs>(
+      args?: Subset<T, UserBodyWeightCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserBodyWeightCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserBodyWeight.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserBodyWeightAggregateArgs>(args: Subset<T, UserBodyWeightAggregateArgs>): Prisma.PrismaPromise<GetUserBodyWeightAggregateType<T>>
+
+    /**
+     * Group by UserBodyWeight.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBodyWeightGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserBodyWeightGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserBodyWeightGroupByArgs['orderBy'] }
+        : { orderBy?: UserBodyWeightGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserBodyWeightGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBodyWeightGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserBodyWeight model
+   */
+  readonly fields: UserBodyWeightFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserBodyWeight.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserBodyWeightClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserBodyWeight model
+   */
+  interface UserBodyWeightFieldRefs {
+    readonly id: FieldRef<"UserBodyWeight", 'Int'>
+    readonly userId: FieldRef<"UserBodyWeight", 'Int'>
+    readonly weight: FieldRef<"UserBodyWeight", 'Decimal'>
+    readonly unit: FieldRef<"UserBodyWeight", 'WeightUnit'>
+    readonly recordedAt: FieldRef<"UserBodyWeight", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserBodyWeight findUnique
+   */
+  export type UserBodyWeightFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBodyWeight to fetch.
+     */
+    where: UserBodyWeightWhereUniqueInput
+  }
+
+  /**
+   * UserBodyWeight findUniqueOrThrow
+   */
+  export type UserBodyWeightFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBodyWeight to fetch.
+     */
+    where: UserBodyWeightWhereUniqueInput
+  }
+
+  /**
+   * UserBodyWeight findFirst
+   */
+  export type UserBodyWeightFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBodyWeight to fetch.
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBodyWeights to fetch.
+     */
+    orderBy?: UserBodyWeightOrderByWithRelationInput | UserBodyWeightOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBodyWeights.
+     */
+    cursor?: UserBodyWeightWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBodyWeights from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBodyWeights.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBodyWeights.
+     */
+    distinct?: UserBodyWeightScalarFieldEnum | UserBodyWeightScalarFieldEnum[]
+  }
+
+  /**
+   * UserBodyWeight findFirstOrThrow
+   */
+  export type UserBodyWeightFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBodyWeight to fetch.
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBodyWeights to fetch.
+     */
+    orderBy?: UserBodyWeightOrderByWithRelationInput | UserBodyWeightOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBodyWeights.
+     */
+    cursor?: UserBodyWeightWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBodyWeights from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBodyWeights.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBodyWeights.
+     */
+    distinct?: UserBodyWeightScalarFieldEnum | UserBodyWeightScalarFieldEnum[]
+  }
+
+  /**
+   * UserBodyWeight findMany
+   */
+  export type UserBodyWeightFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBodyWeights to fetch.
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBodyWeights to fetch.
+     */
+    orderBy?: UserBodyWeightOrderByWithRelationInput | UserBodyWeightOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserBodyWeights.
+     */
+    cursor?: UserBodyWeightWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBodyWeights from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBodyWeights.
+     */
+    skip?: number
+    distinct?: UserBodyWeightScalarFieldEnum | UserBodyWeightScalarFieldEnum[]
+  }
+
+  /**
+   * UserBodyWeight create
+   */
+  export type UserBodyWeightCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserBodyWeight.
+     */
+    data: XOR<UserBodyWeightCreateInput, UserBodyWeightUncheckedCreateInput>
+  }
+
+  /**
+   * UserBodyWeight createMany
+   */
+  export type UserBodyWeightCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserBodyWeights.
+     */
+    data: UserBodyWeightCreateManyInput | UserBodyWeightCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserBodyWeight createManyAndReturn
+   */
+  export type UserBodyWeightCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserBodyWeights.
+     */
+    data: UserBodyWeightCreateManyInput | UserBodyWeightCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBodyWeight update
+   */
+  export type UserBodyWeightUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserBodyWeight.
+     */
+    data: XOR<UserBodyWeightUpdateInput, UserBodyWeightUncheckedUpdateInput>
+    /**
+     * Choose, which UserBodyWeight to update.
+     */
+    where: UserBodyWeightWhereUniqueInput
+  }
+
+  /**
+   * UserBodyWeight updateMany
+   */
+  export type UserBodyWeightUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserBodyWeights.
+     */
+    data: XOR<UserBodyWeightUpdateManyMutationInput, UserBodyWeightUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBodyWeights to update
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * Limit how many UserBodyWeights to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBodyWeight updateManyAndReturn
+   */
+  export type UserBodyWeightUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * The data used to update UserBodyWeights.
+     */
+    data: XOR<UserBodyWeightUpdateManyMutationInput, UserBodyWeightUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBodyWeights to update
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * Limit how many UserBodyWeights to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBodyWeight upsert
+   */
+  export type UserBodyWeightUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserBodyWeight to update in case it exists.
+     */
+    where: UserBodyWeightWhereUniqueInput
+    /**
+     * In case the UserBodyWeight found by the `where` argument doesn't exist, create a new UserBodyWeight with this data.
+     */
+    create: XOR<UserBodyWeightCreateInput, UserBodyWeightUncheckedCreateInput>
+    /**
+     * In case the UserBodyWeight was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserBodyWeightUpdateInput, UserBodyWeightUncheckedUpdateInput>
+  }
+
+  /**
+   * UserBodyWeight delete
+   */
+  export type UserBodyWeightDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
+    /**
+     * Filter which UserBodyWeight to delete.
+     */
+    where: UserBodyWeightWhereUniqueInput
+  }
+
+  /**
+   * UserBodyWeight deleteMany
+   */
+  export type UserBodyWeightDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBodyWeights to delete
+     */
+    where?: UserBodyWeightWhereInput
+    /**
+     * Limit how many UserBodyWeights to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBodyWeight without action
+   */
+  export type UserBodyWeightDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBodyWeight
+     */
+    select?: UserBodyWeightSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBodyWeight
+     */
+    omit?: UserBodyWeightOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBodyWeightInclude<ExtArgs> | null
   }
 
 
@@ -10442,6 +11750,17 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const UserBodyWeightScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    weight: 'weight',
+    unit: 'unit',
+    recordedAt: 'recordedAt'
+  };
+
+  export type UserBodyWeightScalarFieldEnum = (typeof UserBodyWeightScalarFieldEnum)[keyof typeof UserBodyWeightScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -10554,6 +11873,34 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WeightUnit'
+   */
+  export type EnumWeightUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeightUnit'>
+    
+
+
+  /**
+   * Reference to a field of type 'WeightUnit[]'
+   */
+  export type ListEnumWeightUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeightUnit[]'>
     
 
 
@@ -10922,6 +12269,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    bodyWeights?: UserBodyWeightListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10930,6 +12278,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    bodyWeights?: UserBodyWeightOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -10941,6 +12290,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    bodyWeights?: UserBodyWeightListRelationFilter
   }, "id" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
@@ -10965,6 +12315,63 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type UserBodyWeightWhereInput = {
+    AND?: UserBodyWeightWhereInput | UserBodyWeightWhereInput[]
+    OR?: UserBodyWeightWhereInput[]
+    NOT?: UserBodyWeightWhereInput | UserBodyWeightWhereInput[]
+    id?: IntFilter<"UserBodyWeight"> | number
+    userId?: IntFilter<"UserBodyWeight"> | number
+    weight?: DecimalFilter<"UserBodyWeight"> | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFilter<"UserBodyWeight"> | $Enums.WeightUnit
+    recordedAt?: DateTimeFilter<"UserBodyWeight"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserBodyWeightOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+    unit?: SortOrder
+    recordedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserBodyWeightWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: UserBodyWeightWhereInput | UserBodyWeightWhereInput[]
+    OR?: UserBodyWeightWhereInput[]
+    NOT?: UserBodyWeightWhereInput | UserBodyWeightWhereInput[]
+    userId?: IntFilter<"UserBodyWeight"> | number
+    weight?: DecimalFilter<"UserBodyWeight"> | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFilter<"UserBodyWeight"> | $Enums.WeightUnit
+    recordedAt?: DateTimeFilter<"UserBodyWeight"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserBodyWeightOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+    unit?: SortOrder
+    recordedAt?: SortOrder
+    _count?: UserBodyWeightCountOrderByAggregateInput
+    _avg?: UserBodyWeightAvgOrderByAggregateInput
+    _max?: UserBodyWeightMaxOrderByAggregateInput
+    _min?: UserBodyWeightMinOrderByAggregateInput
+    _sum?: UserBodyWeightSumOrderByAggregateInput
+  }
+
+  export type UserBodyWeightScalarWhereWithAggregatesInput = {
+    AND?: UserBodyWeightScalarWhereWithAggregatesInput | UserBodyWeightScalarWhereWithAggregatesInput[]
+    OR?: UserBodyWeightScalarWhereWithAggregatesInput[]
+    NOT?: UserBodyWeightScalarWhereWithAggregatesInput | UserBodyWeightScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"UserBodyWeight"> | number
+    userId?: IntWithAggregatesFilter<"UserBodyWeight"> | number
+    weight?: DecimalWithAggregatesFilter<"UserBodyWeight"> | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitWithAggregatesFilter<"UserBodyWeight"> | $Enums.WeightUnit
+    recordedAt?: DateTimeWithAggregatesFilter<"UserBodyWeight"> | Date | string
   }
 
   export type BodyAreaCreateInput = {
@@ -11256,6 +12663,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    bodyWeights?: UserBodyWeightCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -11264,6 +12672,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    bodyWeights?: UserBodyWeightUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -11271,6 +12680,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bodyWeights?: UserBodyWeightUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -11279,6 +12689,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bodyWeights?: UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -11302,6 +12713,58 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBodyWeightCreateInput = {
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+    user: UserCreateNestedOneWithoutBodyWeightsInput
+  }
+
+  export type UserBodyWeightUncheckedCreateInput = {
+    id?: number
+    userId: number
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+  }
+
+  export type UserBodyWeightUpdateInput = {
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBodyWeightsNestedInput
+  }
+
+  export type UserBodyWeightUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBodyWeightCreateManyInput = {
+    id?: number
+    userId: number
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+  }
+
+  export type UserBodyWeightUpdateManyMutationInput = {
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBodyWeightUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -11718,9 +13181,19 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type UserBodyWeightListRelationFilter = {
+    every?: UserBodyWeightWhereInput
+    some?: UserBodyWeightWhereInput
+    none?: UserBodyWeightWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type UserBodyWeightOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -11771,6 +13244,91 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumWeightUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumWeightUnitFilter<$PrismaModel> | $Enums.WeightUnit
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type UserBodyWeightCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+    unit?: SortOrder
+    recordedAt?: SortOrder
+  }
+
+  export type UserBodyWeightAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type UserBodyWeightMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+    unit?: SortOrder
+    recordedAt?: SortOrder
+  }
+
+  export type UserBodyWeightMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+    unit?: SortOrder
+    recordedAt?: SortOrder
+  }
+
+  export type UserBodyWeightSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    weight?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type EnumWeightUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumWeightUnitWithAggregatesFilter<$PrismaModel> | $Enums.WeightUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWeightUnitFilter<$PrismaModel>
+    _max?: NestedEnumWeightUnitFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateNestedManyWithoutBodyAreaInput = {
@@ -12193,8 +13751,76 @@ export namespace Prisma {
     update?: XOR<XOR<MuscleGroupUpdateToOneWithWhereWithoutSecondaryExercisesInput, MuscleGroupUpdateWithoutSecondaryExercisesInput>, MuscleGroupUncheckedUpdateWithoutSecondaryExercisesInput>
   }
 
+  export type UserBodyWeightCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
+    createMany?: UserBodyWeightCreateManyUserInputEnvelope
+    connect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+  }
+
+  export type UserBodyWeightUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
+    createMany?: UserBodyWeightCreateManyUserInputEnvelope
+    connect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type UserBodyWeightUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
+    upsert?: UserBodyWeightUpsertWithWhereUniqueWithoutUserInput | UserBodyWeightUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBodyWeightCreateManyUserInputEnvelope
+    set?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    disconnect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    delete?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    connect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    update?: UserBodyWeightUpdateWithWhereUniqueWithoutUserInput | UserBodyWeightUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBodyWeightUpdateManyWithWhereWithoutUserInput | UserBodyWeightUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBodyWeightScalarWhereInput | UserBodyWeightScalarWhereInput[]
+  }
+
+  export type UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
+    upsert?: UserBodyWeightUpsertWithWhereUniqueWithoutUserInput | UserBodyWeightUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBodyWeightCreateManyUserInputEnvelope
+    set?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    disconnect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    delete?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    connect?: UserBodyWeightWhereUniqueInput | UserBodyWeightWhereUniqueInput[]
+    update?: UserBodyWeightUpdateWithWhereUniqueWithoutUserInput | UserBodyWeightUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBodyWeightUpdateManyWithWhereWithoutUserInput | UserBodyWeightUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBodyWeightScalarWhereInput | UserBodyWeightScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutBodyWeightsInput = {
+    create?: XOR<UserCreateWithoutBodyWeightsInput, UserUncheckedCreateWithoutBodyWeightsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBodyWeightsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumWeightUnitFieldUpdateOperationsInput = {
+    set?: $Enums.WeightUnit
+  }
+
+  export type UserUpdateOneRequiredWithoutBodyWeightsNestedInput = {
+    create?: XOR<UserCreateWithoutBodyWeightsInput, UserUncheckedCreateWithoutBodyWeightsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBodyWeightsInput
+    upsert?: UserUpsertWithoutBodyWeightsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBodyWeightsInput, UserUpdateWithoutBodyWeightsInput>, UserUncheckedUpdateWithoutBodyWeightsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -12382,6 +14008,50 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedEnumWeightUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumWeightUnitFilter<$PrismaModel> | $Enums.WeightUnit
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWeightUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumWeightUnitWithAggregatesFilter<$PrismaModel> | $Enums.WeightUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWeightUnitFilter<$PrismaModel>
+    _max?: NestedEnumWeightUnitFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateWithoutBodyAreaInput = {
@@ -12967,6 +14637,102 @@ export namespace Prisma {
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
   }
 
+  export type UserBodyWeightCreateWithoutUserInput = {
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+  }
+
+  export type UserBodyWeightUncheckedCreateWithoutUserInput = {
+    id?: number
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+  }
+
+  export type UserBodyWeightCreateOrConnectWithoutUserInput = {
+    where: UserBodyWeightWhereUniqueInput
+    create: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserBodyWeightCreateManyUserInputEnvelope = {
+    data: UserBodyWeightCreateManyUserInput | UserBodyWeightCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserBodyWeightUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserBodyWeightWhereUniqueInput
+    update: XOR<UserBodyWeightUpdateWithoutUserInput, UserBodyWeightUncheckedUpdateWithoutUserInput>
+    create: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserBodyWeightUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserBodyWeightWhereUniqueInput
+    data: XOR<UserBodyWeightUpdateWithoutUserInput, UserBodyWeightUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserBodyWeightUpdateManyWithWhereWithoutUserInput = {
+    where: UserBodyWeightScalarWhereInput
+    data: XOR<UserBodyWeightUpdateManyMutationInput, UserBodyWeightUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserBodyWeightScalarWhereInput = {
+    AND?: UserBodyWeightScalarWhereInput | UserBodyWeightScalarWhereInput[]
+    OR?: UserBodyWeightScalarWhereInput[]
+    NOT?: UserBodyWeightScalarWhereInput | UserBodyWeightScalarWhereInput[]
+    id?: IntFilter<"UserBodyWeight"> | number
+    userId?: IntFilter<"UserBodyWeight"> | number
+    weight?: DecimalFilter<"UserBodyWeight"> | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFilter<"UserBodyWeight"> | $Enums.WeightUnit
+    recordedAt?: DateTimeFilter<"UserBodyWeight"> | Date | string
+  }
+
+  export type UserCreateWithoutBodyWeightsInput = {
+    googleId: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutBodyWeightsInput = {
+    id?: number
+    googleId: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutBodyWeightsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBodyWeightsInput, UserUncheckedCreateWithoutBodyWeightsInput>
+  }
+
+  export type UserUpsertWithoutBodyWeightsInput = {
+    update: XOR<UserUpdateWithoutBodyWeightsInput, UserUncheckedUpdateWithoutBodyWeightsInput>
+    create: XOR<UserCreateWithoutBodyWeightsInput, UserUncheckedCreateWithoutBodyWeightsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBodyWeightsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBodyWeightsInput, UserUncheckedUpdateWithoutBodyWeightsInput>
+  }
+
+  export type UserUpdateWithoutBodyWeightsInput = {
+    googleId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutBodyWeightsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    googleId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MuscleGroupCreateManyBodyAreaInput = {
     id?: number
     label: $Enums.MuscleGroupLabel
@@ -13092,6 +14858,33 @@ export namespace Prisma {
   export type RoutineExerciseUncheckedUpdateManyWithoutRoutineInput = {
     exerciseId?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserBodyWeightCreateManyUserInput = {
+    id?: number
+    weight: Decimal | DecimalJsLike | number | string
+    unit?: $Enums.WeightUnit
+    recordedAt?: Date | string
+  }
+
+  export type UserBodyWeightUpdateWithoutUserInput = {
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBodyWeightUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBodyWeightUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unit?: EnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

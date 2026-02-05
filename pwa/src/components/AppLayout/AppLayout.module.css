@@ -1,0 +1,19 @@
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-unit-3);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+}
+
+.userLink {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: var(--font-size-14);
+}
+
+.userLink:hover {
+  text-decoration: underline;
+}

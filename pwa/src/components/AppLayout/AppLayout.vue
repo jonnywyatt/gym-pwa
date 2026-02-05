@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { authService } from '../../lib/auth/oauth';
+import styles from './AppLayout.module.css';
+
+const route = useRoute();
+const router = useRouter();
+
+const showUserNav = computed(() => {
+  const noNavRoutes = ['login', 'auth-callback'];
+  return !noNavRoutes.includes(route.name as string);
+});
+
+// Access route.path to create a reactive dependency that
+// re-evaluates after navigation (e.g. after login redirect)
+const userName = computed(() => { route.path; return authService.getUserName(); });
+const userId = computed(() => { route.path; return authService.getUserId(); });
+
+function handleLogout() {
+  authService.logout();
+  router.replace('/');
+}
+</script>
+
+<template>
+  <div>
+    <nav v-if="showUserNav" :class="styles.nav">
+      <router-link
+        v-if="userName && userId"
+        :to="`/users/${userId}`"
+        :class="styles.userLink"
+      >
+        {{ userName }}
+      </router-link>
+      <button @click="handleLogout" class="buttonSecondary">Logout</button>
+    </nav>
+    <router-view />
+  </div>
+</template>

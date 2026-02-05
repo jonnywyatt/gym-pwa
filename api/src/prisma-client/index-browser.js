@@ -167,6 +167,14 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.UserBodyWeightScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  weight: 'weight',
+  unit: 'unit',
+  recordedAt: 'recordedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -219,6 +227,10 @@ exports.RecordSetsType = exports.$Enums.RecordSetsType = {
   BODYWEIGHT_PLUS_WEIGHT: 'BODYWEIGHT_PLUS_WEIGHT'
 };
 
+exports.WeightUnit = exports.$Enums.WeightUnit = {
+  KG: 'KG'
+};
+
 exports.Prisma.ModelName = {
   BodyArea: 'BodyArea',
   MuscleGroup: 'MuscleGroup',
@@ -227,7 +239,8 @@ exports.Prisma.ModelName = {
   RoutineExercise: 'RoutineExercise',
   ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
   ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
-  User: 'User'
+  User: 'User',
+  UserBodyWeight: 'UserBodyWeight'
 };
 
 /**

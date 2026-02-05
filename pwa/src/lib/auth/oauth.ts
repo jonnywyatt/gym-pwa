@@ -70,12 +70,18 @@ export class OAuthService {
       throw new Error('Authentication failed');
     }
 
-    const { accessToken, refreshToken } = await response.json();
+    const { accessToken, refreshToken, user } = await response.json();
 
     // Store tokens
     localStorage.setItem('access_token', accessToken);
     if (refreshToken) {
       localStorage.setItem('refresh_token', refreshToken);
+    }
+
+    // Store user info
+    if (user) {
+      localStorage.setItem('user_id', String(user.id));
+      localStorage.setItem('user_name', user.name ?? '');
     }
 
     // Clean up
@@ -88,9 +94,20 @@ export class OAuthService {
     return localStorage.getItem('access_token');
   }
 
+  getUserId(): number | null {
+    const id = localStorage.getItem('user_id');
+    return id ? Number(id) : null;
+  }
+
+  getUserName(): string | null {
+    return localStorage.getItem('user_name');
+  }
+
   logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_name');
   }
 
   isAuthenticated(): boolean {

@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import type { RoutineDetail } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
-import { authService } from '../../lib/auth/oauth';
 import baseStyles from '../../styles/base-classes.module.css';
 
-const router = useRouter();
 const route = useRoute();
 const routine = ref<RoutineDetail | null>(null);
 const loading = ref(true);
@@ -23,11 +21,6 @@ async function loadRoutine() {
   }
 }
 
-function handleLogout() {
-  authService.logout();
-  router.replace('/');
-}
-
 onMounted(() => {
   loadRoutine();
 });
@@ -37,7 +30,6 @@ onMounted(() => {
   <main class="main">
     <header class="header">
       <h1 v-if="routine" :class="baseStyles.heading">{{ routine.label }}</h1>
-      <button @click="handleLogout" class="buttonSecondary">Logout</button>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>

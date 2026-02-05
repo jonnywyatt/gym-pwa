@@ -185,26 +185,6 @@ describe('ExercisesPage', () => {
       expect(listItems[1]).toHaveTextContent('Pull-ups');
     });
   });
-
-  it('should display logout button', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/exercises`, ({ request }) => {
-        const authHeader = request.headers.get('Authorization');
-        if (!authHeader?.startsWith('Bearer ')) {
-          return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-        return HttpResponse.json([]);
-      })
-    );
-
-    render(ExercisesPage);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Logout')).toBeInTheDocument();
-  });
 });
 
 describe('RoutinesPage', () => {

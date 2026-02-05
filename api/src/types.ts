@@ -2,11 +2,13 @@
  * Shared types exported for use across the monorepo
  */
 
-export type { RecordSetsType, User } from './prisma-client/index.js';
+export type { RecordSetsType, User, WeightUnit } from './prisma-client/index.js';
 
 import type {
   Exercise as PrismaExercise,
   Routine as PrismaRoutine,
+  User as PrismaUser,
+  WeightUnit,
 } from './prisma-client/index.js';
 import type { MuscleGroupDisplayName } from './utils/display-names';
 
@@ -30,4 +32,11 @@ export type RoutineSummary = Pick<PrismaRoutine, 'id' | 'label'> & {
  */
 export type RoutineDetail = Pick<PrismaRoutine, 'id' | 'label'> & {
   exercises: Exercise[];
+};
+
+export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
+  latestBodyWeight: {
+    weight: string;
+    unit: WeightUnit;
+  } | null;
 };

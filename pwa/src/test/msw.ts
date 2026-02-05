@@ -31,6 +31,27 @@ export const handlers = [
       user: { id: 1, email: 'test@example.com', name: 'Test User' },
     });
   }),
+
+  http.get(`${mockApiUrl}/users/:userId`, ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({
+      id: 1,
+      name: 'Test User',
+      latestBodyWeight: null,
+    });
+  }),
+
+  http.post(`${mockApiUrl}/users/:userId/body-weights`, async ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const body = (await request.json()) as { weight?: number };
+    return HttpResponse.json({ weight: String(body.weight), unit: 'KG' }, { status: 201 });
+  }),
 ];
 
 export const server = setupServer(...handlers);

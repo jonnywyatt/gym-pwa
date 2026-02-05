@@ -15,6 +15,10 @@ enum RecordSetsType {
   BODYWEIGHT_PLUS_WEIGHT
 }
 
+enum WeightUnit {
+  KG
+}
+
 enum BodyAreaLabel {
   CHEST
   BACK
@@ -126,5 +130,18 @@ model User {
   name      String?
   createdAt DateTime @default(now()) @map("created_at")
 
+  bodyWeights UserBodyWeight[]
+
   @@map("users")
+}
+
+model UserBodyWeight {
+  id         Int        @id @default(autoincrement())
+  userId     Int        @map("user_id")
+  weight     Decimal    @db.Decimal(5, 2)
+  unit       WeightUnit @default(KG)
+  recordedAt DateTime   @default(now()) @map("recorded_at")
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_body_weights")
 }

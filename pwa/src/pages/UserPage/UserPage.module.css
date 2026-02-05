@@ -1,0 +1,30 @@
+.weightForm {
+  margin-top: var(--spacing-unit-4);
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-unit-2);
+}
+
+.inputRow {
+  display: flex;
+  gap: var(--spacing-unit-2);
+  align-items: center;
+}
+
+.weightInput {
+  padding: var(--spacing-unit-2) var(--spacing-unit-3);
+  font-size: var(--font-size-16);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+  width: 8em;
+}
+
+.successMessage {
+  color: var(--green-dark);
+  font-size: var(--font-size-14);
+  margin-top: var(--spacing-unit-2);
+}

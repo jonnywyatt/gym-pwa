@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import type { Exercise } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
-import { authService } from '../../lib/auth/oauth';
 import baseStyles from '../../styles/base-classes.module.css';
 
-const router = useRouter();
 const exercises = ref<Exercise[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -21,11 +18,6 @@ async function loadExercises() {
   }
 }
 
-function handleLogout() {
-  authService.logout();
-  router.replace('/');
-}
-
 onMounted(() => {
   loadExercises();
 });
@@ -35,7 +27,6 @@ onMounted(() => {
   <main class="main">
     <header class="header">
       <h1 :class="baseStyles.heading">Exercises</h1>
-      <button @click="handleLogout" class="buttonSecondary">Logout</button>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
