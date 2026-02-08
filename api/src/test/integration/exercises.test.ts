@@ -25,6 +25,14 @@ describe('Exercise Integration Tests', () => {
     expect(exercises).toHaveLength(12);
 
     const pullUp = exercises.find((e) => e.label === 'Pull up (assisted)');
+    console.log('DEBUG: pullUp found:', !!pullUp);
+    if (pullUp) {
+      console.log('DEBUG: pullUp.primaryMuscleGroups.length:', pullUp.primaryMuscleGroups.length);
+      console.log(
+        'DEBUG: pullUp.primaryMuscleGroups:',
+        JSON.stringify(pullUp.primaryMuscleGroups, null, 2)
+      );
+    }
     expect(pullUp).toBeDefined();
     expect(
       pullUp?.primaryMuscleGroups

@@ -55,8 +55,11 @@ jobs:
           docker exec gym-postgres psql -U postgres -d gym_test -c "SELECT COUNT(*) FROM exercise_primary_muscle_groups;"
           docker exec gym-postgres psql -U postgres -d gym_test -c "SELECT e.label, COUNT(epmg.muscle_group_id) as muscle_groups FROM exercises e LEFT JOIN exercise_primary_muscle_groups epmg ON e.id = epmg.exercise_id WHERE e.label = 'Pull up (assisted)' GROUP BY e.label;"
 
-      - name: Verify Prisma client can query data
+      - name: Verify Prisma client can query data (CommonJS)
         run: cd api && node verify-db.js
+
+      - name: Verify Prisma client can query data (TypeScript)
+        run: cd api && npx tsx verify-db.ts
 
       - name: Run tests
         run: npm run test -w api -- run && npm run test:run -w pwa
