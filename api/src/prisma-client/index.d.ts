@@ -12041,16 +12041,16 @@ export namespace Prisma {
 
   export type ExerciseWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    label?: string
     AND?: ExerciseWhereInput | ExerciseWhereInput[]
     OR?: ExerciseWhereInput[]
     NOT?: ExerciseWhereInput | ExerciseWhereInput[]
-    label?: StringFilter<"Exercise"> | string
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupListRelationFilter
     routineExercises?: RoutineExerciseListRelationFilter
-  }, "id">
+  }, "id" | "label">
 
   export type ExerciseOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12091,12 +12091,12 @@ export namespace Prisma {
 
   export type RoutineWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    label?: string
     AND?: RoutineWhereInput | RoutineWhereInput[]
     OR?: RoutineWhereInput[]
     NOT?: RoutineWhereInput | RoutineWhereInput[]
-    label?: StringFilter<"Routine"> | string
     routineExercises?: RoutineExerciseListRelationFilter
-  }, "id">
+  }, "id" | "label">
 
   export type RoutineOrderByWithAggregationInput = {
     id?: SortOrder

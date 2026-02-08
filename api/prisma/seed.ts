@@ -15,21 +15,13 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  // Clear existing data (order matters due to FK constraints)
-  await prisma.routineExercise.deleteMany({});
-  await prisma.routine.deleteMany({});
-  await prisma.exerciseSecondaryMuscleGroup.deleteMany({});
-  await prisma.exercisePrimaryMuscleGroup.deleteMany({});
-  await prisma.exercise.deleteMany({});
-  await prisma.muscleGroup.deleteMany({});
-  await prisma.bodyArea.deleteMany({});
-  console.log('🗑️  Cleared existing data');
-
   // Seed body areas
   const createdBodyAreas = await Promise.all(
     bodyAreas.map((bodyArea) =>
-      prisma.bodyArea.create({
-        data: bodyArea,
+      prisma.bodyArea.upsert({
+        where: { label: bodyArea.label },
+        update: {},
+        create: bodyArea,
       })
     )
   );
@@ -43,8 +35,10 @@ async function main() {
       if (!bodyAreaId) {
         throw new Error(`Body area not found: ${muscleGroup.bodyAreaLabel}`);
       }
-      return prisma.muscleGroup.create({
-        data: {
+      return prisma.muscleGroup.upsert({
+        where: { label: muscleGroup.label },
+        update: { bodyAreaId },
+        create: {
           label: muscleGroup.label,
           bodyAreaId,
         },
@@ -57,15 +51,20 @@ async function main() {
   const muscleGroupMap = new Map(createdMuscleGroups.map((mg) => [mg.label, mg.id]));
   const exerciseMap = new Map<string, number>();
   for (const exercise of exercises) {
-    const createdExercise = await prisma.exercise.create({
-      data: {
+    const upsertedExercise = await prisma.exercise.upsert({
+      where: { label: exercise.label },
+      update: { recordSetsType: exercise.recordSetsType },
+      create: {
         label: exercise.label,
         recordSetsType: exercise.recordSetsType,
       },
     });
-    exerciseMap.set(createdExercise.label, createdExercise.id);
+    exerciseMap.set(upsertedExercise.label, upsertedExercise.id);
 
-    // Create primary muscle group relationships
+    // Replace primary muscle group relationships
+    await prisma.exercisePrimaryMuscleGroup.deleteMany({
+      where: { exerciseId: upsertedExercise.id },
+    });
     await Promise.all(
       exercise.primaryMuscleGroupLabels.map((label) => {
         const muscleGroupId = muscleGroupMap.get(label);
@@ -74,14 +73,17 @@ async function main() {
         }
         return prisma.exercisePrimaryMuscleGroup.create({
           data: {
-            exerciseId: createdExercise.id,
+            exerciseId: upsertedExercise.id,
             muscleGroupId,
           },
         });
       })
     );
 
-    // Create secondary muscle group relationships
+    // Replace secondary muscle group relationships
+    await prisma.exerciseSecondaryMuscleGroup.deleteMany({
+      where: { exerciseId: upsertedExercise.id },
+    });
     await Promise.all(
       exercise.secondaryMuscleGroupLabels.map((label) => {
         const muscleGroupId = muscleGroupMap.get(label);
@@ -90,7 +92,7 @@ async function main() {
         }
         return prisma.exerciseSecondaryMuscleGroup.create({
           data: {
-            exerciseId: createdExercise.id,
+            exerciseId: upsertedExercise.id,
             muscleGroupId,
           },
         });
@@ -101,13 +103,16 @@ async function main() {
 
   // Seed routines
   for (const routine of routines) {
-    const createdRoutine = await prisma.routine.create({
-      data: {
-        label: routine.label,
-      },
+    const upsertedRoutine = await prisma.routine.upsert({
+      where: { label: routine.label },
+      update: {},
+      create: { label: routine.label },
     });
 
-    // Create routine exercise relationships with position
+    // Replace routine exercise relationships
+    await prisma.routineExercise.deleteMany({
+      where: { routineId: upsertedRoutine.id },
+    });
     await Promise.all(
       routine.exerciseLabels.map((label, index) => {
         const exerciseId = exerciseMap.get(label);
@@ -116,7 +121,7 @@ async function main() {
         }
         return prisma.routineExercise.create({
           data: {
-            routineId: createdRoutine.id,
+            routineId: upsertedRoutine.id,
             exerciseId,
             position: index,
           },

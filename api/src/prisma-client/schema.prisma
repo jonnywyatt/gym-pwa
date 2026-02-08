@@ -71,7 +71,7 @@ model MuscleGroup {
 
 model Exercise {
   id             Int            @id @default(autoincrement())
-  label          String
+  label          String         @unique
   recordSetsType RecordSetsType @map("record_sets_type")
   createdAt      DateTime       @default(now()) @map("created_at")
 
@@ -84,7 +84,7 @@ model Exercise {
 
 model Routine {
   id    Int    @id @default(autoincrement())
-  label String
+  label String @unique
 
   routineExercises RoutineExercise[]
 
