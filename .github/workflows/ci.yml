@@ -42,8 +42,17 @@ jobs:
       - name: Type check
         run: npm run type-check
 
+      - name: Start docker and setup database
+        run: |
+          cd api
+          npm run docker:start
+          npm run db:test:reset
+          echo "Checking database state..."
+          docker exec gym-postgres psql -U postgres -d gym_test -c "SELECT COUNT(*) FROM exercises;"
+          docker exec gym-postgres psql -U postgres -d gym_test -c "SELECT COUNT(*) FROM exercise_primary_muscle_groups;"
+
       - name: Run tests
-        run: npm test
+        run: npm run test -w api -- run && npm run test:run -w pwa
 
       - name: Build API
         run: npm run build:api
