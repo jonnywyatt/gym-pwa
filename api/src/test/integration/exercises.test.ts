@@ -1,10 +1,20 @@
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import { describe, expect, it } from 'vitest';
+import { PrismaClient } from '../../prisma-client';
 import { muscleGroupDisplayNames } from '../../utils/display-names';
-import { getTestPrismaClient } from '../db-setup';
 
 describe('Exercise Integration Tests', () => {
   it('should retrieve default exercises with muscle groups', async () => {
-    const prisma = getTestPrismaClient();
+    // Try creating a fresh client directly
+    const pool = new pg.Pool({
+      connectionString: 'postgresql://postgres:localdev@localhost:5432/gym_test',
+    });
+    const adapter = new PrismaPg(pool);
+    const prisma = new PrismaClient({ adapter });
+    await prisma.$connect();
+
+    // const prisma = getTestPrismaClient();
 
     // Retrieve all exercises with muscle groups
     const exercises = await prisma.exercise.findMany({
@@ -57,5 +67,8 @@ describe('Exercise Integration Tests', () => {
         .map((smg) => muscleGroupDisplayNames[smg.muscleGroup.label])
         .sort()
     ).toEqual(['Abdominals', 'Pectoralis Minor']);
+
+    await prisma.$disconnect();
+    await pool.end();
   });
 });
