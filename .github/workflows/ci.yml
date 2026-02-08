@@ -28,6 +28,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: npm run prisma:generate -w api
+        env:
+          DATABASE_URL: postgresql://postgres:localdev@localhost:5432/gym_test
 
       - name: Clean postgres container and volumes
         run: |
