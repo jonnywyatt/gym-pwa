@@ -26,6 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Clean postgres container and volumes
+        run: |
+          docker rm -f gym-postgres 2>/dev/null || true
+          docker volume rm api_gym-postgres-data 2>/dev/null || true
+
       - name: Lint
         run: npm run lint
 
