@@ -59,30 +59,36 @@ describe('Routine Integration Tests', () => {
   it('should cascade delete routine exercises when exercise is deleted', async () => {
     const prisma = getTestPrismaClient();
 
-    // Get initial count
-    const initialCount = await prisma.routineExercise.count();
-    expect(initialCount).toBe(12);
-
-    // Delete one exercise
-    const pullUp = await prisma.exercise.findFirst({
-      where: { label: 'Pull up (assisted)' },
+    // Create a temporary exercise and add it to the routine
+    const tempExercise = await prisma.exercise.create({
+      data: {
+        label: 'Temp exercise for cascade test',
+        recordSetsType: 'WEIGHT',
+      },
     });
-    expect(pullUp).toBeDefined();
 
+    const routine = await prisma.routine.findFirstOrThrow({
+      where: { label: 'Strength' },
+    });
+
+    await prisma.routineExercise.create({
+      data: {
+        routineId: routine.id,
+        exerciseId: tempExercise.id,
+        position: 99,
+      },
+    });
+
+    const initialCount = await prisma.routineExercise.count();
+    expect(initialCount).toBe(13);
+
+    // Delete the temporary exercise
     await prisma.exercise.delete({
-      where: { id: pullUp?.id },
+      where: { id: tempExercise.id },
     });
 
     // Verify routine exercise was also deleted
     const afterDeleteCount = await prisma.routineExercise.count();
-    expect(afterDeleteCount).toBe(11);
-
-    // Re-seed for other tests
-    await prisma.exercise.create({
-      data: {
-        label: 'Pull up (assisted)',
-        recordSetsType: 'BODYWEIGHT_MINUS_OFFSET',
-      },
-    });
+    expect(afterDeleteCount).toBe(12);
   });
 });
