@@ -16,8 +16,15 @@ onMounted(async () => {
   }
 
   try {
-    await authService.handleCallback(code);
-    router.replace('/routines');
+    const result = await authService.handleCallback(code);
+    const userId = authService.getUserId();
+
+    // First-time users must enter body weight before accessing the app
+    if (!result.hasBodyWeight && userId) {
+      router.replace(`/users/${userId}`);
+    } else {
+      router.replace('/routines');
+    }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Authentication failed';
   }

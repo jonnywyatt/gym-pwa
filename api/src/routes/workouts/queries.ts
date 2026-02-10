@@ -16,6 +16,7 @@ export async function createUserWorkout(
       startedAt: new Date(workout.startedAt),
       finishedAt: new Date(workout.finishedAt),
       exercisesCompleted: workout.exercisesCompleted,
+      bodyWeight: workout.bodyWeight,
     },
   });
 }

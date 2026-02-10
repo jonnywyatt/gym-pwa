@@ -182,7 +182,9 @@ exports.Prisma.UserWorkoutScalarFieldEnum = {
   routineLabel: 'routineLabel',
   startedAt: 'startedAt',
   finishedAt: 'finishedAt',
-  exercisesCompleted: 'exercisesCompleted'
+  exercisesCompleted: 'exercisesCompleted',
+  bodyWeight: 'bodyWeight',
+  bodyWeightUnit: 'bodyWeightUnit'
 };
 
 exports.Prisma.SortOrder = {

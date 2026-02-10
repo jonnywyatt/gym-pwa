@@ -11811,12 +11811,14 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     routineId: number | null
+    bodyWeight: Decimal | null
   }
 
   export type UserWorkoutSumAggregateOutputType = {
     id: number | null
     userId: number | null
     routineId: number | null
+    bodyWeight: Decimal | null
   }
 
   export type UserWorkoutMinAggregateOutputType = {
@@ -11826,6 +11828,8 @@ export namespace Prisma {
     routineLabel: string | null
     startedAt: Date | null
     finishedAt: Date | null
+    bodyWeight: Decimal | null
+    bodyWeightUnit: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutMaxAggregateOutputType = {
@@ -11835,6 +11839,8 @@ export namespace Prisma {
     routineLabel: string | null
     startedAt: Date | null
     finishedAt: Date | null
+    bodyWeight: Decimal | null
+    bodyWeightUnit: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutCountAggregateOutputType = {
@@ -11845,6 +11851,8 @@ export namespace Prisma {
     startedAt: number
     finishedAt: number
     exercisesCompleted: number
+    bodyWeight: number
+    bodyWeightUnit: number
     _all: number
   }
 
@@ -11853,12 +11861,14 @@ export namespace Prisma {
     id?: true
     userId?: true
     routineId?: true
+    bodyWeight?: true
   }
 
   export type UserWorkoutSumAggregateInputType = {
     id?: true
     userId?: true
     routineId?: true
+    bodyWeight?: true
   }
 
   export type UserWorkoutMinAggregateInputType = {
@@ -11868,6 +11878,8 @@ export namespace Prisma {
     routineLabel?: true
     startedAt?: true
     finishedAt?: true
+    bodyWeight?: true
+    bodyWeightUnit?: true
   }
 
   export type UserWorkoutMaxAggregateInputType = {
@@ -11877,6 +11889,8 @@ export namespace Prisma {
     routineLabel?: true
     startedAt?: true
     finishedAt?: true
+    bodyWeight?: true
+    bodyWeightUnit?: true
   }
 
   export type UserWorkoutCountAggregateInputType = {
@@ -11887,6 +11901,8 @@ export namespace Prisma {
     startedAt?: true
     finishedAt?: true
     exercisesCompleted?: true
+    bodyWeight?: true
+    bodyWeightUnit?: true
     _all?: true
   }
 
@@ -11984,6 +12000,8 @@ export namespace Prisma {
     startedAt: Date
     finishedAt: Date
     exercisesCompleted: JsonValue
+    bodyWeight: Decimal | null
+    bodyWeightUnit: $Enums.WeightUnit | null
     _count: UserWorkoutCountAggregateOutputType | null
     _avg: UserWorkoutAvgAggregateOutputType | null
     _sum: UserWorkoutSumAggregateOutputType | null
@@ -12013,6 +12031,8 @@ export namespace Prisma {
     startedAt?: boolean
     finishedAt?: boolean
     exercisesCompleted?: boolean
+    bodyWeight?: boolean
+    bodyWeightUnit?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
 
@@ -12024,6 +12044,8 @@ export namespace Prisma {
     startedAt?: boolean
     finishedAt?: boolean
     exercisesCompleted?: boolean
+    bodyWeight?: boolean
+    bodyWeightUnit?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
 
@@ -12035,6 +12057,8 @@ export namespace Prisma {
     startedAt?: boolean
     finishedAt?: boolean
     exercisesCompleted?: boolean
+    bodyWeight?: boolean
+    bodyWeightUnit?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
 
@@ -12046,9 +12070,11 @@ export namespace Prisma {
     startedAt?: boolean
     finishedAt?: boolean
     exercisesCompleted?: boolean
+    bodyWeight?: boolean
+    bodyWeightUnit?: boolean
   }
 
-  export type UserWorkoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "routineId" | "routineLabel" | "startedAt" | "finishedAt" | "exercisesCompleted", ExtArgs["result"]["userWorkout"]>
+  export type UserWorkoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "routineId" | "routineLabel" | "startedAt" | "finishedAt" | "exercisesCompleted" | "bodyWeight" | "bodyWeightUnit", ExtArgs["result"]["userWorkout"]>
   export type UserWorkoutInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -12072,6 +12098,8 @@ export namespace Prisma {
       startedAt: Date
       finishedAt: Date
       exercisesCompleted: Prisma.JsonValue
+      bodyWeight: Prisma.Decimal | null
+      bodyWeightUnit: $Enums.WeightUnit | null
     }, ExtArgs["result"]["userWorkout"]>
     composites: {}
   }
@@ -12503,6 +12531,8 @@ export namespace Prisma {
     readonly startedAt: FieldRef<"UserWorkout", 'DateTime'>
     readonly finishedAt: FieldRef<"UserWorkout", 'DateTime'>
     readonly exercisesCompleted: FieldRef<"UserWorkout", 'Json'>
+    readonly bodyWeight: FieldRef<"UserWorkout", 'Decimal'>
+    readonly bodyWeightUnit: FieldRef<"UserWorkout", 'WeightUnit'>
   }
     
 
@@ -13020,7 +13050,9 @@ export namespace Prisma {
     routineLabel: 'routineLabel',
     startedAt: 'startedAt',
     finishedAt: 'finishedAt',
-    exercisesCompleted: 'exercisesCompleted'
+    exercisesCompleted: 'exercisesCompleted',
+    bodyWeight: 'bodyWeight',
+    bodyWeightUnit: 'bodyWeightUnit'
   };
 
   export type UserWorkoutScalarFieldEnum = (typeof UserWorkoutScalarFieldEnum)[keyof typeof UserWorkoutScalarFieldEnum]
@@ -13681,6 +13713,8 @@ export namespace Prisma {
     startedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     exercisesCompleted?: JsonFilter<"UserWorkout">
+    bodyWeight?: DecimalNullableFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: EnumWeightUnitNullableFilter<"UserWorkout"> | $Enums.WeightUnit | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -13692,6 +13726,8 @@ export namespace Prisma {
     startedAt?: SortOrder
     finishedAt?: SortOrder
     exercisesCompleted?: SortOrder
+    bodyWeight?: SortOrderInput | SortOrder
+    bodyWeightUnit?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -13706,6 +13742,8 @@ export namespace Prisma {
     startedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     exercisesCompleted?: JsonFilter<"UserWorkout">
+    bodyWeight?: DecimalNullableFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: EnumWeightUnitNullableFilter<"UserWorkout"> | $Enums.WeightUnit | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -13717,6 +13755,8 @@ export namespace Prisma {
     startedAt?: SortOrder
     finishedAt?: SortOrder
     exercisesCompleted?: SortOrder
+    bodyWeight?: SortOrderInput | SortOrder
+    bodyWeightUnit?: SortOrderInput | SortOrder
     _count?: UserWorkoutCountOrderByAggregateInput
     _avg?: UserWorkoutAvgOrderByAggregateInput
     _max?: UserWorkoutMaxOrderByAggregateInput
@@ -13735,6 +13775,8 @@ export namespace Prisma {
     startedAt?: DateTimeWithAggregatesFilter<"UserWorkout"> | Date | string
     finishedAt?: DateTimeWithAggregatesFilter<"UserWorkout"> | Date | string
     exercisesCompleted?: JsonWithAggregatesFilter<"UserWorkout">
+    bodyWeight?: DecimalNullableWithAggregatesFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: EnumWeightUnitNullableWithAggregatesFilter<"UserWorkout"> | $Enums.WeightUnit | null
   }
 
   export type BodyAreaCreateInput = {
@@ -14140,6 +14182,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
     user: UserCreateNestedOneWithoutWorkoutsInput
   }
 
@@ -14151,6 +14195,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUpdateInput = {
@@ -14159,6 +14205,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
     user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
   }
 
@@ -14170,6 +14218,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
   export type UserWorkoutCreateManyInput = {
@@ -14180,6 +14230,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUpdateManyMutationInput = {
@@ -14188,6 +14240,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUncheckedUpdateManyInput = {
@@ -14198,6 +14252,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -14797,6 +14853,24 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type EnumWeightUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWeightUnitNullableFilter<$PrismaModel> | $Enums.WeightUnit | null
+  }
+
   export type UserWorkoutCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -14805,12 +14879,15 @@ export namespace Prisma {
     startedAt?: SortOrder
     finishedAt?: SortOrder
     exercisesCompleted?: SortOrder
+    bodyWeight?: SortOrder
+    bodyWeightUnit?: SortOrder
   }
 
   export type UserWorkoutAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     routineId?: SortOrder
+    bodyWeight?: SortOrder
   }
 
   export type UserWorkoutMaxOrderByAggregateInput = {
@@ -14820,6 +14897,8 @@ export namespace Prisma {
     routineLabel?: SortOrder
     startedAt?: SortOrder
     finishedAt?: SortOrder
+    bodyWeight?: SortOrder
+    bodyWeightUnit?: SortOrder
   }
 
   export type UserWorkoutMinOrderByAggregateInput = {
@@ -14829,12 +14908,15 @@ export namespace Prisma {
     routineLabel?: SortOrder
     startedAt?: SortOrder
     finishedAt?: SortOrder
+    bodyWeight?: SortOrder
+    bodyWeightUnit?: SortOrder
   }
 
   export type UserWorkoutSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     routineId?: SortOrder
+    bodyWeight?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -14861,6 +14943,32 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type EnumWeightUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWeightUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.WeightUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumWeightUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumWeightUnitNullableFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateNestedManyWithoutBodyAreaInput = {
@@ -15403,6 +15511,18 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type NullableEnumWeightUnitFieldUpdateOperationsInput = {
+    set?: $Enums.WeightUnit | null
+  }
+
   export type UserUpdateOneRequiredWithoutWorkoutsNestedInput = {
     create?: XOR<UserCreateWithoutWorkoutsInput, UserUncheckedCreateWithoutWorkoutsInput>
     connectOrCreate?: UserCreateOrConnectWithoutWorkoutsInput
@@ -15641,6 +15761,24 @@ export namespace Prisma {
     _min?: NestedEnumWeightUnitFilter<$PrismaModel>
     _max?: NestedEnumWeightUnitFilter<$PrismaModel>
   }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumWeightUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWeightUnitNullableFilter<$PrismaModel> | $Enums.WeightUnit | null
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -15663,6 +15801,32 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWeightUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WeightUnit | EnumWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.WeightUnit[] | ListEnumWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumWeightUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.WeightUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumWeightUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumWeightUnitNullableFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateWithoutBodyAreaInput = {
@@ -16277,6 +16441,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUncheckedCreateWithoutUserInput = {
@@ -16286,6 +16452,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
   }
 
   export type UserWorkoutCreateOrConnectWithoutUserInput = {
@@ -16352,6 +16520,8 @@ export namespace Prisma {
     startedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     exercisesCompleted?: JsonFilter<"UserWorkout">
+    bodyWeight?: DecimalNullableFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: EnumWeightUnitNullableFilter<"UserWorkout"> | $Enums.WeightUnit | null
   }
 
   export type UserCreateWithoutBodyWeightsInput = {
@@ -16595,6 +16765,8 @@ export namespace Prisma {
     startedAt: Date | string
     finishedAt: Date | string
     exercisesCompleted: JsonNullValueInput | InputJsonValue
+    bodyWeight?: Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: $Enums.WeightUnit | null
   }
 
   export type UserBodyWeightUpdateWithoutUserInput = {
@@ -16623,6 +16795,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUncheckedUpdateWithoutUserInput = {
@@ -16632,6 +16806,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
   export type UserWorkoutUncheckedUpdateManyWithoutUserInput = {
@@ -16641,6 +16817,8 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
+    bodyWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bodyWeightUnit?: NullableEnumWeightUnitFieldUpdateOperationsInput | $Enums.WeightUnit | null
   }
 
 

@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, toRaw } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { RoutineDetail } from 'gym-pwa-api/types';
-import { authFetchJson } from '../../lib/api/client';
 import baseStyles from '../../styles/base-classes.module.css';
 import { authService } from '../../lib/auth/oauth';
-import {
-  createWorkout,
-  getActiveWorkout,
-  type LocalWorkout,
-  type LocalWorkoutExercise,
-} from '../../lib/db';
+import { createWorkout, getActiveWorkout } from '../../lib/db';
+import { fetchRoutine, prepareWorkoutStart } from './helpers';
 
 const route = useRoute();
 const router = useRouter();
@@ -21,8 +16,7 @@ const startingWorkout = ref(false);
 
 async function loadRoutine() {
   try {
-    const routineId = route.params.routineId;
-    routine.value = await authFetchJson<RoutineDetail>(`/routines/${routineId}`);
+    routine.value = await fetchRoutine(route.params.routineId);
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to fetch routine';
   } finally {
@@ -39,39 +33,36 @@ async function handleStartWorkout() {
     return;
   }
 
+  startingWorkout.value = true;
+  error.value = null;
+
   try {
-    startingWorkout.value = true;
-
-    const existingWorkout = await getActiveWorkout(userId);
-    if (existingWorkout) {
-      router.push(`/workouts/${existingWorkout.id}`);
-      return;
-    }
-
-    const workoutId = crypto.randomUUID();
-    const exercisesCompleted: LocalWorkoutExercise[] = routine.value.exercises.map((ex) => {
-      const rawEx = toRaw(ex);
-      return {
-        id: rawEx.id,
-        label: rawEx.label,
-        recordSetsType: rawEx.recordSetsType,
-        primaryMuscleGroups: [...rawEx.primaryMuscleGroups],
-        secondaryMuscleGroups: [...rawEx.secondaryMuscleGroups],
-        completed: false,
-      };
-    });
-
-    const workout: LocalWorkout = {
-      id: workoutId,
+    const action = await prepareWorkoutStart(
       userId,
-      routineId: Number(route.params.routineId),
-      routineLabel: routine.value.label,
-      startedAt: new Date().toISOString(),
-      exercisesCompleted,
-    };
+      Number(route.params.routineId),
+      routine.value,
+      getActiveWorkout
+    );
 
-    await createWorkout(workout);
-    router.push(`/workouts/${workoutId}`);
+    switch (action.type) {
+      case 'navigate-to-existing':
+        await router.push(`/workouts/${action.workoutId}`);
+        break;
+
+      case 'navigate-to-user-page':
+        error.value = action.error;
+        await router.push(`/users/${action.userId}`);
+        break;
+
+      case 'create-new-workout':
+        await createWorkout(action.workout);
+        await router.push(`/workouts/${action.workout.id}`);
+        break;
+
+      case 'error':
+        error.value = action.error;
+        break;
+    }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to start workout';
   } finally {

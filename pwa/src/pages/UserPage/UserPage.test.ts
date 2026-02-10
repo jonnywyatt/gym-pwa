@@ -15,6 +15,7 @@ vi.mock('../../config', () => ({
 vi.mock('vue-router', () => ({
   useRouter: () => ({
     replace: vi.fn(),
+    push: vi.fn(),
   }),
   useRoute: () => ({
     params: { userId: '1' },
@@ -78,7 +79,7 @@ describe('UserPage', () => {
         return HttpResponse.json({
           id: 1,
           name: 'Test User',
-          latestBodyWeight: { weight: '75.50', unit: 'KG' },
+          latestBodyWeight: { weight: 75.5, unit: 'KG' },
         });
       })
     );
@@ -90,7 +91,7 @@ describe('UserPage', () => {
     });
 
     const input = screen.getByLabelText('Body weight (kg)') as HTMLInputElement;
-    expect(input.value).toBe('75.50');
+    expect(input.value).toBe('75.5');
   });
 
   it('should save weight and show success message', async () => {

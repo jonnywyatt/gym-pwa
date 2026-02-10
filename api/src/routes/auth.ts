@@ -66,7 +66,13 @@ router.post('/google', async (req, res, next) => {
       expiresIn: '30d',
     });
 
-    res.json({ accessToken, refreshToken, user });
+    // Check if user has a body weight
+    const latestBodyWeight = await prisma.userBodyWeight.findFirst({
+      where: { userId: user.id },
+      orderBy: { recordedAt: 'desc' },
+    });
+
+    res.json({ accessToken, refreshToken, user, hasBodyWeight: !!latestBodyWeight });
   } catch (error) {
     next(error);
   }

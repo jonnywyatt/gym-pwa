@@ -48,7 +48,9 @@ export class OAuthService {
     window.location.href = authUrl.toString();
   }
 
-  async handleCallback(code: string): Promise<{ accessToken: string; refreshToken?: string }> {
+  async handleCallback(
+    code: string
+  ): Promise<{ accessToken: string; refreshToken?: string; hasBodyWeight: boolean }> {
     const codeVerifier = sessionStorage.getItem('pkce_code_verifier');
 
     if (!codeVerifier) {
@@ -70,7 +72,7 @@ export class OAuthService {
       throw new Error('Authentication failed');
     }
 
-    const { accessToken, refreshToken, user } = await response.json();
+    const { accessToken, refreshToken, user, hasBodyWeight } = await response.json();
 
     // Store tokens
     localStorage.setItem('access_token', accessToken);
@@ -87,7 +89,7 @@ export class OAuthService {
     // Clean up
     sessionStorage.removeItem('pkce_code_verifier');
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, hasBodyWeight };
   }
 
   getAccessToken(): string | null {

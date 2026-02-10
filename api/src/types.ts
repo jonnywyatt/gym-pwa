@@ -36,7 +36,7 @@ export type RoutineDetail = Pick<PrismaRoutine, 'id' | 'label'> & {
 
 export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
   latestBodyWeight: {
-    weight: string;
+    weight: number;
     unit: WeightUnit;
   } | null;
 };
@@ -52,6 +52,7 @@ export type CreateWorkoutRequest = {
   startedAt: string;
   finishedAt: string;
   exercisesCompleted: WorkoutExercise[];
+  bodyWeight: number;
 };
 
 export type UserWorkout = CreateWorkoutRequest & {

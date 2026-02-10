@@ -10,7 +10,7 @@ export function transformUserProfile(
     name: user.name,
     latestBodyWeight: latestBodyWeight
       ? {
-          weight: latestBodyWeight.weight.toString(),
+          weight: Number(latestBodyWeight.weight),
           unit: latestBodyWeight.unit,
         }
       : null,

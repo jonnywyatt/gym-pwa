@@ -2,6 +2,10 @@ import type { UserWorkout } from '../../types';
 import type { UserWorkoutFromDB } from './queries';
 
 export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
+  if (workout.bodyWeight === null) {
+    throw new Error('Workout missing required bodyWeight field');
+  }
+
   return {
     id: workout.id,
     userId: workout.userId,
@@ -10,6 +14,7 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
     startedAt: workout.startedAt.toISOString(),
     finishedAt: workout.finishedAt.toISOString(),
     exercisesCompleted: workout.exercisesCompleted as UserWorkout['exercisesCompleted'],
+    bodyWeight: Number(workout.bodyWeight),
   };
 }
 

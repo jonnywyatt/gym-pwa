@@ -12,6 +12,7 @@ export interface LocalWorkout {
   routineLabel: string;
   startedAt: string;
   exercisesCompleted: LocalWorkoutExercise[];
+  bodyWeight: number;
   finishedAt?: string;
 }
 
@@ -20,7 +21,7 @@ export class GymDatabase extends Dexie {
 
   constructor() {
     super('GymDatabase');
-    this.version(1).stores({
+    this.version(2).stores({
       workouts: 'id, userId, routineId, startedAt',
     });
   }

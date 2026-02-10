@@ -6,7 +6,7 @@ import styles from './WorkoutPage.module.css';
 import { authService } from '../../lib/auth/oauth';
 import { db, updateWorkoutExercise, finishWorkout, deleteWorkout } from '../../lib/db';
 import type { LocalWorkout } from '../../lib/db';
-import { saveWorkout } from './helpers';
+import { saveWorkout, formatStartTime, createWorkoutPayload } from './helpers';
 
 const route = useRoute();
 const router = useRouter();
@@ -17,8 +17,7 @@ const finishing = ref(false);
 
 const startTime = computed(() => {
   if (!workout.value) return '';
-  const date = new Date(workout.value.startedAt);
-  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return formatStartTime(workout.value.startedAt);
 });
 
 async function loadWorkout() {
@@ -59,27 +58,18 @@ async function handleFinish() {
     return;
   }
 
-  try {
-    finishing.value = true;
+  finishing.value = true;
+  error.value = null;
 
+  try {
     const finishedAt = new Date().toISOString();
     await finishWorkout(workout.value.id, finishedAt);
 
-    const completedExercises = workout.value.exercisesCompleted
-      .filter((ex) => ex.completed)
-      .map(({ completed, ...exercise }) => exercise);
-
-    await saveWorkout(userId, {
-      routineId: Number(workout.value.routineId),
-      routineLabel: workout.value.routineLabel,
-      startedAt: workout.value.startedAt,
-      finishedAt,
-      exercisesCompleted: completedExercises,
-    });
+    const workoutPayload = createWorkoutPayload(workout.value, finishedAt);
+    await saveWorkout(userId, workoutPayload);
 
     await deleteWorkout(workout.value.id);
-
-    router.push('/workouts');
+    await router.push('/workouts');
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to finish workout';
   } finally {

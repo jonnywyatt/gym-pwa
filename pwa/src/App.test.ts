@@ -1,6 +1,8 @@
+import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import AuthCallbackPage from './pages/AuthCallbackPage/AuthCallbackPage.vue';
 import ExercisesPage from './pages/ExercisesPage/ExercisesPage.vue';
 import RoutinePage from './pages/RoutinePage/RoutinePage.vue';
 import RoutinesPage from './pages/RoutinesPage/RoutinesPage.vue';
@@ -15,9 +17,13 @@ vi.mock('./config', () => ({
 }));
 
 // Mock vue-router
+const mockRouterReplace = vi.fn();
+const mockRouterPush = vi.fn();
+
 vi.mock('vue-router', () => ({
   useRouter: () => ({
-    replace: vi.fn(),
+    replace: mockRouterReplace,
+    push: mockRouterPush,
   }),
   useRoute: () => ({
     params: { routineId: '1' },
@@ -388,5 +394,175 @@ describe('RoutinePage', () => {
     });
 
     expect(screen.getByText('No exercises in this routine.')).toBeInTheDocument();
+  });
+
+  it('should redirect to user page when starting workout without body weight', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem('user_id', '123');
+
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: ['Pectoralis Major'],
+          secondaryMuscleGroups: ['Triceps'],
+        },
+      ],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.get(`${mockApiUrl}/users/123`, () => {
+        return HttpResponse.json({
+          id: 123,
+          name: 'Test User',
+          latestBodyWeight: null,
+        });
+      })
+    );
+
+    render(RoutinePage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Start workout')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Start workout'));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/users/123');
+    });
+  });
+
+  it('should create workout when starting with valid body weight', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem('user_id', '123');
+
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: ['Pectoralis Major'],
+          secondaryMuscleGroups: ['Triceps'],
+        },
+      ],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.get(`${mockApiUrl}/users/123`, () => {
+        return HttpResponse.json({
+          id: 123,
+          name: 'Test User',
+          latestBodyWeight: { weight: 75.5, unit: 'KG' },
+        });
+      })
+    );
+
+    render(RoutinePage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Start workout')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Start workout'));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalled();
+      const call = mockRouterPush.mock.calls[0][0];
+      expect(call).toMatch(/^\/workouts\//);
+    });
+  });
+});
+
+describe('AuthCallbackPage', () => {
+  const mockApiUrl = 'http://localhost:3000';
+
+  beforeEach(() => {
+    mockRouterReplace.mockClear();
+    sessionStorage.setItem('pkce_code_verifier', 'test-verifier');
+  });
+
+  it('should redirect to user page when hasBodyWeight is false', async () => {
+    server.use(
+      http.post(`${mockApiUrl}/auth/google`, () => {
+        return HttpResponse.json({
+          accessToken: 'test-access-token',
+          refreshToken: 'test-refresh-token',
+          user: { id: 123, name: 'Test User' },
+          hasBodyWeight: false,
+        });
+      })
+    );
+
+    // Mock the URL search params
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: '?code=test-code',
+        origin: 'http://localhost:5173',
+      },
+      writable: true,
+    });
+
+    render(AuthCallbackPage);
+
+    await waitFor(() => {
+      expect(mockRouterReplace).toHaveBeenCalledWith('/users/123');
+    });
+  });
+
+  it('should redirect to routines page when hasBodyWeight is true', async () => {
+    server.use(
+      http.post(`${mockApiUrl}/auth/google`, () => {
+        return HttpResponse.json({
+          accessToken: 'test-access-token',
+          refreshToken: 'test-refresh-token',
+          user: { id: 123, name: 'Test User' },
+          hasBodyWeight: true,
+        });
+      })
+    );
+
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: '?code=test-code',
+        origin: 'http://localhost:5173',
+      },
+      writable: true,
+    });
+
+    render(AuthCallbackPage);
+
+    await waitFor(() => {
+      expect(mockRouterReplace).toHaveBeenCalledWith('/routines');
+    });
+  });
+
+  it('should display error when no code is provided', async () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: '',
+        origin: 'http://localhost:5173',
+      },
+      writable: true,
+    });
+
+    render(AuthCallbackPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('No authorization code received')).toBeInTheDocument();
+    });
   });
 });

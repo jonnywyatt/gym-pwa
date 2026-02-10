@@ -68,7 +68,7 @@ describe('User Routes', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.latestBodyWeight).toEqual({
-        weight: '71.25',
+        weight: 71.25,
         unit: 'KG',
       });
     });

@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { UserProfile } from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './UserPage.module.css';
 import { fetchUserProfile, saveBodyWeight } from './helpers';
 
 const route = useRoute();
+const router = useRouter();
 const profile = ref<UserProfile | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const weight = ref('');
 const saving = ref(false);
 const saveSuccess = ref(false);
+const isFirstTimeUser = ref(false);
 
 async function loadProfile() {
   try {
     profile.value = await fetchUserProfile(route.params.userId);
     if (profile.value.latestBodyWeight) {
-      weight.value = profile.value.latestBodyWeight.weight;
+      weight.value = String(profile.value.latestBodyWeight.weight);
+    } else {
+      isFirstTimeUser.value = true;
     }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to fetch profile';
@@ -39,6 +43,11 @@ async function handleSaveWeight() {
   try {
     await saveBodyWeight(route.params.userId, weightNum);
     saveSuccess.value = true;
+
+    // Redirect first-time users to home page after saving
+    if (isFirstTimeUser.value) {
+      router.push('/routines');
+    }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to save weight';
   } finally {

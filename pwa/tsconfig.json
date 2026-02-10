@@ -11,6 +11,7 @@
     "moduleDetection": "force",
     "noEmit": true,
     "strict": true,
+    "noImplicitAny": true,
     "jsx": "preserve",
     "skipLibCheck": true
   },

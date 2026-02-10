@@ -1,5 +1,13 @@
 # Goal 3 - Workout sets
 
+## Record user body weight with workout
+1. When the user creates a new workout, copy their latest body weight reading from the `user_body_weights` table to the new workout record in indexedDB. It will be used to calculate weight for exercises that offset body weight.
+2. When they finish the workout, save the body weight with the workout record in the remote DB
+
+## Workout timer
+At the moment, the workout start time is shown on the workout page. Instead, show a timer that updates every second and can be paused / played. Start the timer automatically when the workout is created.
+
+## Sets
 1. For each exercise in the workout, remove the checkbox and show a 'Start' button
 2. When the Start button is clicked, store a start date / time for the exercise in indexedDB, and create 2 empty default sets for that exercise - one should be a 'Warmup' set and the other a 'Normal' set. The set type can be changed to any of Warmup / Normal / Failure
 3. Each set will show the set number (warmup will always be number 1), and also one or two input boxes which will reflect the recordSetsType of the exercise (the input box(es) will be Weight, or Time, or both)
