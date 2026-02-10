@@ -17,8 +17,17 @@
 - [Goal 1: User can enter their body weight](epic-3-workouts/goal-1-enter-user-bodyweight.md)
 - [Goal 2: Start and finish workout](epic-3-workouts/goal-2-start-finish-workout.md)
 - workout sets
+- delete workout
 
 ## Backlog
+### Features
+- delete workout from workouts page
+- if user navigates away from workout page, during workout
+- when clicking Finish workout, show workout summary page and confirm / discard / back buttons
+- link to workouts page from home page
+
+### Other
+- Netlify should deploy only after CI passes ([possible solution](https://www.google.com/search?q=how+do+I+get+netlify+to+wait+for+github+actions+checks+to+pass))
 - E2E tests
 - visual design
   - dark / light mode?

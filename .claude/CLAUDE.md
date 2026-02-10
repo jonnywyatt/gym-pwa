@@ -10,6 +10,7 @@
 - when researching and installing NPM libraries, always use the latest stable major version
 - only add code comments if the code is not self-explanatory. Favour descriptive variable names and readable code, over code comments
 - don't use non-null assertions
+- prefer to extend / re-use existing type interfaces rather than duplicating to new ones
 
 ### PWA
 - keep each Vue component in its own folder. Keep utility functions out of Vue component files. If the utility function is re-usable, move it to the pwa/src/utils folder. If it's specific to that component then move to a helpers.ts file in that component's folder

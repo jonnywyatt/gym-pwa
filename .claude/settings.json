@@ -18,7 +18,7 @@
     "servers": {
       "chrome-devtools": {
         "command": "npx",
-        "args": ["-y", "chrome-devtools-mcp@latest", "--autoConnect", "--channel=beta"]
+        "args": ["-y", "chrome-devtools-mcp@latest", "--autoConnect"]
       }
     }
   },

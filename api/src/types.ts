@@ -40,3 +40,21 @@ export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
     unit: WeightUnit;
   } | null;
 };
+
+export type WorkoutExercise = Pick<
+  Exercise,
+  'id' | 'label' | 'recordSetsType' | 'primaryMuscleGroups' | 'secondaryMuscleGroups'
+>;
+
+export type CreateWorkoutRequest = {
+  routineId: number;
+  routineLabel: string;
+  startedAt: string;
+  finishedAt: string;
+  exercisesCompleted: WorkoutExercise[];
+};
+
+export type UserWorkout = CreateWorkoutRequest & {
+  id: number;
+  userId: number;
+};

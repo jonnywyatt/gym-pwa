@@ -175,9 +175,23 @@ exports.Prisma.UserBodyWeightScalarFieldEnum = {
   recordedAt: 'recordedAt'
 };
 
+exports.Prisma.UserWorkoutScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  routineId: 'routineId',
+  routineLabel: 'routineLabel',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  exercisesCompleted: 'exercisesCompleted'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -188,6 +202,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.BodyAreaLabel = exports.$Enums.BodyAreaLabel = {
   CHEST: 'CHEST',
@@ -240,7 +260,8 @@ exports.Prisma.ModelName = {
   ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
   ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
   User: 'User',
-  UserBodyWeight: 'UserBodyWeight'
+  UserBodyWeight: 'UserBodyWeight',
+  UserWorkout: 'UserWorkout'
 };
 
 /**

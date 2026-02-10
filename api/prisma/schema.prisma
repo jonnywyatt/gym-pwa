@@ -131,6 +131,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
 
   bodyWeights UserBodyWeight[]
+  workouts    UserWorkout[]
 
   @@map("users")
 }
@@ -144,4 +145,17 @@ model UserBodyWeight {
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_body_weights")
+}
+
+model UserWorkout {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  routineId          Int      @map("routine_id")
+  routineLabel       String   @map("routine_label")
+  startedAt          DateTime @map("started_at")
+  finishedAt         DateTime @map("finished_at")
+  exercisesCompleted Json     @map("exercises_completed")
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_workouts")
 }

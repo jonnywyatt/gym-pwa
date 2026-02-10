@@ -38,6 +38,18 @@ const router = createRouter({
       component: () => import('./pages/UserPage/UserPage.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/workouts',
+      name: 'workouts-list',
+      component: () => import('./pages/WorkoutsListPage/WorkoutsListPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/workouts/:workoutId',
+      name: 'workout-detail',
+      component: () => import('./pages/WorkoutPage/WorkoutPage.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 
