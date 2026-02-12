@@ -25,6 +25,7 @@
 - if user navigates away from workout page, during workout
 - when clicking Finish workout, show workout summary page and confirm / discard / back buttons
 - link to workouts page from home page
+- unique page titles
 
 ### Other
 - Netlify should deploy only after CI passes ([possible solution](https://www.google.com/search?q=how+do+I+get+netlify+to+wait+for+github+actions+checks+to+pass))
