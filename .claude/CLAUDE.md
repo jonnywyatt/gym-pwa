@@ -26,3 +26,6 @@
 - Vue component files .vue should contain only Vue-specific concerns  (state management, user interaction, routing) - any business logic should be in a helpers.ts file in the same folder and separately unit tested in isolation   
 - any changes made to .vue component files should always be accompanied by integration test coverage.
 
+#### Tests
+UI tests using DOM testing library queries, should favour `getByRole` over `getByText` eg when looking for headings or links.
+

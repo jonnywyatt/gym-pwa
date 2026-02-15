@@ -1,26 +1,101 @@
-.dashboardNav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-unit-3);
-  margin-top: var(--spacing-unit-4);
+.section {
+  margin-top: var(--spacing-unit-6);
 }
 
-.navCard {
+.routineItem {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-unit-1);
-  padding: var(--spacing-unit-4);
-  border: 1px solid var(--grey-6);
-  border-radius: var(--border-radius);
-  text-decoration: none;
-  color: var(--text-primary);
-}
-
-.navCard:hover {
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-unit-3) var(--spacing-unit-4);
+  margin-bottom: var(--spacing-unit-2);
   background: var(--background-secondary);
+  border-radius: var(--border-radius);
 }
 
-.navCard span {
+.routineLabel {
+  font-weight: bold;
+}
+
+.routineActions {
+  display: flex;
+  gap: var(--spacing-unit-3);
+  font-size: var(--font-size-14);
+  align-items: center;
+}
+
+.routineActions a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.routineActions a:hover {
+  text-decoration: underline;
+}
+
+.newWorkoutButton {
+  background: none;
+  border: none;
+  color: var(--blue);
+  font-size: var(--font-size-14);
+  cursor: pointer;
+  padding: 0;
+}
+
+.newWorkoutButton:hover {
+  text-decoration: underline;
+}
+
+.newWorkoutButton:disabled {
+  color: var(--grey-4b);
+  cursor: default;
+  text-decoration: none;
+}
+
+.workoutCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
+  padding: var(--spacing-unit-4);
+  background: var(--background-secondary);
+  border-radius: var(--border-radius);
+}
+
+.workoutCardHeader {
   font-size: var(--font-size-14);
   color: var(--text-secondary);
+}
+
+.workoutMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-unit-2);
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+}
+
+.workoutMeta span:not(:last-child)::after {
+  content: '·';
+  margin-left: var(--spacing-unit-2);
+}
+
+.workoutLink {
+  color: var(--blue);
+  text-decoration: none;
+  font-size: var(--font-size-14);
+}
+
+.workoutLink:hover {
+  text-decoration: underline;
+}
+
+.allWorkoutsLink {
+  display: inline-block;
+  margin-top: var(--spacing-unit-3);
+  color: var(--blue);
+  text-decoration: none;
+  font-size: var(--font-size-14);
+}
+
+.allWorkoutsLink:hover {
+  text-decoration: underline;
 }

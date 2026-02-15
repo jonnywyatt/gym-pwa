@@ -30,6 +30,13 @@ export async function getUserWorkouts(userId: number): Promise<UserWorkoutFromDB
   });
 }
 
+export async function getLatestUserWorkout(userId: number): Promise<UserWorkoutFromDB | null> {
+  return await prisma.userWorkout.findFirst({
+    where: { userId },
+    orderBy: { finishedAt: 'desc' },
+  });
+}
+
 export async function getUserWorkout(
   userId: number,
   workoutId: number

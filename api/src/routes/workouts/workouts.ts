@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
 import type { CreateWorkoutRequest } from '../../types';
-import { createUserWorkout, getUserWorkout, getUserWorkouts } from './queries';
+import {
+  createUserWorkout,
+  getLatestUserWorkout,
+  getUserWorkout,
+  getUserWorkouts,
+} from './queries';
 import { transformUserWorkout, transformUserWorkouts } from './transforms';
 
 const router = Router();
@@ -82,6 +87,33 @@ router.get('/users/:userId/workouts', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error fetching workouts:', error);
     res.status(500).json({ error: 'Failed to fetch workouts' });
+  }
+});
+
+router.get('/users/:userId/workouts/latest', authenticate, async (req, res) => {
+  try {
+    const userId = parseInt(String(req.params.userId), 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    if (userId !== req.user?.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const workout = await getLatestUserWorkout(userId);
+    if (!workout) {
+      res.status(404).json({ error: 'No workouts found' });
+      return;
+    }
+
+    const transformed = transformUserWorkout(workout);
+    res.json(transformed);
+  } catch (error) {
+    console.error('Error fetching latest workout:', error);
+    res.status(500).json({ error: 'Failed to fetch latest workout' });
   }
 });
 
