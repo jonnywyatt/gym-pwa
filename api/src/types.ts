@@ -2,13 +2,12 @@
  * Shared types exported for use across the monorepo
  */
 
-export type { RecordSetsType, User, WeightUnit } from './prisma-client/index.js';
+export type { RecordSetsType, User } from './prisma-client/index.js';
 
 import type {
   Exercise as PrismaExercise,
   Routine as PrismaRoutine,
   User as PrismaUser,
-  WeightUnit,
 } from './prisma-client/index.js';
 import type { MuscleGroupDisplayName } from './utils/display-names';
 
@@ -36,8 +35,7 @@ export type RoutineDetail = Pick<PrismaRoutine, 'id' | 'label'> & {
 
 export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
   latestBodyWeight: {
-    weight: number;
-    unit: WeightUnit;
+    weightKg: number;
   } | null;
 };
 
@@ -46,13 +44,29 @@ export type WorkoutExercise = Pick<
   'id' | 'label' | 'recordSetsType' | 'primaryMuscleGroups' | 'secondaryMuscleGroups'
 >;
 
+export type SetType = 'Warmup' | 'Normal' | 'Failure';
+
+export type CompletedSet = {
+  setType: SetType;
+  weightKg?: number;
+  reps?: number;
+  timeSeconds?: number;
+};
+
+export type CompletedWorkoutExercise = WorkoutExercise & {
+  sets: CompletedSet[];
+  totalWeightKg: number;
+};
+
 export type CreateWorkoutRequest = {
   routineId: number;
   routineLabel: string;
   startedAt: string;
   finishedAt: string;
-  exercisesCompleted: WorkoutExercise[];
-  bodyWeight: number;
+  durationSeconds?: number;
+  exercisesCompleted: CompletedWorkoutExercise[];
+  bodyWeightKg: number;
+  totalWeightKg: number;
 };
 
 export type UserWorkout = CreateWorkoutRequest & {

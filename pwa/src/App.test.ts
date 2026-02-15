@@ -466,7 +466,7 @@ describe('RoutinePage', () => {
         return HttpResponse.json({
           id: 123,
           name: 'Test User',
-          latestBodyWeight: { weight: 75.5, unit: 'KG' },
+          latestBodyWeight: { weightKg: 75.5 },
         });
       })
     );

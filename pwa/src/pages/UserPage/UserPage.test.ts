@@ -79,7 +79,7 @@ describe('UserPage', () => {
         return HttpResponse.json({
           id: 1,
           name: 'Test User',
-          latestBodyWeight: { weight: 75.5, unit: 'KG' },
+          latestBodyWeight: { weightKg: 75.5 },
         });
       })
     );
@@ -106,8 +106,8 @@ describe('UserPage', () => {
         });
       }),
       http.post(`${mockApiUrl}/users/1/body-weights`, async ({ request }) => {
-        const body = (await request.json()) as { weight: number };
-        return HttpResponse.json({ weight: String(body.weight), unit: 'KG' }, { status: 201 });
+        const body = (await request.json()) as { weightKg: number };
+        return HttpResponse.json({ weightKg: String(body.weightKg) }, { status: 201 });
       })
     );
 

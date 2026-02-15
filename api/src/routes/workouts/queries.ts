@@ -15,8 +15,10 @@ export async function createUserWorkout(
       routineLabel: workout.routineLabel,
       startedAt: new Date(workout.startedAt),
       finishedAt: new Date(workout.finishedAt),
+      durationSeconds: workout.durationSeconds,
       exercisesCompleted: workout.exercisesCompleted,
-      bodyWeight: workout.bodyWeight,
+      totalWeightKg: workout.totalWeightKg,
+      bodyWeightKg: workout.bodyWeightKg,
     },
   });
 }

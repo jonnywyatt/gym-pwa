@@ -1,4 +1,3 @@
-import { WeightUnit } from '../../prisma-client';
 import { prisma } from '../../utils/prisma';
 
 export async function getUserById(userId: number) {
@@ -14,12 +13,11 @@ export async function getLatestBodyWeight(userId: number) {
   });
 }
 
-export async function createBodyWeight(userId: number, weight: number) {
+export async function createBodyWeight(userId: number, weightKg: number) {
   return await prisma.userBodyWeight.create({
     data: {
       userId,
-      weight,
-      unit: WeightUnit.KG,
+      weightKg,
     },
   });
 }

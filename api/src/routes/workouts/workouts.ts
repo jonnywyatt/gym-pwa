@@ -49,6 +49,11 @@ router.post('/users/:userId/workouts', authenticate, async (req, res) => {
       return;
     }
 
+    if (typeof workout.bodyWeightKg !== 'number' || workout.bodyWeightKg <= 0) {
+      res.status(400).json({ error: 'bodyWeightKg is required and must be a positive number' });
+      return;
+    }
+
     const createdWorkout = await createUserWorkout(userId, workout);
     const transformed = transformUserWorkout(createdWorkout);
     res.status(201).json(transformed);

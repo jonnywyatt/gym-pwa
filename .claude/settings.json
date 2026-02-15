@@ -1,11 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "projectInfo": {
     "name": "Gym PWA",
     "description": "Progressive Web App for gym workout tracking"
   },
-  "preferences": {
-    "alwaysApproveTools": true,
-    "defaultModel": "sonnet"
+  "permissions": {
+    "defaultMode": "acceptEdits"
   },
   "customInstructions": [
     "This is a React PWA project using TypeScript and Vite",

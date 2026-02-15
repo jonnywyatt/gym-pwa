@@ -10,7 +10,7 @@ export async function fetchUserBodyWeight(userId: number): Promise<number> {
     throw new Error('MISSING_BODY_WEIGHT');
   }
 
-  return userProfile.latestBodyWeight.weight;
+  return userProfile.latestBodyWeight.weightKg;
 }
 
 export async function fetchRoutine(routineId: string | string[]): Promise<RoutineDetail> {
@@ -35,7 +35,7 @@ export function createWorkoutFromRoutine(
   userId: number,
   routineId: number,
   routine: RoutineDetail,
-  bodyWeight: number
+  bodyWeightKg: number
 ): LocalWorkout {
   return {
     id: crypto.randomUUID(),
@@ -44,7 +44,7 @@ export function createWorkoutFromRoutine(
     routineLabel: routine.label,
     startedAt: new Date().toISOString(),
     exercisesCompleted: mapExercisesToWorkoutExercises(routine),
-    bodyWeight,
+    bodyWeightKg,
   };
 }
 
@@ -67,9 +67,9 @@ export async function prepareWorkoutStart(
   }
 
   // Fetch user's body weight
-  let bodyWeight: number;
+  let bodyWeightKg: number;
   try {
-    bodyWeight = await fetchUserBodyWeight(userId);
+    bodyWeightKg = await fetchUserBodyWeight(userId);
   } catch (e) {
     if (e instanceof Error && e.message === 'MISSING_BODY_WEIGHT') {
       return {
@@ -82,6 +82,6 @@ export async function prepareWorkoutStart(
   }
 
   // Create workout
-  const workout = createWorkoutFromRoutine(userId, routineId, routine, bodyWeight);
+  const workout = createWorkoutFromRoutine(userId, routineId, routine, bodyWeightKg);
   return { type: 'create-new-workout', workout };
 }

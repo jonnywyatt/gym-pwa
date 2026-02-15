@@ -15,10 +15,6 @@ enum RecordSetsType {
   BODYWEIGHT_PLUS_WEIGHT
 }
 
-enum WeightUnit {
-  KG
-}
-
 enum BodyAreaLabel {
   CHEST
   BACK
@@ -137,27 +133,27 @@ model User {
 }
 
 model UserBodyWeight {
-  id         Int        @id @default(autoincrement())
-  userId     Int        @map("user_id")
-  weight     Decimal    @db.Decimal(5, 2)
-  unit       WeightUnit @default(KG)
-  recordedAt DateTime   @default(now()) @map("recorded_at")
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  weightKg   Decimal  @map("weight_kg") @db.Decimal(5, 2)
+  recordedAt DateTime @default(now()) @map("recorded_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_body_weights")
 }
 
 model UserWorkout {
-  id                 Int         @id @default(autoincrement())
-  userId             Int         @map("user_id")
-  routineId          Int         @map("routine_id")
-  routineLabel       String      @map("routine_label")
-  startedAt          DateTime    @map("started_at")
-  finishedAt         DateTime    @map("finished_at")
-  exercisesCompleted Json        @map("exercises_completed")
-  bodyWeight         Decimal?    @map("body_weight") @db.Decimal(5, 2)
-  bodyWeightUnit     WeightUnit? @default(KG) @map("body_weight_unit")
-  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  routineId          Int      @map("routine_id")
+  routineLabel       String   @map("routine_label")
+  startedAt          DateTime @map("started_at")
+  finishedAt         DateTime @map("finished_at")
+  durationSeconds    Int?     @map("duration_seconds")
+  exercisesCompleted Json     @map("exercises_completed")
+  totalWeightKg      Int?     @map("total_weight_kg")
+  bodyWeightKg       Decimal  @map("body_weight_kg") @db.Decimal(5, 2)
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_workouts")
 }

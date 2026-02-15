@@ -57,8 +57,8 @@ describe('User Routes', () => {
 
       await prisma.userBodyWeight.createMany({
         data: [
-          { userId: testUserId, weight: 70.5, unit: 'KG', recordedAt: new Date('2025-01-01') },
-          { userId: testUserId, weight: 71.25, unit: 'KG', recordedAt: new Date('2025-01-02') },
+          { userId: testUserId, weightKg: 70.5, recordedAt: new Date('2025-01-01') },
+          { userId: testUserId, weightKg: 71.25, recordedAt: new Date('2025-01-02') },
         ],
       });
 
@@ -68,8 +68,7 @@ describe('User Routes', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.latestBodyWeight).toEqual({
-        weight: 71.25,
-        unit: 'KG',
+        weightKg: 71.25,
       });
     });
 
@@ -107,12 +106,11 @@ describe('User Routes', () => {
       const response = await request(app)
         .post(`/users/${testUserId}/body-weights`)
         .set('Authorization', `Bearer ${token}`)
-        .send({ weight: 75.5 });
+        .send({ weightKg: 75.5 });
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
-        weight: '75.5',
-        unit: 'KG',
+        weightKg: '75.5',
       });
 
       const prisma = getTestPrismaClient();
@@ -127,13 +125,13 @@ describe('User Routes', () => {
       const prisma = getTestPrismaClient();
 
       await prisma.userBodyWeight.create({
-        data: { userId: testUserId, weight: 70.0, unit: 'KG' },
+        data: { userId: testUserId, weightKg: 70.0 },
       });
 
       const response = await request(app)
         .post(`/users/${testUserId}/body-weights`)
         .set('Authorization', `Bearer ${token}`)
-        .send({ weight: 71.5 });
+        .send({ weightKg: 71.5 });
 
       expect(response.status).toBe(201);
 
@@ -142,8 +140,8 @@ describe('User Routes', () => {
         orderBy: { recordedAt: 'asc' },
       });
       expect(records).toHaveLength(2);
-      expect(Number(records[0].weight)).toBe(70);
-      expect(Number(records[1].weight)).toBe(71.5);
+      expect(Number(records[0].weightKg)).toBe(70);
+      expect(Number(records[1].weightKg)).toBe(71.5);
     });
 
     it('returns 400 for invalid weight', async () => {
@@ -152,7 +150,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .post(`/users/${testUserId}/body-weights`)
         .set('Authorization', `Bearer ${token}`)
-        .send({ weight: -5 });
+        .send({ weightKg: -5 });
 
       expect(response.status).toBe(400);
     });
@@ -176,7 +174,7 @@ describe('User Routes', () => {
       const response = await request(app)
         .post(`/users/${testUserId}/body-weights`)
         .set('Authorization', `Bearer ${otherToken}`)
-        .send({ weight: 75 });
+        .send({ weightKg: 75 });
 
       expect(response.status).toBe(403);
     });

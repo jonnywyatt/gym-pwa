@@ -1,12 +1,24 @@
 import { HttpResponse, http } from 'msw';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { LocalWorkout, LocalWorkoutExercise } from '../../lib/db';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { LocalWorkout, LocalWorkoutExercise, WorkoutSet } from '../../lib/db';
 import { server } from '../../test/msw';
 import {
+  calculateElapsedSeconds,
+  calculateExerciseTotalWeightKg,
+  calculateFinalDurationSeconds,
+  calculateSetWeightKg,
+  calculateWorkoutTotalWeightKg,
+  createDefaultSets,
+  createNewSet,
   createWorkoutPayload,
+  discardExercise,
+  finishExercise,
   formatStartTime,
   getCompletedExercises,
+  getSetDisplayLabel,
+  getSetInputFields,
   saveWorkout,
+  startExercise,
 } from './helpers';
 
 vi.mock('../../config', () => ({
@@ -27,22 +39,336 @@ describe('WorkoutPage helpers', () => {
     it('formats ISO date string to localized time', () => {
       const isoString = '2025-01-15T14:30:00.000Z';
       const result = formatStartTime(isoString);
-
-      // Should be in format like "2:30 PM" or "14:30"
       expect(result).toMatch(/\d{1,2}:\d{2}/);
     });
 
     it('handles different time zones correctly', () => {
       const isoString = '2025-01-15T09:15:00.000Z';
       const result = formatStartTime(isoString);
-
       expect(result).toBeTruthy();
       expect(typeof result).toBe('string');
     });
   });
 
+  describe('createDefaultSets', () => {
+    it('returns a warmup and a normal set', () => {
+      const sets = createDefaultSets();
+      expect(sets).toHaveLength(2);
+      expect(sets[0].setType).toBe('Warmup');
+      expect(sets[1].setType).toBe('Normal');
+    });
+
+    it('sets both as incomplete', () => {
+      const sets = createDefaultSets();
+      expect(sets[0].completed).toBe(false);
+      expect(sets[1].completed).toBe(false);
+    });
+
+    it('generates unique ids', () => {
+      const sets = createDefaultSets();
+      expect(sets[0].id).not.toBe(sets[1].id);
+    });
+  });
+
+  describe('createNewSet', () => {
+    it('returns a normal incomplete set', () => {
+      const set = createNewSet();
+      expect(set.setType).toBe('Normal');
+      expect(set.completed).toBe(false);
+      expect(set.id).toBeTruthy();
+    });
+  });
+
+  describe('getSetDisplayLabel', () => {
+    it('returns W for warmup sets', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Warmup', completed: false },
+        { id: '2', setType: 'Normal', completed: false },
+      ];
+      expect(getSetDisplayLabel(sets, 0)).toBe('W');
+    });
+
+    it('numbers normal sets starting from 1', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Warmup', completed: false },
+        { id: '2', setType: 'Normal', completed: false },
+        { id: '3', setType: 'Normal', completed: false },
+      ];
+      expect(getSetDisplayLabel(sets, 1)).toBe('1');
+      expect(getSetDisplayLabel(sets, 2)).toBe('2');
+    });
+
+    it('numbers failure sets as normal', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Warmup', completed: false },
+        { id: '2', setType: 'Normal', completed: false },
+        { id: '3', setType: 'Failure', completed: false },
+      ];
+      expect(getSetDisplayLabel(sets, 2)).toBe('2');
+    });
+
+    it('skips warmups in numbering', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Warmup', completed: false },
+        { id: '2', setType: 'Warmup', completed: false },
+        { id: '3', setType: 'Normal', completed: false },
+      ];
+      expect(getSetDisplayLabel(sets, 2)).toBe('1');
+    });
+  });
+
+  describe('getSetInputFields', () => {
+    it('returns weight and reps for WEIGHT type', () => {
+      const result = getSetInputFields('WEIGHT');
+      expect(result).toEqual({
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        weightLabel: 'Kg',
+      });
+    });
+
+    it('returns weight and reps for BODYWEIGHT_PLUS_WEIGHT', () => {
+      const result = getSetInputFields('BODYWEIGHT_PLUS_WEIGHT');
+      expect(result).toEqual({
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        weightLabel: 'Kg',
+      });
+    });
+
+    it('returns weight (offset) and reps for BODYWEIGHT_MINUS_OFFSET', () => {
+      const result = getSetInputFields('BODYWEIGHT_MINUS_OFFSET');
+      expect(result).toEqual({
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        weightLabel: 'Offset',
+      });
+    });
+
+    it('returns weight and time for WEIGHT_AND_TIME', () => {
+      const result = getSetInputFields('WEIGHT_AND_TIME');
+      expect(result).toEqual({
+        showWeight: true,
+        showReps: false,
+        showTime: true,
+        weightLabel: 'Kg',
+      });
+    });
+
+    it('returns time only for TIME', () => {
+      const result = getSetInputFields('TIME');
+      expect(result).toEqual({
+        showWeight: false,
+        showReps: false,
+        showTime: true,
+        weightLabel: '',
+      });
+    });
+  });
+
+  describe('calculateSetWeightKg', () => {
+    it('calculates WEIGHT type: weight * reps', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Normal',
+        weightKg: 60,
+        reps: 10,
+        completed: true,
+      };
+      expect(calculateSetWeightKg('WEIGHT', 80, set)).toBe(600);
+    });
+
+    it('calculates BODYWEIGHT_PLUS_WEIGHT type', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Normal',
+        weightKg: 20,
+        reps: 8,
+        completed: true,
+      };
+      expect(calculateSetWeightKg('BODYWEIGHT_PLUS_WEIGHT', 80, set)).toBe(800);
+    });
+
+    it('calculates BODYWEIGHT_MINUS_OFFSET type', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Normal',
+        weightKg: 30,
+        reps: 5,
+        completed: true,
+      };
+      expect(calculateSetWeightKg('BODYWEIGHT_MINUS_OFFSET', 80, set)).toBe(250);
+    });
+
+    it('calculates WEIGHT_AND_TIME type: weight only', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Normal',
+        weightKg: 40,
+        timeSeconds: 60,
+        completed: true,
+      };
+      expect(calculateSetWeightKg('WEIGHT_AND_TIME', 80, set)).toBe(40);
+    });
+
+    it('returns 0 for TIME type', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Normal', timeSeconds: 120, completed: true };
+      expect(calculateSetWeightKg('TIME', 80, set)).toBe(0);
+    });
+
+    it('handles missing weight/reps as 0', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Normal', completed: true };
+      expect(calculateSetWeightKg('WEIGHT', 80, set)).toBe(0);
+    });
+  });
+
+  describe('calculateExerciseTotalWeightKg', () => {
+    it('sums weight of completed sets only', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
+        { id: '2', setType: 'Normal', weightKg: 60, reps: 8, completed: true },
+        { id: '3', setType: 'Normal', weightKg: 60, reps: 6, completed: false },
+      ];
+      expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(1080);
+    });
+
+    it('returns 0 when no sets are completed', () => {
+      const sets: WorkoutSet[] = [
+        { id: '1', setType: 'Normal', weightKg: 60, reps: 10, completed: false },
+      ];
+      expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(0);
+    });
+  });
+
+  describe('calculateWorkoutTotalWeightKg', () => {
+    it('sums totalWeight of completed exercises', () => {
+      const exercises: LocalWorkoutExercise[] = [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: true,
+          totalWeightKg: 500,
+        },
+        {
+          id: 2,
+          label: 'Squats',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: true,
+          totalWeightKg: 800,
+        },
+        {
+          id: 3,
+          label: 'Curls',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: false,
+        },
+      ];
+      expect(calculateWorkoutTotalWeightKg(exercises)).toBe(1300);
+    });
+
+    it('returns 0 when no exercises are completed', () => {
+      const exercises: LocalWorkoutExercise[] = [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: false,
+        },
+      ];
+      expect(calculateWorkoutTotalWeightKg(exercises)).toBe(0);
+    });
+  });
+
+  describe('startExercise', () => {
+    it('sets startedAt and creates default sets', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+      };
+      const result = startExercise(exercise);
+      expect(result.startedAt).toBeTruthy();
+      expect(result.sets).toHaveLength(2);
+      if (result.sets === undefined) throw new Error('sets should be defined');
+      expect(result.sets[0].setType).toBe('Warmup');
+      expect(result.sets[1].setType).toBe('Normal');
+    });
+
+    it('does not mutate the original exercise', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+      };
+      startExercise(exercise);
+      expect(exercise.startedAt).toBeUndefined();
+      expect(exercise.sets).toBeUndefined();
+    });
+  });
+
+  describe('finishExercise', () => {
+    it('marks exercise completed and keeps only completed sets', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [
+          { id: '1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
+          { id: '2', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
+          { id: '3', setType: 'Normal', weightKg: 60, reps: 8, completed: false },
+        ],
+      };
+      const result = finishExercise(exercise, 80);
+      expect(result.completed).toBe(true);
+      expect(result.sets).toHaveLength(2);
+      expect(result.totalWeightKg).toBe(1000);
+    });
+  });
+
+  describe('discardExercise', () => {
+    it('clears all exercise progress', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [{ id: '1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true }],
+      };
+      const result = discardExercise(exercise);
+      expect(result.completed).toBe(false);
+      expect(result.startedAt).toBeUndefined();
+      expect(result.sets).toBeUndefined();
+      expect(result.totalWeightKg).toBeUndefined();
+    });
+  });
+
   describe('getCompletedExercises', () => {
-    it('filters only completed exercises', () => {
+    it('filters only completed exercises and strips local fields', () => {
       const exercises: LocalWorkoutExercise[] = [
         {
           id: 1,
@@ -51,6 +377,9 @@ describe('WorkoutPage helpers', () => {
           primaryMuscleGroups: ['Pectoralis Major'],
           secondaryMuscleGroups: ['Triceps'],
           completed: true,
+          startedAt: '2025-01-15T14:00:00.000Z',
+          sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+          totalWeightKg: 600,
         },
         {
           id: 2,
@@ -60,40 +389,14 @@ describe('WorkoutPage helpers', () => {
           secondaryMuscleGroups: ['Glutes'],
           completed: false,
         },
-        {
-          id: 3,
-          label: 'Deadlift',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Lower Back'],
-          secondaryMuscleGroups: ['Hamstrings'],
-          completed: true,
-        },
       ];
-
       const result = getCompletedExercises(exercises);
-
-      expect(result).toHaveLength(2);
-      expect(result[0].label).toBe('Bench Press');
-      expect(result[1].label).toBe('Deadlift');
-    });
-
-    it('removes the completed property from exercises', () => {
-      const exercises: LocalWorkoutExercise[] = [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: true,
-        },
-      ];
-
-      const result = getCompletedExercises(exercises);
-
+      expect(result).toHaveLength(1);
       expect(result[0]).not.toHaveProperty('completed');
-      expect(result[0]).toHaveProperty('id');
-      expect(result[0]).toHaveProperty('label');
+      expect(result[0]).not.toHaveProperty('startedAt');
+      expect(result[0].sets[0]).not.toHaveProperty('id');
+      expect(result[0].sets[0]).not.toHaveProperty('completed');
+      expect(result[0].totalWeightKg).toBe(600);
     });
 
     it('returns empty array when no exercises are completed', () => {
@@ -102,27 +405,24 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
           completed: false,
         },
       ];
-
-      const result = getCompletedExercises(exercises);
-
-      expect(result).toHaveLength(0);
+      expect(getCompletedExercises(exercises)).toHaveLength(0);
     });
   });
 
   describe('createWorkoutPayload', () => {
-    it('creates correct workout payload', () => {
+    it('creates correct workout payload with totalWeight', () => {
       const workout: LocalWorkout = {
         id: 'workout-123',
         userId: 456,
         routineId: 1,
         routineLabel: 'Strength Training',
         startedAt: '2025-01-15T14:00:00.000Z',
-        bodyWeight: 75.5,
+        bodyWeightKg: 75.5,
         exercisesCompleted: [
           {
             id: 1,
@@ -131,6 +431,8 @@ describe('WorkoutPage helpers', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
           },
           {
             id: 2,
@@ -143,25 +445,11 @@ describe('WorkoutPage helpers', () => {
         ],
       };
 
-      const finishedAt = '2025-01-15T15:30:00.000Z';
-      const result = createWorkoutPayload(workout, finishedAt);
-
-      expect(result).toEqual({
-        routineId: 1,
-        routineLabel: 'Strength Training',
-        startedAt: '2025-01-15T14:00:00.000Z',
-        finishedAt: '2025-01-15T15:30:00.000Z',
-        bodyWeight: 75.5,
-        exercisesCompleted: [
-          {
-            id: 1,
-            label: 'Bench Press',
-            recordSetsType: 'WEIGHT',
-            primaryMuscleGroups: ['Pectoralis Major'],
-            secondaryMuscleGroups: ['Triceps'],
-          },
-        ],
-      });
+      const result = createWorkoutPayload(workout, '2025-01-15T15:30:00.000Z', 5400);
+      expect(result.exercisesCompleted).toHaveLength(1);
+      expect(result.totalWeightKg).toBe(600);
+      expect(result.bodyWeightKg).toBe(75.5);
+      expect(result.durationSeconds).toBe(5400);
     });
 
     it('includes all required fields', () => {
@@ -171,18 +459,14 @@ describe('WorkoutPage helpers', () => {
         routineId: 2,
         routineLabel: 'Cardio',
         startedAt: '2025-01-15T10:00:00.000Z',
-        bodyWeight: 80.0,
+        bodyWeightKg: 80.0,
         exercisesCompleted: [],
       };
 
-      const finishedAt = '2025-01-15T11:00:00.000Z';
-      const result = createWorkoutPayload(workout, finishedAt);
-
+      const result = createWorkoutPayload(workout, '2025-01-15T11:00:00.000Z', 3600);
       expect(result.routineId).toBe(2);
       expect(result.routineLabel).toBe('Cardio');
-      expect(result.startedAt).toBe('2025-01-15T10:00:00.000Z');
-      expect(result.finishedAt).toBe('2025-01-15T11:00:00.000Z');
-      expect(result.bodyWeight).toBe(80.0);
+      expect(result.totalWeightKg).toBe(0);
       expect(result.exercisesCompleted).toEqual([]);
     });
   });
@@ -203,7 +487,7 @@ describe('WorkoutPage helpers', () => {
         http.post(`${mockApiUrl}/users/123/workouts`, async ({ request }) => {
           const body = await request.json();
           expect(body).toHaveProperty('routineId');
-          expect(body).toHaveProperty('bodyWeight');
+          expect(body).toHaveProperty('bodyWeightKg');
           return HttpResponse.json(mockResponse);
         })
       );
@@ -214,7 +498,8 @@ describe('WorkoutPage helpers', () => {
         startedAt: '2025-01-15T14:00:00.000Z',
         finishedAt: '2025-01-15T15:00:00.000Z',
         exercisesCompleted: [],
-        bodyWeight: 75.5,
+        bodyWeightKg: 75.5,
+        totalWeightKg: 0,
       });
 
       expect(result).toEqual(mockResponse);
@@ -234,9 +519,66 @@ describe('WorkoutPage helpers', () => {
           startedAt: '2025-01-15T14:00:00.000Z',
           finishedAt: '2025-01-15T15:00:00.000Z',
           exercisesCompleted: [],
-          bodyWeight: 75.5,
+          bodyWeightKg: 75.5,
+          totalWeightKg: 0,
         })
       ).rejects.toThrow();
+    });
+  });
+
+  describe('calculateElapsedSeconds', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('calculates elapsed time without pauses', () => {
+      const startedAt = '2025-01-15T14:00:00.000Z';
+      vi.setSystemTime(new Date('2025-01-15T14:05:00.000Z'));
+      expect(calculateElapsedSeconds(startedAt, 0, false)).toBe(300);
+    });
+
+    it('calculates elapsed time with total paused seconds', () => {
+      const startedAt = '2025-01-15T14:00:00.000Z';
+      vi.setSystemTime(new Date('2025-01-15T14:10:00.000Z'));
+      expect(calculateElapsedSeconds(startedAt, 120, false)).toBe(480);
+    });
+
+    it('calculates elapsed time when currently paused', () => {
+      const startedAt = '2025-01-15T14:00:00.000Z';
+      const pausedAt = '2025-01-15T14:05:00.000Z';
+      vi.setSystemTime(new Date('2025-01-15T14:07:00.000Z'));
+      expect(calculateElapsedSeconds(startedAt, 0, true, pausedAt)).toBe(300);
+    });
+
+    it('calculates elapsed time with previous pauses and currently paused', () => {
+      const startedAt = '2025-01-15T14:00:00.000Z';
+      const pausedAt = '2025-01-15T14:08:00.000Z';
+      vi.setSystemTime(new Date('2025-01-15T14:10:00.000Z'));
+      expect(calculateElapsedSeconds(startedAt, 60, true, pausedAt)).toBe(420);
+    });
+  });
+
+  describe('calculateFinalDurationSeconds', () => {
+    it('calculates duration between start and finish', () => {
+      expect(
+        calculateFinalDurationSeconds('2025-01-15T14:00:00.000Z', '2025-01-15T15:00:00.000Z')
+      ).toBe(3600);
+    });
+
+    it('calculates duration with paused time', () => {
+      expect(
+        calculateFinalDurationSeconds('2025-01-15T14:00:00.000Z', '2025-01-15T15:00:00.000Z', 300)
+      ).toBe(3300);
+    });
+
+    it('handles short durations', () => {
+      expect(
+        calculateFinalDurationSeconds('2025-01-15T14:00:00.000Z', '2025-01-15T14:00:45.000Z')
+      ).toBe(45);
     });
   });
 });

@@ -1,0 +1,106 @@
+.exercise {
+  padding: var(--spacing-unit-3) var(--spacing-unit-4);
+  border-bottom: 1px solid var(--grey-6);
+}
+
+.exerciseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-unit-2);
+}
+
+.totalWeight {
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+}
+
+.startButton {
+  padding: var(--spacing-unit-1) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.setsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
+  margin-bottom: var(--spacing-unit-3);
+}
+
+.setRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit-2);
+}
+
+.setLabel {
+  min-width: var(--spacing-unit-5);
+  font-size: var(--font-size-14);
+  font-weight: bold;
+  text-align: center;
+}
+
+.setInput {
+  width: var(--spacing-unit-12);
+  padding: var(--spacing-unit-1);
+  font-size: var(--font-size-14);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+}
+
+.setTypeSelect {
+  font-size: var(--font-size-12);
+  padding: var(--spacing-unit-1);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addSetButton {
+  font-size: var(--font-size-14);
+  color: var(--blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.finishDiscardButtons {
+  display: flex;
+  gap: var(--spacing-unit-2);
+}
+
+.finishButton {
+  padding: var(--spacing-unit-1) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--green-dark);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.discardButton {
+  padding: var(--spacing-unit-1) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.completedSummary {
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+}

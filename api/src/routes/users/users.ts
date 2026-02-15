@@ -46,16 +46,15 @@ router.post('/users/:userId/body-weights', authenticate, async (req, res) => {
       return;
     }
 
-    const { weight } = req.body;
-    if (typeof weight !== 'number' || weight <= 0) {
-      res.status(400).json({ error: 'Weight must be a positive number' });
+    const { weightKg } = req.body;
+    if (typeof weightKg !== 'number' || weightKg <= 0) {
+      res.status(400).json({ error: 'weightKg must be a positive number' });
       return;
     }
 
-    const bodyWeight = await createBodyWeight(userId, weight);
+    const bodyWeight = await createBodyWeight(userId, weightKg);
     res.status(201).json({
-      weight: bodyWeight.weight.toString(),
-      unit: bodyWeight.unit,
+      weightKg: bodyWeight.weightKg.toString(),
     });
   } catch (error) {
     console.error('Error saving body weight:', error);

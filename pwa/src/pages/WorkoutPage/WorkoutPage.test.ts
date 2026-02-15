@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/vue';
 import type { CreateWorkoutRequest } from 'gym-pwa-api/types';
 import { HttpResponse, http } from 'msw';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { LocalWorkout } from '../../lib/db';
 import { db } from '../../lib/db';
 import { server } from '../../test/msw';
 import WorkoutPage from './WorkoutPage.vue';
@@ -25,6 +26,36 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+function createTestWorkout(overrides: Partial<LocalWorkout> = {}): LocalWorkout {
+  return {
+    id: 'test-workout-id',
+    userId: 123,
+    routineId: 1,
+    routineLabel: 'Test Routine',
+    startedAt: '2025-01-15T14:00:00.000Z',
+    bodyWeightKg: 75.5,
+    exercisesCompleted: [
+      {
+        id: 1,
+        label: 'Bench Press',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: ['Triceps'],
+        completed: false,
+      },
+      {
+        id: 2,
+        label: 'Squats',
+        recordSetsType: 'WEIGHT',
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: ['Glutes'],
+        completed: false,
+      },
+    ],
+    ...overrides,
+  };
+}
+
 describe('WorkoutPage', () => {
   const mockApiUrl = 'http://localhost:3000';
 
@@ -32,12 +63,11 @@ describe('WorkoutPage', () => {
     localStorage.setItem('access_token', 'test-token');
     localStorage.setItem('user_id', '123');
     mockRouterPush.mockClear();
-
-    // Clear IndexedDB
     await db.workouts.clear();
   });
 
   afterEach(async () => {
+    vi.useRealTimers();
     await db.workouts.clear();
   });
 
@@ -47,32 +77,7 @@ describe('WorkoutPage', () => {
   });
 
   it('should display workout with exercises', async () => {
-    await db.workouts.add({
-      id: 'test-workout-id',
-      userId: 123,
-      routineId: 1,
-      routineLabel: 'Test Routine',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 75.5,
-      exercisesCompleted: [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: false,
-        },
-        {
-          id: 2,
-          label: 'Squats',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Quadriceps'],
-          secondaryMuscleGroups: ['Glutes'],
-          completed: true,
-        },
-      ],
-    });
+    await db.workouts.add(createTestWorkout());
 
     render(WorkoutPage);
 
@@ -92,98 +97,211 @@ describe('WorkoutPage', () => {
     });
   });
 
-  it('should save workout with body weight when finished', async () => {
-    const user = userEvent.setup();
+  it('should show Start buttons for exercises', async () => {
+    await db.workouts.add(createTestWorkout());
 
-    await db.workouts.add({
-      id: 'test-workout-id',
-      userId: 123,
-      routineId: 1,
-      routineLabel: 'Test Routine',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 75.5,
-      exercisesCompleted: [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: true,
-        },
-      ],
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
     });
 
-    let savedWorkout: CreateWorkoutRequest | null = null;
+    const startButtons = screen.getAllByText('Start');
+    expect(startButtons).toHaveLength(2);
+  });
 
-    server.use(
-      http.post(`${mockApiUrl}/users/123/workouts`, async ({ request }) => {
-        savedWorkout = (await request.json()) as CreateWorkoutRequest;
-        return HttpResponse.json({
-          id: 1,
-          userId: 123,
-          ...savedWorkout,
-        });
+  it('should start exercise and show sets when Start is clicked', async () => {
+    const user = userEvent.setup();
+    await db.workouts.add(createTestWorkout());
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
+    });
+
+    const startButtons = screen.getAllByText('Start');
+    await user.click(startButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText('W')).toBeInTheDocument();
+      expect(screen.getByText('1')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Add Set')).toBeInTheDocument();
+    expect(screen.getAllByText('Finish')).toHaveLength(2);
+    expect(screen.getByText('Discard')).toBeInTheDocument();
+  });
+
+  it('should add a new set when Add Set is clicked', async () => {
+    const user = userEvent.setup();
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: false,
+            startedAt: '2025-01-15T14:00:00.000Z',
+            sets: [
+              { id: 's1', setType: 'Warmup', completed: false },
+              { id: 's2', setType: 'Normal', completed: false },
+            ],
+          },
+        ],
       })
     );
 
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('Finish')).toBeInTheDocument();
+      expect(screen.getByText('Add Set')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Finish'));
+    await user.click(screen.getByText('Add Set'));
 
     await waitFor(() => {
-      if (savedWorkout === null) {
-        throw new Error('savedWorkout should not be null');
-      }
-      expect(savedWorkout.bodyWeight).toBe(75.5);
-      expect(savedWorkout.routineId).toBe(1);
-      expect(savedWorkout.routineLabel).toBe('Test Routine');
-      expect(savedWorkout.exercisesCompleted).toHaveLength(1);
-      expect(savedWorkout.exercisesCompleted[0].label).toBe('Bench Press');
+      expect(screen.getByText('2')).toBeInTheDocument();
     });
   });
 
-  it('should only include completed exercises when finishing', async () => {
+  it('should finish exercise and show total weight', async () => {
+    const user = userEvent.setup();
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: false,
+            startedAt: '2025-01-15T14:00:00.000Z',
+            sets: [
+              { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
+              { id: 's2', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
+            ],
+          },
+        ],
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      const finishButtons = screen.getAllByText('Finish');
+      expect(finishButtons).toHaveLength(2);
+    });
+
+    // Click the exercise Finish button (second one — inside ExerciseSets)
+    const finishButtons = screen.getAllByText('Finish');
+    await user.click(finishButtons[1]);
+
+    await waitFor(() => {
+      expect(screen.getByText('2 sets completed')).toBeInTheDocument();
+    });
+
+    // 1000 Kg appears in both exercise summary and navbar
+    const weightTexts = screen.getAllByText('1000 Kg');
+    expect(weightTexts.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('should discard exercise and return to Start state', async () => {
+    const user = userEvent.setup();
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: false,
+            startedAt: '2025-01-15T14:00:00.000Z',
+            sets: [
+              { id: 's1', setType: 'Warmup', completed: false },
+              { id: 's2', setType: 'Normal', completed: false },
+            ],
+          },
+        ],
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Discard')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Discard'));
+
+    await waitFor(() => {
+      const startButtons = screen.getAllByText('Start');
+      expect(startButtons).toHaveLength(1);
+    });
+
+    expect(screen.queryByText('Add Set')).not.toBeInTheDocument();
+  });
+
+  it('should show workout total weight in navbar when exercises are finished', async () => {
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
+          },
+          {
+            id: 2,
+            label: 'Squats',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Quadriceps'],
+            secondaryMuscleGroups: ['Glutes'],
+            completed: false,
+          },
+        ],
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      // 600 Kg appears in both navbar and the exercise completed summary
+      const weightTexts = screen.getAllByText('600 Kg');
+      expect(weightTexts.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it('should save workout with sets and totalWeight when finished', async () => {
     const user = userEvent.setup();
 
-    await db.workouts.add({
-      id: 'test-workout-id',
-      userId: 123,
-      routineId: 1,
-      routineLabel: 'Test Routine',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 80.0,
-      exercisesCompleted: [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: true,
-        },
-        {
-          id: 2,
-          label: 'Squats',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Quadriceps'],
-          secondaryMuscleGroups: ['Glutes'],
-          completed: false,
-        },
-        {
-          id: 3,
-          label: 'Deadlift',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Lower Back'],
-          secondaryMuscleGroups: ['Hamstrings'],
-          completed: true,
-        },
-      ],
-    });
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
+          },
+        ],
+      })
+    );
 
     let savedWorkout: CreateWorkoutRequest | null = null;
 
@@ -201,6 +319,7 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
+      // The workout Finish button (not exercise one since exercise is already completed)
       expect(screen.getByText('Finish')).toBeInTheDocument();
     });
 
@@ -210,34 +329,36 @@ describe('WorkoutPage', () => {
       if (savedWorkout === null) {
         throw new Error('savedWorkout should not be null');
       }
-      expect(savedWorkout.exercisesCompleted).toHaveLength(2);
-      expect(savedWorkout.exercisesCompleted[0].label).toBe('Bench Press');
-      expect(savedWorkout.exercisesCompleted[1].label).toBe('Deadlift');
-      expect(savedWorkout.exercisesCompleted[0]).not.toHaveProperty('completed');
+      expect(savedWorkout.totalWeightKg).toBe(600);
+      expect(savedWorkout.exercisesCompleted).toHaveLength(1);
+      expect(savedWorkout.exercisesCompleted[0].sets).toHaveLength(1);
+      expect(savedWorkout.exercisesCompleted[0].sets[0].setType).toBe('Normal');
+      expect(savedWorkout.exercisesCompleted[0].sets[0].weightKg).toBe(60);
+      expect(savedWorkout.exercisesCompleted[0].sets[0].reps).toBe(10);
+      expect(savedWorkout.exercisesCompleted[0].totalWeightKg).toBe(600);
+      expect(savedWorkout.bodyWeightKg).toBe(75.5);
     });
   });
 
   it('should remove workout from IndexedDB after successful save', async () => {
     const user = userEvent.setup();
 
-    await db.workouts.add({
-      id: 'test-workout-id',
-      userId: 123,
-      routineId: 1,
-      routineLabel: 'Test Routine',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 75.5,
-      exercisesCompleted: [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: true,
-        },
-      ],
-    });
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
+          },
+        ],
+      })
+    );
 
     server.use(
       http.post(`${mockApiUrl}/users/123/workouts`, () => {
@@ -275,24 +396,22 @@ describe('WorkoutPage', () => {
   it('should display error when save fails', async () => {
     const user = userEvent.setup();
 
-    await db.workouts.add({
-      id: 'test-workout-id',
-      userId: 123,
-      routineId: 1,
-      routineLabel: 'Test Routine',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 75.5,
-      exercisesCompleted: [
-        {
-          id: 1,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-          completed: true,
-        },
-      ],
-    });
+    await db.workouts.add(
+      createTestWorkout({
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
+          },
+        ],
+      })
+    );
 
     server.use(
       http.post(`${mockApiUrl}/users/123/workouts`, () => {
@@ -312,8 +431,123 @@ describe('WorkoutPage', () => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
     });
 
-    // Workout should still be in IndexedDB
     const workout = await db.workouts.get('test-workout-id');
     expect(workout).toBeDefined();
+  });
+
+  it('should display workout timer', async () => {
+    await db.workouts.add(
+      createTestWorkout({
+        startedAt: new Date(Date.now() - 300000).toISOString(),
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+    });
+
+    const timerText = screen.getByText(/\d{2}:\d{2}:\d{2}/);
+    expect(timerText).toBeInTheDocument();
+  });
+
+  it('should pause and resume timer', async () => {
+    const user = userEvent.setup();
+
+    await db.workouts.add(
+      createTestWorkout({
+        startedAt: new Date(Date.now() - 300000).toISOString(),
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+    });
+
+    const pauseButton = screen.getByRole('button', { name: 'Pause' });
+    await user.click(pauseButton);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Resume' })).toBeInTheDocument();
+    });
+
+    const workoutAfterPause = await db.workouts.get('test-workout-id');
+    if (workoutAfterPause === null || workoutAfterPause === undefined) {
+      throw new Error('Workout should exist after pause');
+    }
+    expect(workoutAfterPause.pausedAt).toBeDefined();
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const resumeButton = screen.getByRole('button', { name: 'Resume' });
+    await user.click(resumeButton);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+    });
+
+    const workoutAfterResume = await db.workouts.get('test-workout-id');
+    if (workoutAfterResume === null || workoutAfterResume === undefined) {
+      throw new Error('Workout should exist after resume');
+    }
+    expect(workoutAfterResume.pausedAt).toBeUndefined();
+    expect(workoutAfterResume.totalPausedSeconds).toBeGreaterThanOrEqual(0);
+  });
+
+  it('should save durationSeconds when finishing workout', async () => {
+    const user = userEvent.setup();
+
+    const startedAt = new Date(Date.now() - 1800000).toISOString();
+
+    await db.workouts.add(
+      createTestWorkout({
+        startedAt,
+        totalPausedSeconds: 300,
+        exercisesCompleted: [
+          {
+            id: 1,
+            label: 'Bench Press',
+            recordSetsType: 'WEIGHT',
+            primaryMuscleGroups: ['Pectoralis Major'],
+            secondaryMuscleGroups: ['Triceps'],
+            completed: true,
+            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            totalWeightKg: 600,
+          },
+        ],
+      })
+    );
+
+    let savedWorkout: CreateWorkoutRequest | null = null;
+
+    server.use(
+      http.post(`${mockApiUrl}/users/123/workouts`, async ({ request }) => {
+        savedWorkout = (await request.json()) as CreateWorkoutRequest;
+        return HttpResponse.json({
+          id: 1,
+          userId: 123,
+          ...savedWorkout,
+        });
+      })
+    );
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Finish')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Finish'));
+
+    await waitFor(() => {
+      if (savedWorkout === null) {
+        throw new Error('savedWorkout should not be null');
+      }
+      expect(savedWorkout.durationSeconds).toBeGreaterThan(1400);
+      expect(savedWorkout.durationSeconds).toBeLessThan(1600);
+    });
   });
 });

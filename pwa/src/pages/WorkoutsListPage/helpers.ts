@@ -27,3 +27,26 @@ export function formatTime(dateString: string): string {
     minute: '2-digit',
   });
 }
+
+export function formatTotalWeight(weightKg: number): string {
+  return `${weightKg.toLocaleString()}kg`;
+}
+
+export function formatDuration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const parts: string[] = [];
+  if (hours > 0) {
+    parts.push(`${hours}h`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes}m`);
+  }
+  if (secs > 0 || parts.length === 0) {
+    parts.push(`${secs}s`);
+  }
+
+  return parts.join(' ');
+}

@@ -32,7 +32,7 @@ describe('RoutinePage helpers', () => {
           return HttpResponse.json({
             id: 1,
             name: 'Test User',
-            latestBodyWeight: { weight: 75.5, unit: 'KG' },
+            latestBodyWeight: { weightKg: 75.5 },
           });
         })
       );
@@ -175,7 +175,7 @@ describe('RoutinePage helpers', () => {
       expect(workout.userId).toBe(123);
       expect(workout.routineId).toBe(1);
       expect(workout.routineLabel).toBe('Test Routine');
-      expect(workout.bodyWeight).toBe(75.5);
+      expect(workout.bodyWeightKg).toBe(75.5);
       expect(workout.id).toBeTruthy(); // UUID
       expect(workout.startedAt).toBeTruthy(); // ISO date string
       expect(workout.exercisesCompleted).toHaveLength(1);
@@ -223,7 +223,7 @@ describe('RoutinePage helpers', () => {
           return HttpResponse.json({
             id: 123,
             name: 'Test User',
-            latestBodyWeight: { weight: 75.5, unit: 'KG' },
+            latestBodyWeight: { weightKg: 75.5 },
           });
         })
       );
@@ -267,7 +267,7 @@ describe('RoutinePage helpers', () => {
           return HttpResponse.json({
             id: 123,
             name: 'Test User',
-            latestBodyWeight: { weight: 75.5, unit: 'KG' },
+            latestBodyWeight: { weightKg: 75.5 },
           });
         })
       );
@@ -279,7 +279,7 @@ describe('RoutinePage helpers', () => {
         expect(result.workout.userId).toBe(123);
         expect(result.workout.routineId).toBe(1);
         expect(result.workout.routineLabel).toBe('Test Routine');
-        expect(result.workout.bodyWeight).toBe(75.5);
+        expect(result.workout.bodyWeightKg).toBe(75.5);
         expect(result.workout.exercisesCompleted).toHaveLength(1);
       }
     });

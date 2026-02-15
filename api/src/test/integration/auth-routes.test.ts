@@ -38,8 +38,7 @@ describe('Auth Routes', () => {
         await prisma.userBodyWeight.create({
           data: {
             userId: testUserId,
-            weight: 75.5,
-            unit: 'KG',
+            weightKg: 75.5,
           },
         });
 
@@ -59,14 +58,12 @@ describe('Auth Routes', () => {
           data: [
             {
               userId: testUserId,
-              weight: 70.0,
-              unit: 'KG',
+              weightKg: 70.0,
               recordedAt: new Date('2025-01-01'),
             },
             {
               userId: testUserId,
-              weight: 75.5,
-              unit: 'KG',
+              weightKg: 75.5,
               recordedAt: new Date('2025-01-02'),
             },
           ],
@@ -77,7 +74,7 @@ describe('Auth Routes', () => {
           orderBy: { recordedAt: 'desc' },
         });
 
-        expect(latestBodyWeight?.weight.toString()).toBe('75.5');
+        expect(latestBodyWeight?.weightKg.toString()).toBe('75.5');
       });
     });
   });

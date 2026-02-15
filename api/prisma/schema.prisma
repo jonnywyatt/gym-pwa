@@ -15,10 +15,6 @@ enum RecordSetsType {
   BODYWEIGHT_PLUS_WEIGHT
 }
 
-enum WeightUnit {
-  KG
-}
-
 enum BodyAreaLabel {
   CHEST
   BACK
@@ -137,12 +133,11 @@ model User {
 }
 
 model UserBodyWeight {
-  id         Int        @id @default(autoincrement())
-  userId     Int        @map("user_id")
-  weight     Decimal    @db.Decimal(5, 2)
-  unit       WeightUnit @default(KG)
-  recordedAt DateTime   @default(now()) @map("recorded_at")
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  weightKg   Decimal  @db.Decimal(5, 2) @map("weight_kg")
+  recordedAt DateTime @default(now()) @map("recorded_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_body_weights")
 }
@@ -154,9 +149,10 @@ model UserWorkout {
   routineLabel       String     @map("routine_label")
   startedAt          DateTime   @map("started_at")
   finishedAt         DateTime   @map("finished_at")
+  durationSeconds    Int?       @map("duration_seconds")
   exercisesCompleted Json       @map("exercises_completed")
-  bodyWeight         Decimal?   @db.Decimal(5, 2) @map("body_weight")
-  bodyWeightUnit     WeightUnit? @default(KG) @map("body_weight_unit")
+  totalWeightKg      Int?       @map("total_weight_kg")
+  bodyWeightKg       Decimal    @db.Decimal(5, 2) @map("body_weight_kg")
   user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_workouts")

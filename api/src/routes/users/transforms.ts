@@ -10,8 +10,7 @@ export function transformUserProfile(
     name: user.name,
     latestBodyWeight: latestBodyWeight
       ? {
-          weight: Number(latestBodyWeight.weight),
-          unit: latestBodyWeight.unit,
+          weightKg: Number(latestBodyWeight.weightKg),
         }
       : null,
   };

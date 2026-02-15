@@ -191,7 +191,7 @@ describe('RoutinePage', () => {
         return HttpResponse.json({
           id: 123,
           name: 'Test User',
-          latestBodyWeight: { weight: 75.5, unit: 'KG' },
+          latestBodyWeight: { weightKg: 75.5 },
         });
       })
     );
@@ -213,7 +213,7 @@ describe('RoutinePage', () => {
     // Verify workout was created in IndexedDB with body weight
     const workouts = await db.workouts.toArray();
     expect(workouts).toHaveLength(1);
-    expect(workouts[0].bodyWeight).toBe(75.5);
+    expect(workouts[0].bodyWeightKg).toBe(75.5);
     expect(workouts[0].routineId).toBe(1);
     expect(workouts[0].routineLabel).toBe('Test Routine');
     expect(workouts[0].exercisesCompleted).toHaveLength(1);
@@ -229,7 +229,7 @@ describe('RoutinePage', () => {
       routineId: 2,
       routineLabel: 'Another Routine',
       startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeight: 80.0,
+      bodyWeightKg: 80.0,
       exercisesCompleted: [],
     });
 

@@ -20,7 +20,7 @@ async function loadProfile() {
   try {
     profile.value = await fetchUserProfile(route.params.userId);
     if (profile.value.latestBodyWeight) {
-      weight.value = String(profile.value.latestBodyWeight.weight);
+      weight.value = String(profile.value.latestBodyWeight.weightKg);
     } else {
       isFirstTimeUser.value = true;
     }

@@ -49,8 +49,8 @@ export const handlers = [
     if (!authHeader?.startsWith('Bearer ')) {
       return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const body = (await request.json()) as { weight?: number };
-    return HttpResponse.json({ weight: String(body.weight), unit: 'KG' }, { status: 201 });
+    const body = (await request.json()) as { weightKg?: number };
+    return HttpResponse.json({ weightKg: String(body.weightKg) }, { status: 201 });
   }),
 ];
 

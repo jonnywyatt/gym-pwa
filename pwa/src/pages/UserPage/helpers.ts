@@ -9,7 +9,7 @@ export async function saveBodyWeight(userId: string | string[], weight: number):
   const response = await authFetch(`/users/${userId}/body-weights`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ weight }),
+    body: JSON.stringify({ weightKg: weight }),
   });
 
   if (!response.ok) {

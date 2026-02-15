@@ -1,8 +1,18 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { WorkoutExercise } from 'gym-pwa-api/types';
+import type { CompletedSet, WorkoutExercise } from 'gym-pwa-api/types';
+
+export type { SetType } from 'gym-pwa-api/types';
+
+export interface WorkoutSet extends CompletedSet {
+  id: string;
+  completed: boolean;
+}
 
 export interface LocalWorkoutExercise extends WorkoutExercise {
   completed: boolean;
+  startedAt?: string;
+  sets?: WorkoutSet[];
+  totalWeightKg?: number;
 }
 
 export interface LocalWorkout {
@@ -12,8 +22,11 @@ export interface LocalWorkout {
   routineLabel: string;
   startedAt: string;
   exercisesCompleted: LocalWorkoutExercise[];
-  bodyWeight: number;
+  bodyWeightKg: number;
   finishedAt?: string;
+  pausedAt?: string;
+  totalPausedSeconds?: number;
+  elapsedSeconds?: number;
 }
 
 export class GymDatabase extends Dexie {
@@ -42,22 +55,12 @@ export async function createWorkout(workout: LocalWorkout): Promise<string> {
   return workout.id;
 }
 
-export async function updateWorkoutExercise(
+export async function updateWorkoutExercises(
   workoutId: string,
-  exerciseId: number,
-  completed: boolean
+  exercises: LocalWorkoutExercise[]
 ): Promise<void> {
-  const workout = await db.workouts.get(workoutId);
-  if (!workout) {
-    throw new Error('Workout not found');
-  }
-
-  const updatedExercises = workout.exercisesCompleted.map((exercise) =>
-    exercise.id === exerciseId ? { ...exercise, completed } : exercise
-  );
-
   await db.workouts.update(workoutId, {
-    exercisesCompleted: updatedExercises,
+    exercisesCompleted: exercises,
   });
 }
 
@@ -67,4 +70,15 @@ export async function finishWorkout(workoutId: string, finishedAt: string): Prom
 
 export async function deleteWorkout(workoutId: string): Promise<void> {
   await db.workouts.delete(workoutId);
+}
+
+export async function updateWorkoutTimer(
+  workoutId: string,
+  updates: {
+    elapsedSeconds?: number;
+    pausedAt?: string;
+    totalPausedSeconds?: number;
+  }
+): Promise<void> {
+  await db.workouts.update(workoutId, updates);
 }
