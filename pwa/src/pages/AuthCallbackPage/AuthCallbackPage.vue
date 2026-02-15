@@ -23,7 +23,7 @@ onMounted(async () => {
     if (!result.hasBodyWeight && userId) {
       router.replace(`/users/${userId}`);
     } else {
-      router.replace('/routines');
+      router.replace('/');
     }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Authentication failed';

@@ -6,6 +6,12 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'dashboard',
+      component: () => import('./pages/DashboardPage/DashboardPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/login',
       name: 'login',
       component: () => import('./pages/LoginPage/LoginPage.vue'),
     },
@@ -55,7 +61,7 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !authService.isAuthenticated()) {
-    next({ name: 'login' });
+    next('/login');
   } else {
     next();
   }

@@ -1,0 +1,26 @@
+.dashboardNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-3);
+  margin-top: var(--spacing-unit-4);
+}
+
+.navCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-1);
+  padding: var(--spacing-unit-4);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.navCard:hover {
+  background: var(--background-secondary);
+}
+
+.navCard span {
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+}

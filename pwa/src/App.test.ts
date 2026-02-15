@@ -523,7 +523,7 @@ describe('AuthCallbackPage', () => {
     });
   });
 
-  it('should redirect to routines page when hasBodyWeight is true', async () => {
+  it('should redirect to dashboard when hasBodyWeight is true', async () => {
     server.use(
       http.post(`${mockApiUrl}/auth/google`, () => {
         return HttpResponse.json({
@@ -546,7 +546,7 @@ describe('AuthCallbackPage', () => {
     render(AuthCallbackPage);
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/routines');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/');
     });
   });
 

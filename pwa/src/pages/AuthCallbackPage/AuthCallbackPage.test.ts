@@ -94,7 +94,7 @@ describe('AuthCallbackPage', () => {
     expect(localStorage.getItem('user_name')).toBe('Test User');
   });
 
-  it('should redirect to routines page when hasBodyWeight is true', async () => {
+  it('should redirect to dashboard when hasBodyWeight is true', async () => {
     Object.defineProperty(window, 'location', {
       value: {
         search: '?code=test-code',
@@ -117,7 +117,7 @@ describe('AuthCallbackPage', () => {
     render(AuthCallbackPage);
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/routines');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/');
     });
 
     // Verify tokens and user info were stored
@@ -273,7 +273,7 @@ describe('AuthCallbackPage', () => {
     render(AuthCallbackPage);
 
     await waitFor(() => {
-      expect(mockRouterReplace).toHaveBeenCalledWith('/routines');
+      expect(mockRouterReplace).toHaveBeenCalledWith('/');
     });
 
     expect(localStorage.getItem('user_name')).toBe('');
