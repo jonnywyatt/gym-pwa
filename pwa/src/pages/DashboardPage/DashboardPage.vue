@@ -5,7 +5,7 @@ import styles from './DashboardPage.module.css';
 
 <template>
   <main class="main">
-    <h1 :class="baseStyles.heading">Axis gym companion</h1>
+    <h1 :class="baseStyles.heading">Duro gym companion</h1>
     <nav :class="styles.dashboardNav">
       <router-link to="/routines" :class="styles.navCard">
         <strong>Routines</strong>

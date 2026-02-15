@@ -1,4 +1,5 @@
 import type {
+  CompletedSet,
   CompletedWorkoutExercise,
   CreateWorkoutRequest,
   RecordSetsType,
@@ -215,4 +216,41 @@ export function calculateFinalDurationSeconds(
   const endTime = new Date(finishedAt).getTime();
   const totalElapsed = Math.floor((endTime - startTime) / 1000);
   return totalElapsed - totalPausedSeconds;
+}
+
+export async function fetchWorkout(userId: number, workoutId: number): Promise<UserWorkout> {
+  return await authFetchJson<UserWorkout>(`/users/${userId}/workouts/${workoutId}`);
+}
+
+function formatTimeSeconds(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (mins > 0 && secs > 0) return `${mins}m ${secs}s`;
+  if (mins > 0) return `${mins}m`;
+  return `${secs}s`;
+}
+
+export function formatSetDetails(set: CompletedSet, recordSetsType: RecordSetsType): string {
+  const parts: string[] = [set.setType];
+
+  switch (recordSetsType) {
+    case 'WEIGHT':
+    case 'BODYWEIGHT_PLUS_WEIGHT':
+      parts.push(`${set.weightKg ?? 0}kg`);
+      parts.push(`${set.reps ?? 0} reps`);
+      break;
+    case 'BODYWEIGHT_MINUS_OFFSET':
+      parts.push(`${set.weightKg ?? 0}kg offset`);
+      parts.push(`${set.reps ?? 0} reps`);
+      break;
+    case 'WEIGHT_AND_TIME':
+      parts.push(`${set.weightKg ?? 0}kg`);
+      parts.push(formatTimeSeconds(set.timeSeconds ?? 0));
+      break;
+    case 'TIME':
+      parts.push(formatTimeSeconds(set.timeSeconds ?? 0));
+      break;
+  }
+
+  return parts.join(' · ');
 }

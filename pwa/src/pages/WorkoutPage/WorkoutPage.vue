@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, toRaw } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { UserWorkout } from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutPage.module.css';
 import { authService } from '../../lib/auth/oauth';
@@ -18,11 +19,21 @@ import {
   finishExercise as finishExerciseHelper,
   discardExercise,
   createNewSet,
+  fetchWorkout,
+  formatSetDetails,
 } from './helpers';
+import {
+  formatDate,
+  formatTime,
+  formatDuration,
+  formatTotalWeight,
+} from '../WorkoutsListPage/helpers';
 
 const route = useRoute();
 const router = useRouter();
+const mode = ref<'active' | 'summary'>('active');
 const workout = ref<LocalWorkout | null>(null);
+const completedWorkout = ref<UserWorkout | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const finishing = ref(false);
@@ -67,19 +78,34 @@ async function loadWorkout() {
     const workoutId = String(route.params.workoutId);
     const workoutData = await db.workouts.get(workoutId);
 
-    if (!workoutData) {
+    if (workoutData) {
+      mode.value = 'active';
+      workout.value = workoutData;
+      isPaused.value = Boolean(workoutData.pausedAt);
+
+      if (!isPaused.value) {
+        startTimer();
+      } else {
+        updateElapsedTime();
+      }
+      return;
+    }
+
+    const userId = authService.getUserId();
+    if (!userId) {
+      error.value = 'User not authenticated';
+      return;
+    }
+
+    const numericWorkoutId = parseInt(workoutId, 10);
+    if (Number.isNaN(numericWorkoutId)) {
       error.value = 'Workout not found';
       return;
     }
 
-    workout.value = workoutData;
-    isPaused.value = Boolean(workoutData.pausedAt);
-
-    if (!isPaused.value) {
-      startTimer();
-    } else {
-      updateElapsedTime();
-    }
+    const apiWorkout = await fetchWorkout(userId, numericWorkoutId);
+    mode.value = 'summary';
+    completedWorkout.value = apiWorkout;
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to load workout';
   } finally {
@@ -267,7 +293,9 @@ onUnmounted(() => {
   <main class="main">
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
-    <template v-else-if="workout">
+
+    <!-- Active workout mode -->
+    <template v-else-if="mode === 'active' && workout">
       <nav :class="styles.nav">
         <div :class="styles.navLeft">
           <WorkoutTimer
@@ -304,6 +332,43 @@ onUnmounted(() => {
             @finish="handleFinishExercise"
             @discard="handleDiscardExercise"
           />
+        </li>
+      </ul>
+    </template>
+
+    <!-- Summary mode -->
+    <template v-else-if="mode === 'summary' && completedWorkout">
+      <header class="header">
+        <h1 :class="baseStyles.heading">{{ completedWorkout.routineLabel }}</h1>
+      </header>
+
+      <div :class="styles.summaryMeta">
+        <span>{{ formatDate(completedWorkout.startedAt) }} at {{ formatTime(completedWorkout.startedAt) }}</span>
+        <span v-if="completedWorkout.durationSeconds !== undefined">{{ formatDuration(completedWorkout.durationSeconds) }}</span>
+        <span v-if="completedWorkout.totalWeightKg">{{ formatTotalWeight(completedWorkout.totalWeightKg) }} total</span>
+      </div>
+
+      <ul class="list">
+        <li
+          v-for="exercise in completedWorkout.exercisesCompleted"
+          :key="exercise.id"
+          :class="styles.summaryExercise"
+        >
+          <div :class="styles.summaryExerciseHeader">
+            <strong>{{ exercise.label }}</strong>
+            <span v-if="exercise.totalWeightKg" :class="styles.summaryExerciseWeight">
+              {{ formatTotalWeight(exercise.totalWeightKg) }}
+            </span>
+          </div>
+          <ul :class="styles.summarySetsList">
+            <li
+              v-for="(set, index) in exercise.sets"
+              :key="index"
+              :class="styles.summarySetItem"
+            >
+              {{ formatSetDetails(set, exercise.recordSetsType) }}
+            </li>
+          </ul>
         </li>
       </ul>
     </template>

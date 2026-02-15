@@ -18,12 +18,23 @@ vi.mock('../../lib/auth/oauth', () => ({
   },
 }));
 
+const routerLinkStub = {
+  template: '<a :href="to"><slot /></a>',
+  props: ['to'],
+};
+
 describe('WorkoutsListPage', () => {
   const mockApiUrl = 'http://localhost:3000';
 
   beforeEach(() => {
     localStorage.setItem('access_token', 'test-token');
   });
+
+  function renderPage() {
+    return render(WorkoutsListPage, {
+      global: { stubs: { RouterLink: routerLinkStub } },
+    });
+  }
 
   it('should display loading state initially', async () => {
     server.use(
@@ -33,7 +44,7 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
@@ -45,7 +56,7 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -79,7 +90,7 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -109,7 +120,7 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -151,7 +162,7 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -172,12 +183,42 @@ describe('WorkoutsListPage', () => {
       })
     );
 
-    render(WorkoutsListPage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
     expect(screen.getByText(/Error:/)).toBeInTheDocument();
+  });
+
+  it('should render workout items as links to workout detail', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([
+          {
+            id: 42,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Strength',
+            startedAt: '2024-01-15T10:00:00Z',
+            finishedAt: '2024-01-15T11:00:00Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            bodyWeightKg: 80,
+            totalWeightKg: 0,
+          },
+        ]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Strength')).toBeInTheDocument();
+    });
+
+    const link = screen.getByText('Strength').closest('a');
+    expect(link).toHaveAttribute('href', '/workouts/42');
   });
 });

@@ -13,7 +13,7 @@ describe('DashboardPage', () => {
       global: { stubs: { RouterLink: routerLinkStub } },
     });
 
-    expect(screen.getByText('Axis gym companion')).toBeInTheDocument();
+    expect(screen.getByText('Duro gym companion')).toBeInTheDocument();
   });
 
   it('should display a link to the Routines page', () => {

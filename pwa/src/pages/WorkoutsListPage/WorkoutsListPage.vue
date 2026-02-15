@@ -43,16 +43,18 @@ onMounted(() => {
       <p v-if="workouts.length === 0">No workouts yet. Start a routine to log your first workout!</p>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" :class="styles.workoutItem">
-          <div :class="styles.workoutHeader">
-            <strong>{{ workout.routineLabel }}</strong>
-          </div>
-          <div :class="styles.workoutMeta">
-            <span>{{ formatDate(workout.startedAt) }} at {{ formatTime(workout.startedAt) }}</span>
-            <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
-            <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
-            <span>{{ workout.exercisesCompleted.length }} exercises</span>
-            <span v-if="workout.totalWeightKg">{{ formatTotalWeight(workout.totalWeightKg) }} total</span>
-          </div>
+          <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">
+            <div :class="styles.workoutHeader">
+              <strong>{{ workout.routineLabel }}</strong>
+            </div>
+            <div :class="styles.workoutMeta">
+              <span>{{ formatDate(workout.startedAt) }} at {{ formatTime(workout.startedAt) }}</span>
+              <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
+              <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
+              <span>{{ workout.exercisesCompleted.length }} exercises</span>
+              <span v-if="workout.totalWeightKg">{{ formatTotalWeight(workout.totalWeightKg) }} total</span>
+            </div>
+          </router-link>
         </li>
       </ul>
     </template>

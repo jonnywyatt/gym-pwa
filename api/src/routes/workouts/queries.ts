@@ -29,3 +29,12 @@ export async function getUserWorkouts(userId: number): Promise<UserWorkoutFromDB
     orderBy: { finishedAt: 'desc' },
   });
 }
+
+export async function getUserWorkout(
+  userId: number,
+  workoutId: number
+): Promise<UserWorkoutFromDB | null> {
+  return await prisma.userWorkout.findFirst({
+    where: { id: workoutId, userId },
+  });
+}

@@ -17,12 +17,14 @@ vi.mock('../../config', () => ({
 
 const mockRouterPush = vi.fn();
 
+let mockWorkoutId = 'test-workout-id';
+
 vi.mock('vue-router', () => ({
   useRouter: () => ({
     push: mockRouterPush,
   }),
   useRoute: () => ({
-    params: { workoutId: 'test-workout-id' },
+    params: { workoutId: mockWorkoutId },
   }),
 }));
 
@@ -63,6 +65,7 @@ describe('WorkoutPage', () => {
     localStorage.setItem('access_token', 'test-token');
     localStorage.setItem('user_id', '123');
     mockRouterPush.mockClear();
+    mockWorkoutId = 'test-workout-id';
     await db.workouts.clear();
   });
 
@@ -548,6 +551,147 @@ describe('WorkoutPage', () => {
       }
       expect(savedWorkout.durationSeconds).toBeGreaterThan(1400);
       expect(savedWorkout.durationSeconds).toBeLessThan(1600);
+    });
+  });
+
+  describe('summary mode', () => {
+    beforeEach(() => {
+      mockWorkoutId = '42';
+    });
+
+    it('should display workout summary when no active workout in IndexedDB', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Strength Training',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:05:30.000Z',
+            durationSeconds: 3930,
+            exercisesCompleted: [
+              {
+                id: 1,
+                label: 'Bench Press',
+                recordSetsType: 'WEIGHT',
+                primaryMuscleGroups: ['Pectoralis Major'],
+                secondaryMuscleGroups: ['Triceps'],
+                sets: [
+                  { setType: 'Warmup', weightKg: 40, reps: 10 },
+                  { setType: 'Normal', weightKg: 60, reps: 10 },
+                ],
+                totalWeightKg: 1000,
+              },
+            ],
+            totalWeightKg: 1000,
+            bodyWeightKg: 75.5,
+          });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText('Strength Training')).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
+      expect(screen.getByText('1,000kg total')).toBeInTheDocument();
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
+      expect(screen.getByText('1,000kg')).toBeInTheDocument();
+      expect(screen.getByText('Warmup · 40kg · 10 reps')).toBeInTheDocument();
+      expect(screen.getByText('Normal · 60kg · 10 reps')).toBeInTheDocument();
+    });
+
+    it('should display exercises with different record set types', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Mixed Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [
+              {
+                id: 1,
+                label: 'Plank',
+                recordSetsType: 'TIME',
+                primaryMuscleGroups: ['Core'],
+                secondaryMuscleGroups: [],
+                sets: [{ setType: 'Normal', timeSeconds: 60 }],
+                totalWeightKg: 0,
+              },
+              {
+                id: 2,
+                label: 'Assisted Pull-up',
+                recordSetsType: 'BODYWEIGHT_MINUS_OFFSET',
+                primaryMuscleGroups: ['Back'],
+                secondaryMuscleGroups: [],
+                sets: [{ setType: 'Normal', weightKg: 20, reps: 8 }],
+                totalWeightKg: 480,
+              },
+            ],
+            totalWeightKg: 480,
+            bodyWeightKg: 80,
+          });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText('Mixed Workout')).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('Normal · 1m')).toBeInTheDocument();
+      expect(screen.getByText('Normal · 20kg offset · 8 reps')).toBeInTheDocument();
+    });
+
+    it('should display error when API fetch fails', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return new HttpResponse(null, { status: 500 });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Error:/)).toBeInTheDocument();
+      });
+    });
+
+    it('should not show active workout UI elements in summary mode', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Test Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            totalWeightKg: 0,
+            bodyWeightKg: 75,
+          });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Workout')).toBeInTheDocument();
+      });
+
+      expect(screen.queryByText('Finish')).not.toBeInTheDocument();
+      expect(screen.queryByText('Finishing...')).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Pause' })).not.toBeInTheDocument();
     });
   });
 });

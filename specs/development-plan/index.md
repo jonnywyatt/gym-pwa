@@ -17,14 +17,15 @@
 - [Goal 1: User can enter their body weight](epic-3-workouts/goal-1-enter-user-bodyweight.md)
 - [Goal 2: Start and finish workout](epic-3-workouts/goal-2-start-finish-workout.md)
 - [Goal 3 - Workout sets](./epic-3-workouts/goal-3-sets.md)
-- delete workout
+- [Goal 4 - Dashboard](./epic-3-workouts/goal-4-dashboard.md)
+- [Goal 5 - Workout summary](./epic-3-workouts/goal-5-workout-summary.md)
 
 ## Backlog
 ### Features
+- design
+- show summary of muscle groups worked / body areas for each workout
 - delete workout from workouts page
-- if user navigates away from workout page, during workout
-- when clicking Finish workout, show workout summary page and confirm / discard / back buttons
-- link to workouts page from home page
+- edit workout
 - unique page titles
 
 ### Other

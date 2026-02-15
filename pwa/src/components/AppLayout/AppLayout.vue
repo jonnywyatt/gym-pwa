@@ -17,6 +17,8 @@ const backLink = computed(() => {
     routines: { to: '/', label: 'Dashboard' },
     'workouts-list': { to: '/', label: 'Dashboard' },
     'routine-detail': { to: '/routines', label: 'Routines' },
+    'workout-detail': { to: '/workouts', label: 'Workouts' },
+    'user-profile': { to: '/', label: 'Dashboard' },
   };
   return backLinks[route.name as string] ?? null;
 });

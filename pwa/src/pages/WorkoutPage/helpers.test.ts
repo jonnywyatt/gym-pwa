@@ -1,3 +1,4 @@
+import type { CompletedSet } from 'gym-pwa-api/types';
 import { HttpResponse, http } from 'msw';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout, LocalWorkoutExercise, WorkoutSet } from '../../lib/db';
@@ -12,7 +13,9 @@ import {
   createNewSet,
   createWorkoutPayload,
   discardExercise,
+  fetchWorkout,
   finishExercise,
+  formatSetDetails,
   formatStartTime,
   getCompletedExercises,
   getSetDisplayLabel,
@@ -579,6 +582,91 @@ describe('WorkoutPage helpers', () => {
       expect(
         calculateFinalDurationSeconds('2025-01-15T14:00:00.000Z', '2025-01-15T14:00:45.000Z')
       ).toBe(45);
+    });
+  });
+
+  describe('formatSetDetails', () => {
+    it('formats WEIGHT set with setType, weight, and reps', () => {
+      const set: CompletedSet = { setType: 'Normal', weightKg: 60, reps: 10 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 60kg · 10 reps');
+    });
+
+    it('formats BODYWEIGHT_PLUS_WEIGHT set', () => {
+      const set: CompletedSet = { setType: 'Normal', weightKg: 20, reps: 8 };
+      expect(formatSetDetails(set, 'BODYWEIGHT_PLUS_WEIGHT')).toBe('Normal · 20kg · 8 reps');
+    });
+
+    it('formats BODYWEIGHT_MINUS_OFFSET set with offset label', () => {
+      const set: CompletedSet = { setType: 'Normal', weightKg: 30, reps: 5 };
+      expect(formatSetDetails(set, 'BODYWEIGHT_MINUS_OFFSET')).toBe(
+        'Normal · 30kg offset · 5 reps'
+      );
+    });
+
+    it('formats WEIGHT_AND_TIME set with weight and time', () => {
+      const set: CompletedSet = { setType: 'Normal', weightKg: 40, timeSeconds: 90 };
+      expect(formatSetDetails(set, 'WEIGHT_AND_TIME')).toBe('Normal · 40kg · 1m 30s');
+    });
+
+    it('formats TIME set with time only', () => {
+      const set: CompletedSet = { setType: 'Normal', timeSeconds: 120 };
+      expect(formatSetDetails(set, 'TIME')).toBe('Normal · 2m');
+    });
+
+    it('formats Warmup set type', () => {
+      const set: CompletedSet = { setType: 'Warmup', weightKg: 40, reps: 10 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Warmup · 40kg · 10 reps');
+    });
+
+    it('handles missing weight as 0', () => {
+      const set: CompletedSet = { setType: 'Normal', reps: 10 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 0kg · 10 reps');
+    });
+
+    it('handles missing reps as 0', () => {
+      const set: CompletedSet = { setType: 'Normal', weightKg: 60 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 60kg · 0 reps');
+    });
+
+    it('formats time in seconds only when less than a minute', () => {
+      const set: CompletedSet = { setType: 'Normal', timeSeconds: 45 };
+      expect(formatSetDetails(set, 'TIME')).toBe('Normal · 45s');
+    });
+  });
+
+  describe('fetchWorkout', () => {
+    it('fetches a single workout from the API', async () => {
+      const mockResponse = {
+        id: 1,
+        userId: 123,
+        routineId: 1,
+        routineLabel: 'Test Routine',
+        startedAt: '2025-01-15T14:00:00.000Z',
+        finishedAt: '2025-01-15T15:00:00.000Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        totalWeightKg: 500,
+        bodyWeightKg: 75.5,
+      };
+
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/1`, () => {
+          return HttpResponse.json(mockResponse);
+        })
+      );
+
+      const result = await fetchWorkout(123, 1);
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('throws error when API call fails', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/999`, () => {
+          return new HttpResponse(null, { status: 404 });
+        })
+      );
+
+      await expect(fetchWorkout(123, 999)).rejects.toThrow();
     });
   });
 });

@@ -1,6 +1,12 @@
 .workoutItem {
-  padding: var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
+}
+
+.workoutLink {
+  display: block;
+  padding: var(--spacing-md);
+  text-decoration: none;
+  color: inherit;
 }
 
 .workoutHeader {
