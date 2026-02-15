@@ -195,23 +195,54 @@ describe('ExerciseSets', () => {
       sets: [{ id: 's1', setType: 'Normal', timeSeconds: 60, completed: false }],
     };
 
-    it('shows time input but not weight or reps inputs', () => {
+    it('shows minutes and seconds inputs but not weight or reps inputs', () => {
       render(ExerciseSets, {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByPlaceholderText('m:ss')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Sec')).toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Kg')).not.toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Reps')).not.toBeInTheDocument();
     });
 
-    it('displays formatted time value', () => {
+    it('emits updateSet with combined timeSeconds when minutes input changes', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: timeExercise, bodyWeightKg: 80 },
+      });
+
+      const minInput = screen.getByPlaceholderText('Min');
+      await user.clear(minInput);
+      await user.type(minInput, '2');
+      const updates = emitted().updateSet;
+      const lastUpdate = updates[updates.length - 1];
+      expect(lastUpdate).toEqual([2, 's1', { timeSeconds: 120 }]);
+    });
+
+    it('emits updateSet with combined timeSeconds when seconds input changes', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: timeExercise, bodyWeightKg: 80 },
+      });
+
+      const secInput = screen.getByPlaceholderText('Sec');
+      await user.clear(secInput);
+      await user.type(secInput, '30');
+      const updates = emitted().updateSet;
+      const lastUpdate = updates[updates.length - 1];
+      expect(lastUpdate).toEqual([2, 's1', { timeSeconds: 90 }]);
+    });
+
+    it('displays minutes and seconds values separately', () => {
       render(ExerciseSets, {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
 
-      const timeInput = screen.getByPlaceholderText('m:ss') as HTMLInputElement;
-      expect(timeInput.value).toBe('1:00');
+      const minInput = screen.getByPlaceholderText('Min') as HTMLInputElement;
+      const secInput = screen.getByPlaceholderText('Sec') as HTMLInputElement;
+      expect(minInput.value).toBe('1');
+      expect(secInput.value).toBe('0');
     });
   });
 
@@ -227,13 +258,14 @@ describe('ExerciseSets', () => {
       sets: [{ id: 's1', setType: 'Normal', completed: false }],
     };
 
-    it('shows weight and time inputs but not reps', () => {
+    it('shows weight, minutes and seconds inputs but not reps', () => {
       render(ExerciseSets, {
         props: { exercise: weightTimeExercise, bodyWeightKg: 80 },
       });
 
       expect(screen.getByPlaceholderText('Kg')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('m:ss')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Sec')).toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Reps')).not.toBeInTheDocument();
     });
   });

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { LocalWorkoutExercise, SetType } from '../../lib/db';
-import { formatTimeMinSec } from '../../utils/time';
 import {
   calculateExerciseTotalWeightKg,
   getSetDisplayLabel,
   getSetInputFields,
 } from '../../pages/WorkoutPage/helpers';
+import { combineTimeSeconds, getMinutes, getSeconds } from './helpers';
 import styles from './ExerciseSets.module.css';
 
 interface Props {
@@ -39,9 +39,9 @@ const exerciseTotalWeightKg = computed(() => {
 const isStarted = computed(() => Boolean(props.exercise.startedAt));
 const isCompleted = computed(() => props.exercise.completed);
 
-function formatSetTime(timeSeconds: number | undefined): string {
-  if (timeSeconds === undefined) return '';
-  return formatTimeMinSec(timeSeconds);
+function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined, field: 'minutes' | 'seconds', value: string) {
+  const timeSeconds = combineTimeSeconds(currentTimeSeconds, field, value);
+  emit('updateSet', props.exercise.id, setId, { timeSeconds });
 }
 </script>
 
@@ -91,24 +91,30 @@ function formatSetTime(timeSeconds: number | undefined): string {
           @input="(e) => emit('updateSet', exercise.id, set.id, { reps: Number((e.target as HTMLInputElement).value) || undefined })"
         />
 
-        <input
-          v-if="inputFields.showTime"
-          type="text"
-          :class="styles.setInput"
-          placeholder="m:ss"
-          :aria-label="`Time for set ${index + 1}`"
-          :value="formatSetTime(set.timeSeconds)"
-          @change="(e) => {
-            const val = (e.target as HTMLInputElement).value;
-            const match = val.trim().match(/^(\d+):(\d{1,2})$/);
-            if (match) {
-              const seconds = parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
-              if (parseInt(match[2], 10) < 60) {
-                emit('updateSet', exercise.id, set.id, { timeSeconds: seconds });
-              }
-            }
-          }"
-        />
+        <template v-if="inputFields.showTime">
+          <div :class="styles.timeInputGroup">
+            <input
+              type="number"
+              :class="styles.timeInput"
+              placeholder="Min"
+              :aria-label="`Minutes for set ${index + 1}`"
+              :value="getMinutes(set.timeSeconds)"
+              min="0"
+              @input="(e) => handleTimeUpdate(set.id, set.timeSeconds, 'minutes', (e.target as HTMLInputElement).value)"
+            />
+            <span :class="styles.timeSeparator">:</span>
+            <input
+              type="number"
+              :class="styles.timeInput"
+              placeholder="Sec"
+              :aria-label="`Seconds for set ${index + 1}`"
+              :value="getSeconds(set.timeSeconds)"
+              min="0"
+              max="59"
+              @input="(e) => handleTimeUpdate(set.id, set.timeSeconds, 'seconds', (e.target as HTMLInputElement).value)"
+            />
+          </div>
+        </template>
 
         <select
           :class="styles.setTypeSelect"
