@@ -32,48 +32,27 @@ async function renderWithRoute(routeName: string, routePath: string = '/') {
 }
 
 describe('AppLayout', () => {
-  it.each([
-    { route: 'routines', path: '/routines', label: 'Dashboard', href: '/' },
-    {
-      route: 'workouts-list',
-      path: '/workouts',
-      label: 'Dashboard',
-      href: '/',
-    },
-    {
-      route: 'routine-detail',
-      path: '/routines/1',
-      label: 'Routines',
-      href: '/routines',
-    },
-    {
-      route: 'workout-detail',
-      path: '/workouts/1',
-      label: 'Workouts',
-      href: '/workouts',
-    },
-    {
-      route: 'user-profile',
-      path: '/users/1',
-      label: 'Dashboard',
-      href: '/',
-    },
-  ])('should show a back link to $label when on the $route route', async ({
-    route,
-    path,
-    label,
-    href,
-  }) => {
-    await renderWithRoute(route, path);
-
-    const backLink = screen.getByText(`← ${label}`).closest('a');
-    expect(backLink).toHaveAttribute('href', href);
-  });
-
-  it('should not show a back link on the dashboard route', async () => {
+  it('should display Routines and Workouts nav links', async () => {
     await renderWithRoute('dashboard', '/');
 
-    expect(screen.queryByText(/←/)).not.toBeInTheDocument();
+    const routinesLink = screen.getByRole('link', { name: 'Routines' });
+    expect(routinesLink).toHaveAttribute('href', '/routines');
+
+    const workoutsLink = screen.getByRole('link', { name: 'Workouts' });
+    expect(workoutsLink).toHaveAttribute('href', '/workouts');
+  });
+
+  it('should display nav links on all authenticated routes', async () => {
+    await renderWithRoute('routine-detail', '/routines/1');
+
+    expect(screen.getByRole('link', { name: 'Routines' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Workouts' })).toBeInTheDocument();
+  });
+
+  it('should display the brand name in the nav', async () => {
+    await renderWithRoute('dashboard', '/');
+
+    expect(screen.getByText('Duro')).toBeInTheDocument();
   });
 
   it('should not show the nav on the login route', async () => {

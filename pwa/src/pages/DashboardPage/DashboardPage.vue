@@ -65,9 +65,6 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 :class="baseStyles.heading">Duro</h1>
-    <div>Gym companion</div>
-
     <section :class="styles.section">
       <h2 :class="[baseStyles.heading, baseStyles.headingMedium]">Routines</h2>
       <p v-if="routinesLoading">Loading...</p>

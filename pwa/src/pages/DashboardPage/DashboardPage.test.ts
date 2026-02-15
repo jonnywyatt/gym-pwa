@@ -78,14 +78,6 @@ describe('DashboardPage', () => {
     });
   }
 
-  it('should display the dashboard heading', async () => {
-    setupHandlers();
-    renderPage();
-
-    expect(screen.getByRole('heading', { level: 1, name: 'Duro' })).toBeInTheDocument();
-    expect(screen.getByText('Gym companion')).toBeInTheDocument();
-  });
-
   it('should display section headings', async () => {
     setupHandlers();
     renderPage();

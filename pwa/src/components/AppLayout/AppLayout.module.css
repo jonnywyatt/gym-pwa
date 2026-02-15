@@ -7,18 +7,26 @@
   padding: var(--spacing-unit-2) var(--spacing-unit-4);
 }
 
-.backLink {
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit-4);
+}
+
+.brandName {
+  font-family: var(--font-stack-heading);
+  font-size: var(--font-size-18);
+  color: var(--text-primary);
+}
+
+.navLink {
   color: var(--text-secondary);
   text-decoration: none;
   font-size: var(--font-size-14);
 }
 
-.backLink:hover {
+.navLink:hover {
   color: var(--text-primary);
-}
-
-.navSpacer {
-  flex: 1;
 }
 
 .navRight {

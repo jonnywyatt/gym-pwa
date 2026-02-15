@@ -12,17 +12,6 @@ const showUserNav = computed(() => {
   return !noNavRoutes.includes(route.name as string);
 });
 
-const backLink = computed(() => {
-  const backLinks: Record<string, { to: string; label: string }> = {
-    routines: { to: '/', label: 'Dashboard' },
-    'workouts-list': { to: '/', label: 'Dashboard' },
-    'routine-detail': { to: '/routines', label: 'Routines' },
-    'workout-detail': { to: '/workouts', label: 'Workouts' },
-    'user-profile': { to: '/', label: 'Dashboard' },
-  };
-  return backLinks[route.name as string] ?? null;
-});
-
 // Access route.path to create a reactive dependency that
 // re-evaluates after navigation (e.g. after login redirect)
 const userName = computed(() => { route.path; return authService.getUserName(); });
@@ -37,10 +26,11 @@ function handleLogout() {
 <template>
   <div>
     <nav v-if="showUserNav" :class="styles.nav">
-      <router-link v-if="backLink" :to="backLink.to" :class="styles.backLink">
-        &larr; {{ backLink.label }}
-      </router-link>
-      <span v-else :class="styles.navSpacer" />
+      <div :class="styles.navLeft">
+        <span :class="styles.brandName">Duro</span>
+        <router-link to="/routines" :class="styles.navLink">Routines</router-link>
+        <router-link to="/workouts" :class="styles.navLink">Workouts</router-link>
+      </div>
       <div :class="styles.navRight">
         <router-link
           v-if="userName && userId"
