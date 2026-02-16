@@ -16,7 +16,7 @@
 
 .brandName {
   font-family: var(--font-stack-logo);
-  font-size: var(--font-size-22);
+  font-size: var(--font-size-24);
   font-style: italic;
   color: var(--accent-primary);
   text-decoration: none;
