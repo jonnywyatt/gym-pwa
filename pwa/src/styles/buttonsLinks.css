@@ -14,7 +14,7 @@
 }
 
 .buttonSecondary {
-  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  padding: var(--spacing-unit-1) var(--spacing-unit-2);
   font-size: var(--font-size-14);
   background: var(--background-surface);
   color: var(--text-secondary);

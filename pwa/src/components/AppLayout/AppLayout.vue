@@ -39,7 +39,7 @@ function handleLogout() {
         >
           {{ userName }}
         </router-link>
-        <button @click="handleLogout" class="buttonSecondary">Logout</button>
+        <button @click="handleLogout" :class="styles.navLink">Logout</button>
       </div>
     </nav>
     <router-view />

@@ -34,8 +34,8 @@ onMounted(() => {
     <ul v-else class="list">
       <li v-for="routine in routines" :key="routine.id" class="listItem">
         <router-link :to="`/routines/${routine.id}`" class="routineLink">
-          <strong>{{ routine.label }}</strong>
-          <span class="exerciseCount">{{ routine.exerciseCount }} exercises</span>
+          <div>{{ routine.label }}</div>
+          <div class="exerciseCount">{{ routine.exerciseCount }} exercises</div>
         </router-link>
       </li>
     </ul>

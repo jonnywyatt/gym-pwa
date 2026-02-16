@@ -11,7 +11,7 @@
 .navLeft {
   display: flex;
   align-items: center;
-  gap: var(--spacing-unit-4);
+  gap: var(--spacing-unit-3);
 }
 
 .brandName {
@@ -21,6 +21,7 @@
   color: var(--accent-primary);
   text-decoration: none;
   letter-spacing: -0.02em;
+    margin-right: var(--spacing-unit-2);
 }
 
 .navLink {
