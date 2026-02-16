@@ -58,7 +58,7 @@ describe('WorkoutPage helpers', () => {
       const sets = createDefaultSets();
       expect(sets).toHaveLength(2);
       expect(sets[0].setType).toBe('Warmup');
-      expect(sets[1].setType).toBe('Normal');
+      expect(sets[1].setType).toBe('Standard');
     });
 
     it('sets both as incomplete', () => {
@@ -76,7 +76,7 @@ describe('WorkoutPage helpers', () => {
   describe('createNewSet', () => {
     it('returns a normal incomplete set', () => {
       const set = createNewSet();
-      expect(set.setType).toBe('Normal');
+      expect(set.setType).toBe('Standard');
       expect(set.completed).toBe(false);
       expect(set.id).toBeTruthy();
     });
@@ -86,7 +86,7 @@ describe('WorkoutPage helpers', () => {
     it('returns W for warmup sets', () => {
       const sets: WorkoutSet[] = [
         { id: '1', setType: 'Warmup', completed: false },
-        { id: '2', setType: 'Normal', completed: false },
+        { id: '2', setType: 'Standard', completed: false },
       ];
       expect(getSetDisplayLabel(sets, 0)).toBe('W');
     });
@@ -94,8 +94,8 @@ describe('WorkoutPage helpers', () => {
     it('numbers normal sets starting from 1', () => {
       const sets: WorkoutSet[] = [
         { id: '1', setType: 'Warmup', completed: false },
-        { id: '2', setType: 'Normal', completed: false },
-        { id: '3', setType: 'Normal', completed: false },
+        { id: '2', setType: 'Standard', completed: false },
+        { id: '3', setType: 'Standard', completed: false },
       ];
       expect(getSetDisplayLabel(sets, 1)).toBe('1');
       expect(getSetDisplayLabel(sets, 2)).toBe('2');
@@ -104,7 +104,7 @@ describe('WorkoutPage helpers', () => {
     it('numbers failure sets as normal', () => {
       const sets: WorkoutSet[] = [
         { id: '1', setType: 'Warmup', completed: false },
-        { id: '2', setType: 'Normal', completed: false },
+        { id: '2', setType: 'Standard', completed: false },
         { id: '3', setType: 'Failure', completed: false },
       ];
       expect(getSetDisplayLabel(sets, 2)).toBe('2');
@@ -114,7 +114,7 @@ describe('WorkoutPage helpers', () => {
       const sets: WorkoutSet[] = [
         { id: '1', setType: 'Warmup', completed: false },
         { id: '2', setType: 'Warmup', completed: false },
-        { id: '3', setType: 'Normal', completed: false },
+        { id: '3', setType: 'Standard', completed: false },
       ];
       expect(getSetDisplayLabel(sets, 2)).toBe('1');
     });
@@ -176,7 +176,7 @@ describe('WorkoutPage helpers', () => {
     it('calculates WEIGHT type: weight * reps', () => {
       const set: WorkoutSet = {
         id: '1',
-        setType: 'Normal',
+        setType: 'Standard',
         weightKg: 60,
         reps: 10,
         completed: true,
@@ -187,7 +187,7 @@ describe('WorkoutPage helpers', () => {
     it('calculates BODYWEIGHT_PLUS_WEIGHT type', () => {
       const set: WorkoutSet = {
         id: '1',
-        setType: 'Normal',
+        setType: 'Standard',
         weightKg: 20,
         reps: 8,
         completed: true,
@@ -198,7 +198,7 @@ describe('WorkoutPage helpers', () => {
     it('calculates BODYWEIGHT_MINUS_OFFSET type', () => {
       const set: WorkoutSet = {
         id: '1',
-        setType: 'Normal',
+        setType: 'Standard',
         weightKg: 30,
         reps: 5,
         completed: true,
@@ -209,7 +209,7 @@ describe('WorkoutPage helpers', () => {
     it('calculates WEIGHT_AND_TIME type: weight only', () => {
       const set: WorkoutSet = {
         id: '1',
-        setType: 'Normal',
+        setType: 'Standard',
         weightKg: 40,
         timeSeconds: 60,
         completed: true,
@@ -218,12 +218,12 @@ describe('WorkoutPage helpers', () => {
     });
 
     it('returns 0 for TIME type', () => {
-      const set: WorkoutSet = { id: '1', setType: 'Normal', timeSeconds: 120, completed: true };
+      const set: WorkoutSet = { id: '1', setType: 'Standard', timeSeconds: 120, completed: true };
       expect(calculateSetWeightKg('TIME', 80, set)).toBe(0);
     });
 
     it('handles missing weight/reps as 0', () => {
-      const set: WorkoutSet = { id: '1', setType: 'Normal', completed: true };
+      const set: WorkoutSet = { id: '1', setType: 'Standard', completed: true };
       expect(calculateSetWeightKg('WEIGHT', 80, set)).toBe(0);
     });
   });
@@ -231,16 +231,16 @@ describe('WorkoutPage helpers', () => {
   describe('calculateExerciseTotalWeightKg', () => {
     it('sums weight of completed sets only', () => {
       const sets: WorkoutSet[] = [
-        { id: '1', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
-        { id: '2', setType: 'Normal', weightKg: 60, reps: 8, completed: true },
-        { id: '3', setType: 'Normal', weightKg: 60, reps: 6, completed: false },
+        { id: '1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
+        { id: '2', setType: 'Standard', weightKg: 60, reps: 8, completed: true },
+        { id: '3', setType: 'Standard', weightKg: 60, reps: 6, completed: false },
       ];
       expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(1080);
     });
 
     it('returns 0 when no sets are completed', () => {
       const sets: WorkoutSet[] = [
-        { id: '1', setType: 'Normal', weightKg: 60, reps: 10, completed: false },
+        { id: '1', setType: 'Standard', weightKg: 60, reps: 10, completed: false },
       ];
       expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(0);
     });
@@ -309,7 +309,7 @@ describe('WorkoutPage helpers', () => {
       expect(result.sets).toHaveLength(2);
       if (result.sets === undefined) throw new Error('sets should be defined');
       expect(result.sets[0].setType).toBe('Warmup');
-      expect(result.sets[1].setType).toBe('Normal');
+      expect(result.sets[1].setType).toBe('Standard');
     });
 
     it('does not mutate the original exercise', () => {
@@ -339,8 +339,8 @@ describe('WorkoutPage helpers', () => {
         startedAt: '2025-01-15T14:00:00.000Z',
         sets: [
           { id: '1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
-          { id: '2', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
-          { id: '3', setType: 'Normal', weightKg: 60, reps: 8, completed: false },
+          { id: '2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
+          { id: '3', setType: 'Standard', weightKg: 60, reps: 8, completed: false },
         ],
       };
       const result = finishExercise(exercise, 80);
@@ -381,7 +381,7 @@ describe('WorkoutPage helpers', () => {
           secondaryMuscleGroups: ['Triceps'],
           completed: true,
           startedAt: '2025-01-15T14:00:00.000Z',
-          sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+          sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
           totalWeightKg: 600,
         },
         {
@@ -434,7 +434,7 @@ describe('WorkoutPage helpers', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
           {
@@ -587,30 +587,30 @@ describe('WorkoutPage helpers', () => {
 
   describe('formatSetDetails', () => {
     it('formats WEIGHT set with setType, weight, and reps', () => {
-      const set: CompletedSet = { setType: 'Normal', weightKg: 60, reps: 10 };
-      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 60kg · 10 reps');
+      const set: CompletedSet = { setType: 'Standard', weightKg: 60, reps: 10 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Standard · 60kg · 10 reps');
     });
 
     it('formats BODYWEIGHT_PLUS_WEIGHT set', () => {
-      const set: CompletedSet = { setType: 'Normal', weightKg: 20, reps: 8 };
-      expect(formatSetDetails(set, 'BODYWEIGHT_PLUS_WEIGHT')).toBe('Normal · 20kg · 8 reps');
+      const set: CompletedSet = { setType: 'Standard', weightKg: 20, reps: 8 };
+      expect(formatSetDetails(set, 'BODYWEIGHT_PLUS_WEIGHT')).toBe('Standard · 20kg · 8 reps');
     });
 
     it('formats BODYWEIGHT_MINUS_OFFSET set with offset label', () => {
-      const set: CompletedSet = { setType: 'Normal', weightKg: 30, reps: 5 };
+      const set: CompletedSet = { setType: 'Standard', weightKg: 30, reps: 5 };
       expect(formatSetDetails(set, 'BODYWEIGHT_MINUS_OFFSET')).toBe(
-        'Normal · 30kg offset · 5 reps'
+        'Standard · 30kg offset · 5 reps'
       );
     });
 
     it('formats WEIGHT_AND_TIME set with weight and time', () => {
-      const set: CompletedSet = { setType: 'Normal', weightKg: 40, timeSeconds: 90 };
-      expect(formatSetDetails(set, 'WEIGHT_AND_TIME')).toBe('Normal · 40kg · 1m 30s');
+      const set: CompletedSet = { setType: 'Standard', weightKg: 40, timeSeconds: 90 };
+      expect(formatSetDetails(set, 'WEIGHT_AND_TIME')).toBe('Standard · 40kg · 1m 30s');
     });
 
     it('formats TIME set with time only', () => {
-      const set: CompletedSet = { setType: 'Normal', timeSeconds: 120 };
-      expect(formatSetDetails(set, 'TIME')).toBe('Normal · 2m');
+      const set: CompletedSet = { setType: 'Standard', timeSeconds: 120 };
+      expect(formatSetDetails(set, 'TIME')).toBe('Standard · 2m');
     });
 
     it('formats Warmup set type', () => {
@@ -619,18 +619,18 @@ describe('WorkoutPage helpers', () => {
     });
 
     it('handles missing weight as 0', () => {
-      const set: CompletedSet = { setType: 'Normal', reps: 10 };
-      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 0kg · 10 reps');
+      const set: CompletedSet = { setType: 'Standard', reps: 10 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Standard · 0kg · 10 reps');
     });
 
     it('handles missing reps as 0', () => {
-      const set: CompletedSet = { setType: 'Normal', weightKg: 60 };
-      expect(formatSetDetails(set, 'WEIGHT')).toBe('Normal · 60kg · 0 reps');
+      const set: CompletedSet = { setType: 'Standard', weightKg: 60 };
+      expect(formatSetDetails(set, 'WEIGHT')).toBe('Standard · 60kg · 0 reps');
     });
 
     it('formats time in seconds only when less than a minute', () => {
-      const set: CompletedSet = { setType: 'Normal', timeSeconds: 45 };
-      expect(formatSetDetails(set, 'TIME')).toBe('Normal · 45s');
+      const set: CompletedSet = { setType: 'Standard', timeSeconds: 45 };
+      expect(formatSetDetails(set, 'TIME')).toBe('Standard · 45s');
     });
   });
 

@@ -49,10 +49,11 @@ describe('AppLayout', () => {
     expect(screen.getByRole('link', { name: 'Workouts' })).toBeInTheDocument();
   });
 
-  it('should display the brand name in the nav', async () => {
+  it('should display the brand name as a link to the dashboard', async () => {
     await renderWithRoute('dashboard', '/');
 
-    expect(screen.getByText('Duro')).toBeInTheDocument();
+    const brandLink = screen.getByRole('link', { name: 'Duro' });
+    expect(brandLink).toHaveAttribute('href', '/');
   });
 
   it('should not show the nav on the login route', async () => {

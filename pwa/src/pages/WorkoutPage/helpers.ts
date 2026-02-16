@@ -35,7 +35,7 @@ export function createDefaultSets(): WorkoutSet[] {
     },
     {
       id: crypto.randomUUID(),
-      setType: 'Normal',
+      setType: 'Standard',
       completed: false,
     },
   ];
@@ -44,7 +44,7 @@ export function createDefaultSets(): WorkoutSet[] {
 export function createNewSet(): WorkoutSet {
   return {
     id: crypto.randomUUID(),
-    setType: 'Normal',
+    setType: 'Standard',
     completed: false,
   };
 }

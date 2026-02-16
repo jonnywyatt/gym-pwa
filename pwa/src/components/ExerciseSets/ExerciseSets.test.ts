@@ -42,7 +42,7 @@ describe('ExerciseSets', () => {
       startedAt: '2025-01-15T14:00:00.000Z',
       sets: [
         { id: 's1', setType: 'Warmup', completed: false },
-        { id: 's2', setType: 'Normal', completed: false },
+        { id: 's2', setType: 'Standard', completed: false },
       ],
     };
 
@@ -131,7 +131,7 @@ describe('ExerciseSets', () => {
         startedAt: '2025-01-15T14:00:00.000Z',
         sets: [
           { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
-          { id: 's2', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
+          { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
         ],
       };
 
@@ -149,8 +149,8 @@ describe('ExerciseSets', () => {
       completed: true,
       startedAt: '2025-01-15T14:00:00.000Z',
       sets: [
-        { id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
-        { id: 's2', setType: 'Normal', weightKg: 60, reps: 8, completed: true },
+        { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
+        { id: 's2', setType: 'Standard', weightKg: 60, reps: 8, completed: true },
       ],
       totalWeightKg: 1080,
     };
@@ -192,7 +192,7 @@ describe('ExerciseSets', () => {
       secondaryMuscleGroups: [],
       completed: false,
       startedAt: '2025-01-15T14:00:00.000Z',
-      sets: [{ id: 's1', setType: 'Normal', timeSeconds: 60, completed: false }],
+      sets: [{ id: 's1', setType: 'Standard', timeSeconds: 60, completed: false }],
     };
 
     it('shows minutes and seconds inputs but not weight or reps inputs', () => {
@@ -255,7 +255,7 @@ describe('ExerciseSets', () => {
       secondaryMuscleGroups: [],
       completed: false,
       startedAt: '2025-01-15T14:00:00.000Z',
-      sets: [{ id: 's1', setType: 'Normal', completed: false }],
+      sets: [{ id: 's1', setType: 'Standard', completed: false }],
     };
 
     it('shows weight, minutes and seconds inputs but not reps', () => {

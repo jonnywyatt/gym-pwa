@@ -17,6 +17,7 @@
   font-family: var(--font-stack-heading);
   font-size: var(--font-size-18);
   color: var(--text-primary);
+  text-decoration: none;
 }
 
 .navLink {

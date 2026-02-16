@@ -151,7 +151,7 @@ describe('WorkoutPage', () => {
             startedAt: '2025-01-15T14:00:00.000Z',
             sets: [
               { id: 's1', setType: 'Warmup', completed: false },
-              { id: 's2', setType: 'Normal', completed: false },
+              { id: 's2', setType: 'Standard', completed: false },
             ],
           },
         ],
@@ -186,7 +186,7 @@ describe('WorkoutPage', () => {
             startedAt: '2025-01-15T14:00:00.000Z',
             sets: [
               { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
-              { id: 's2', setType: 'Normal', weightKg: 60, reps: 10, completed: true },
+              { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
             ],
           },
         ],
@@ -228,7 +228,7 @@ describe('WorkoutPage', () => {
             startedAt: '2025-01-15T14:00:00.000Z',
             sets: [
               { id: 's1', setType: 'Warmup', completed: false },
-              { id: 's2', setType: 'Normal', completed: false },
+              { id: 's2', setType: 'Standard', completed: false },
             ],
           },
         ],
@@ -262,7 +262,7 @@ describe('WorkoutPage', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
           {
@@ -299,7 +299,7 @@ describe('WorkoutPage', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
         ],
@@ -335,7 +335,7 @@ describe('WorkoutPage', () => {
       expect(savedWorkout.totalWeightKg).toBe(600);
       expect(savedWorkout.exercisesCompleted).toHaveLength(1);
       expect(savedWorkout.exercisesCompleted[0].sets).toHaveLength(1);
-      expect(savedWorkout.exercisesCompleted[0].sets[0].setType).toBe('Normal');
+      expect(savedWorkout.exercisesCompleted[0].sets[0].setType).toBe('Standard');
       expect(savedWorkout.exercisesCompleted[0].sets[0].weightKg).toBe(60);
       expect(savedWorkout.exercisesCompleted[0].sets[0].reps).toBe(10);
       expect(savedWorkout.exercisesCompleted[0].totalWeightKg).toBe(600);
@@ -356,7 +356,7 @@ describe('WorkoutPage', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
         ],
@@ -409,7 +409,7 @@ describe('WorkoutPage', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
         ],
@@ -517,7 +517,7 @@ describe('WorkoutPage', () => {
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
-            sets: [{ id: 's1', setType: 'Normal', weightKg: 60, reps: 10, completed: true }],
+            sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
             totalWeightKg: 600,
           },
         ],
@@ -579,7 +579,7 @@ describe('WorkoutPage', () => {
                 secondaryMuscleGroups: ['Triceps'],
                 sets: [
                   { setType: 'Warmup', weightKg: 40, reps: 10 },
-                  { setType: 'Normal', weightKg: 60, reps: 10 },
+                  { setType: 'Standard', weightKg: 60, reps: 10 },
                 ],
                 totalWeightKg: 1000,
               },
@@ -601,7 +601,7 @@ describe('WorkoutPage', () => {
       expect(screen.getByText('Bench Press')).toBeInTheDocument();
       expect(screen.getByText('1,000kg')).toBeInTheDocument();
       expect(screen.getByText('Warmup · 40kg · 10 reps')).toBeInTheDocument();
-      expect(screen.getByText('Normal · 60kg · 10 reps')).toBeInTheDocument();
+      expect(screen.getByText('Standard · 60kg · 10 reps')).toBeInTheDocument();
     });
 
     it('should display exercises with different record set types', async () => {
@@ -622,7 +622,7 @@ describe('WorkoutPage', () => {
                 recordSetsType: 'TIME',
                 primaryMuscleGroups: ['Core'],
                 secondaryMuscleGroups: [],
-                sets: [{ setType: 'Normal', timeSeconds: 60 }],
+                sets: [{ setType: 'Standard', timeSeconds: 60 }],
                 totalWeightKg: 0,
               },
               {
@@ -631,7 +631,7 @@ describe('WorkoutPage', () => {
                 recordSetsType: 'BODYWEIGHT_MINUS_OFFSET',
                 primaryMuscleGroups: ['Back'],
                 secondaryMuscleGroups: [],
-                sets: [{ setType: 'Normal', weightKg: 20, reps: 8 }],
+                sets: [{ setType: 'Standard', weightKg: 20, reps: 8 }],
                 totalWeightKg: 480,
               },
             ],
@@ -647,8 +647,8 @@ describe('WorkoutPage', () => {
         expect(screen.getByText('Mixed Workout')).toBeInTheDocument();
       });
 
-      expect(screen.getByText('Normal · 1m')).toBeInTheDocument();
-      expect(screen.getByText('Normal · 20kg offset · 8 reps')).toBeInTheDocument();
+      expect(screen.getByText('Standard · 1m')).toBeInTheDocument();
+      expect(screen.getByText('Standard · 20kg offset · 8 reps')).toBeInTheDocument();
     });
 
     it('should display error when API fetch fails', async () => {

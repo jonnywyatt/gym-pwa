@@ -123,7 +123,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           @change="(e) => emit('changeSetType', exercise.id, set.id, (e.target as HTMLSelectElement).value as SetType)"
         >
           <option value="Warmup">Warmup</option>
-          <option value="Normal">Normal</option>
+          <option value="Standard">Standard</option>
           <option value="Failure">Failure</option>
         </select>
 

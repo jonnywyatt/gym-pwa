@@ -44,7 +44,7 @@ export type WorkoutExercise = Pick<
   'id' | 'label' | 'recordSetsType' | 'primaryMuscleGroups' | 'secondaryMuscleGroups'
 >;
 
-export type SetType = 'Warmup' | 'Normal' | 'Failure';
+export type SetType = 'Warmup' | 'Standard' | 'Failure';
 
 export type CompletedSet = {
   setType: SetType;

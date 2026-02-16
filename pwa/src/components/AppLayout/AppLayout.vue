@@ -27,7 +27,7 @@ function handleLogout() {
   <div>
     <nav v-if="showUserNav" :class="styles.nav">
       <div :class="styles.navLeft">
-        <span :class="styles.brandName">Duro</span>
+        <router-link to="/" :class="styles.brandName">Duro</router-link>
         <router-link to="/routines" :class="styles.navLink">Routines</router-link>
         <router-link to="/workouts" :class="styles.navLink">Workouts</router-link>
       </div>
