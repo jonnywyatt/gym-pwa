@@ -141,6 +141,34 @@ describe('ExerciseSets', () => {
 
       expect(screen.getByText('1000 Kg')).toBeInTheDocument();
     });
+
+    it('allows 0 weight to be entered', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+      });
+
+      const weightInputs = screen.getAllByPlaceholderText('Kg');
+      await user.clear(weightInputs[0]);
+      await user.type(weightInputs[0], '0');
+
+      expect(emitted().updateSet).toHaveLength(1);
+      expect(emitted().updateSet[0]).toEqual([1, 's1', { weightKg: 0 }]);
+    });
+
+    it('allows 0 reps to be entered', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+      });
+
+      const repsInputs = screen.getAllByPlaceholderText('Reps');
+      await user.clear(repsInputs[0]);
+      await user.type(repsInputs[0], '0');
+
+      expect(emitted().updateSet).toHaveLength(1);
+      expect(emitted().updateSet[0]).toEqual([1, 's1', { reps: 0 }]);
+    });
   });
 
   describe('completed state', () => {

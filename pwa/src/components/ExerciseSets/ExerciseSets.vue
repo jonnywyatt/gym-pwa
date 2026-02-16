@@ -78,7 +78,11 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           :placeholder="inputFields.weightLabel"
           :aria-label="`${inputFields.weightLabel} for set ${index + 1}`"
           :value="set.weightKg ?? ''"
-          @input="(e) => emit('updateSet', exercise.id, set.id, { weightKg: Number((e.target as HTMLInputElement).value) || undefined })"
+          min="0"
+          @input="(e) => {
+            const value = (e.target as HTMLInputElement).value;
+            emit('updateSet', exercise.id, set.id, { weightKg: value === '' ? undefined : Number(value) });
+          }"
         />
 
         <input
@@ -88,7 +92,11 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           placeholder="Reps"
           :aria-label="`Reps for set ${index + 1}`"
           :value="set.reps ?? ''"
-          @input="(e) => emit('updateSet', exercise.id, set.id, { reps: Number((e.target as HTMLInputElement).value) || undefined })"
+          min="0"
+          @input="(e) => {
+            const value = (e.target as HTMLInputElement).value;
+            emit('updateSet', exercise.id, set.id, { reps: value === '' ? undefined : Number(value) });
+          }"
         />
 
         <template v-if="inputFields.showTime">
