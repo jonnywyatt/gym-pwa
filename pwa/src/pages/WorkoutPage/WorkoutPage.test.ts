@@ -8,6 +8,14 @@ import { db } from '../../lib/db';
 import { server } from '../../test/msw';
 import WorkoutPage from './WorkoutPage.vue';
 
+HTMLDialogElement.prototype.showModal = function () {
+  this.setAttribute('open', '');
+};
+
+HTMLDialogElement.prototype.close = function () {
+  this.removeAttribute('open');
+};
+
 vi.mock('../../config', () => ({
   config: {
     apiUrl: 'http://localhost:3000',
@@ -693,5 +701,123 @@ describe('WorkoutPage', () => {
       expect(screen.queryByText('Finishing...')).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: 'Pause' })).not.toBeInTheDocument();
     });
+
+    it('should display delete button in summary mode', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Test Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            totalWeightKg: 0,
+            bodyWeightKg: 75,
+          });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Workout')).toBeInTheDocument();
+      });
+
+      expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+    });
+
+    it('should navigate to /workouts after confirming delete', async () => {
+      const user = userEvent.setup();
+
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Test Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            totalWeightKg: 0,
+            bodyWeightKg: 75,
+          });
+        }),
+        http.delete(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return new HttpResponse(null, { status: 204 });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Delete workout' }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Delete workout?' })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Delete' }));
+
+      await waitFor(() => {
+        expect(mockRouterPush).toHaveBeenCalledWith('/workouts');
+      });
+    });
+
+    it('should display error when delete fails', async () => {
+      const user = userEvent.setup();
+
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Test Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            totalWeightKg: 0,
+            bodyWeightKg: 75,
+          });
+        }),
+        http.delete(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({ error: 'Server error' }, { status: 500 });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Delete workout' }));
+      await user.click(screen.getByRole('button', { name: 'Delete' }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/Error:/)).toBeInTheDocument();
+      });
+    });
+  });
+
+  it('should not display delete button in active mode', async () => {
+    await db.workouts.add(createTestWorkout());
+
+    render(WorkoutPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Routine')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('button', { name: 'Delete workout' })).not.toBeInTheDocument();
   });
 });

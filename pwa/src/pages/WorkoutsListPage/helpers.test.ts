@@ -1,11 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { HttpResponse, http } from 'msw';
+import { describe, expect, it, vi } from 'vitest';
+import { server } from '../../test/msw';
 import {
   calculateDuration,
+  deleteWorkoutApi,
   formatDate,
   formatDuration,
   formatTime,
   formatTotalWeight,
 } from './helpers';
+
+vi.mock('../../config', () => ({
+  config: {
+    apiUrl: 'http://localhost:3000',
+    googleClientId: 'test-client-id',
+  },
+}));
+
+vi.mock('../../lib/auth/oauth', () => ({
+  authService: {
+    getUserId: () => 1,
+    getAccessToken: () => 'test-token',
+  },
+}));
 
 describe('calculateDuration', () => {
   it('calculates duration in minutes between two timestamps', () => {
@@ -116,5 +133,29 @@ describe('formatDuration', () => {
     const result = formatDuration(seconds);
 
     expect(result).toBe('2h 3m 4s');
+  });
+});
+
+describe('deleteWorkoutApi', () => {
+  const mockApiUrl = 'http://localhost:3000';
+
+  it('successfully deletes a workout', async () => {
+    server.use(
+      http.delete(`${mockApiUrl}/users/1/workouts/42`, () => {
+        return new HttpResponse(null, { status: 204 });
+      })
+    );
+
+    await expect(deleteWorkoutApi(1, 42)).resolves.toBeUndefined();
+  });
+
+  it('throws an error when the API returns an error', async () => {
+    server.use(
+      http.delete(`${mockApiUrl}/users/1/workouts/42`, () => {
+        return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      })
+    );
+
+    await expect(deleteWorkoutApi(1, 42)).rejects.toThrow('Failed to delete workout: 404');
   });
 });

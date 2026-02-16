@@ -3,6 +3,7 @@ import { authenticate } from '../../middleware/auth';
 import type { CreateWorkoutRequest } from '../../types';
 import {
   createUserWorkout,
+  deleteUserWorkout,
   getLatestUserWorkout,
   getUserWorkout,
   getUserWorkouts,
@@ -147,6 +148,38 @@ router.get('/users/:userId/workouts/:workoutId', authenticate, async (req, res) 
   } catch (error) {
     console.error('Error fetching workout:', error);
     res.status(500).json({ error: 'Failed to fetch workout' });
+  }
+});
+
+router.delete('/users/:userId/workouts/:workoutId', authenticate, async (req, res) => {
+  try {
+    const userId = parseInt(String(req.params.userId), 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    const workoutId = parseInt(String(req.params.workoutId), 10);
+    if (Number.isNaN(workoutId)) {
+      res.status(400).json({ error: 'Invalid workout ID' });
+      return;
+    }
+
+    if (userId !== req.user?.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const deleted = await deleteUserWorkout(userId, workoutId);
+    if (!deleted) {
+      res.status(404).json({ error: 'Workout not found' });
+      return;
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting workout:', error);
+    res.status(500).json({ error: 'Failed to delete workout' });
   }
 });
 

@@ -4,11 +4,14 @@ import type { UserWorkout } from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutsListPage.module.css';
 import { authService } from '../../lib/auth/oauth';
-import { fetchWorkouts, calculateDuration, formatDate, formatTime, formatDuration, formatTotalWeight } from './helpers';
+import { fetchWorkouts, deleteWorkoutApi, calculateDuration, formatDate, formatTime, formatDuration, formatTotalWeight } from './helpers';
+import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const workouts = ref<UserWorkout[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
+const showDeleteDialog = ref(false);
+const workoutToDelete = ref<UserWorkout | null>(null);
 
 async function loadWorkouts() {
   const userId = authService.getUserId();
@@ -24,6 +27,38 @@ async function loadWorkouts() {
     error.value = e instanceof Error ? e.message : 'Failed to fetch workouts';
   } finally {
     loading.value = false;
+  }
+}
+
+function openDeleteDialog(workout: UserWorkout) {
+  workoutToDelete.value = workout;
+  showDeleteDialog.value = true;
+}
+
+function cancelDelete() {
+  showDeleteDialog.value = false;
+  workoutToDelete.value = null;
+}
+
+async function confirmDelete() {
+  if (!workoutToDelete.value) return;
+
+  const userId = authService.getUserId();
+  if (!userId) {
+    error.value = 'User not authenticated';
+    return;
+  }
+
+  const workoutId = workoutToDelete.value.id;
+
+  try {
+    await deleteWorkoutApi(userId, workoutId);
+    workouts.value = workouts.value.filter((w) => w.id !== workoutId);
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Failed to delete workout';
+  } finally {
+    showDeleteDialog.value = false;
+    workoutToDelete.value = null;
   }
 }
 
@@ -43,20 +78,38 @@ onMounted(() => {
       <p v-if="workouts.length === 0">No workouts yet. Start a routine to log your first workout!</p>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" :class="styles.workoutItem">
-          <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">
-            <div :class="styles.workoutHeader">
-              <strong>{{ workout.routineLabel }}</strong>
-            </div>
-            <div :class="styles.workoutMeta">
-              <span>{{ formatDate(workout.startedAt) }} at {{ formatTime(workout.startedAt) }}</span>
-              <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
-              <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
-              <span>{{ workout.exercisesCompleted.length }} exercises</span>
-              <span v-if="workout.totalWeightKg">{{ formatTotalWeight(workout.totalWeightKg) }} total</span>
-            </div>
-          </router-link>
+          <div :class="styles.workoutRow">
+            <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">
+              <div :class="styles.workoutHeader">
+                <strong>{{ workout.routineLabel }}</strong>
+              </div>
+              <div :class="styles.workoutMeta">
+                <span>{{ formatDate(workout.startedAt) }} at {{ formatTime(workout.startedAt) }}</span>
+                <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
+                <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
+                <span>{{ workout.exercisesCompleted.length }} exercises</span>
+                <span v-if="workout.totalWeightKg">{{ formatTotalWeight(workout.totalWeightKg) }} total</span>
+              </div>
+            </router-link>
+            <button
+              type="button"
+              :class="styles.deleteButton"
+              :aria-label="`Delete ${workout.routineLabel}`"
+              @click="openDeleteDialog(workout)"
+            >
+              Delete
+            </button>
+          </div>
         </li>
       </ul>
     </template>
+
+    <ConfirmDialog
+      :open="showDeleteDialog"
+      title="Delete workout?"
+      message="This action cannot be undone."
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </main>
 </template>

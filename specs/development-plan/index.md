@@ -24,7 +24,6 @@
 ### Features
 - design
 - show summary of muscle groups worked / body areas for each workout
-- delete workout from workouts page
 - edit workout
 - unique page titles
 

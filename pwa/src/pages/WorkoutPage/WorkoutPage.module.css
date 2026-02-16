@@ -57,3 +57,22 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
+
+.summaryActions {
+  padding: var(--spacing-unit-5) var(--spacing-unit-4);
+}
+
+.deleteButton {
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  color: var(--red);
+  background: none;
+  border: 1px solid var(--red);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: var(--red);
+  color: var(--white);
+}

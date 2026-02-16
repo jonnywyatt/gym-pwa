@@ -45,3 +45,22 @@ export async function getUserWorkout(
     where: { id: workoutId, userId },
   });
 }
+
+export async function deleteUserWorkout(
+  userId: number,
+  workoutId: number
+): Promise<UserWorkoutFromDB | null> {
+  const workout = await prisma.userWorkout.findFirst({
+    where: { id: workoutId, userId },
+  });
+
+  if (!workout) {
+    return null;
+  }
+
+  await prisma.userWorkout.delete({
+    where: { id: workoutId },
+  });
+
+  return workout;
+}

@@ -1,0 +1,58 @@
+.dialog {
+  border: none;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-unit-5);
+  max-width: 360px;
+  width: 90%;
+  font-family: var(--font-stack);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  font-size: var(--font-size-18);
+  font-weight: normal;
+  color: var(--grey-2);
+  margin: 0 0 var(--spacing-unit-2) 0;
+}
+
+.message {
+  font-size: var(--font-size-14);
+  color: var(--grey-3);
+  margin: 0 0 var(--spacing-unit-5) 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-unit-2);
+}
+
+.cancelButton {
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--background-secondary);
+  border: 1px solid var(--grey-6);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background: var(--grey-6b);
+}
+
+.confirmButton {
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.confirmButton:hover {
+  opacity: 0.9;
+}

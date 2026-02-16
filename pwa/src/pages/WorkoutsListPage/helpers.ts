@@ -1,8 +1,18 @@
 import type { UserWorkout } from 'gym-pwa-api/types';
-import { authFetchJson } from '../../lib/api/client';
+import { authFetch, authFetchJson } from '../../lib/api/client';
 
 export async function fetchWorkouts(userId: number): Promise<UserWorkout[]> {
   return await authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
+}
+
+export async function deleteWorkoutApi(userId: number, workoutId: number): Promise<void> {
+  const response = await authFetch(`/users/${userId}/workouts/${workoutId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete workout: ${response.status}`);
+  }
 }
 
 export function calculateDuration(startedAt: string, finishedAt: string): number {

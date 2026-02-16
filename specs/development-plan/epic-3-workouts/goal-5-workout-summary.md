@@ -10,3 +10,6 @@ Below those all the completed exercises should be listed, with the exercise name
 
 ## Implementation notes
 Add new API endpoint `GET /users/:userId/workouts/:workoutId` for the workout summary page to fetch the workout.
+
+## Delete workout
+Add the ability to delete a workout from the /workouts page, or the completed workout page

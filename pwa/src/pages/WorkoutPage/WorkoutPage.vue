@@ -23,11 +23,13 @@ import {
   formatSetDetails,
 } from './helpers';
 import {
+  deleteWorkoutApi,
   formatDate,
   formatTime,
   formatDuration,
   formatTotalWeight,
 } from '../WorkoutsListPage/helpers';
+import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -39,6 +41,8 @@ const error = ref<string | null>(null);
 const finishing = ref(false);
 const elapsedSeconds = ref(0);
 const isPaused = ref(false);
+const showDeleteDialog = ref(false);
+const deleting = ref(false);
 let timerInterval: number | null = null;
 
 const workoutTotalWeightKg = computed(() => {
@@ -280,6 +284,29 @@ async function handleFinish() {
   }
 }
 
+async function handleDeleteWorkout() {
+  if (!completedWorkout.value) return;
+
+  const userId = authService.getUserId();
+  if (!userId) {
+    error.value = 'User not authenticated';
+    return;
+  }
+
+  deleting.value = true;
+  error.value = null;
+
+  try {
+    await deleteWorkoutApi(userId, completedWorkout.value.id);
+    await router.push('/workouts');
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Failed to delete workout';
+  } finally {
+    deleting.value = false;
+    showDeleteDialog.value = false;
+  }
+}
+
 onMounted(() => {
   loadWorkout();
 });
@@ -371,6 +398,25 @@ onUnmounted(() => {
           </ul>
         </li>
       </ul>
+
+      <div :class="styles.summaryActions">
+        <button
+          type="button"
+          :class="styles.deleteButton"
+          :disabled="deleting"
+          @click="showDeleteDialog = true"
+        >
+          Delete workout
+        </button>
+      </div>
+
+      <ConfirmDialog
+        :open="showDeleteDialog"
+        title="Delete workout?"
+        message="This action cannot be undone."
+        @confirm="handleDeleteWorkout"
+        @cancel="showDeleteDialog = false"
+      />
     </template>
   </main>
 </template>

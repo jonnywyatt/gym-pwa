@@ -2,11 +2,18 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.workoutRow {
+  display: flex;
+  align-items: center;
+}
+
 .workoutLink {
   display: block;
+  flex: 1;
   padding: var(--spacing-md);
   text-decoration: none;
   color: inherit;
+  min-width: 0;
 }
 
 .workoutHeader {
@@ -19,4 +26,21 @@
   gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  padding: var(--spacing-unit-2) var(--spacing-unit-3);
+  margin-right: var(--spacing-unit-3);
+  font-size: var(--font-size-13);
+  color: var(--red);
+  background: none;
+  border: 1px solid var(--red);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: var(--red);
+  color: var(--white);
 }
