@@ -5,6 +5,7 @@ import type { UserProfile } from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './UserPage.module.css';
 import { fetchUserProfile, saveBodyWeight } from './helpers';
+import {authService} from "../../lib/auth/oauth";
 
 const route = useRoute();
 const router = useRouter();
@@ -55,6 +56,11 @@ async function handleSaveWeight() {
   }
 }
 
+function handleLogout() {
+  authService.logout();
+  router.replace('/login');
+}
+
 onMounted(() => {
   loadProfile();
 });
@@ -64,6 +70,7 @@ onMounted(() => {
   <main class="main">
     <header class="header">
       <h1 v-if="profile" :class="baseStyles.heading">{{ profile.name }}</h1>
+      <button @click="handleLogout" class="buttonSecondary">Logout</button>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
@@ -90,6 +97,7 @@ onMounted(() => {
         </div>
         <p v-if="saveSuccess" :class="styles.successMessage">Weight saved</p>
       </form>
+
     </template>
   </main>
 </template>

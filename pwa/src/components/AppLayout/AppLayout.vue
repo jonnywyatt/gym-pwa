@@ -17,10 +17,6 @@ const showUserNav = computed(() => {
 const userName = computed(() => { route.path; return authService.getUserName(); });
 const userId = computed(() => { route.path; return authService.getUserId(); });
 
-function handleLogout() {
-  authService.logout();
-  router.replace('/login');
-}
 </script>
 
 <template>
@@ -39,7 +35,6 @@ function handleLogout() {
         >
           {{ userName }}
         </router-link>
-        <button @click="handleLogout" :class="styles.navLink">Logout</button>
       </div>
     </nav>
     <router-view />
