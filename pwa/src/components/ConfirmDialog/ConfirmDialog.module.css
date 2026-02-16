@@ -5,22 +5,24 @@
   max-width: 360px;
   width: 90%;
   font-family: var(--font-stack);
+  background: var(--background-surface);
+  color: var(--text-primary);
 }
 
 .dialog::backdrop {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .title {
   font-size: var(--font-size-18);
   font-weight: normal;
-  color: var(--grey-2);
+  color: var(--text-primary);
   margin: 0 0 var(--spacing-unit-2) 0;
 }
 
 .message {
   font-size: var(--font-size-14);
-  color: var(--grey-3);
+  color: var(--text-secondary);
   margin: 0 0 var(--spacing-unit-5) 0;
 }
 
@@ -33,21 +35,22 @@
 .cancelButton {
   padding: var(--spacing-unit-2) var(--spacing-unit-4);
   font-size: var(--font-size-14);
-  background: var(--background-secondary);
-  border: 1px solid var(--grey-6);
+  background: var(--background-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .cancelButton:hover {
-  background: var(--grey-6b);
+  background: var(--background-surface-hover);
 }
 
 .confirmButton {
   padding: var(--spacing-unit-2) var(--spacing-unit-4);
   font-size: var(--font-size-14);
-  background: var(--red);
-  color: var(--white);
+  background: var(--em-error);
+  color: var(--text-primary);
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;

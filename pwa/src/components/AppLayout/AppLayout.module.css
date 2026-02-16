@@ -4,7 +4,8 @@
   align-items: center;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  padding: var(--spacing-unit-3) var(--spacing-unit-4);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .navLeft {
@@ -14,14 +15,16 @@
 }
 
 .brandName {
-  font-family: var(--font-stack-heading);
-  font-size: var(--font-size-18);
-  color: var(--text-primary);
+  font-family: var(--font-stack-logo);
+  font-size: var(--font-size-22);
+  font-style: italic;
+  color: var(--accent-primary);
   text-decoration: none;
+  letter-spacing: -0.02em;
 }
 
 .navLink {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
   font-size: var(--font-size-14);
 }
@@ -37,11 +40,11 @@
 }
 
 .userLink {
-  color: var(--text-primary);
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: var(--font-size-14);
 }
 
 .userLink:hover {
-  text-decoration: underline;
+  color: var(--text-primary);
 }

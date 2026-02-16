@@ -1,6 +1,6 @@
 .exercise {
   padding: var(--spacing-unit-3) var(--spacing-unit-4);
-  border-bottom: 1px solid var(--grey-6);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .exerciseHeader {
@@ -18,11 +18,16 @@
 .startButton {
   padding: var(--spacing-unit-1) var(--spacing-unit-4);
   font-size: var(--font-size-14);
-  background: var(--blue);
-  color: var(--white);
+  background: var(--accent-primary);
+  color: var(--background-primary);
   border: none;
   border-radius: var(--border-radius);
+  font-weight: 700;
   cursor: pointer;
+}
+
+.startButton:hover {
+  background: var(--accent-primary-hover);
 }
 
 .setsContainer {
@@ -49,7 +54,10 @@
   width: var(--spacing-unit-12);
   padding: var(--spacing-unit-1);
   font-size: var(--font-size-14);
-  border: 1px solid var(--grey-6);
+  font-family: var(--font-stack-mono);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
 }
 
@@ -63,7 +71,10 @@
   width: var(--spacing-unit-10);
   padding: var(--spacing-unit-1);
   font-size: var(--font-size-14);
-  border: 1px solid var(--grey-6);
+  font-family: var(--font-stack-mono);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
 }
 
@@ -75,7 +86,9 @@
 .setTypeSelect {
   font-size: var(--font-size-12);
   padding: var(--spacing-unit-1);
-  border: 1px solid var(--grey-6);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
 }
 
@@ -87,11 +100,15 @@
 
 .addSetButton {
   font-size: var(--font-size-14);
-  color: var(--blue);
+  color: var(--accent-secondary);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+}
+
+.addSetButton:hover {
+  color: var(--text-primary);
 }
 
 .finishDiscardButtons {
@@ -102,11 +119,16 @@
 .finishButton {
   padding: var(--spacing-unit-1) var(--spacing-unit-4);
   font-size: var(--font-size-14);
-  background: var(--green-dark);
-  color: var(--white);
+  background: var(--accent-primary);
+  color: var(--background-primary);
   border: none;
   border-radius: var(--border-radius);
+  font-weight: 700;
   cursor: pointer;
+}
+
+.finishButton:hover {
+  background: var(--accent-primary-hover);
 }
 
 .discardButton {
@@ -114,9 +136,13 @@
   font-size: var(--font-size-14);
   background: none;
   color: var(--text-secondary);
-  border: 1px solid var(--grey-6);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
+}
+
+.discardButton:hover {
+  background: var(--background-surface-hover);
 }
 
 .completedSummary {

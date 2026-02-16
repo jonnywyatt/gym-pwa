@@ -6,6 +6,6 @@
 .listItem {
   padding: var(--spacing-unit-3) var(--spacing-unit-4);
   margin-bottom: var(--spacing-unit-2);
-  background: var(--background-secondary);
-  border-radius: var(--border-radius);
+  background: var(--background-surface);
+  border-radius: var(--border-radius-lg);
 }

@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RoutineSummary, UserWorkout } from 'gym-pwa-api/types';
-import baseStyles from '../../styles/base-classes.module.css';
 import styles from './DashboardPage.module.css';
 import { authService } from '../../lib/auth/oauth';
 import { createWorkout, getActiveWorkout } from '../../lib/db';
@@ -66,16 +65,16 @@ onMounted(() => {
 <template>
   <main class="main">
     <section :class="styles.section">
-      <h2 :class="[baseStyles.heading, baseStyles.headingMedium]">Routines</h2>
-      <p v-if="routinesLoading">Loading...</p>
-      <p v-else-if="routinesError" class="error">Error: {{ routinesError }}</p>
+      <h2 :class="styles.sectionHeading">Routines</h2>
+      <p v-if="routinesLoading" :class="styles.loading">Loading...</p>
+      <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
       <template v-else>
-        <p v-if="routines.length === 0">No routines available.</p>
-        <ul v-else class="list">
+        <p v-if="routines.length === 0" :class="styles.emptyText">No routines available.</p>
+        <ul v-else :class="styles.routineList">
           <li v-for="routine in routines" :key="routine.id" :class="styles.routineItem">
             <span :class="styles.routineLabel">{{ routine.label }}</span>
             <span :class="styles.routineActions">
-              <router-link :to="`/routines/${routine.id}`">Details</router-link>
+              <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">Details</router-link>
               <button
                 type="button"
                 :class="styles.newWorkoutButton"
@@ -91,15 +90,15 @@ onMounted(() => {
     </section>
 
     <section :class="styles.section">
-      <h2 :class="[baseStyles.heading, baseStyles.headingMedium]">Workouts</h2>
-      <p v-if="workoutLoading">Loading workouts...</p>
-      <p v-else-if="workoutError" class="error">Error: {{ workoutError }}</p>
+      <h2 :class="styles.sectionHeading">Workouts</h2>
+      <p v-if="workoutLoading" :class="styles.loading">Loading workouts...</p>
+      <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
-        <p v-if="!latestWorkout">No workouts yet.</p>
+        <p v-if="!latestWorkout" :class="styles.emptyText">No workouts yet.</p>
         <template v-else>
           <div :class="styles.workoutCard">
             <div :class="styles.workoutCardHeader">Last workout</div>
-            <strong>{{ latestWorkout.routineLabel }}</strong>
+            <span :class="styles.workoutRoutineName">{{ latestWorkout.routineLabel }}</span>
             <div :class="styles.workoutMeta">
               <span>{{ formatDate(latestWorkout.startedAt) }} at {{ formatTime(latestWorkout.startedAt) }}</span>
               <span v-if="latestWorkout.totalWeightKg">{{ formatTotalWeight(latestWorkout.totalWeightKg) }} total</span>

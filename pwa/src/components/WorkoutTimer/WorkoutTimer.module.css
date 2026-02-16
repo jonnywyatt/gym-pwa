@@ -5,24 +5,25 @@
 }
 
 .time {
-  font-family: var(--font-stack-heading);
+  font-family: var(--font-stack-mono);
   font-size: var(--font-size-22);
-  color: var(--text-primary);
   font-weight: bold;
+  color: var(--accent-secondary);
 }
 
 .button {
   padding: var(--spacing-unit-1) var(--spacing-unit-3);
   font-size: var(--font-size-14);
-  background-color: var(--green-dark);
-  color: var(--white);
-  border: none;
+  background-color: var(--background-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .button:hover {
-  opacity: 0.9;
+  background-color: var(--background-surface-hover);
+  color: var(--text-primary);
 }
 
 .button:active {

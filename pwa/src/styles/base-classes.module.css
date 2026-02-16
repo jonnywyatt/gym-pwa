@@ -1,5 +1,5 @@
 .imageBorder {
-  border: 1px solid var(--grey-3);
+  border: 1px solid var(--border-color);
 }
 
 .imageWrapper {
@@ -31,7 +31,7 @@
   content: '';
   display: block;
   height: 1px;
-  background-color: var(--green-dark);
+  background-color: var(--accent-secondary);
   margin-top: var(--spacing-unit-3);
 }
 
@@ -49,7 +49,7 @@
   display: block;
   width: 20%;
   height: 1px;
-  background-color: var(--grey-5);
+  background-color: var(--text-muted);
   margin-top: var(--spacing-unit-3);
 }
 

@@ -1,5 +1,22 @@
 .section {
-  margin-top: var(--spacing-unit-6);
+  margin-top: var(--spacing-unit-7);
+}
+
+.sectionHeading {
+  font-size: var(--font-size-13);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-unit-3);
+}
+
+.routineList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
 }
 
 .routineItem {
@@ -7,48 +24,53 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-unit-3) var(--spacing-unit-4);
-  margin-bottom: var(--spacing-unit-2);
-  background: var(--background-secondary);
-  border-radius: var(--border-radius);
+  background: var(--background-surface);
+  border-radius: var(--border-radius-lg);
+}
+
+.routineItem:hover {
+  background: var(--background-surface-hover);
 }
 
 .routineLabel {
-  font-weight: bold;
+  font-weight: 600;
+  font-size: var(--font-size-16);
 }
 
 .routineActions {
   display: flex;
   gap: var(--spacing-unit-3);
-  font-size: var(--font-size-14);
   align-items: center;
 }
 
-.routineActions a {
-  color: var(--blue);
+.routineDetailLink {
+  color: var(--text-muted);
   text-decoration: none;
+  font-size: var(--font-size-13);
 }
 
-.routineActions a:hover {
-  text-decoration: underline;
+.routineDetailLink:hover {
+  color: var(--text-secondary);
 }
 
 .newWorkoutButton {
-  background: none;
+  background: var(--accent-primary);
+  color: var(--background-primary);
   border: none;
-  color: var(--blue);
-  font-size: var(--font-size-14);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-unit-1) var(--spacing-unit-3);
+  font-size: var(--font-size-13);
+  font-weight: 700;
   cursor: pointer;
-  padding: 0;
 }
 
 .newWorkoutButton:hover {
-  text-decoration: underline;
+  background: var(--accent-primary-hover);
 }
 
 .newWorkoutButton:disabled {
-  color: var(--grey-4b);
+  opacity: 0.4;
   cursor: default;
-  text-decoration: none;
 }
 
 .workoutCard {
@@ -56,32 +78,44 @@
   flex-direction: column;
   gap: var(--spacing-unit-2);
   padding: var(--spacing-unit-4);
-  background: var(--background-secondary);
-  border-radius: var(--border-radius);
+  background: var(--background-surface);
+  border-radius: var(--border-radius-lg);
+  border-left: 3px solid var(--accent-secondary);
 }
 
 .workoutCardHeader {
-  font-size: var(--font-size-14);
-  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-secondary);
+}
+
+.workoutRoutineName {
+  font-weight: 700;
+  font-size: var(--font-size-18);
 }
 
 .workoutMeta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-unit-2);
-  font-size: var(--font-size-14);
+  font-family: var(--font-stack-mono);
+  font-size: var(--font-size-13);
   color: var(--text-secondary);
 }
 
 .workoutMeta span:not(:last-child)::after {
   content: '·';
   margin-left: var(--spacing-unit-2);
+  color: var(--text-muted);
 }
 
 .workoutLink {
-  color: var(--blue);
+  color: var(--accent-secondary);
   text-decoration: none;
   font-size: var(--font-size-14);
+  font-weight: 500;
 }
 
 .workoutLink:hover {
@@ -91,11 +125,24 @@
 .allWorkoutsLink {
   display: inline-block;
   margin-top: var(--spacing-unit-3);
-  color: var(--blue);
+  color: var(--text-muted);
   text-decoration: none;
   font-size: var(--font-size-14);
 }
 
 .allWorkoutsLink:hover {
-  text-decoration: underline;
+  color: var(--text-secondary);
+}
+
+.emptyText {
+  color: var(--text-muted);
+  font-size: var(--font-size-14);
+}
+
+.loading {
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--text-error);
 }

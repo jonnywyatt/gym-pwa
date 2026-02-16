@@ -1,38 +1,39 @@
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-stack: Verdana, sans-serif;
-  --font-stack-heading: Verdana, sans-serif;
+  --border-radius-lg: 16px;
+  --font-stack: 'Inter', Verdana, sans-serif;
+  --font-stack-heading: 'Inter', Verdana, sans-serif;
+  --font-stack-logo: 'Archivo Black', 'Impact', sans-serif;
+  --font-stack-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
 
-  --white: #ffffff;
-  --green-dark: #0c6b58;
-  --green-pale: rgba(142, 237, 199, 0.2);
-  --blue: #0d3aad;
-  --red: #cc0000;
+  /* Electric Midnight palette */
+  --em-base: #0b1215;
+  --em-surface: #1a2a32;
+  --em-surface-hover: #223540;
+  --em-accent-lime: #ccff00;
+  --em-accent-lime-hover: #b8e600;
+  --em-accent-teal: #00f5ff;
+  --em-neutral: #94a3b8;
+  --em-text-primary: #ffffff;
+  --em-text-secondary: #94a3b8;
+  --em-text-muted: #64748b;
+  --em-border: #2a3f4a;
+  --em-error: #ff4d4d;
+  --em-success: #00f5ff;
 
-  --grey-1: #222222;
-  --grey-1b: #333333;
-  --grey-2: #444444;
-  --grey-2b: #555555;
-  --grey-3: #666666;
-  --grey-3b: #777777;
-  --grey-4: #888888;
-  --grey-4b: #999999;
-  --grey-5: #aaaaaa;
-  --grey-6: #cccccc;
-  --grey-6b: #dddddd;
-  --grey-7: #eeeeee;
-
-  /* Mappings */
-  --text-primary: var(--grey-2b);
-  --text-primary-active: var(--grey-1);
-  --text-secondary: var(--grey-3);
-  --text-error: var(--red);
-  --heading: var(--grey-2);
-  --background-primary: var(--white);
-  --background-secondary: var(--grey-7);
-  --border-primary: var(--green-dark);
-  --background-form: var(--green-pale);
+  /* Semantic mappings (wired to EM palette) */
+  --text-primary: var(--em-text-primary);
+  --text-secondary: var(--em-text-secondary);
+  --text-muted: var(--em-text-muted);
+  --text-error: var(--em-error);
+  --background-primary: var(--em-base);
+  --background-surface: var(--em-surface);
+  --background-surface-hover: var(--em-surface-hover);
+  --border-color: var(--em-border);
+  --accent-primary: var(--em-accent-lime);
+  --accent-primary-hover: var(--em-accent-lime-hover);
+  --accent-secondary: var(--em-accent-teal);
 
   --spacing-unit-1: 5px;
   --spacing-unit-2: 10px;
@@ -61,14 +62,4 @@
   --font-size-21: 1.3125rem;
   --font-size-22: 1.375rem;
   --font-size-32: 2rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: var(--white);
-    --text-secondary: var(--white);
-    --background-primary: transparent;
-    --background-secondary: transparent;
-    --border-primary: var(--grey-7);
-  }
 }

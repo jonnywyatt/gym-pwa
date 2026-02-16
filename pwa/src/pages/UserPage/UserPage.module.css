@@ -18,13 +18,15 @@
 .weightInput {
   padding: var(--spacing-unit-2) var(--spacing-unit-3);
   font-size: var(--font-size-16);
-  border: 1px solid var(--grey-6);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   width: 8em;
 }
 
 .successMessage {
-  color: var(--green-dark);
+  color: var(--accent-primary);
   font-size: var(--font-size-14);
   margin-top: var(--spacing-unit-2);
 }

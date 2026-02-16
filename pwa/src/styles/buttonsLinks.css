@@ -1,39 +1,41 @@
 .buttonPrimary {
   padding: var(--spacing-unit-3) var(--spacing-unit-6);
   font-size: var(--font-size-16);
-  background: var(--blue);
-  color: var(--white);
+  background: var(--accent-primary);
+  color: var(--background-primary);
   border: none;
   border-radius: var(--border-radius);
+  font-weight: 700;
   cursor: pointer;
 }
 
 .buttonPrimary:hover {
-  opacity: 0.9;
+  background: var(--accent-primary-hover);
 }
 
 .buttonSecondary {
   padding: var(--spacing-unit-2) var(--spacing-unit-4);
   font-size: var(--font-size-14);
-  background: var(--background-secondary);
-  border: 1px solid var(--grey-6);
+  background: var(--background-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .buttonSecondary:hover {
-  background: var(--grey-6b);
+  background: var(--background-surface-hover);
 }
 
 .buttonLink {
-  color: var(--blue);
+  color: var(--accent-secondary);
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease-in-out;
 }
 
 .buttonLink:hover {
-  color: var(--grey-4b);
+  color: var(--text-primary);
 }
 
 .buttonIcon {
@@ -47,5 +49,5 @@
 }
 
 .infoLink {
-  border-bottom: 1px dashed var(--grey-3b);
+  border-bottom: 1px dashed var(--text-muted);
 }
