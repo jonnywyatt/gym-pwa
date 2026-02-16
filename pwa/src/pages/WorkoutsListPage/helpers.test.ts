@@ -1,12 +1,11 @@
 import { HttpResponse, http } from 'msw';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
 import {
   calculateDuration,
   deleteWorkoutApi,
-  formatDate,
+  formatDateTime,
   formatDuration,
-  formatTime,
   formatTotalWeight,
 } from './helpers';
 
@@ -44,23 +43,24 @@ describe('calculateDuration', () => {
   });
 });
 
-describe('formatDate', () => {
-  it('formats date in MMM D, YYYY format', () => {
-    const dateString = '2024-01-15T10:30:00Z';
-
-    const result = formatDate(dateString);
-
-    expect(result).toMatch(/Jan 1[45], 2024/);
+describe('formatDateTime', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-02-16T15:30:00'));
   });
-});
 
-describe('formatTime', () => {
-  it('formats time in 12-hour format', () => {
-    const dateString = '2024-01-15T14:30:00Z';
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-    const result = formatTime(dateString);
+  it('formats date and time without year for current year', () => {
+    const result = formatDateTime('2026-02-16T15:45:00');
+    expect(result).toBe('16 Feb @ 3:45pm');
+  });
 
-    expect(result).toMatch(/\d{1,2}:\d{2}\s?(AM|PM)/);
+  it('formats date and time with year for previous year', () => {
+    const result = formatDateTime('2025-12-25T09:30:00');
+    expect(result).toBe('25 Dec 2025 @ 9:30am');
   });
 });
 

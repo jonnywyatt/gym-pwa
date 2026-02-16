@@ -1,5 +1,6 @@
 import type { UserWorkout } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
+import { formatDateTime as formatDateTimeUtil } from '../../utils/time';
 
 export async function fetchWorkouts(userId: number): Promise<UserWorkout[]> {
   return await authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
@@ -21,21 +22,8 @@ export function calculateDuration(startedAt: string, finishedAt: string): number
   return Math.round((finish - start) / 1000 / 60);
 }
 
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
-export function formatTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-  });
+export function formatDateTime(dateString: string): string {
+  return formatDateTimeUtil(dateString);
 }
 
 export function formatTotalWeight(weightKg: number): string {

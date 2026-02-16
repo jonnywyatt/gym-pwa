@@ -24,8 +24,7 @@ import {
 } from './helpers';
 import {
   deleteWorkoutApi,
-  formatDate,
-  formatTime,
+  formatDateTime,
   formatDuration,
   formatTotalWeight,
 } from '../WorkoutsListPage/helpers';
@@ -370,7 +369,7 @@ onUnmounted(() => {
       </header>
 
       <div :class="styles.summaryMeta">
-        <span>{{ formatDate(completedWorkout.startedAt) }} at {{ formatTime(completedWorkout.startedAt) }}</span>
+        <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
         <span v-if="completedWorkout.durationSeconds !== undefined">{{ formatDuration(completedWorkout.durationSeconds) }}</span>
         <span v-if="completedWorkout.totalWeightKg">{{ formatTotalWeight(completedWorkout.totalWeightKg) }} total</span>
       </div>

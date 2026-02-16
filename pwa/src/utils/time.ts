@@ -1,3 +1,21 @@
+export function formatDateTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const isSameYear = date.getFullYear() === now.getFullYear();
+
+  const day = date.getDate();
+  const month = date.toLocaleDateString('en-US', { month: 'short' });
+  const year = isSameYear ? '' : ` ${date.getFullYear()}`;
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  const displayHours = hours % 12 || 12;
+  const displayMinutes = minutes.toString().padStart(2, '0');
+
+  return `${day} ${month}${year} @ ${displayHours}:${displayMinutes}${ampm}`;
+}
+
 export function formatDurationSeconds(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);

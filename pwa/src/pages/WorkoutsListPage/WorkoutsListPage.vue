@@ -4,7 +4,7 @@ import type { UserWorkout } from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutsListPage.module.css';
 import { authService } from '../../lib/auth/oauth';
-import { fetchWorkouts, deleteWorkoutApi, calculateDuration, formatDate, formatTime, formatDuration, formatTotalWeight } from './helpers';
+import { fetchWorkouts, deleteWorkoutApi, calculateDuration, formatDateTime, formatDuration, formatTotalWeight } from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const workouts = ref<UserWorkout[]>([]);
@@ -84,7 +84,7 @@ onMounted(() => {
                 <strong>{{ workout.routineLabel }}</strong>
               </div>
               <div :class="styles.workoutMeta">
-                <span>{{ formatDate(workout.startedAt) }} at {{ formatTime(workout.startedAt) }}</span>
+                <span>{{ formatDateTime(workout.startedAt) }}</span>
                 <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
                 <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
                 <span>{{ workout.exercisesCompleted.length }} exercises</span>

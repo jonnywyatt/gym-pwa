@@ -7,8 +7,7 @@ import { authService } from '../../lib/auth/oauth';
 import { createWorkout, getActiveWorkout } from '../../lib/db';
 import { loadDashboardData, handleNewWorkout } from './helpers';
 import {
-  formatDate,
-  formatTime,
+  formatDateTime,
   formatDuration,
   formatTotalWeight,
 } from '../WorkoutsListPage/helpers';
@@ -100,7 +99,7 @@ onMounted(() => {
             <div :class="styles.workoutCardHeader">Last workout</div>
             <span :class="styles.workoutRoutineName">{{ latestWorkout.routineLabel }}</span>
             <div :class="styles.workoutMeta">
-              <span>{{ formatDate(latestWorkout.startedAt) }} at {{ formatTime(latestWorkout.startedAt) }}</span>
+              <span>{{ formatDateTime(latestWorkout.startedAt) }}</span>
               <span v-if="latestWorkout.totalWeightKg">{{ formatTotalWeight(latestWorkout.totalWeightKg) }} total</span>
               <span v-if="latestWorkout.durationSeconds !== undefined">{{ formatDuration(latestWorkout.durationSeconds) }}</span>
             </div>

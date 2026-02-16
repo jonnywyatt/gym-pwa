@@ -1,7 +1,46 @@
-import { describe, expect, it } from 'vitest';
-import { formatDurationSeconds, formatTimeMinSec, parseTimeMinSec } from './time';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { formatDateTime, formatDurationSeconds, formatTimeMinSec, parseTimeMinSec } from './time';
 
 describe('time utils', () => {
+  describe('formatDateTime', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-02-16T15:30:00'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('formats date and time in current year without year suffix', () => {
+      expect(formatDateTime('2026-02-16T15:45:00')).toBe('16 Feb @ 3:45pm');
+    });
+
+    it('formats date and time with year for previous year', () => {
+      expect(formatDateTime('2025-12-25T09:30:00')).toBe('25 Dec 2025 @ 9:30am');
+    });
+
+    it('formats morning time with am', () => {
+      expect(formatDateTime('2026-01-05T08:15:00')).toBe('5 Jan @ 8:15am');
+    });
+
+    it('formats afternoon time with pm', () => {
+      expect(formatDateTime('2026-03-20T14:45:00')).toBe('20 Mar @ 2:45pm');
+    });
+
+    it('formats midnight as 12:00am', () => {
+      expect(formatDateTime('2026-02-10T00:00:00')).toBe('10 Feb @ 12:00am');
+    });
+
+    it('formats noon as 12:00pm', () => {
+      expect(formatDateTime('2026-02-10T12:00:00')).toBe('10 Feb @ 12:00pm');
+    });
+
+    it('pads single-digit minutes with zero', () => {
+      expect(formatDateTime('2026-02-16T15:05:00')).toBe('16 Feb @ 3:05pm');
+    });
+  });
+
   describe('formatDurationSeconds', () => {
     it('formats zero seconds', () => {
       expect(formatDurationSeconds(0)).toBe('00:00:00');
