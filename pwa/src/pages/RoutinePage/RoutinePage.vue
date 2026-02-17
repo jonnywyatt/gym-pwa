@@ -82,6 +82,7 @@ onMounted(() => {
       <button
         v-if="routine && !loading"
         type="button"
+        class="buttonPrimary"
         :disabled="startingWorkout"
         @click="handleStartWorkout"
       >

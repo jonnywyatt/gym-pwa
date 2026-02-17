@@ -29,8 +29,8 @@ function handleButtonClick() {
 <template>
   <div :class="styles.container">
     <div :class="styles.time">{{ formattedTime }}</div>
-    <button type="button" :class="styles.button" @click="handleButtonClick">
-      {{ isPaused ? 'Resume' : 'Pause' }}
+    <button type="button" :class="styles.button" :aria-label="isPaused ? 'Resume' : 'Pause'" @click="handleButtonClick">
+      {{ isPaused ? '▶' : '⏸' }}
     </button>
   </div>
 </template>

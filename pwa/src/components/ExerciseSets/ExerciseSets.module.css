@@ -8,6 +8,14 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-unit-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit-3);
 }
 
 .totalWeight {
@@ -15,19 +23,10 @@
   color: var(--text-secondary);
 }
 
-.startButton {
-  padding: var(--spacing-unit-1) var(--spacing-unit-4);
+.chevron {
   font-size: var(--font-size-14);
-  background: var(--accent-primary);
-  color: var(--background-primary);
-  border: none;
-  border-radius: var(--border-radius);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.startButton:hover {
-  background: var(--accent-primary-hover);
+  color: var(--text-muted);
+    transform:scale(2,1)
 }
 
 .setsContainer {
@@ -109,43 +108,4 @@
 
 .addSetButton:hover {
   color: var(--text-primary);
-}
-
-.finishDiscardButtons {
-  display: flex;
-  gap: var(--spacing-unit-2);
-}
-
-.finishButton {
-  padding: var(--spacing-unit-1) var(--spacing-unit-4);
-  font-size: var(--font-size-14);
-  background: var(--accent-primary);
-  color: var(--background-primary);
-  border: none;
-  border-radius: var(--border-radius);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.finishButton:hover {
-  background: var(--accent-primary-hover);
-}
-
-.discardButton {
-  padding: var(--spacing-unit-1) var(--spacing-unit-4);
-  font-size: var(--font-size-14);
-  background: none;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  cursor: pointer;
-}
-
-.discardButton:hover {
-  background: var(--background-surface-hover);
-}
-
-.completedSummary {
-  font-size: var(--font-size-14);
-  color: var(--text-secondary);
 }

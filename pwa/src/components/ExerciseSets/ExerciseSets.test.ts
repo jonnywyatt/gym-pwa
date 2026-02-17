@@ -14,101 +14,168 @@ describe('ExerciseSets', () => {
     completed: false,
   };
 
-  describe('not started state', () => {
-    it('shows exercise label and Start button', () => {
+  const exerciseWithSets: LocalWorkoutExercise = {
+    ...baseExercise,
+    startedAt: '2025-01-15T14:00:00.000Z',
+    sets: [
+      { id: 's1', setType: 'Warmup', completed: false },
+      { id: 's2', setType: 'Standard', completed: false },
+    ],
+  };
+
+  describe('collapsed state', () => {
+    it('shows exercise label and down chevron', () => {
       render(ExerciseSets, {
         props: { exercise: baseExercise, bodyWeightKg: 80 },
       });
 
       expect(screen.getByText('Bench Press')).toBeInTheDocument();
-      expect(screen.getByText('Start')).toBeInTheDocument();
+      expect(screen.getByText('▼')).toBeInTheDocument();
     });
 
-    it('emits start event when Start button is clicked', async () => {
+    it('does not show set inputs when collapsed', () => {
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      expect(screen.queryByPlaceholderText('Kg')).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText('Reps')).not.toBeInTheDocument();
+    });
+
+    it('does not show Add Set button when collapsed', () => {
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      expect(screen.queryByText('Add Set')).not.toBeInTheDocument();
+    });
+
+    it('does not show Start, Finish, Discard, or Change buttons', () => {
+      render(ExerciseSets, {
+        props: { exercise: baseExercise, bodyWeightKg: 80 },
+      });
+
+      expect(screen.queryByText('Start')).not.toBeInTheDocument();
+      expect(screen.queryByText('Finish')).not.toBeInTheDocument();
+      expect(screen.queryByText('Discard')).not.toBeInTheDocument();
+      expect(screen.queryByText('Change')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('panel toggle', () => {
+    it('opens panel when header row is clicked', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      expect(screen.getByText('Add Set')).toBeInTheDocument();
+      expect(screen.getByText('▲')).toBeInTheDocument();
+    });
+
+    it('closes panel when header row is clicked again', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      const header = screen.getByRole('button', { name: /bench press/i });
+      await user.click(header);
+      await user.click(header);
+
+      expect(screen.queryByText('Add Set')).not.toBeInTheDocument();
+      expect(screen.getByText('▼')).toBeInTheDocument();
+    });
+
+    it('emits start when first opened and exercise has no startedAt', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
         props: { exercise: baseExercise, bodyWeightKg: 80 },
       });
 
-      await user.click(screen.getByText('Start'));
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
       expect(emitted().start).toHaveLength(1);
       expect(emitted().start[0]).toEqual([1]);
     });
-  });
 
-  describe('in progress state', () => {
-    const inProgressExercise: LocalWorkoutExercise = {
-      ...baseExercise,
-      startedAt: '2025-01-15T14:00:00.000Z',
-      sets: [
-        { id: 's1', setType: 'Warmup', completed: false },
-        { id: 's2', setType: 'Standard', completed: false },
-      ],
-    };
-
-    it('shows set rows with inputs', () => {
-      render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+    it('does not emit start when exercise already has startedAt', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByText('Bench Press')).toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      expect(emitted().start).toBeUndefined();
+    });
+
+    it('does not emit start on subsequent opens after the first', async () => {
+      const user = userEvent.setup();
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: baseExercise, bodyWeightKg: 80 },
+      });
+
+      const header = screen.getByRole('button', { name: /bench press/i });
+      await user.click(header);
+      await user.click(header);
+      await user.click(header);
+
+      expect(emitted().start).toHaveLength(1);
+    });
+  });
+
+  describe('open panel with sets', () => {
+    it('shows set rows with inputs when opened', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
       expect(screen.getByText('W')).toBeInTheDocument();
       expect(screen.getByText('1')).toBeInTheDocument();
       expect(screen.getAllByPlaceholderText('Kg')).toHaveLength(2);
       expect(screen.getAllByPlaceholderText('Reps')).toHaveLength(2);
     });
 
-    it('shows Add Set, Finish, and Discard buttons', () => {
+    it('shows Add Set button when open', async () => {
+      const user = userEvent.setup();
       render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByText('Add Set')).toBeInTheDocument();
-      expect(screen.getByText('Finish')).toBeInTheDocument();
-      expect(screen.getByText('Discard')).toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
     });
 
     it('emits addSet event when Add Set is clicked', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
-      await user.click(screen.getByText('Add Set'));
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+      await user.click(screen.getByRole('button', { name: 'Add Set' }));
+
       expect(emitted().addSet).toHaveLength(1);
       expect(emitted().addSet[0]).toEqual([1]);
-    });
-
-    it('emits finish event when Finish is clicked', async () => {
-      const user = userEvent.setup();
-      const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
-      });
-
-      await user.click(screen.getByText('Finish'));
-      expect(emitted().finish).toHaveLength(1);
-      expect(emitted().finish[0]).toEqual([1]);
-    });
-
-    it('emits discard event when Discard is clicked', async () => {
-      const user = userEvent.setup();
-      const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
-      });
-
-      await user.click(screen.getByText('Discard'));
-      expect(emitted().discard).toHaveLength(1);
-      expect(emitted().discard[0]).toEqual([1]);
     });
 
     it('emits updateSet when checkbox is toggled', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
       const checkboxes = screen.getAllByRole('checkbox');
       await user.click(checkboxes[0]);
+
       expect(emitted().updateSet).toHaveLength(1);
       expect(emitted().updateSet[0]).toEqual([1, 's1', { completed: true }]);
     });
@@ -116,38 +183,43 @@ describe('ExerciseSets', () => {
     it('emits changeSetType when dropdown changes', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
       const selects = screen.getAllByRole('combobox');
       await user.selectOptions(selects[1], 'Failure');
+
       expect(emitted().changeSetType).toHaveLength(1);
       expect(emitted().changeSetType[0]).toEqual([1, 's2', 'Failure']);
     });
 
-    it('shows running total weight when sets are completed', () => {
+    it('shows total weight for completed sets in header', () => {
       const exerciseWithCompletedSets: LocalWorkoutExercise = {
         ...baseExercise,
         startedAt: '2025-01-15T14:00:00.000Z',
         sets: [
-          { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
+          { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
           { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
         ],
+        completed: true,
+        totalWeightKg: 1200,
       };
 
       render(ExerciseSets, {
         props: { exercise: exerciseWithCompletedSets, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByText('1000 Kg')).toBeInTheDocument();
+      expect(screen.getByText('1200 Kg')).toBeInTheDocument();
     });
 
     it('allows 0 weight to be entered', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
       const weightInputs = screen.getAllByPlaceholderText('Kg');
       await user.clear(weightInputs[0]);
       await user.type(weightInputs[0], '0');
@@ -159,55 +231,16 @@ describe('ExerciseSets', () => {
     it('allows 0 reps to be entered', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
-        props: { exercise: inProgressExercise, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
       const repsInputs = screen.getAllByPlaceholderText('Reps');
       await user.clear(repsInputs[0]);
       await user.type(repsInputs[0], '0');
 
       expect(emitted().updateSet).toHaveLength(1);
       expect(emitted().updateSet[0]).toEqual([1, 's1', { reps: 0 }]);
-    });
-  });
-
-  describe('completed state', () => {
-    const completedExercise: LocalWorkoutExercise = {
-      ...baseExercise,
-      completed: true,
-      startedAt: '2025-01-15T14:00:00.000Z',
-      sets: [
-        { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
-        { id: 's2', setType: 'Standard', weightKg: 60, reps: 8, completed: true },
-      ],
-      totalWeightKg: 1080,
-    };
-
-    it('shows exercise label and total weight', () => {
-      render(ExerciseSets, {
-        props: { exercise: completedExercise, bodyWeightKg: 80 },
-      });
-
-      expect(screen.getByText('Bench Press')).toBeInTheDocument();
-      expect(screen.getByText('1080 Kg')).toBeInTheDocument();
-    });
-
-    it('shows completed summary', () => {
-      render(ExerciseSets, {
-        props: { exercise: completedExercise, bodyWeightKg: 80 },
-      });
-
-      expect(screen.getByText('2 sets completed')).toBeInTheDocument();
-    });
-
-    it('does not show Start, Finish, or Discard buttons', () => {
-      render(ExerciseSets, {
-        props: { exercise: completedExercise, bodyWeightKg: 80 },
-      });
-
-      expect(screen.queryByText('Start')).not.toBeInTheDocument();
-      expect(screen.queryByText('Finish')).not.toBeInTheDocument();
-      expect(screen.queryByText('Discard')).not.toBeInTheDocument();
     });
   });
 
@@ -223,10 +256,13 @@ describe('ExerciseSets', () => {
       sets: [{ id: 's1', setType: 'Standard', timeSeconds: 60, completed: false }],
     };
 
-    it('shows minutes and seconds inputs but not weight or reps inputs', () => {
+    it('shows minutes and seconds inputs but not weight or reps inputs', async () => {
+      const user = userEvent.setup();
       render(ExerciseSets, {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
 
       expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Sec')).toBeInTheDocument();
@@ -240,6 +276,7 @@ describe('ExerciseSets', () => {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
       const minInput = screen.getByPlaceholderText('Min');
       await user.clear(minInput);
       await user.type(minInput, '2');
@@ -254,6 +291,7 @@ describe('ExerciseSets', () => {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
 
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
       const secInput = screen.getByPlaceholderText('Sec');
       await user.clear(secInput);
       await user.type(secInput, '30');
@@ -262,10 +300,13 @@ describe('ExerciseSets', () => {
       expect(lastUpdate).toEqual([2, 's1', { timeSeconds: 90 }]);
     });
 
-    it('displays minutes and seconds values separately', () => {
+    it('displays minutes and seconds values separately', async () => {
+      const user = userEvent.setup();
       render(ExerciseSets, {
         props: { exercise: timeExercise, bodyWeightKg: 80 },
       });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
 
       const minInput = screen.getByPlaceholderText('Min') as HTMLInputElement;
       const secInput = screen.getByPlaceholderText('Sec') as HTMLInputElement;
@@ -286,10 +327,13 @@ describe('ExerciseSets', () => {
       sets: [{ id: 's1', setType: 'Standard', completed: false }],
     };
 
-    it('shows weight, minutes and seconds inputs but not reps', () => {
+    it('shows weight, minutes and seconds inputs but not reps', async () => {
+      const user = userEvent.setup();
       render(ExerciseSets, {
         props: { exercise: weightTimeExercise, bodyWeightKg: 80 },
       });
+
+      await user.click(screen.getByRole('button', { name: /farmer/i }));
 
       expect(screen.getByPlaceholderText('Kg')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();

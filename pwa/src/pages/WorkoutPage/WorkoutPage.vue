@@ -15,9 +15,8 @@ import {
   calculateElapsedSeconds,
   calculateFinalDurationSeconds,
   calculateWorkoutTotalWeightKg,
+  calculateExerciseTotalWeightKg,
   startExercise,
-  finishExercise as finishExerciseHelper,
-  discardExercise,
   createNewSet,
   fetchWorkout,
   formatSetDetails,
@@ -189,14 +188,25 @@ function handleUpdateSet(
 ) {
   if (!workout.value) return;
 
+  const bodyWeightKg = workout.value.bodyWeightKg;
   const updatedExercises = workout.value.exercisesCompleted.map((ex) => {
     if (ex.id !== exerciseId) return ex;
-    return {
-      ...ex,
-      sets: (ex.sets ?? []).map((set) =>
-        set.id === setId ? { ...set, ...updates } : set
-      ),
-    };
+
+    const updatedSets = (ex.sets ?? []).map((set) =>
+      set.id === setId ? { ...set, ...updates } : set
+    );
+
+    if ('completed' in updates) {
+      const totalWeightKg = calculateExerciseTotalWeightKg(
+        ex.recordSetsType,
+        bodyWeightKg,
+        updatedSets
+      );
+      const completed = updatedSets.some((s) => s.completed);
+      return { ...ex, sets: updatedSets, totalWeightKg, completed };
+    }
+
+    return { ...ex, sets: updatedSets };
   });
   updateExercises(updatedExercises);
 }
@@ -229,23 +239,6 @@ function handleChangeSetType(exerciseId: number, setId: string, setType: SetType
   updateExercises(updatedExercises);
 }
 
-function handleFinishExercise(exerciseId: number) {
-  if (!workout.value) return;
-
-  const updatedExercises = workout.value.exercisesCompleted.map((ex) =>
-    ex.id === exerciseId ? finishExerciseHelper(ex, workout.value?.bodyWeightKg ?? 0) : ex
-  );
-  updateExercises(updatedExercises);
-}
-
-function handleDiscardExercise(exerciseId: number) {
-  if (!workout.value) return;
-
-  const updatedExercises = workout.value.exercisesCompleted.map((ex) =>
-    ex.id === exerciseId ? discardExercise(ex) : ex
-  );
-  updateExercises(updatedExercises);
-}
 
 async function handleFinish() {
   if (!workout.value) return;
@@ -334,7 +327,7 @@ onUnmounted(() => {
             {{ workoutTotalWeightKg }} Kg
           </span>
         </div>
-        <button type="button" :disabled="finishing" @click="handleFinish">
+        <button type="button" :disabled="finishing" @click="handleFinish" class="buttonSecondary">
           {{ finishing ? 'Finishing...' : 'Finish' }}
         </button>
       </nav>
@@ -355,8 +348,6 @@ onUnmounted(() => {
             @update-set="handleUpdateSet"
             @add-set="handleAddSet"
             @change-set-type="handleChangeSetType"
-            @finish="handleFinishExercise"
-            @discard="handleDiscardExercise"
           />
         </li>
       </ul>

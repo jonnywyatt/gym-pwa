@@ -108,7 +108,7 @@ describe('WorkoutPage', () => {
     });
   });
 
-  it('should show Start buttons for exercises', async () => {
+  it('should show exercise rows with chevrons', async () => {
     await db.workouts.add(createTestWorkout());
 
     render(WorkoutPage);
@@ -117,11 +117,11 @@ describe('WorkoutPage', () => {
       expect(screen.getByText('Bench Press')).toBeInTheDocument();
     });
 
-    const startButtons = screen.getAllByText('Start');
-    expect(startButtons).toHaveLength(2);
+    expect(screen.getByRole('button', { name: /bench press/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /squats/i })).toBeInTheDocument();
   });
 
-  it('should start exercise and show sets when Start is clicked', async () => {
+  it('should open panel and show sets when exercise row is clicked', async () => {
     const user = userEvent.setup();
     await db.workouts.add(createTestWorkout());
 
@@ -131,17 +131,14 @@ describe('WorkoutPage', () => {
       expect(screen.getByText('Bench Press')).toBeInTheDocument();
     });
 
-    const startButtons = screen.getAllByText('Start');
-    await user.click(startButtons[0]);
+    await user.click(screen.getByRole('button', { name: /bench press/i }));
 
     await waitFor(() => {
       expect(screen.getByText('W')).toBeInTheDocument();
       expect(screen.getByText('1')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Add Set')).toBeInTheDocument();
-    expect(screen.getAllByText('Finish')).toHaveLength(2);
-    expect(screen.getByText('Discard')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
   });
 
   it('should add a new set when Add Set is clicked', async () => {
@@ -169,18 +166,23 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('Add Set')).toBeInTheDocument();
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Add Set'));
+    await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Add Set' }));
 
     await waitFor(() => {
       expect(screen.getByText('2')).toBeInTheDocument();
     });
   });
 
-  it('should finish exercise and show total weight', async () => {
-    const user = userEvent.setup();
+  it('should show exercise total weight when sets are completed', async () => {
     await db.workouts.add(
       createTestWorkout({
         exercisesCompleted: [
@@ -204,24 +206,11 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      const finishButtons = screen.getAllByText('Finish');
-      expect(finishButtons).toHaveLength(2);
+      expect(screen.getByText('1000 Kg')).toBeInTheDocument();
     });
-
-    // Click the exercise Finish button (second one — inside ExerciseSets)
-    const finishButtons = screen.getAllByText('Finish');
-    await user.click(finishButtons[1]);
-
-    await waitFor(() => {
-      expect(screen.getByText('2 sets completed')).toBeInTheDocument();
-    });
-
-    // 1000 Kg appears in both exercise summary and navbar
-    const weightTexts = screen.getAllByText('1000 Kg');
-    expect(weightTexts.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should discard exercise and return to Start state', async () => {
+  it('should close the panel when exercise row is clicked again', async () => {
     const user = userEvent.setup();
     await db.workouts.add(
       createTestWorkout({
@@ -246,17 +235,21 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('Discard')).toBeInTheDocument();
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Discard'));
+    const exerciseRow = screen.getByRole('button', { name: /bench press/i });
+    await user.click(exerciseRow);
 
     await waitFor(() => {
-      const startButtons = screen.getAllByText('Start');
-      expect(startButtons).toHaveLength(1);
+      expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
     });
 
-    expect(screen.queryByText('Add Set')).not.toBeInTheDocument();
+    await user.click(exerciseRow);
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'Add Set' })).not.toBeInTheDocument();
+    });
   });
 
   it('should show workout total weight in navbar when exercises are finished', async () => {

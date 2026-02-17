@@ -127,35 +127,6 @@ export function startExercise(exercise: LocalWorkoutExercise): LocalWorkoutExerc
   };
 }
 
-export function finishExercise(
-  exercise: LocalWorkoutExercise,
-  bodyWeightKg: number
-): LocalWorkoutExercise {
-  const completedSets = (exercise.sets ?? []).filter((set) => set.completed);
-  const totalWeightKg = calculateExerciseTotalWeightKg(
-    exercise.recordSetsType,
-    bodyWeightKg,
-    exercise.sets ?? []
-  );
-
-  return {
-    ...exercise,
-    completed: true,
-    sets: completedSets,
-    totalWeightKg,
-  };
-}
-
-export function discardExercise(exercise: LocalWorkoutExercise): LocalWorkoutExercise {
-  return {
-    ...exercise,
-    completed: false,
-    startedAt: undefined,
-    sets: undefined,
-    totalWeightKg: undefined,
-  };
-}
-
 export function getCompletedExercises(
   exercises: LocalWorkoutExercise[]
 ): CompletedWorkoutExercise[] {
@@ -163,7 +134,9 @@ export function getCompletedExercises(
     .filter((ex) => ex.completed)
     .map(({ completed, startedAt, ...exercise }) => ({
       ...exercise,
-      sets: (exercise.sets ?? []).map(({ id, completed: setCompleted, ...set }) => set),
+      sets: (exercise.sets ?? [])
+        .filter((set) => set.completed)
+        .map(({ id, completed: setCompleted, ...set }) => set),
       totalWeightKg: exercise.totalWeightKg ?? 0,
     }));
 }

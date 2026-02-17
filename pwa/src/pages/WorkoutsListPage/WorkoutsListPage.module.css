@@ -30,13 +30,10 @@
 
 .deleteButton {
   flex-shrink: 0;
-  padding: var(--spacing-unit-2) var(--spacing-unit-3);
   margin-right: var(--spacing-unit-3);
   font-size: var(--font-size-13);
   color: var(--em-error);
   background: none;
-  border: 1px solid var(--em-error);
-  border-radius: var(--border-radius);
   cursor: pointer;
 }
 

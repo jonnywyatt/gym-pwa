@@ -12,9 +12,7 @@ import {
   createDefaultSets,
   createNewSet,
   createWorkoutPayload,
-  discardExercise,
   fetchWorkout,
-  finishExercise,
   formatSetDetails,
   formatStartTime,
   getCompletedExercises,
@@ -327,49 +325,6 @@ describe('WorkoutPage helpers', () => {
     });
   });
 
-  describe('finishExercise', () => {
-    it('marks exercise completed and keeps only completed sets', () => {
-      const exercise: LocalWorkoutExercise = {
-        id: 1,
-        label: 'Bench Press',
-        recordSetsType: 'WEIGHT',
-        primaryMuscleGroups: [],
-        secondaryMuscleGroups: [],
-        completed: false,
-        startedAt: '2025-01-15T14:00:00.000Z',
-        sets: [
-          { id: '1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
-          { id: '2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
-          { id: '3', setType: 'Standard', weightKg: 60, reps: 8, completed: false },
-        ],
-      };
-      const result = finishExercise(exercise, 80);
-      expect(result.completed).toBe(true);
-      expect(result.sets).toHaveLength(2);
-      expect(result.totalWeightKg).toBe(1000);
-    });
-  });
-
-  describe('discardExercise', () => {
-    it('clears all exercise progress', () => {
-      const exercise: LocalWorkoutExercise = {
-        id: 1,
-        label: 'Bench Press',
-        recordSetsType: 'WEIGHT',
-        primaryMuscleGroups: [],
-        secondaryMuscleGroups: [],
-        completed: false,
-        startedAt: '2025-01-15T14:00:00.000Z',
-        sets: [{ id: '1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true }],
-      };
-      const result = discardExercise(exercise);
-      expect(result.completed).toBe(false);
-      expect(result.startedAt).toBeUndefined();
-      expect(result.sets).toBeUndefined();
-      expect(result.totalWeightKg).toBeUndefined();
-    });
-  });
-
   describe('getCompletedExercises', () => {
     it('filters only completed exercises and strips local fields', () => {
       const exercises: LocalWorkoutExercise[] = [
@@ -400,6 +355,27 @@ describe('WorkoutPage helpers', () => {
       expect(result[0].sets[0]).not.toHaveProperty('id');
       expect(result[0].sets[0]).not.toHaveProperty('completed');
       expect(result[0].totalWeightKg).toBe(600);
+    });
+
+    it('filters out incomplete sets from completed exercises', () => {
+      const exercises: LocalWorkoutExercise[] = [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: true,
+          startedAt: '2025-01-15T14:00:00.000Z',
+          sets: [
+            { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
+            { id: 's2', setType: 'Standard', weightKg: 60, reps: 8, completed: false },
+          ],
+          totalWeightKg: 600,
+        },
+      ];
+      const result = getCompletedExercises(exercises);
+      expect(result[0].sets).toHaveLength(1);
     });
 
     it('returns empty array when no exercises are completed', () => {

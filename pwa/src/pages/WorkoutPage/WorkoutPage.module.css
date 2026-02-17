@@ -1,20 +1,23 @@
 .nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-unit-3) 0;
+  background: var(--background-primary);
   border-bottom: 1px solid var(--border-color);
 }
 
 .navLeft {
   display: flex;
   align-items: center;
-  gap: var(--spacing-unit-3);
+  gap: var(--spacing-unit-5);
 }
 
 .workoutTotalWeight {
-  font-size: var(--font-size-14);
-  font-weight: bold;
+  font-size: var(--font-size-18);
 }
 
 .summaryMeta {

@@ -1,12 +1,12 @@
 .container {
   display: flex;
   align-items: center;
-  gap: var(--spacing-unit-3);
+  gap: var(--spacing-unit-2);
 }
 
 .time {
   font-family: var(--font-stack-mono);
-  font-size: var(--font-size-22);
+  font-size: var(--font-size-18);
   font-weight: bold;
   color: var(--accent-secondary);
 }
