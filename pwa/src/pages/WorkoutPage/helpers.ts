@@ -38,6 +38,11 @@ export function createDefaultSets(): WorkoutSet[] {
       setType: 'Standard',
       completed: false,
     },
+    {
+      id: crypto.randomUUID(),
+      setType: 'Standard',
+      completed: false,
+    },
   ];
 }
 

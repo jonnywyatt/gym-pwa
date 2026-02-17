@@ -52,22 +52,25 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('createDefaultSets', () => {
-    it('returns a warmup and a normal set', () => {
+    it('returns a warmup and two standard sets', () => {
       const sets = createDefaultSets();
-      expect(sets).toHaveLength(2);
+      expect(sets).toHaveLength(3);
       expect(sets[0].setType).toBe('Warmup');
       expect(sets[1].setType).toBe('Standard');
+      expect(sets[2].setType).toBe('Standard');
     });
 
-    it('sets both as incomplete', () => {
+    it('sets all as incomplete', () => {
       const sets = createDefaultSets();
       expect(sets[0].completed).toBe(false);
       expect(sets[1].completed).toBe(false);
+      expect(sets[2].completed).toBe(false);
     });
 
     it('generates unique ids', () => {
       const sets = createDefaultSets();
-      expect(sets[0].id).not.toBe(sets[1].id);
+      const ids = sets.map((s) => s.id);
+      expect(new Set(ids).size).toBe(ids.length);
     });
   });
 
@@ -304,10 +307,11 @@ describe('WorkoutPage helpers', () => {
       };
       const result = startExercise(exercise);
       expect(result.startedAt).toBeTruthy();
-      expect(result.sets).toHaveLength(2);
+      expect(result.sets).toHaveLength(3);
       if (result.sets === undefined) throw new Error('sets should be defined');
       expect(result.sets[0].setType).toBe('Warmup');
       expect(result.sets[1].setType).toBe('Standard');
+      expect(result.sets[2].setType).toBe('Standard');
     });
 
     it('does not mutate the original exercise', () => {
