@@ -20,7 +20,7 @@
 
 .totalWeight {
   font-size: var(--font-size-14);
-  color: var(--text-secondary);
+  color: var(--accent-primary);
 }
 
 .chevron {

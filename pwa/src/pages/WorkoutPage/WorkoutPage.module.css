@@ -18,6 +18,7 @@
 
 .workoutTotalWeight {
   font-size: var(--font-size-18);
+    color: var(--accent-primary);
 }
 
 .summaryMeta {
