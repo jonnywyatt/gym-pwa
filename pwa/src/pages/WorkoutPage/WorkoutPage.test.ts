@@ -605,6 +605,33 @@ describe('WorkoutPage', () => {
       expect(screen.getByText('Standard · 60kg · 10 reps')).toBeInTheDocument();
     });
 
+    it('should display bodyweight in summary', async () => {
+      server.use(
+        http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+          return HttpResponse.json({
+            id: 42,
+            userId: 123,
+            routineId: 1,
+            routineLabel: 'Test Workout',
+            startedAt: '2025-01-15T14:00:00.000Z',
+            finishedAt: '2025-01-15T15:00:00.000Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            totalWeightKg: 0,
+            bodyWeightKg: 80,
+          });
+        })
+      );
+
+      render(WorkoutPage);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Workout')).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('Body weight: 80kg')).toBeInTheDocument();
+    });
+
     it('should display exercises with different record set types', async () => {
       server.use(
         http.get(`${mockApiUrl}/users/123/workouts/42`, () => {

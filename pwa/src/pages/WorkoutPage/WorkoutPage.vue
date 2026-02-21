@@ -362,6 +362,7 @@ onUnmounted(() => {
       <div :class="styles.summaryMeta">
         <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
         <span v-if="completedWorkout.durationSeconds !== undefined">{{ formatDuration(completedWorkout.durationSeconds) }}</span>
+        <span v-if="completedWorkout.bodyWeightKg">Body weight: {{ formatTotalWeight(completedWorkout.bodyWeightKg) }}</span>
         <span v-if="completedWorkout.totalWeightKg">{{ formatTotalWeight(completedWorkout.totalWeightKg) }} total</span>
       </div>
 
