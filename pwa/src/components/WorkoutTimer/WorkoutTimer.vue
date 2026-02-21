@@ -30,7 +30,13 @@ function handleButtonClick() {
   <div :class="styles.container">
     <div :class="styles.time">{{ formattedTime }}</div>
     <button type="button" :class="styles.button" :aria-label="isPaused ? 'Resume' : 'Pause'" @click="handleButtonClick">
-      {{ isPaused ? '▶' : '⏸' }}
+      <svg v-if="isPaused" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="1em" height="1em">
+        <polygon points="5,3 19,12 5,21" />
+      </svg>
+      <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="1em" height="1em">
+        <rect x="5" y="3" width="4" height="18" rx="1" />
+        <rect x="15" y="3" width="4" height="18" rx="1" />
+      </svg>
     </button>
   </div>
 </template>
