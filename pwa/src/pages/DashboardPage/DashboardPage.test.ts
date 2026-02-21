@@ -251,6 +251,70 @@ describe('DashboardPage', () => {
     expect(workouts[0].bodyWeightKg).toBe(80);
   });
 
+  it('should show Continue workout button for routine with active workout, New workout for others', async () => {
+    await db.workouts.add({
+      id: 'active-workout-id',
+      userId: 1,
+      routineId: 1,
+      routineLabel: 'Upper Body',
+      startedAt: '2025-01-15T14:00:00.000Z',
+      bodyWeightKg: 80,
+      exercisesCompleted: [],
+    });
+
+    const routines = [
+      { id: 1, label: 'Upper Body', exerciseCount: 5 },
+      { id: 2, label: 'Lower Body', exerciseCount: 4 },
+    ];
+    setupHandlers(routines, null);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'New workout' })).toBeInTheDocument();
+    });
+  });
+
+  it('should navigate to active workout when Continue workout is clicked', async () => {
+    const user = userEvent.setup();
+
+    await db.workouts.add({
+      id: 'active-workout-id',
+      userId: 1,
+      routineId: 1,
+      routineLabel: 'Upper Body',
+      startedAt: '2025-01-15T14:00:00.000Z',
+      bodyWeightKg: 80,
+      exercisesCompleted: [],
+    });
+
+    const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
+    const mockRoutineDetail = {
+      id: 1,
+      label: 'Upper Body',
+      exercises: [],
+    };
+
+    setupHandlers(routines, null);
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutineDetail);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Continue workout' }));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/workouts/active-workout-id');
+    });
+  });
+
   it('should redirect to existing workout if one is active when New workout is clicked', async () => {
     const user = userEvent.setup();
 

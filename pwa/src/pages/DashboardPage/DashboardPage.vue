@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import type { RoutineSummary, UserWorkout } from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
 import { authService } from '../../lib/auth/oauth';
-import { createWorkout, getActiveWorkout } from '../../lib/db';
+import { createWorkout, getActiveWorkout, type LocalWorkout } from '../../lib/db';
 import { loadDashboardData, handleNewWorkout } from './helpers';
 import {
   formatDateTime,
@@ -15,6 +15,7 @@ import {
 const router = useRouter();
 const routines = ref<RoutineSummary[]>([]);
 const latestWorkout = ref<UserWorkout | null>(null);
+const activeWorkout = ref<LocalWorkout | null>(null);
 const routinesLoading = ref(true);
 const workoutLoading = ref(true);
 const routinesError = ref<string | null>(null);
@@ -31,6 +32,10 @@ async function loadData() {
   workoutError.value = data.workoutError;
   routinesLoading.value = false;
   workoutLoading.value = false;
+
+  if (userId !== null) {
+    activeWorkout.value = (await getActiveWorkout(userId)) ?? null;
+  }
 }
 
 async function onNewWorkout(routineId: number) {
@@ -80,7 +85,7 @@ onMounted(() => {
                 :disabled="startingRoutineId === routine.id"
                 @click="onNewWorkout(routine.id)"
               >
-                {{ startingRoutineId === routine.id ? 'Starting...' : 'New workout' }}
+                {{ startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue workout' : 'New workout' }}
               </button>
             </span>
           </li>
