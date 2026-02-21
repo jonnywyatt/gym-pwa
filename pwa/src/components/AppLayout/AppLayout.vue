@@ -17,6 +17,9 @@ const showUserNav = computed(() => {
 const userName = computed(() => { route.path; return authService.getUserName(); });
 const userId = computed(() => { route.path; return authService.getUserId(); });
 
+const isRoutinesActive = computed(() => route.path.startsWith('/routines'));
+const isWorkoutsActive = computed(() => route.path.startsWith('/workouts'));
+
 </script>
 
 <template>
@@ -24,8 +27,8 @@ const userId = computed(() => { route.path; return authService.getUserId(); });
     <nav v-if="showUserNav" :class="styles.nav">
       <div :class="styles.navLeft">
         <router-link to="/" :class="styles.brandName">Duro</router-link>
-        <router-link to="/routines" :class="styles.navLink">Routines</router-link>
-        <router-link to="/workouts" :class="styles.navLink">Workouts</router-link>
+        <router-link to="/routines" :class="[styles.navLink, isRoutinesActive && styles.navLinkActive]">Routines</router-link>
+        <router-link to="/workouts" :class="[styles.navLink, isWorkoutsActive && styles.navLinkActive]">Workouts</router-link>
       </div>
       <div :class="styles.navRight">
         <router-link

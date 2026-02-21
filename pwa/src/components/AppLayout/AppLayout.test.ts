@@ -49,6 +49,41 @@ describe('AppLayout', () => {
     expect(screen.getByRole('link', { name: 'Workouts' })).toBeInTheDocument();
   });
 
+  it('should highlight the Routines link when on the routines list page', async () => {
+    await renderWithRoute('routines', '/routines');
+
+    expect(screen.getByRole('link', { name: 'Routines' }).className).toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Workouts' }).className).not.toContain('navLinkActive');
+  });
+
+  it('should highlight the Routines link when on a routine detail page', async () => {
+    await renderWithRoute('routine-detail', '/routines/1');
+
+    expect(screen.getByRole('link', { name: 'Routines' }).className).toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Workouts' }).className).not.toContain('navLinkActive');
+  });
+
+  it('should highlight the Workouts link when on the workouts list page', async () => {
+    await renderWithRoute('workouts-list', '/workouts');
+
+    expect(screen.getByRole('link', { name: 'Workouts' }).className).toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
+  });
+
+  it('should highlight the Workouts link when on a workout detail page', async () => {
+    await renderWithRoute('workout-detail', '/workouts/42');
+
+    expect(screen.getByRole('link', { name: 'Workouts' }).className).toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
+  });
+
+  it('should not highlight either nav link on the dashboard', async () => {
+    await renderWithRoute('dashboard', '/');
+
+    expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Workouts' }).className).not.toContain('navLinkActive');
+  });
+
   it('should display the brand name as a link to the dashboard', async () => {
     await renderWithRoute('dashboard', '/');
 
