@@ -12,7 +12,6 @@ export interface LocalWorkoutExercise extends WorkoutExercise {
   completed: boolean;
   startedAt?: string;
   sets?: WorkoutSet[];
-  totalWeightKg?: number;
 }
 
 export interface LocalWorkout {

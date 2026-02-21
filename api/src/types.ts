@@ -55,7 +55,6 @@ export type CompletedSet = {
 
 export type CompletedWorkoutExercise = WorkoutExercise & {
   sets: CompletedSet[];
-  totalWeightKg: number;
 };
 
 export type CreateWorkoutRequest = {

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout, LocalWorkoutExercise, WorkoutSet } from '../../lib/db';
 import { server } from '../../test/msw';
 import {
+  calculateCompletedSetsTotalWeightKg,
   calculateElapsedSeconds,
   calculateExerciseTotalWeightKg,
   calculateFinalDurationSeconds,
@@ -248,7 +249,7 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('calculateWorkoutTotalWeightKg', () => {
-    it('sums totalWeight of completed exercises', () => {
+    it('sums weight of completed exercises calculated from sets', () => {
       const exercises: LocalWorkoutExercise[] = [
         {
           id: 1,
@@ -257,7 +258,7 @@ describe('WorkoutPage helpers', () => {
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           completed: true,
-          totalWeightKg: 500,
+          sets: [{ id: 's1', setType: 'Standard', weightKg: 50, reps: 10, completed: true }],
         },
         {
           id: 2,
@@ -266,7 +267,7 @@ describe('WorkoutPage helpers', () => {
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           completed: true,
-          totalWeightKg: 800,
+          sets: [{ id: 's2', setType: 'Standard', weightKg: 80, reps: 10, completed: true }],
         },
         {
           id: 3,
@@ -277,7 +278,7 @@ describe('WorkoutPage helpers', () => {
           completed: false,
         },
       ];
-      expect(calculateWorkoutTotalWeightKg(exercises)).toBe(1300);
+      expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(1300);
     });
 
     it('returns 0 when no exercises are completed', () => {
@@ -291,7 +292,26 @@ describe('WorkoutPage helpers', () => {
           completed: false,
         },
       ];
-      expect(calculateWorkoutTotalWeightKg(exercises)).toBe(0);
+      expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(0);
+    });
+  });
+
+  describe('calculateCompletedSetsTotalWeightKg', () => {
+    it('sums weight for all sets in a completed exercise', () => {
+      const sets: CompletedSet[] = [
+        { setType: 'Warmup', weightKg: 40, reps: 10 },
+        { setType: 'Standard', weightKg: 60, reps: 10 },
+      ];
+      expect(calculateCompletedSetsTotalWeightKg('WEIGHT', 80, sets)).toBe(1000);
+    });
+
+    it('returns 0 for TIME sets', () => {
+      const sets: CompletedSet[] = [{ setType: 'Standard', timeSeconds: 60 }];
+      expect(calculateCompletedSetsTotalWeightKg('TIME', 80, sets)).toBe(0);
+    });
+
+    it('returns 0 for empty sets', () => {
+      expect(calculateCompletedSetsTotalWeightKg('WEIGHT', 80, [])).toBe(0);
     });
   });
 
@@ -341,7 +361,6 @@ describe('WorkoutPage helpers', () => {
           completed: true,
           startedAt: '2025-01-15T14:00:00.000Z',
           sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-          totalWeightKg: 600,
         },
         {
           id: 2,
@@ -358,7 +377,6 @@ describe('WorkoutPage helpers', () => {
       expect(result[0]).not.toHaveProperty('startedAt');
       expect(result[0].sets[0]).not.toHaveProperty('id');
       expect(result[0].sets[0]).not.toHaveProperty('completed');
-      expect(result[0].totalWeightKg).toBe(600);
     });
 
     it('filters out incomplete sets from completed exercises', () => {
@@ -375,7 +393,6 @@ describe('WorkoutPage helpers', () => {
             { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
             { id: 's2', setType: 'Standard', weightKg: 60, reps: 8, completed: false },
           ],
-          totalWeightKg: 600,
         },
       ];
       const result = getCompletedExercises(exercises);
@@ -398,7 +415,7 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('createWorkoutPayload', () => {
-    it('creates correct workout payload with totalWeight', () => {
+    it('creates correct workout payload with completed exercises', () => {
       const workout: LocalWorkout = {
         id: 'workout-123',
         userId: 456,
@@ -415,7 +432,6 @@ describe('WorkoutPage helpers', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
           {
             id: 2,

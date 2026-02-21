@@ -264,7 +264,6 @@ describe('WorkoutPage', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
           {
             id: 2,
@@ -287,7 +286,7 @@ describe('WorkoutPage', () => {
     });
   });
 
-  it('should save workout with sets and totalWeight when finished', async () => {
+  it('should save workout with sets when finished', async () => {
     const user = userEvent.setup();
 
     await db.workouts.add(
@@ -301,7 +300,6 @@ describe('WorkoutPage', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
         ],
       })
@@ -339,7 +337,6 @@ describe('WorkoutPage', () => {
       expect(savedWorkout.exercisesCompleted[0].sets[0].setType).toBe('Standard');
       expect(savedWorkout.exercisesCompleted[0].sets[0].weightKg).toBe(60);
       expect(savedWorkout.exercisesCompleted[0].sets[0].reps).toBe(10);
-      expect(savedWorkout.exercisesCompleted[0].totalWeightKg).toBe(600);
       expect(savedWorkout.bodyWeightKg).toBe(75.5);
     });
   });
@@ -358,7 +355,6 @@ describe('WorkoutPage', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
         ],
       })
@@ -411,7 +407,6 @@ describe('WorkoutPage', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
         ],
       })
@@ -519,7 +514,6 @@ describe('WorkoutPage', () => {
             secondaryMuscleGroups: ['Triceps'],
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
-            totalWeightKg: 600,
           },
         ],
       })
@@ -582,7 +576,6 @@ describe('WorkoutPage', () => {
                   { setType: 'Warmup', weightKg: 40, reps: 10 },
                   { setType: 'Standard', weightKg: 60, reps: 10 },
                 ],
-                totalWeightKg: 1000,
               },
             ],
             totalWeightKg: 1000,
@@ -651,7 +644,6 @@ describe('WorkoutPage', () => {
                 primaryMuscleGroups: ['Core'],
                 secondaryMuscleGroups: [],
                 sets: [{ setType: 'Standard', timeSeconds: 60 }],
-                totalWeightKg: 0,
               },
               {
                 id: 2,
@@ -660,7 +652,6 @@ describe('WorkoutPage', () => {
                 primaryMuscleGroups: ['Back'],
                 secondaryMuscleGroups: [],
                 sets: [{ setType: 'Standard', weightKg: 20, reps: 8 }],
-                totalWeightKg: 480,
               },
             ],
             totalWeightKg: 480,

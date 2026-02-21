@@ -203,7 +203,6 @@ describe('ExerciseSets', () => {
           { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
         ],
         completed: true,
-        totalWeightKg: 1200,
       };
 
       render(ExerciseSets, {

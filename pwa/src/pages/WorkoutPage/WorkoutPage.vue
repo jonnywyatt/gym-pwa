@@ -15,7 +15,7 @@ import {
   calculateElapsedSeconds,
   calculateFinalDurationSeconds,
   calculateWorkoutTotalWeightKg,
-  calculateExerciseTotalWeightKg,
+  calculateCompletedSetsTotalWeightKg,
   startExercise,
   createNewSet,
   fetchWorkout,
@@ -45,7 +45,7 @@ let timerInterval: number | null = null;
 
 const workoutTotalWeightKg = computed(() => {
   if (!workout.value) return 0;
-  return calculateWorkoutTotalWeightKg(workout.value.exercisesCompleted);
+  return calculateWorkoutTotalWeightKg(workout.value.exercisesCompleted, workout.value.bodyWeightKg);
 });
 
 function updateElapsedTime() {
@@ -197,13 +197,8 @@ function handleUpdateSet(
     );
 
     if ('completed' in updates) {
-      const totalWeightKg = calculateExerciseTotalWeightKg(
-        ex.recordSetsType,
-        bodyWeightKg,
-        updatedSets
-      );
       const completed = updatedSets.some((s) => s.completed);
-      return { ...ex, sets: updatedSets, totalWeightKg, completed };
+      return { ...ex, sets: updatedSets, completed };
     }
 
     return { ...ex, sets: updatedSets };
@@ -374,8 +369,8 @@ onUnmounted(() => {
         >
           <div :class="styles.summaryExerciseHeader">
             <strong>{{ exercise.label }}</strong>
-            <span v-if="exercise.totalWeightKg" :class="styles.summaryExerciseWeight">
-              {{ formatTotalWeight(exercise.totalWeightKg) }}
+            <span v-if="calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets) > 0" :class="styles.summaryExerciseWeight">
+              {{ formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets)) }}
             </span>
           </div>
           <ul :class="styles.summarySetsList">

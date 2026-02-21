@@ -89,7 +89,7 @@ export function getSetInputFields(recordSetsType: RecordSetsType): {
 export function calculateSetWeightKg(
   recordSetsType: RecordSetsType,
   bodyWeightKg: number,
-  set: WorkoutSet
+  set: CompletedSet
 ): number {
   const weightKg = set.weightKg ?? 0;
   const reps = set.reps ?? 0;
@@ -118,10 +118,29 @@ export function calculateExerciseTotalWeightKg(
     .reduce((total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set), 0);
 }
 
-export function calculateWorkoutTotalWeightKg(exercises: LocalWorkoutExercise[]): number {
+export function calculateCompletedSetsTotalWeightKg(
+  recordSetsType: RecordSetsType,
+  bodyWeightKg: number,
+  sets: CompletedSet[]
+): number {
+  return sets.reduce(
+    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set),
+    0
+  );
+}
+
+export function calculateWorkoutTotalWeightKg(
+  exercises: LocalWorkoutExercise[],
+  bodyWeightKg: number
+): number {
   return exercises
-    .filter((exercise) => exercise.completed && exercise.totalWeightKg !== undefined)
-    .reduce((total, exercise) => total + (exercise.totalWeightKg ?? 0), 0);
+    .filter((exercise) => exercise.completed)
+    .reduce(
+      (total, exercise) =>
+        total +
+        calculateExerciseTotalWeightKg(exercise.recordSetsType, bodyWeightKg, exercise.sets ?? []),
+      0
+    );
 }
 
 export function startExercise(exercise: LocalWorkoutExercise): LocalWorkoutExercise {
@@ -142,7 +161,6 @@ export function getCompletedExercises(
       sets: (exercise.sets ?? [])
         .filter((set) => set.completed)
         .map(({ id, completed: setCompleted, ...set }) => set),
-      totalWeightKg: exercise.totalWeightKg ?? 0,
     }));
 }
 
@@ -151,18 +169,15 @@ export function createWorkoutPayload(
   finishedAt: string,
   durationSeconds: number
 ): CreateWorkoutRequest {
-  const completedExercises = getCompletedExercises(workout.exercisesCompleted);
-  const totalWeightKg = completedExercises.reduce((sum, ex) => sum + ex.totalWeightKg, 0);
-
   return {
     routineId: workout.routineId,
     routineLabel: workout.routineLabel,
     startedAt: workout.startedAt,
     finishedAt,
     durationSeconds,
-    exercisesCompleted: completedExercises,
+    exercisesCompleted: getCompletedExercises(workout.exercisesCompleted),
     bodyWeightKg: workout.bodyWeightKg,
-    totalWeightKg,
+    totalWeightKg: calculateWorkoutTotalWeightKg(workout.exercisesCompleted, workout.bodyWeightKg),
   };
 }
 
