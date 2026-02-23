@@ -1,10 +1,10 @@
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --border-radius-lg: 16px;
+  --border-radius-lg: 14px;
   --font-stack: 'Inter', Verdana, sans-serif;
-  --font-stack-heading: 'Inter', Verdana, sans-serif;
-  --font-stack-logo: 'Archivo Black', 'Impact', sans-serif;
+  --font-stack-heading: 'Archivo', 'Inter', Verdana, sans-serif;
+  --font-stack-logo: 'Archivo', 'Impact', sans-serif;
   --font-stack-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
 
   /* Electric Midnight palette */
@@ -14,9 +14,11 @@
   --em-accent-lime: #ccff00;
   --em-accent-lime-hover: #b8e600;
   --em-accent-teal: #00f5ff;
+    --em-accent-purple: #8239AA;
   --em-neutral: #94a3b8;
   --em-text-primary: #ffffff;
   --em-text-secondary: #94a3b8;
+  --em-text-tertiary: #7b848f;
   --em-text-muted: #64748b;
   --em-border: #2a3f4a;
   --em-error: #ff4d4d;
@@ -34,6 +36,7 @@
   --accent-primary: var(--em-accent-lime);
   --accent-primary-hover: var(--em-accent-lime-hover);
   --accent-secondary: var(--em-accent-teal);
+  --accent-tertiary: var(--em-accent-purple);
 
   --spacing-unit-1: 5px;
   --spacing-unit-2: 10px;

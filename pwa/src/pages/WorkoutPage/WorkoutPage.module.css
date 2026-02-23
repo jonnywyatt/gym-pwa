@@ -27,7 +27,6 @@
   gap: var(--spacing-unit-1);
   font-size: var(--font-size-13);
   color: var(--text-secondary);
-  padding: 0 var(--spacing-unit-4);
   margin-bottom: var(--spacing-unit-4);
 }
 
@@ -62,20 +61,5 @@
 }
 
 .summaryActions {
-  padding: var(--spacing-unit-5) var(--spacing-unit-4);
-}
-
-.deleteButton {
-  padding: var(--spacing-unit-2) var(--spacing-unit-4);
-  font-size: var(--font-size-14);
-  color: var(--em-error);
-  background: none;
-  border: 1px solid var(--em-error);
-  border-radius: var(--border-radius);
-  cursor: pointer;
-}
-
-.deleteButton:hover {
-  background: var(--em-error);
-  color: var(--text-primary);
+  padding: var(--spacing-unit-5) 0;
 }

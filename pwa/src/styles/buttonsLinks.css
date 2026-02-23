@@ -51,3 +51,15 @@
 .infoLink {
   border-bottom: 1px dashed var(--text-muted);
 }
+
+.buttonDelete {
+    font-size: var(--font-size-14);
+    color: var(--em-error);
+    background: none;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    background: var(--em-error);
+    color: var(--text-primary);
+}

@@ -32,21 +32,21 @@ async function renderWithRoute(routeName: string, routePath: string = '/') {
 }
 
 describe('AppLayout', () => {
-  it('should display Routines and Workouts nav links', async () => {
+  it('should not display Routines and Workouts nav links on the dashboard', async () => {
     await renderWithRoute('dashboard', '/');
+
+    expect(screen.queryByRole('link', { name: 'Routines' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Workouts' })).not.toBeInTheDocument();
+  });
+
+  it('should display Routines and Workouts nav links on non-dashboard routes', async () => {
+    await renderWithRoute('routine-detail', '/routines/1');
 
     const routinesLink = screen.getByRole('link', { name: 'Routines' });
     expect(routinesLink).toHaveAttribute('href', '/routines');
 
     const workoutsLink = screen.getByRole('link', { name: 'Workouts' });
     expect(workoutsLink).toHaveAttribute('href', '/workouts');
-  });
-
-  it('should display nav links on all authenticated routes', async () => {
-    await renderWithRoute('routine-detail', '/routines/1');
-
-    expect(screen.getByRole('link', { name: 'Routines' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Workouts' })).toBeInTheDocument();
   });
 
   it('should highlight the Routines link when on the routines list page', async () => {
@@ -77,11 +77,11 @@ describe('AppLayout', () => {
     expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
   });
 
-  it('should not highlight either nav link on the dashboard', async () => {
+  it('should not show nav links on the dashboard', async () => {
     await renderWithRoute('dashboard', '/');
 
-    expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
-    expect(screen.getByRole('link', { name: 'Workouts' }).className).not.toContain('navLinkActive');
+    expect(screen.queryByRole('link', { name: 'Routines' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Workouts' })).not.toBeInTheDocument();
   });
 
   it('should display the brand name as a link to the dashboard', async () => {
@@ -89,6 +89,13 @@ describe('AppLayout', () => {
 
     const brandLink = screen.getByRole('link', { name: 'Duro' });
     expect(brandLink).toHaveAttribute('href', '/');
+  });
+
+  it('should display the profile icon as a link to the user profile', async () => {
+    await renderWithRoute('dashboard', '/');
+
+    const profileLink = screen.getByRole('link', { name: 'Test User' });
+    expect(profileLink).toHaveAttribute('href', '/users/1');
   });
 
   it('should not show the nav on the login route', async () => {

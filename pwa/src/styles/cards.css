@@ -1,0 +1,16 @@
+
+
+
+.highlightCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-2);
+    padding: var(--spacing-unit-3);
+    background: var(--background-surface);
+    border-radius: var(--border-radius-lg);
+    border-left: 3px solid var(--accent-secondary);
+}
+
+.indentToCardText {
+    margin-left: calc(var(--spacing-unit-3) + 3px);
+}

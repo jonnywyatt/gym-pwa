@@ -83,7 +83,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     expect(screen.getByRole('heading', { level: 2, name: 'Routines' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 2, name: 'Workouts' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Recent workouts' })).toBeInTheDocument();
   });
 
   it('should display loading state for routines', async () => {
@@ -120,7 +120,7 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display up to 3 routines with Details and New workout links', async () => {
+  it('should display up to 3 routines with Details and Start workout links', async () => {
     const routines = [
       { id: 1, label: 'Upper Body', exerciseCount: 5 },
       { id: 2, label: 'Lower Body', exerciseCount: 4 },
@@ -139,13 +139,13 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Core')).toBeInTheDocument();
     expect(screen.queryByText('Cardio')).not.toBeInTheDocument();
 
-    const detailsLinks = screen.getAllByRole('link', { name: 'Details' });
+    const detailsLinks = screen.getAllByRole('link', { name: 'See exercises' });
     expect(detailsLinks).toHaveLength(3);
     expect(detailsLinks[0]).toHaveAttribute('href', '/routines/1');
     expect(detailsLinks[1]).toHaveAttribute('href', '/routines/2');
     expect(detailsLinks[2]).toHaveAttribute('href', '/routines/3');
 
-    const newWorkoutButtons = screen.getAllByRole('button', { name: 'New workout' });
+    const newWorkoutButtons = screen.getAllByRole('button', { name: 'Start workout' });
     expect(newWorkoutButtons).toHaveLength(3);
   });
 
@@ -169,15 +169,14 @@ describe('DashboardPage', () => {
       expect(screen.getByText('Strength')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Last workout')).toBeInTheDocument();
     expect(screen.getByText('2,500kg total')).toBeInTheDocument();
     expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
 
-    const summaryLink = screen.getByRole('link', { name: 'Summary' });
-    expect(summaryLink).toHaveAttribute('href', '/workouts/42');
+    const cardLink = screen.getByTestId('workout-42');
+    expect(cardLink).toHaveAttribute('href', '/workouts/42');
   });
 
-  it('should display All workouts link when latest workout exists', async () => {
+  it('should display See all link when latest workout exists', async () => {
     const workout = {
       id: 1,
       userId: 1,
@@ -194,12 +193,12 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      const allWorkoutsLink = screen.getByRole('link', { name: 'All workouts' });
+      const allWorkoutsLink = screen.getByRole('link', { name: 'See all' });
       expect(allWorkoutsLink).toHaveAttribute('href', '/workouts');
     });
   });
 
-  it('should start a new workout when New workout button is clicked', async () => {
+  it('should start a new workout when Start workout button is clicked', async () => {
     const user = userEvent.setup();
     const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
     const mockRoutineDetail = {
@@ -233,10 +232,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'New workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'New workout' }));
+    await user.click(screen.getByRole('button', { name: 'Start workout' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
@@ -251,7 +250,7 @@ describe('DashboardPage', () => {
     expect(workouts[0].bodyWeightKg).toBe(80);
   });
 
-  it('should show Continue workout button for routine with active workout, New workout for others', async () => {
+  it('should show Continue workout button for routine with active workout, Start workout for others', async () => {
     await db.workouts.add({
       id: 'active-workout-id',
       userId: 1,
@@ -271,7 +270,7 @@ describe('DashboardPage', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'New workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
     });
   });
 
@@ -315,7 +314,7 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should redirect to existing workout if one is active when New workout is clicked', async () => {
+  it('should redirect to existing workout if one is active when Start workout is clicked', async () => {
     const user = userEvent.setup();
 
     await db.workouts.add({
@@ -353,10 +352,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'New workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'New workout' }));
+    await user.click(screen.getByRole('button', { name: 'Start workout' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith('/workouts/existing-workout-id');

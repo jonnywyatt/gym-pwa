@@ -15,3 +15,40 @@
   white-space: nowrap;
   width: 1px;
 }
+
+.sectionHeading {
+    font-size: var(--font-size-12);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-unit-3);
+}
+
+.headingAccentTertiary {
+    color: var(--accent-tertiary);
+}
+
+.heading {
+    font-family: var(--font-stack-heading);
+    font-weight: normal;
+    color: var(--text-primary);
+}
+
+.heading-l {
+    font-family: var(--font-stack-heading);
+    font-weight: 400;
+    font-size: var(--font-size-22);
+}
+
+.heading-m {
+    font-family: var(--font-stack-heading);
+    font-weight: 400;
+    font-size: var(--font-size-18);
+}
+
+.weight-sm {
+    font-family: var(--font-stack-heading);
+    color: var(--accent-primary);
+    font-size: var(--font-size-13);
+}

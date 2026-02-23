@@ -1,5 +1,5 @@
 .exercise {
-  padding: var(--spacing-unit-3) 0;
+  padding: var(--spacing-unit-4) 0;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -7,7 +7,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-unit-2);
   cursor: pointer;
   user-select: none;
 }
@@ -23,16 +22,11 @@
   color: var(--accent-primary);
 }
 
-.chevron {
-  font-size: var(--font-size-14);
-  color: var(--text-muted);
-    transform:scale(2,1)
-}
-
 .setsContainer {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-unit-2);
+  margin-top: var(--spacing-unit-3);
   margin-bottom: var(--spacing-unit-3);
 }
 
@@ -45,7 +39,7 @@
 .setLabel {
   min-width: var(--spacing-unit-5);
   font-size: var(--font-size-14);
-  font-weight: bold;
+  font-weight: 400;
   text-align: center;
 }
 
@@ -69,7 +63,7 @@
 .timeInput {
   width: var(--spacing-unit-10);
   padding: var(--spacing-unit-1);
-  font-size: var(--font-size-14);
+  font-size: var(--font-size-13);
   font-family: var(--font-stack-mono);
   background: var(--background-surface);
   color: var(--text-primary);

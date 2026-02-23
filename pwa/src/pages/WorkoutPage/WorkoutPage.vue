@@ -327,8 +327,8 @@ onUnmounted(() => {
         </button>
       </nav>
 
-      <header class="header">
-        <h1 :class="baseStyles.heading">{{ workout.routineLabel }}</h1>
+      <header class="marginTop4 marginBottom4">
+        <h1 class="heading-l">{{ workout.routineLabel }}</h1>
       </header>
 
       <ul class="list">
@@ -350,8 +350,8 @@ onUnmounted(() => {
 
     <!-- Summary mode -->
     <template v-else-if="mode === 'summary' && completedWorkout">
-      <header class="header">
-        <h1 :class="baseStyles.heading">{{ completedWorkout.routineLabel }}</h1>
+      <header class="header marginBottom4">
+        <h1 class="heading-l">{{ completedWorkout.routineLabel }}</h1>
       </header>
 
       <div :class="styles.summaryMeta">
@@ -388,7 +388,7 @@ onUnmounted(() => {
       <div :class="styles.summaryActions">
         <button
           type="button"
-          :class="styles.deleteButton"
+          class="buttonDelete"
           :disabled="deleting"
           @click="showDeleteDialog = true"
         >

@@ -30,7 +30,6 @@ describe('ExerciseSets', () => {
       });
 
       expect(screen.getByText('Bench Press')).toBeInTheDocument();
-      expect(screen.getByText('▼')).toBeInTheDocument();
     });
 
     it('does not show set inputs when collapsed', () => {
@@ -72,7 +71,6 @@ describe('ExerciseSets', () => {
       await user.click(screen.getByRole('button', { name: /bench press/i }));
 
       expect(screen.getByText('Add Set')).toBeInTheDocument();
-      expect(screen.getByText('▲')).toBeInTheDocument();
     });
 
     it('closes panel when header row is clicked again', async () => {
@@ -86,7 +84,6 @@ describe('ExerciseSets', () => {
       await user.click(header);
 
       expect(screen.queryByText('Add Set')).not.toBeInTheDocument();
-      expect(screen.getByText('▼')).toBeInTheDocument();
     });
 
     it('emits start when first opened and exercise has no startedAt', async () => {

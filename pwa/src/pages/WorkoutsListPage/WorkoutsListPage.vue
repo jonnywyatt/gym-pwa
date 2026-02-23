@@ -70,7 +70,7 @@ onMounted(() => {
 <template>
   <main class="main">
     <header class="header">
-      <h1 :class="baseStyles.heading">Workouts</h1>
+      <h1 class="heading-l">Workouts</h1>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>

@@ -8,6 +8,8 @@ import {
 } from '../../pages/WorkoutPage/helpers';
 import { combineTimeSeconds, getMinutes, getSeconds } from './helpers';
 import styles from './ExerciseSets.module.css';
+import chevronDownSvg from '../../assets/chevron-down.svg';
+import chevronUpSvg from '../../assets/chevron-up.svg';
 
 interface Props {
   exercise: LocalWorkoutExercise;
@@ -61,10 +63,10 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
       @keydown.enter="togglePanel"
       @keydown.space.prevent="togglePanel"
     >
-      <strong>{{ exercise.label }}</strong>
+      <span>{{ exercise.label }}</span>
       <div :class="styles.headerRight">
         <span v-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight">{{ exerciseTotalWeightKg }} Kg</span>
-        <span :class="styles.chevron" :aria-label="isOpen ? 'Collapse' : 'Expand'">{{ isOpen ? '▲' : '▼' }}</span>
+        <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
     </div>
 
