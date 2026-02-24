@@ -16,3 +16,4 @@ The 'in workout' page will be critical functionality. I'll detail that separatel
 - Numerical data density is high — sets × (weight + reps) per exercise
 
 
+Colour wheel - https://color.adobe.com/My-Color-Theme-color-theme-8f8e41ca-9466-4b93-a393-502965ece3b9

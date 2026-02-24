@@ -3,6 +3,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import AppLayout from './AppLayout.vue';
 
+vi.mock('../InstallPrompt/InstallPrompt.vue', () => ({
+  default: { template: '<div data-testid="install-prompt" />' },
+}));
+
 vi.mock('../../lib/auth/oauth', () => ({
   authService: {
     getUserName: () => 'Test User',
@@ -102,5 +106,11 @@ describe('AppLayout', () => {
     await renderWithRoute('login', '/login');
 
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  });
+
+  it('should render the install prompt', async () => {
+    await renderWithRoute('dashboard', '/');
+
+    expect(screen.getByTestId('install-prompt')).toBeInTheDocument();
   });
 });

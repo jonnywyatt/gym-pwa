@@ -5,6 +5,7 @@ import { authService } from '../../lib/auth/oauth';
 import styles from './AppLayout.module.css';
 import duroLogo from '../../assets/duro-logo.svg';
 import profileIcon from '../../assets/profile.svg';
+import InstallPrompt from '../InstallPrompt/InstallPrompt.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -48,6 +49,7 @@ const isWorkoutsActive = computed(() => route.path.startsWith('/workouts'));
         </router-link>
       </div>
     </nav>
+    <InstallPrompt />
     <router-view />
   </div>
 </template>
