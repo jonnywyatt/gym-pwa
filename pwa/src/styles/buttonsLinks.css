@@ -1,5 +1,5 @@
 .buttonPrimary {
-  padding: var(--spacing-unit-3) var(--spacing-unit-6);
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
   font-size: var(--font-size-16);
   background: var(--accent-primary);
   color: var(--background-primary);

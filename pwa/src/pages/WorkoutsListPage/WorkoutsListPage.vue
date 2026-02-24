@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import type { UserWorkout } from 'gym-pwa-api/types';
+import {ref, onMounted} from 'vue';
+import type {UserWorkout} from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutsListPage.module.css';
-import { authService } from '../../lib/auth/oauth';
-import { fetchWorkouts, deleteWorkoutApi, calculateDuration, formatDateTime, formatDuration, formatTotalWeight } from './helpers';
+import {authService} from '../../lib/auth/oauth';
+import {
+  fetchWorkouts,
+  deleteWorkoutApi,
+  calculateDuration,
+  formatDateTime,
+  formatDuration,
+  formatTotalWeight
+} from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const workouts = ref<UserWorkout[]>([]);
@@ -69,7 +76,7 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <header class="header">
+    <header class="header marginBottom6">
       <h1 class="heading-l">Workouts</h1>
     </header>
     <p v-if="loading">Loading...</p>
@@ -77,25 +84,37 @@ onMounted(() => {
     <template v-else>
       <p v-if="workouts.length === 0">No workouts yet. Start a routine to log your first workout!</p>
       <ul v-else class="list">
-        <li v-for="workout in workouts" :key="workout.id" :class="styles.workoutItem">
+        <li v-for="workout in workouts" :key="workout.id" class="highlightCard marginBottom4">
           <div :class="styles.workoutRow">
             <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">
-              <div :class="styles.workoutHeader">
-                <strong>{{ workout.routineLabel }}</strong>
-              </div>
-              <div :class="styles.workoutMeta">
-                <span>{{ formatDateTime(workout.startedAt) }}</span>
-                <span v-if="workout.durationSeconds !== undefined">{{ formatDuration(workout.durationSeconds) }}</span>
-                <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
-                <span>{{ workout.exercisesCompleted.length }} exercises</span>
-                <span v-if="workout.totalWeightKg">{{ formatTotalWeight(workout.totalWeightKg) }} total</span>
+              <h2 class="heading-m marginBottom2">
+               {{ workout.routineLabel }}
+              </h2>
+              <div class="flexVerticalColumn flexGap1Unit">
+                <div class="highlightCardContents">
+                  <span>{{ formatDateTime(workout.startedAt) }}</span>
+                </div>
+                <div class="highlightCardContents">
+                  <span v-if="workout.durationSeconds !== undefined">{{
+                      formatDuration(workout.durationSeconds)
+                    }}</span>
+                  <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
+                </div>
+                <div class="highlightCardContents">
+                  <span>{{ workout.exercisesCompleted.length }} exercises</span>
+                </div>
+                <div class="highlightCardContents">
+                  <span v-if="workout.totalWeightKg" class="accentPrimary">{{
+                      formatTotalWeight(workout.totalWeightKg)
+                    }} total</span>
+                </div>
               </div>
             </router-link>
             <button
-              type="button"
-              :class="styles.deleteButton"
-              :aria-label="`Delete ${workout.routineLabel}`"
-              @click="openDeleteDialog(workout)"
+                type="button"
+                :class="styles.deleteButton"
+                :aria-label="`Delete ${workout.routineLabel}`"
+                @click="openDeleteDialog(workout)"
             >
               Delete
             </button>
@@ -105,11 +124,11 @@ onMounted(() => {
     </template>
 
     <ConfirmDialog
-      :open="showDeleteDialog"
-      title="Delete workout?"
-      message="This action cannot be undone."
-      @confirm="confirmDelete"
-      @cancel="cancelDelete"
+        :open="showDeleteDialog"
+        title="Delete workout?"
+        message="This action cannot be undone."
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
     />
   </main>
 </template>

@@ -14,3 +14,9 @@
 .indentToCardText {
     margin-left: calc(var(--spacing-unit-3) + 3px);
 }
+
+.highlightCardContents {
+    font-family: var(--font-stack-mono);
+    font-size: var(--font-size-13);
+    color: var(--text-secondary);
+}

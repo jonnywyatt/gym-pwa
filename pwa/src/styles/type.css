@@ -25,9 +25,10 @@
     margin-bottom: var(--spacing-unit-3);
 }
 
-.headingAccentTertiary {
-    color: var(--accent-tertiary);
+.accentPrimary {
+    color: var(--accent-primary);
 }
+
 
 .heading {
     font-family: var(--font-stack-heading);
@@ -45,6 +46,12 @@
     font-family: var(--font-stack-heading);
     font-weight: 400;
     font-size: var(--font-size-18);
+}
+
+.heading-s {
+    font-family: var(--font-stack-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
 }
 
 .weight-sm {

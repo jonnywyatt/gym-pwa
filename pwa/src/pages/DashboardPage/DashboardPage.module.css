@@ -10,24 +10,6 @@
   gap: var(--spacing-unit-2);
 }
 
-.routineItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-unit-3) var(--spacing-unit-4);
-  background: var(--background-surface);
-  border-radius: var(--border-radius-lg);
-    border-left: 3px solid var(--accent-tertiary);
-}
-
-.routineItem:hover {
-  background: var(--background-surface-hover);
-}
-
-.routineLabel {
-  font-size: var(--font-size-16);
-}
-
 .routineDetailLink {
   color: var(--text-secondary);
   text-decoration: none;
@@ -57,14 +39,6 @@
   cursor: default;
 }
 
-.workoutCardHeader {
-  font-size: var(--font-size-11);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: var(--accent-secondary);
-}
-
 .workoutMeta {
   display: flex;
   flex-wrap: wrap;
@@ -78,17 +52,6 @@
   content: '·';
   margin-left: 7px;
   color: var(--text-muted);
-}
-
-.workoutLink {
-  color: var(--accent-secondary);
-  text-decoration: none;
-  font-size: var(--font-size-14);
-  font-weight: 500;
-}
-
-.workoutLink:hover {
-  text-decoration: underline;
 }
 
 .allWorkoutsLink {

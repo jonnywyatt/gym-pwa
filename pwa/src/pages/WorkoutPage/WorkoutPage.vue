@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, toRaw } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import type { UserWorkout } from 'gym-pwa-api/types';
+import {ref, computed, onMounted, onUnmounted, toRaw} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import type {UserWorkout} from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutPage.module.css';
-import { authService } from '../../lib/auth/oauth';
-import { db, updateWorkoutExercises, finishWorkout, deleteWorkout, updateWorkoutTimer } from '../../lib/db';
-import type { LocalWorkout, SetType } from '../../lib/db';
+import {authService} from '../../lib/auth/oauth';
+import {db, updateWorkoutExercises, finishWorkout, deleteWorkout, updateWorkoutTimer} from '../../lib/db';
+import type {LocalWorkout, SetType} from '../../lib/db';
 import WorkoutTimer from '../../components/WorkoutTimer/WorkoutTimer.vue';
 import ExerciseSets from '../../components/ExerciseSets/ExerciseSets.vue';
 import {
@@ -52,10 +52,10 @@ function updateElapsedTime() {
   if (!workout.value) return;
 
   elapsedSeconds.value = calculateElapsedSeconds(
-    workout.value.startedAt,
-    workout.value.totalPausedSeconds || 0,
-    isPaused.value,
-    workout.value.pausedAt
+      workout.value.startedAt,
+      workout.value.totalPausedSeconds || 0,
+      isPaused.value,
+      workout.value.pausedAt
   );
 }
 
@@ -164,7 +164,7 @@ async function updateExercises(updatedExercises: LocalWorkout['exercisesComplete
   if (!workout.value) return;
 
   try {
-    workout.value = { ...workout.value, exercisesCompleted: updatedExercises };
+    workout.value = {...workout.value, exercisesCompleted: updatedExercises};
     const rawExercises = JSON.parse(JSON.stringify(toRaw(updatedExercises)));
     await updateWorkoutExercises(workout.value.id, rawExercises);
   } catch (e) {
@@ -176,15 +176,15 @@ function handleStartExercise(exerciseId: number) {
   if (!workout.value) return;
 
   const updatedExercises = workout.value.exercisesCompleted.map((ex) =>
-    ex.id === exerciseId ? startExercise(ex) : ex
+      ex.id === exerciseId ? startExercise(ex) : ex
   );
   updateExercises(updatedExercises);
 }
 
 function handleUpdateSet(
-  exerciseId: number,
-  setId: string,
-  updates: { weightKg?: number; reps?: number; timeSeconds?: number; completed?: boolean }
+    exerciseId: number,
+    setId: string,
+    updates: { weightKg?: number; reps?: number; timeSeconds?: number; completed?: boolean }
 ) {
   if (!workout.value) return;
 
@@ -193,15 +193,15 @@ function handleUpdateSet(
     if (ex.id !== exerciseId) return ex;
 
     const updatedSets = (ex.sets ?? []).map((set) =>
-      set.id === setId ? { ...set, ...updates } : set
+        set.id === setId ? {...set, ...updates} : set
     );
 
     if ('completed' in updates) {
       const completed = updatedSets.some((s) => s.completed);
-      return { ...ex, sets: updatedSets, completed };
+      return {...ex, sets: updatedSets, completed};
     }
 
-    return { ...ex, sets: updatedSets };
+    return {...ex, sets: updatedSets};
   });
   updateExercises(updatedExercises);
 }
@@ -227,7 +227,7 @@ function handleChangeSetType(exerciseId: number, setId: string, setType: SetType
     return {
       ...ex,
       sets: (ex.sets ?? []).map((set) =>
-        set.id === setId ? { ...set, setType } : set
+          set.id === setId ? {...set, setType} : set
       ),
     };
   });
@@ -252,9 +252,9 @@ async function handleFinish() {
 
     const finishedAt = new Date().toISOString();
     const durationSeconds = calculateFinalDurationSeconds(
-      workout.value.startedAt,
-      finishedAt,
-      workout.value.totalPausedSeconds || 0
+        workout.value.startedAt,
+        finishedAt,
+        workout.value.totalPausedSeconds || 0
     );
 
     await finishWorkout(workout.value.id, finishedAt);
@@ -313,10 +313,10 @@ onUnmounted(() => {
       <nav :class="styles.nav">
         <div :class="styles.navLeft">
           <WorkoutTimer
-            :elapsed-seconds="elapsedSeconds"
-            :is-paused="isPaused"
-            @pause="handleTimerPause"
-            @resume="handleTimerResume"
+              :elapsed-seconds="elapsedSeconds"
+              :is-paused="isPaused"
+              @pause="handleTimerPause"
+              @resume="handleTimerResume"
           />
           <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight">
             {{ workoutTotalWeightKg }} Kg
@@ -333,16 +333,16 @@ onUnmounted(() => {
 
       <ul class="list">
         <li
-          v-for="exercise in workout.exercisesCompleted"
-          :key="exercise.id"
+            v-for="exercise in workout.exercisesCompleted"
+            :key="exercise.id"
         >
           <ExerciseSets
-            :exercise="exercise"
-            :body-weight-kg="workout.bodyWeightKg"
-            @start="handleStartExercise"
-            @update-set="handleUpdateSet"
-            @add-set="handleAddSet"
-            @change-set-type="handleChangeSetType"
+              :exercise="exercise"
+              :body-weight-kg="workout.bodyWeightKg"
+              @start="handleStartExercise"
+              @update-set="handleUpdateSet"
+              @add-set="handleAddSet"
+              @change-set-type="handleChangeSetType"
           />
         </li>
       </ul>
@@ -351,33 +351,51 @@ onUnmounted(() => {
     <!-- Summary mode -->
     <template v-else-if="mode === 'summary' && completedWorkout">
       <header class="header marginBottom4">
-        <h1 class="heading-l">{{ completedWorkout.routineLabel }}</h1>
+        <h1 class="heading-l">{{ completedWorkout.routineLabel }} workout</h1>
       </header>
 
-      <div :class="styles.summaryMeta">
-        <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
-        <span v-if="completedWorkout.durationSeconds !== undefined">{{ formatDuration(completedWorkout.durationSeconds) }}</span>
-        <span v-if="completedWorkout.bodyWeightKg">Body weight: {{ formatTotalWeight(completedWorkout.bodyWeightKg) }}</span>
-        <span v-if="completedWorkout.totalWeightKg">{{ formatTotalWeight(completedWorkout.totalWeightKg) }} total</span>
+      <div class="flexVerticalColumn flexGap1Unit marginBottom6">
+        <div class="highlightCardContents">
+          <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{
+              formatTotalWeight(completedWorkout.totalWeightKg)
+            }} total</span>
+        </div>
+        <div class="highlightCardContents">
+          <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
+        </div>
+        <div class="highlightCardContents">
+        <span v-if="completedWorkout.durationSeconds !== undefined">{{
+            formatDuration(completedWorkout.durationSeconds)
+          }}</span>
+        </div>
+        <div class="highlightCardContents">
+          <span v-if="completedWorkout.bodyWeightKg">Body weight: {{
+              formatTotalWeight(completedWorkout.bodyWeightKg)
+            }}</span>
+        </div>
       </div>
 
       <ul class="list">
         <li
-          v-for="exercise in completedWorkout.exercisesCompleted"
-          :key="exercise.id"
-          :class="styles.summaryExercise"
+            v-for="exercise in completedWorkout.exercisesCompleted"
+            :key="exercise.id"
+            class="highlightCard marginBottom4"
         >
-          <div :class="styles.summaryExerciseHeader">
-            <strong>{{ exercise.label }}</strong>
-            <span v-if="calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets) > 0" :class="styles.summaryExerciseWeight">
-              {{ formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets)) }}
+          <h2 class="heading-m marginBottom1">{{ exercise.label }}</h2>
+          <div class="highlightCardContents">
+            <span
+                v-if="calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets) > 0"
+                class="accentPrimary">
+              {{
+                formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets))
+              }}
             </span>
           </div>
           <ul :class="styles.summarySetsList">
             <li
-              v-for="(set, index) in exercise.sets"
-              :key="index"
-              :class="styles.summarySetItem"
+                v-for="(set, index) in exercise.sets"
+                :key="index"
+                class="highlightCardContents"
             >
               {{ formatSetDetails(set, exercise.recordSetsType) }}
             </li>
@@ -387,21 +405,21 @@ onUnmounted(() => {
 
       <div :class="styles.summaryActions">
         <button
-          type="button"
-          class="buttonDelete"
-          :disabled="deleting"
-          @click="showDeleteDialog = true"
+            type="button"
+            class="buttonDelete"
+            :disabled="deleting"
+            @click="showDeleteDialog = true"
         >
           Delete workout
         </button>
       </div>
 
       <ConfirmDialog
-        :open="showDeleteDialog"
-        title="Delete workout?"
-        message="This action cannot be undone."
-        @confirm="handleDeleteWorkout"
-        @cancel="showDeleteDialog = false"
+          :open="showDeleteDialog"
+          title="Delete workout?"
+          message="This action cannot be undone."
+          @confirm="handleDeleteWorkout"
+          @cancel="showDeleteDialog = false"
       />
     </template>
   </main>

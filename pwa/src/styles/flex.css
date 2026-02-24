@@ -41,3 +41,8 @@
     gap: var(--spacing-unit-6);
     align-items: center;
 }
+
+.flexVerticalColumn {
+    display: flex;
+    flex-direction: column;
+}

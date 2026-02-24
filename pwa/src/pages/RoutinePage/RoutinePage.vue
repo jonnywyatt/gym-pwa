@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import type { RoutineDetail } from 'gym-pwa-api/types';
+import {ref, onMounted} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import type {RoutineDetail} from 'gym-pwa-api/types';
 import baseStyles from '../../styles/base-classes.module.css';
-import { authService } from '../../lib/auth/oauth';
-import { createWorkout, getActiveWorkout } from '../../lib/db';
-import { fetchRoutine, prepareWorkoutStart } from './helpers';
+import {authService} from '../../lib/auth/oauth';
+import {createWorkout, getActiveWorkout} from '../../lib/db';
+import {fetchRoutine, prepareWorkoutStart} from './helpers';
 
 const route = useRoute();
 const router = useRouter();
@@ -38,10 +38,10 @@ async function handleStartWorkout() {
 
   try {
     const action = await prepareWorkoutStart(
-      userId,
-      Number(route.params.routineId),
-      routine.value,
-      getActiveWorkout
+        userId,
+        Number(route.params.routineId),
+        routine.value,
+        getActiveWorkout
     );
 
     switch (action.type) {
@@ -77,14 +77,14 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <header class="header">
-      <h1 v-if="routine" :class="baseStyles.heading">{{ routine.label }}</h1>
+    <header class="header flexSpaceBetween marginBottom6">
+      <h1 v-if="routine" class="heading-l">{{ routine.label }} routine</h1>
       <button
-        v-if="routine && !loading"
-        type="button"
-        class="buttonPrimary"
-        :disabled="startingWorkout"
-        @click="handleStartWorkout"
+          v-if="routine && !loading"
+          type="button"
+          class="buttonPrimary"
+          :disabled="startingWorkout"
+          @click="handleStartWorkout"
       >
         {{ startingWorkout ? 'Starting...' : 'Start workout' }}
       </button>
@@ -94,10 +94,12 @@ onMounted(() => {
     <template v-else-if="routine">
       <p v-if="routine.exercises.length === 0">No exercises in this routine.</p>
       <ul v-else class="list">
-        <li v-for="exercise in routine.exercises" :key="exercise.id" class="listItem">
-          <strong>{{ exercise.label }}</strong>
-          <div>Primary: {{ exercise.primaryMuscleGroups.join(', ') }}</div>
-          <div>Secondary: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
+        <li v-for="exercise in routine.exercises" :key="exercise.id" class="highlightCard marginBottom4">
+          <h2 class="heading-m">{{ exercise.label }}</h2>
+          <div class="highlightCardContents">
+            <div class="marginBottom2">{{ exercise.primaryMuscleGroups.join(', ') }}</div>
+            <div>Secondary muscle groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
+          </div>
         </li>
       </ul>
     </template>

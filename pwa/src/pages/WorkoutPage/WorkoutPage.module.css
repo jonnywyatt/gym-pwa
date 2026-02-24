@@ -21,43 +21,12 @@
     color: var(--accent-primary);
 }
 
-.summaryMeta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-unit-1);
-  font-size: var(--font-size-13);
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-unit-4);
-}
-
-.summaryExercise {
-  padding: var(--spacing-unit-3) var(--spacing-unit-4);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.summaryExerciseHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-unit-2);
-}
-
-.summaryExerciseWeight {
-  font-size: var(--font-size-13);
-  color: var(--text-secondary);
-}
-
 .summarySetsList {
   list-style: none;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-unit-1);
-}
-
-.summarySetItem {
-  font-size: var(--font-size-13);
-  color: var(--text-secondary);
 }
 
 .summaryActions {
