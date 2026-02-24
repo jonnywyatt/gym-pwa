@@ -20,25 +20,6 @@
   color: var(--text-secondary);
 }
 
-.newWorkoutButton {
-  background: var(--accent-primary);
-  color: var(--background-primary);
-  border: none;
-  border-radius: var(--border-radius);
-  padding: var(--spacing-unit-1) var(--spacing-unit-3);
-  font-size: var(--font-size-13);
-  cursor: pointer;
-}
-
-.newWorkoutButton:hover {
-  background: var(--accent-primary-hover);
-}
-
-.newWorkoutButton:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
 .workoutMeta {
   display: flex;
   flex-wrap: wrap;

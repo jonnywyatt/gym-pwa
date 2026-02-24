@@ -81,7 +81,7 @@ onMounted(() => {
               <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
               <button
                   type="button"
-                  :class="styles.newWorkoutButton"
+                  class="buttonPrimary"
                   :disabled="startingRoutineId === routine.id"
                   @click="onNewWorkout(routine.id)"
               >

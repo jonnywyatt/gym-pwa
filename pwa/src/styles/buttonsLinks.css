@@ -1,11 +1,12 @@
 .buttonPrimary {
-  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+    font-family: var(--font-stack-heading);
+  padding: var(--spacing-unit-1) var(--spacing-unit-2);
   font-size: var(--font-size-16);
   background: var(--accent-primary);
   color: var(--background-primary);
   border: none;
   border-radius: var(--border-radius);
-  font-weight: 700;
+  font-weight: 400;
   cursor: pointer;
 }
 
