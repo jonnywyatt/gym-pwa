@@ -1,5 +1,85 @@
 import { describe, expect, it } from 'vitest';
-import { combineTimeSeconds, getMinutes, getSeconds } from './helpers';
+import {
+  combineTimeSeconds,
+  formatTotalTime,
+  getCompletedTotalTimeSeconds,
+  getMinutes,
+  getRepresentativeWeightKg,
+  getSeconds,
+} from './helpers';
+
+describe('getCompletedTotalTimeSeconds', () => {
+  it('returns 0 when no sets are completed', () => {
+    expect(
+      getCompletedTotalTimeSeconds([
+        { id: 's1', setType: 'Standard', completed: false, timeSeconds: 30 },
+      ])
+    ).toBe(0);
+  });
+
+  it('sums timeSeconds from completed sets only', () => {
+    expect(
+      getCompletedTotalTimeSeconds([
+        { id: 's1', setType: 'Standard', completed: true, timeSeconds: 30 },
+        { id: 's2', setType: 'Standard', completed: false, timeSeconds: 30 },
+        { id: 's3', setType: 'Standard', completed: true, timeSeconds: 45 },
+      ])
+    ).toBe(75);
+  });
+
+  it('treats missing timeSeconds as 0', () => {
+    expect(getCompletedTotalTimeSeconds([{ id: 's1', setType: 'Standard', completed: true }])).toBe(
+      0
+    );
+  });
+});
+
+describe('formatTotalTime', () => {
+  it('formats seconds only', () => {
+    expect(formatTotalTime(45)).toBe('45s');
+  });
+
+  it('formats minutes only', () => {
+    expect(formatTotalTime(120)).toBe('2m');
+  });
+
+  it('formats minutes and seconds', () => {
+    expect(formatTotalTime(90)).toBe('1m 30s');
+  });
+
+  it('formats 0 seconds as 0s', () => {
+    expect(formatTotalTime(0)).toBe('0s');
+  });
+});
+
+describe('getRepresentativeWeightKg', () => {
+  it('returns undefined when no sets are completed', () => {
+    expect(
+      getRepresentativeWeightKg([{ id: 's1', setType: 'Standard', completed: false, weightKg: 20 }])
+    ).toBeUndefined();
+  });
+
+  it('returns weight from first completed standard set', () => {
+    expect(
+      getRepresentativeWeightKg([
+        { id: 's1', setType: 'Warmup', completed: true, weightKg: 10 },
+        { id: 's2', setType: 'Standard', completed: true, weightKg: 20 },
+      ])
+    ).toBe(20);
+  });
+
+  it('falls back to warmup set when no standard sets are completed', () => {
+    expect(
+      getRepresentativeWeightKg([{ id: 's1', setType: 'Warmup', completed: true, weightKg: 10 }])
+    ).toBe(10);
+  });
+
+  it('returns undefined when completed set has no weight', () => {
+    expect(
+      getRepresentativeWeightKg([{ id: 's1', setType: 'Standard', completed: true }])
+    ).toBeUndefined();
+  });
+});
 
 describe('getMinutes', () => {
   it('returns empty string when timeSeconds is undefined', () => {

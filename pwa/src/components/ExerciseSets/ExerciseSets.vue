@@ -6,7 +6,14 @@ import {
   getSetDisplayLabel,
   getSetInputFields,
 } from '../../pages/WorkoutPage/helpers';
-import { combineTimeSeconds, getMinutes, getSeconds } from './helpers';
+import {
+  combineTimeSeconds,
+  formatTotalTime,
+  getCompletedTotalTimeSeconds,
+  getMinutes,
+  getRepresentativeWeightKg,
+  getSeconds,
+} from './helpers';
 import styles from './ExerciseSets.module.css';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
@@ -34,6 +41,18 @@ const exerciseTotalWeightKg = computed(() => {
     props.bodyWeightKg,
     props.exercise.sets
   );
+});
+
+const completedTimeSummary = computed((): string | null => {
+  if (!props.exercise.completed || !inputFields.value.showTime || !props.exercise.sets) return null;
+  const total = getCompletedTotalTimeSeconds(props.exercise.sets);
+  return total > 0 ? formatTotalTime(total) : null;
+});
+
+const completedWeightSummary = computed((): string | null => {
+  if (!props.exercise.completed || !inputFields.value.showWeight || !inputFields.value.showTime || !props.exercise.sets) return null;
+  const weight = getRepresentativeWeightKg(props.exercise.sets);
+  return weight !== undefined ? `${weight} Kg` : null;
 });
 
 const isOpen = ref(false);
@@ -65,7 +84,11 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
     >
       <span>{{ exercise.label }}</span>
       <div :class="styles.headerRight">
-        <span v-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight">{{ exerciseTotalWeightKg }} Kg</span>
+        <template v-if="completedTimeSummary">
+          <span v-if="completedWeightSummary" :class="styles.totalWeight">{{ completedWeightSummary }}</span>
+          <span :class="styles.totalWeight">{{ completedTimeSummary }}</span>
+        </template>
+        <span v-else-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight">{{ exerciseTotalWeightKg }} Kg</span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
     </div>

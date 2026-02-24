@@ -311,6 +311,80 @@ describe('ExerciseSets', () => {
     });
   });
 
+  describe('completed time-based exercise header summary', () => {
+    it('shows total time in header when TIME exercise is completed', () => {
+      const completedDeadHang: LocalWorkoutExercise = {
+        id: 2,
+        label: 'Dead Hang',
+        recordSetsType: 'TIME',
+        primaryMuscleGroups: ['Forearms'],
+        secondaryMuscleGroups: [],
+        completed: true,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [
+          { id: 's1', setType: 'Standard', timeSeconds: 60, completed: true },
+          { id: 's2', setType: 'Standard', timeSeconds: 30, completed: true },
+        ],
+      };
+
+      render(ExerciseSets, { props: { exercise: completedDeadHang, bodyWeightKg: 80 } });
+
+      expect(screen.getByText('1m 30s')).toBeInTheDocument();
+    });
+
+    it('does not show time in header when TIME exercise is not completed', () => {
+      const incompleteDeadHang: LocalWorkoutExercise = {
+        id: 2,
+        label: 'Dead Hang',
+        recordSetsType: 'TIME',
+        primaryMuscleGroups: ['Forearms'],
+        secondaryMuscleGroups: [],
+        completed: false,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [{ id: 's1', setType: 'Standard', timeSeconds: 60, completed: true }],
+      };
+
+      render(ExerciseSets, { props: { exercise: incompleteDeadHang, bodyWeightKg: 80 } });
+
+      expect(screen.queryByText('1m')).not.toBeInTheDocument();
+    });
+
+    it('shows weight and total time in header when WEIGHT_AND_TIME exercise is completed', () => {
+      const completedFarmersCarry: LocalWorkoutExercise = {
+        id: 3,
+        label: "Farmer's Carry",
+        recordSetsType: 'WEIGHT_AND_TIME',
+        primaryMuscleGroups: ['Forearms'],
+        secondaryMuscleGroups: [],
+        completed: true,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [
+          { id: 's1', setType: 'Standard', weightKg: 20, timeSeconds: 45, completed: true },
+          { id: 's2', setType: 'Standard', weightKg: 20, timeSeconds: 45, completed: true },
+        ],
+      };
+
+      render(ExerciseSets, { props: { exercise: completedFarmersCarry, bodyWeightKg: 80 } });
+
+      expect(screen.getByText('20 Kg')).toBeInTheDocument();
+      expect(screen.getByText('1m 30s')).toBeInTheDocument();
+    });
+
+    it('does not show time summary for completed non-time exercises', () => {
+      const completedBenchPress: LocalWorkoutExercise = {
+        ...baseExercise,
+        completed: true,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
+      };
+
+      render(ExerciseSets, { props: { exercise: completedBenchPress, bodyWeightKg: 80 } });
+
+      expect(screen.queryByText(/\dm/)).not.toBeInTheDocument();
+      expect(screen.getByText('600 Kg')).toBeInTheDocument();
+    });
+  });
+
   describe('WEIGHT_AND_TIME exercise type', () => {
     const weightTimeExercise: LocalWorkoutExercise = {
       id: 3,
