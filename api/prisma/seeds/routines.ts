@@ -22,4 +22,8 @@ export const routines: RoutineSeed[] = [
       'Reverse lunge',
     ],
   },
+  {
+    label: 'Abs',
+    exerciseLabels: ['Plank', 'Side plank', 'Reverse crunch', 'Superman'],
+  },
 ];

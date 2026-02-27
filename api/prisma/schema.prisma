@@ -13,6 +13,7 @@ enum RecordSetsType {
   TIME
   WEIGHT_AND_TIME
   BODYWEIGHT_PLUS_WEIGHT
+  REPS
 }
 
 enum BodyAreaLabel {

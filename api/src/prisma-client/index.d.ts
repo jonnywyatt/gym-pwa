@@ -73,7 +73,8 @@ export namespace $Enums {
   BODYWEIGHT_MINUS_OFFSET: 'BODYWEIGHT_MINUS_OFFSET',
   TIME: 'TIME',
   WEIGHT_AND_TIME: 'WEIGHT_AND_TIME',
-  BODYWEIGHT_PLUS_WEIGHT: 'BODYWEIGHT_PLUS_WEIGHT'
+  BODYWEIGHT_PLUS_WEIGHT: 'BODYWEIGHT_PLUS_WEIGHT',
+  REPS: 'REPS'
 };
 
 export type RecordSetsType = (typeof RecordSetsType)[keyof typeof RecordSetsType]

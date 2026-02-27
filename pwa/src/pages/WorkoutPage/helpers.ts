@@ -83,6 +83,8 @@ export function getSetInputFields(recordSetsType: RecordSetsType): {
       return { showWeight: true, showReps: false, showTime: true, weightLabel: 'Kg' };
     case 'TIME':
       return { showWeight: false, showReps: false, showTime: true, weightLabel: '' };
+    case 'REPS':
+      return { showWeight: false, showReps: true, showTime: false, weightLabel: '' };
   }
 }
 
@@ -104,6 +106,8 @@ export function calculateSetWeightKg(
     case 'WEIGHT_AND_TIME':
       return weightKg;
     case 'TIME':
+      return 0;
+    case 'REPS':
       return 0;
   }
 }
@@ -242,6 +246,9 @@ export function formatSetDetails(set: CompletedSet, recordSetsType: RecordSetsTy
       break;
     case 'TIME':
       parts.push(formatTimeSeconds(set.timeSeconds ?? 0));
+      break;
+    case 'REPS':
+      parts.push(`${set.reps ?? 0} reps`);
       break;
   }
 

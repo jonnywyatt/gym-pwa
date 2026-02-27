@@ -135,4 +135,33 @@ export const exercises: ExerciseSeed[] = [
       MuscleGroupLabel.LOWER_BACK,
     ],
   },
+  {
+    label: 'Plank',
+    recordSetsType: RecordSetsType.TIME,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.LOWER_BACK, MuscleGroupLabel.GLUTES],
+  },
+  {
+    label: 'Side plank',
+    recordSetsType: RecordSetsType.TIME,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.LOWER_BACK, MuscleGroupLabel.ADDUCTORS],
+  },
+  {
+    label: 'Reverse crunch',
+    recordSetsType: RecordSetsType.REPS,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.LOWER_BACK, MuscleGroupLabel.ADDUCTORS],
+  },
+  {
+    label: 'Superman',
+    recordSetsType: RecordSetsType.REPS,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+      MuscleGroupLabel.RHOMBOIDS,
+    ],
+    secondaryMuscleGroupLabels: [],
+  },
 ];

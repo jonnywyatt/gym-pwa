@@ -385,6 +385,33 @@ describe('ExerciseSets', () => {
     });
   });
 
+  describe('REPS exercise type', () => {
+    const repsExercise: LocalWorkoutExercise = {
+      id: 4,
+      label: 'Reverse Crunch',
+      recordSetsType: 'REPS',
+      primaryMuscleGroups: ['Obliques'],
+      secondaryMuscleGroups: [],
+      completed: false,
+      startedAt: '2025-01-15T14:00:00.000Z',
+      sets: [{ id: 's1', setType: 'Standard', reps: 12, completed: false }],
+    };
+
+    it('shows only reps input, not weight or time inputs', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: repsExercise, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /reverse crunch/i }));
+
+      expect(screen.getByPlaceholderText('Reps')).toBeInTheDocument();
+      expect(screen.queryByPlaceholderText('Kg')).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText('Min')).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText('Sec')).not.toBeInTheDocument();
+    });
+  });
+
   describe('WEIGHT_AND_TIME exercise type', () => {
     const weightTimeExercise: LocalWorkoutExercise = {
       id: 3,

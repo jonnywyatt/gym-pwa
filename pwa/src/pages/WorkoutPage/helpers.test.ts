@@ -172,6 +172,16 @@ describe('WorkoutPage helpers', () => {
         weightLabel: '',
       });
     });
+
+    it('returns reps only for REPS', () => {
+      const result = getSetInputFields('REPS');
+      expect(result).toEqual({
+        showWeight: false,
+        showReps: true,
+        showTime: false,
+        weightLabel: '',
+      });
+    });
   });
 
   describe('calculateSetWeightKg', () => {
@@ -222,6 +232,11 @@ describe('WorkoutPage helpers', () => {
     it('returns 0 for TIME type', () => {
       const set: WorkoutSet = { id: '1', setType: 'Standard', timeSeconds: 120, completed: true };
       expect(calculateSetWeightKg('TIME', 80, set)).toBe(0);
+    });
+
+    it('returns 0 for REPS type', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', reps: 15, completed: true };
+      expect(calculateSetWeightKg('REPS', 80, set)).toBe(0);
     });
 
     it('handles missing weight/reps as 0', () => {
@@ -627,6 +642,16 @@ describe('WorkoutPage helpers', () => {
     it('formats time in seconds only when less than a minute', () => {
       const set: CompletedSet = { setType: 'Standard', timeSeconds: 45 };
       expect(formatSetDetails(set, 'TIME')).toBe('Standard · 45s');
+    });
+
+    it('formats REPS set with reps only', () => {
+      const set: CompletedSet = { setType: 'Standard', reps: 15 };
+      expect(formatSetDetails(set, 'REPS')).toBe('Standard · 15 reps');
+    });
+
+    it('handles missing reps as 0 for REPS type', () => {
+      const set: CompletedSet = { setType: 'Standard' };
+      expect(formatSetDetails(set, 'REPS')).toBe('Standard · 0 reps');
     });
   });
 
