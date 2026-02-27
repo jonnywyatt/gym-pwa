@@ -1,11 +1,11 @@
 import type { RoutineSummary, UserWorkout } from 'gym-pwa-api/types';
-import { authFetch, authFetchJson } from '../../lib/api/client';
+import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
 export interface DashboardData {
   routines: RoutineSummary[];
-  latestWorkout: UserWorkout | null;
+  recentWorkouts: UserWorkout[];
   routinesError: string | null;
   workoutError: string | null;
 }
@@ -20,15 +20,9 @@ export async function fetchRoutines(): Promise<RoutineSummary[]> {
   return routines.slice(0, 3);
 }
 
-export async function fetchLatestWorkout(userId: number): Promise<UserWorkout | null> {
-  const response = await authFetch(`/users/${userId}/workouts/latest`);
-  if (response.status === 404) {
-    return null;
-  }
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
-  return response.json();
+export async function fetchRecentWorkouts(userId: number): Promise<UserWorkout[]> {
+  const workouts = await authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
+  return workouts.slice(0, 2);
 }
 
 export async function startWorkoutForRoutine(
@@ -41,9 +35,9 @@ export async function startWorkoutForRoutine(
 }
 
 export async function loadDashboardData(userId: number | null): Promise<DashboardData> {
-  const [routinesResult, workoutResult] = await Promise.allSettled([
+  const [routinesResult, workoutsResult] = await Promise.allSettled([
     fetchRoutines(),
-    userId !== null ? fetchLatestWorkout(userId) : Promise.resolve(null),
+    userId !== null ? fetchRecentWorkouts(userId) : Promise.resolve([]),
   ]);
 
   return {
@@ -54,12 +48,12 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
           ? routinesResult.reason.message
           : 'Failed to fetch routines'
         : null,
-    latestWorkout: workoutResult.status === 'fulfilled' ? workoutResult.value : null,
+    recentWorkouts: workoutsResult.status === 'fulfilled' ? workoutsResult.value : [],
     workoutError:
-      workoutResult.status === 'rejected'
-        ? workoutResult.reason instanceof Error
-          ? workoutResult.reason.message
-          : 'Failed to fetch workout'
+      workoutsResult.status === 'rejected'
+        ? workoutsResult.reason instanceof Error
+          ? workoutsResult.reason.message
+          : 'Failed to fetch workouts'
         : null,
   };
 }

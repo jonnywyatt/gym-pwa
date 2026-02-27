@@ -14,7 +14,7 @@ import {
 
 const router = useRouter();
 const routines = ref<RoutineSummary[]>([]);
-const latestWorkout = ref<UserWorkout | null>(null);
+const recentWorkouts = ref<UserWorkout[]>([]);
 const activeWorkout = ref<LocalWorkout | null>(null);
 const routinesLoading = ref(true);
 const workoutLoading = ref(true);
@@ -27,7 +27,7 @@ async function loadData() {
   const data = await loadDashboardData(userId);
 
   routines.value = data.routines;
-  latestWorkout.value = data.latestWorkout;
+  recentWorkouts.value = data.recentWorkouts;
   routinesError.value = data.routinesError;
   workoutError.value = data.workoutError;
   routinesLoading.value = false;
@@ -100,22 +100,24 @@ onMounted(() => {
       <p v-if="workoutLoading" :class="styles.loading">Loading workouts...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
-        <p v-if="!latestWorkout" :class="styles.emptyText">No workouts yet.</p>
+        <p v-if="recentWorkouts.length === 0" :class="styles.emptyText">No workouts yet.</p>
         <template v-else>
-            <router-link :to="`/workouts/${latestWorkout.id}`" :data-testid="`workout-${latestWorkout.id}`">
-          <div class="highlightCard">
-              <span class="heading-m">{{ latestWorkout.routineLabel }}</span>
-              <div :class="styles.workoutMeta">
-                <span>{{ formatDateTime(latestWorkout.startedAt) }}</span>
-                <span v-if="latestWorkout.durationSeconds !== undefined">{{
-                    formatDuration(latestWorkout.durationSeconds)
-                  }}</span>
-              </div>
-            <div class="weight-sm" v-if="latestWorkout.totalWeightKg">{{
-                formatTotalWeight(latestWorkout.totalWeightKg)
-              }} total</div>
-          </div>
-            </router-link>
+            <div v-for="workout in recentWorkouts" :key="workout.id" class="marginBottom2">
+              <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">
+                <div class="highlightCard highlightCardSecondary">
+                  <span class="heading-m">{{ workout.routineLabel }}</span>
+                  <div :class="styles.workoutMeta">
+                    <span>{{ formatDateTime(workout.startedAt) }}</span>
+                    <span v-if="workout.durationSeconds !== undefined">{{
+                        formatDuration(workout.durationSeconds)
+                      }}</span>
+                  </div>
+                  <div class="weight-sm" v-if="workout.totalWeightKg">{{
+                      formatTotalWeight(workout.totalWeightKg)
+                    }} total</div>
+                </div>
+              </router-link>
+            </div>
           <div class="indentToCardText"><router-link to="/workouts" :class="styles.allWorkoutsLink">See all</router-link></div>
         </template>
       </template>

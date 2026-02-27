@@ -1,6 +1,4 @@
 
-
-
 .highlightCard {
     display: flex;
     flex-direction: column;
@@ -9,6 +7,11 @@
     background: var(--background-surface);
     border-radius: var(--border-radius-lg);
     border-left: 3px solid var(--accent-secondary);
+}
+
+.highlightCardSecondary {
+    composes: highlightCard;
+    border-left-color: var(--accent-tertiary);
 }
 
 .indentToCardText {

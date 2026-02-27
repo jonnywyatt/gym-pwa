@@ -2,7 +2,7 @@ import type { RoutineDetail, RoutineSummary, UserWorkout } from 'gym-pwa-api/typ
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import {
-  fetchLatestWorkout,
+  fetchRecentWorkouts,
   fetchRoutines,
   handleNewWorkout,
   loadDashboardData,
@@ -14,10 +14,9 @@ vi.mock('../../lib/api/client', () => ({
   authFetch: vi.fn(),
 }));
 
-import { authFetch, authFetchJson } from '../../lib/api/client';
+import { authFetchJson } from '../../lib/api/client';
 
 const mockAuthFetchJson = vi.mocked(authFetchJson);
-const mockAuthFetch = vi.mocked(authFetch);
 
 describe('fetchRoutines', () => {
   it('should return at most 3 routines', async () => {
@@ -50,7 +49,7 @@ describe('fetchRoutines', () => {
   });
 });
 
-describe('fetchLatestWorkout', () => {
+describe('fetchRecentWorkouts', () => {
   const mockWorkout: UserWorkout = {
     id: 1,
     userId: 1,
@@ -64,38 +63,32 @@ describe('fetchLatestWorkout', () => {
     totalWeightKg: 2500,
   };
 
-  it('should return workout data on success', async () => {
-    mockAuthFetch.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockWorkout),
-    } as Response);
+  it('should return up to 2 workouts', async () => {
+    const fiveWorkouts: UserWorkout[] = [1, 2, 3, 4, 5].map((n) => ({ ...mockWorkout, id: n }));
+    mockAuthFetchJson.mockResolvedValue(fiveWorkouts);
 
-    const result = await fetchLatestWorkout(1);
+    const result = await fetchRecentWorkouts(1);
 
-    expect(result).toEqual(mockWorkout);
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe(1);
+    expect(result[1].id).toBe(2);
   });
 
-  it('should return null on 404', async () => {
-    mockAuthFetch.mockResolvedValue({
-      ok: false,
-      status: 404,
-      json: () => Promise.resolve({ error: 'No workouts found' }),
-    } as Response);
+  it('should return all workouts when fewer than 3', async () => {
+    const twoWorkouts: UserWorkout[] = [1, 2].map((n) => ({ ...mockWorkout, id: n }));
+    mockAuthFetchJson.mockResolvedValue(twoWorkouts);
 
-    const result = await fetchLatestWorkout(1);
+    const result = await fetchRecentWorkouts(1);
 
-    expect(result).toBeNull();
+    expect(result).toHaveLength(2);
   });
 
-  it('should throw on other error status codes', async () => {
-    mockAuthFetch.mockResolvedValue({
-      ok: false,
-      status: 500,
-      json: () => Promise.resolve({ error: 'Server error' }),
-    } as Response);
+  it('should return empty array when no workouts', async () => {
+    mockAuthFetchJson.mockResolvedValue([]);
 
-    await expect(fetchLatestWorkout(1)).rejects.toThrow('HTTP error: 500');
+    const result = await fetchRecentWorkouts(1);
+
+    expect(result).toHaveLength(0);
   });
 });
 
@@ -165,77 +158,63 @@ describe('loadDashboardData', () => {
     totalWeightKg: 2500,
   };
 
-  it('should return routines and latest workout on success', async () => {
-    mockAuthFetchJson.mockResolvedValue(mockRoutines);
-    mockAuthFetch.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockWorkout),
-    } as Response);
+  it('should return routines and recent workouts on success', async () => {
+    mockAuthFetchJson.mockResolvedValueOnce(mockRoutines).mockResolvedValueOnce([mockWorkout]);
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual(mockRoutines);
-    expect(result.latestWorkout).toEqual(mockWorkout);
+    expect(result.recentWorkouts).toEqual([mockWorkout]);
     expect(result.routinesError).toBeNull();
     expect(result.workoutError).toBeNull();
   });
 
   it('should return routinesError when routines fetch fails', async () => {
-    mockAuthFetchJson.mockRejectedValue(new Error('Network error'));
-    mockAuthFetch.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockWorkout),
-    } as Response);
+    mockAuthFetchJson
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValueOnce([mockWorkout]);
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual([]);
     expect(result.routinesError).toBe('Network error');
-    expect(result.latestWorkout).toEqual(mockWorkout);
+    expect(result.recentWorkouts).toEqual([mockWorkout]);
     expect(result.workoutError).toBeNull();
   });
 
-  it('should return workoutError when workout fetch fails', async () => {
-    mockAuthFetchJson.mockResolvedValue(mockRoutines);
-    mockAuthFetch.mockResolvedValue({
-      ok: false,
-      status: 500,
-      json: () => Promise.resolve({ error: 'Server error' }),
-    } as Response);
+  it('should return workoutError when workouts fetch fails', async () => {
+    mockAuthFetchJson
+      .mockResolvedValueOnce(mockRoutines)
+      .mockRejectedValueOnce(new Error('HTTP error: 500'));
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual(mockRoutines);
     expect(result.routinesError).toBeNull();
-    expect(result.latestWorkout).toBeNull();
+    expect(result.recentWorkouts).toEqual([]);
     expect(result.workoutError).toBe('HTTP error: 500');
   });
 
-  it('should return null workout with no error when userId is null', async () => {
-    mockAuthFetchJson.mockResolvedValue(mockRoutines);
+  it('should return empty workouts with no error when userId is null', async () => {
+    mockAuthFetchJson.mockResolvedValueOnce(mockRoutines);
 
     const result = await loadDashboardData(null);
 
     expect(result.routines).toEqual(mockRoutines);
-    expect(result.latestWorkout).toBeNull();
+    expect(result.recentWorkouts).toEqual([]);
     expect(result.workoutError).toBeNull();
   });
 
   it('should return both errors when both fetches fail', async () => {
-    mockAuthFetchJson.mockRejectedValue(new Error('Routines error'));
-    mockAuthFetch.mockResolvedValue({
-      ok: false,
-      status: 500,
-      json: () => Promise.resolve({}),
-    } as Response);
+    mockAuthFetchJson
+      .mockRejectedValueOnce(new Error('Routines error'))
+      .mockRejectedValueOnce(new Error('HTTP error: 500'));
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual([]);
     expect(result.routinesError).toBe('Routines error');
-    expect(result.latestWorkout).toBeNull();
+    expect(result.recentWorkouts).toEqual([]);
     expect(result.workoutError).toBe('HTTP error: 500');
   });
 });

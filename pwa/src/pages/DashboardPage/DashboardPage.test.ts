@@ -37,7 +37,7 @@ const mockApiUrl = 'http://localhost:3000';
 
 function setupHandlers(
   routines: unknown[] = [],
-  latestWorkout: unknown | null = null,
+  workouts: unknown[] = [],
   options: { routinesDelay?: boolean; workoutDelay?: boolean } = {}
 ) {
   server.use(
@@ -48,15 +48,12 @@ function setupHandlers(
       }
       return HttpResponse.json(routines);
     }),
-    http.get(`${mockApiUrl}/users/1/workouts/latest`, async () => {
+    http.get(`${mockApiUrl}/users/1/workouts`, async () => {
       if (options.workoutDelay) {
         await delay('infinite');
-        return HttpResponse.json({});
+        return HttpResponse.json([]);
       }
-      if (latestWorkout === null) {
-        return HttpResponse.json({ error: 'No workouts found' }, { status: 404 });
-      }
-      return HttpResponse.json(latestWorkout);
+      return HttpResponse.json(workouts);
     })
   );
 }
@@ -87,14 +84,14 @@ describe('DashboardPage', () => {
   });
 
   it('should display loading state for routines', async () => {
-    setupHandlers([], null, { routinesDelay: true });
+    setupHandlers([], [], { routinesDelay: true });
     renderPage();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('should display loading state for workouts', async () => {
-    setupHandlers([], null, { workoutDelay: true });
+    setupHandlers([], [], { workoutDelay: true });
     renderPage();
 
     await waitFor(() => {
@@ -103,7 +100,7 @@ describe('DashboardPage', () => {
   });
 
   it('should display empty state when no routines', async () => {
-    setupHandlers([], null);
+    setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
@@ -112,7 +109,7 @@ describe('DashboardPage', () => {
   });
 
   it('should display empty state when no workouts', async () => {
-    setupHandlers([], null);
+    setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
@@ -127,7 +124,7 @@ describe('DashboardPage', () => {
       { id: 3, label: 'Core', exerciseCount: 3 },
       { id: 4, label: 'Cardio', exerciseCount: 2 },
     ];
-    setupHandlers(routines, null);
+    setupHandlers(routines, []);
     renderPage();
 
     await waitFor(() => {
@@ -149,20 +146,73 @@ describe('DashboardPage', () => {
     expect(newWorkoutButtons).toHaveLength(3);
   });
 
-  it('should display last workout with stats and Summary link', async () => {
-    const workout = {
-      id: 42,
-      userId: 1,
-      routineId: 1,
-      routineLabel: 'Strength',
-      startedAt: '2024-01-15T10:00:00Z',
-      finishedAt: '2024-01-15T11:05:30Z',
-      durationSeconds: 3930,
-      exercisesCompleted: [],
-      bodyWeightKg: 80,
-      totalWeightKg: 2500,
-    };
-    setupHandlers([], workout);
+  it('should display up to 2 recent workouts', async () => {
+    const workouts = [
+      {
+        id: 1,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Strength',
+        startedAt: '2024-01-15T10:00:00Z',
+        finishedAt: '2024-01-15T11:05:30Z',
+        durationSeconds: 3930,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 2500,
+      },
+      {
+        id: 2,
+        userId: 1,
+        routineId: 2,
+        routineLabel: 'Cardio',
+        startedAt: '2024-01-14T10:00:00Z',
+        finishedAt: '2024-01-14T10:30:00Z',
+        durationSeconds: 1800,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+      {
+        id: 3,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Strength',
+        startedAt: '2024-01-13T10:00:00Z',
+        finishedAt: '2024-01-13T11:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 2000,
+      },
+    ];
+    setupHandlers([], workouts);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('workout-1')).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('workout-1')).toHaveAttribute('href', '/workouts/1');
+    expect(screen.getByTestId('workout-2')).toHaveAttribute('href', '/workouts/2');
+    expect(screen.queryByTestId('workout-3')).not.toBeInTheDocument();
+  });
+
+  it('should display workout stats', async () => {
+    const workouts = [
+      {
+        id: 42,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Strength',
+        startedAt: '2024-01-15T10:00:00Z',
+        finishedAt: '2024-01-15T11:05:30Z',
+        durationSeconds: 3930,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 2500,
+      },
+    ];
+    setupHandlers([], workouts);
     renderPage();
 
     await waitFor(() => {
@@ -176,20 +226,22 @@ describe('DashboardPage', () => {
     expect(cardLink).toHaveAttribute('href', '/workouts/42');
   });
 
-  it('should display See all link when latest workout exists', async () => {
-    const workout = {
-      id: 1,
-      userId: 1,
-      routineId: 1,
-      routineLabel: 'Test',
-      startedAt: '2024-01-15T10:00:00Z',
-      finishedAt: '2024-01-15T11:00:00Z',
-      durationSeconds: 3600,
-      exercisesCompleted: [],
-      bodyWeightKg: 80,
-      totalWeightKg: 0,
-    };
-    setupHandlers([], workout);
+  it('should display See all link when workouts exist', async () => {
+    const workouts = [
+      {
+        id: 1,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Test',
+        startedAt: '2024-01-15T10:00:00Z',
+        finishedAt: '2024-01-15T11:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+    ];
+    setupHandlers([], workouts);
     renderPage();
 
     await waitFor(() => {
@@ -215,7 +267,7 @@ describe('DashboardPage', () => {
       ],
     };
 
-    setupHandlers(routines, null);
+    setupHandlers(routines, []);
     server.use(
       http.get(`${mockApiUrl}/routines/1`, () => {
         return HttpResponse.json(mockRoutineDetail);
@@ -265,7 +317,7 @@ describe('DashboardPage', () => {
       { id: 1, label: 'Upper Body', exerciseCount: 5 },
       { id: 2, label: 'Lower Body', exerciseCount: 4 },
     ];
-    setupHandlers(routines, null);
+    setupHandlers(routines, []);
     renderPage();
 
     await waitFor(() => {
@@ -294,7 +346,7 @@ describe('DashboardPage', () => {
       exercises: [],
     };
 
-    setupHandlers(routines, null);
+    setupHandlers(routines, []);
     server.use(
       http.get(`${mockApiUrl}/routines/1`, () => {
         return HttpResponse.json(mockRoutineDetail);
@@ -342,7 +394,7 @@ describe('DashboardPage', () => {
       ],
     };
 
-    setupHandlers(routines, null);
+    setupHandlers(routines, []);
     server.use(
       http.get(`${mockApiUrl}/routines/1`, () => {
         return HttpResponse.json(mockRoutineDetail);
@@ -367,8 +419,8 @@ describe('DashboardPage', () => {
       http.get(`${mockApiUrl}/routines`, () => {
         return HttpResponse.json({ error: 'Server error' }, { status: 500 });
       }),
-      http.get(`${mockApiUrl}/users/1/workouts/latest`, () => {
-        return HttpResponse.json({ error: 'No workouts found' }, { status: 404 });
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([]);
       })
     );
     renderPage();
@@ -383,7 +435,7 @@ describe('DashboardPage', () => {
       http.get(`${mockApiUrl}/routines`, () => {
         return HttpResponse.json([]);
       }),
-      http.get(`${mockApiUrl}/users/1/workouts/latest`, () => {
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
         return HttpResponse.json({ error: 'Server error' }, { status: 500 });
       })
     );

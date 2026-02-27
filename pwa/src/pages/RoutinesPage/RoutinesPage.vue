@@ -2,7 +2,6 @@
 import {ref, onMounted} from 'vue';
 import type {RoutineSummary} from 'gym-pwa-api/types';
 import {authFetchJson} from '../../lib/api/client';
-import baseStyles from '../../styles/base-classes.module.css';
 
 const routines = ref<RoutineSummary[]>([]);
 const loading = ref(true);
