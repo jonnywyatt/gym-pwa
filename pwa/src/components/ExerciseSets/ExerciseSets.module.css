@@ -46,7 +46,7 @@
 .setInput {
   width: var(--spacing-unit-10);
   padding: var(--spacing-unit-1);
-  font-size: var(--font-size-14);
+  font-size: var(--font-size-13);
   font-family: var(--font-stack-mono);
   background: var(--background-surface);
   color: var(--text-primary);

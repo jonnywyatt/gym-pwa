@@ -69,8 +69,10 @@ onMounted(() => {
 <template>
   <main class="main">
     <header class="header">
+      <div class="flexSpaceBetween">
       <h1 v-if="profile" :class="baseStyles.heading">{{ profile.name }}</h1>
       <button @click="handleLogout" class="buttonSecondary">Logout</button>
+      </div>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>

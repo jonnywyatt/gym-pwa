@@ -349,7 +349,7 @@ describe('RoutinePage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText('Strength')).toBeInTheDocument();
+    expect(screen.getByText('Strength routine')).toBeInTheDocument();
     expect(screen.getByText('Pull up (assisted)')).toBeInTheDocument();
     expect(screen.getByText('Chest press machine')).toBeInTheDocument();
   });

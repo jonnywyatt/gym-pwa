@@ -80,7 +80,7 @@ describe('RoutinePage', () => {
     render(RoutinePage);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Routine')).toBeInTheDocument();
+      expect(screen.getByText('Test Routine routine')).toBeInTheDocument();
     });
 
     expect(screen.getByText('Bench Press')).toBeInTheDocument();

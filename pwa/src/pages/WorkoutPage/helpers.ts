@@ -78,7 +78,7 @@ export function getSetInputFields(recordSetsType: RecordSetsType): {
     case 'BODYWEIGHT_PLUS_WEIGHT':
       return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Kg' };
     case 'BODYWEIGHT_MINUS_OFFSET':
-      return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Offset' };
+      return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Kg' };
     case 'WEIGHT_AND_TIME':
       return { showWeight: true, showReps: false, showTime: true, weightLabel: 'Kg' };
     case 'TIME':

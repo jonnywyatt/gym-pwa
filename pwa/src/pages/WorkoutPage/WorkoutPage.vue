@@ -328,7 +328,7 @@ onUnmounted(() => {
       </nav>
 
       <header class="marginTop4 marginBottom4">
-        <h1 class="heading-l">{{ workout.routineLabel }}</h1>
+        <h1 class="heading-l">{{ workout.routineLabel }} workout</h1>
       </header>
 
       <ul class="list">

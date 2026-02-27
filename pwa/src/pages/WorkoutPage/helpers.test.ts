@@ -149,7 +149,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: true,
         showReps: true,
         showTime: false,
-        weightLabel: 'Offset',
+        weightLabel: 'Kg',
       });
     });
 
