@@ -2,11 +2,34 @@ import { describe, expect, it } from 'vitest';
 import {
   combineTimeSeconds,
   formatTotalTime,
+  getCompletedTotalReps,
   getCompletedTotalTimeSeconds,
   getMinutes,
   getRepresentativeWeightKg,
   getSeconds,
 } from './helpers';
+
+describe('getCompletedTotalReps', () => {
+  it('returns 0 when no sets are completed', () => {
+    expect(
+      getCompletedTotalReps([{ id: 's1', setType: 'Standard', completed: false, reps: 10 }])
+    ).toBe(0);
+  });
+
+  it('sums reps from completed sets only', () => {
+    expect(
+      getCompletedTotalReps([
+        { id: 's1', setType: 'Standard', completed: true, reps: 12 },
+        { id: 's2', setType: 'Standard', completed: false, reps: 12 },
+        { id: 's3', setType: 'Standard', completed: true, reps: 8 },
+      ])
+    ).toBe(20);
+  });
+
+  it('treats missing reps as 0', () => {
+    expect(getCompletedTotalReps([{ id: 's1', setType: 'Standard', completed: true }])).toBe(0);
+  });
+});
 
 describe('getCompletedTotalTimeSeconds', () => {
   it('returns 0 when no sets are completed', () => {

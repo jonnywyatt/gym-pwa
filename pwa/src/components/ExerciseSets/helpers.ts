@@ -6,6 +6,10 @@ export function getCompletedTotalTimeSeconds(sets: WorkoutSet[]): number {
     .reduce((total, set) => total + (set.timeSeconds ?? 0), 0);
 }
 
+export function getCompletedTotalReps(sets: WorkoutSet[]): number {
+  return sets.filter((set) => set.completed).reduce((total, set) => total + (set.reps ?? 0), 0);
+}
+
 export function formatTotalTime(totalSeconds: number): string {
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;

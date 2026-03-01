@@ -410,6 +410,37 @@ describe('ExerciseSets', () => {
       expect(screen.queryByPlaceholderText('Min')).not.toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Sec')).not.toBeInTheDocument();
     });
+
+    it('shows total reps in header when sets are completed', () => {
+      const repsExerciseWithCompletedSets: LocalWorkoutExercise = {
+        id: 4,
+        label: 'Reverse Crunch',
+        recordSetsType: 'REPS',
+        primaryMuscleGroups: ['Obliques'],
+        secondaryMuscleGroups: [],
+        completed: false,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [
+          { id: 's1', setType: 'Standard', reps: 12, completed: true },
+          { id: 's2', setType: 'Standard', reps: 10, completed: true },
+          { id: 's3', setType: 'Standard', reps: 8, completed: false },
+        ],
+      };
+
+      render(ExerciseSets, {
+        props: { exercise: repsExerciseWithCompletedSets, bodyWeightKg: 80 },
+      });
+
+      expect(screen.getByText('22 reps')).toBeInTheDocument();
+    });
+
+    it('does not show reps summary in header when no sets are completed', () => {
+      render(ExerciseSets, {
+        props: { exercise: repsExercise, bodyWeightKg: 80 },
+      });
+
+      expect(screen.queryByText(/reps/)).not.toBeInTheDocument();
+    });
   });
 
   describe('WEIGHT_AND_TIME exercise type', () => {

@@ -9,6 +9,7 @@ import {
 import {
   combineTimeSeconds,
   formatTotalTime,
+  getCompletedTotalReps,
   getCompletedTotalTimeSeconds,
   getMinutes,
   getRepresentativeWeightKg,
@@ -55,6 +56,12 @@ const completedWeightSummary = computed((): string | null => {
   return weight !== undefined ? `${weight} Kg` : null;
 });
 
+const completedRepsSummary = computed((): string | null => {
+  if (props.exercise.recordSetsType !== 'REPS' || !props.exercise.sets) return null;
+  const total = getCompletedTotalReps(props.exercise.sets);
+  return total > 0 ? `${total} reps` : null;
+});
+
 const isOpen = ref(false);
 const hasEmittedStart = ref(false);
 
@@ -89,6 +96,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           <span :class="styles.totalWeight">{{ completedTimeSummary }}</span>
         </template>
         <span v-else-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight">{{ exerciseTotalWeightKg }} Kg</span>
+        <span v-else-if="completedRepsSummary" :class="styles.totalWeight">{{ completedRepsSummary }}</span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
     </div>
