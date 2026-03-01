@@ -7,6 +7,11 @@
   font-family: var(--font-stack);
   background: var(--background-surface);
   color: var(--text-primary);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
 }
 
 .dialog::backdrop {
