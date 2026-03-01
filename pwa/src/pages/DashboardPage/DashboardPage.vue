@@ -77,6 +77,7 @@ onMounted(() => {
         <template v-else>
           <ul :class="styles.routineList">
             <li v-for="routine in routines" :key="routine.id" class="highlightCard">
+              <p v-if="routine.userId === null" class="labelCaps labelCaps--small">Recommended</p>
               <span class="heading-m">{{ routine.label }}</span>
               <span class="flexSpaceBetween">
                 <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
