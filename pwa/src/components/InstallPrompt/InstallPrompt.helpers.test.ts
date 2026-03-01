@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   canInstall,
   initInstallPromptListener,
+  isIos,
   promptInstall,
   resetDeferredPrompt,
 } from './InstallPrompt.helpers';
@@ -77,6 +78,64 @@ describe('InstallPrompt helpers', () => {
       await promptInstall();
 
       expect(canInstall()).toBe(false);
+    });
+  });
+
+  describe('isIos', () => {
+    const originalUserAgent = navigator.userAgent;
+
+    afterEach(() => {
+      Object.defineProperty(navigator, 'userAgent', {
+        value: originalUserAgent,
+        writable: false,
+        configurable: true,
+      });
+      Object.defineProperty(navigator, 'standalone', {
+        value: undefined,
+        configurable: true,
+      });
+    });
+
+    function setUserAgent(userAgent: string): void {
+      Object.defineProperty(navigator, 'userAgent', {
+        value: userAgent,
+        writable: false,
+        configurable: true,
+      });
+    }
+
+    function setStandalone(value: boolean): void {
+      Object.defineProperty(navigator, 'standalone', {
+        value,
+        writable: false,
+        configurable: true,
+      });
+    }
+
+    it('returns true for iPhone user agent', () => {
+      setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)');
+      expect(isIos()).toBe(true);
+    });
+
+    it('returns true for iPad user agent', () => {
+      setUserAgent('Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X)');
+      expect(isIos()).toBe(true);
+    });
+
+    it('returns true for iPod user agent', () => {
+      setUserAgent('Mozilla/5.0 (iPod touch; CPU iPhone OS 15_0 like Mac OS X)');
+      expect(isIos()).toBe(true);
+    });
+
+    it('returns false when already installed as standalone', () => {
+      setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)');
+      setStandalone(true);
+      expect(isIos()).toBe(false);
+    });
+
+    it('returns false for non-iOS user agents', () => {
+      setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+      expect(isIos()).toBe(false);
     });
   });
 });

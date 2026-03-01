@@ -30,3 +30,10 @@ export async function promptInstall(): Promise<'accepted' | 'dismissed'> {
 export function resetDeferredPrompt(value: BeforeInstallPromptEvent | null = null): void {
   deferredPrompt = value;
 }
+
+export function isIos(): boolean {
+  const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isStandalone =
+    (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+  return isIosDevice && !isStandalone;
+}
