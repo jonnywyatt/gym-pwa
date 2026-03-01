@@ -164,4 +164,60 @@ export const exercises: ExerciseSeed[] = [
     ],
     secondaryMuscleGroupLabels: [],
   },
+  {
+    label: 'Bench press (barbell)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+      MuscleGroupLabel.FRONT_DELTOIDS,
+      MuscleGroupLabel.TRICEPS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.OBLIQUES,
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+    ],
+  },
+  {
+    label: 'Pull up',
+    recordSetsType: RecordSetsType.BODYWEIGHT_PLUS_WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+      MuscleGroupLabel.BICEPS,
+      MuscleGroupLabel.REAR_DELTOIDS,
+      MuscleGroupLabel.RHOMBOIDS,
+      MuscleGroupLabel.TRAPEZIUS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.FOREARMS,
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+    ],
+  },
+  {
+    label: 'Leg extension',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.QUADRICEPS],
+    secondaryMuscleGroupLabels: [],
+  },
+  {
+    label: 'Tricep dips',
+    recordSetsType: RecordSetsType.BODYWEIGHT_PLUS_WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.TRICEPS],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.FRONT_DELTOIDS,
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+      MuscleGroupLabel.RHOMBOIDS,
+    ],
+  },
+  {
+    label: 'Back extension',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+    ],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS],
+  },
 ];
