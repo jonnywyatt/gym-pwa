@@ -252,6 +252,66 @@ describe('RoutinePage', () => {
     expect(workouts[0].exercisesCompleted).toHaveLength(1);
   });
 
+  it('should show "Continue workout" button when there is an active workout for this routine', async () => {
+    await db.workouts.add({
+      id: 'active-workout-id',
+      userId: 123,
+      routineId: 1,
+      routineLabel: 'Test Routine',
+      startedAt: '2025-01-15T14:00:00.000Z',
+      bodyWeightKg: 75.0,
+      exercisesCompleted: [],
+    });
+
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
+    });
+  });
+
+  it('should show "Start workout" button when the active workout belongs to a different routine', async () => {
+    await db.workouts.add({
+      id: 'other-workout-id',
+      userId: 123,
+      routineId: 99,
+      routineLabel: 'Other Routine',
+      startedAt: '2025-01-15T14:00:00.000Z',
+      bodyWeightKg: 75.0,
+      exercisesCompleted: [],
+    });
+
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+    });
+  });
+
   it('should redirect to existing workout if one is already active', async () => {
     const user = userEvent.setup();
 

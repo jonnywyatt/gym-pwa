@@ -49,6 +49,17 @@ export async function getActiveWorkout(userId: number): Promise<LocalWorkout | u
     .first();
 }
 
+export async function getActiveWorkoutForRoutine(
+  userId: number,
+  routineId: number
+): Promise<LocalWorkout | undefined> {
+  return await db.workouts
+    .where('userId')
+    .equals(userId)
+    .and((workout) => workout.routineId === routineId && !workout.finishedAt)
+    .first();
+}
+
 export async function createWorkout(workout: LocalWorkout): Promise<string> {
   await db.workouts.add(workout);
   return workout.id;
