@@ -16,6 +16,18 @@
   width: 1px;
 }
 
+.labelCaps {
+    font-size: var(--font-size-12);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+}
+
+.labelCaps--small {
+    font-size: var(--font-size-11);
+}
+
 .sectionHeading {
     font-size: var(--font-size-12);
     font-weight: 400;

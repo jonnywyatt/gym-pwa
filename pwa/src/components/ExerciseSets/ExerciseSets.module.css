@@ -43,32 +43,10 @@
   text-align: center;
 }
 
-.setInput {
-  width: var(--spacing-unit-10);
-  padding: var(--spacing-unit-1);
-  font-size: var(--font-size-13);
-  font-family: var(--font-stack-mono);
-  background: var(--background-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-}
-
 .timeInputGroup {
   display: flex;
   align-items: center;
   gap: var(--spacing-unit-1);
-}
-
-.timeInput {
-  width: var(--spacing-unit-10);
-  padding: var(--spacing-unit-1);
-  font-size: var(--font-size-13);
-  font-family: var(--font-stack-mono);
-  background: var(--background-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
 }
 
 .timeSeparator {
@@ -79,10 +57,6 @@
 .setTypeSelect {
   font-size: var(--font-size-13);
   padding: var(--spacing-unit-1);
-  background: var(--background-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
 }
 
 .actionButtons {

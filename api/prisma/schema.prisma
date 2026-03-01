@@ -80,11 +80,14 @@ model Exercise {
 }
 
 model Routine {
-  id    Int    @id @default(autoincrement())
-  label String @unique
+  id     Int     @id @default(autoincrement())
+  label  String?
+  userId Int?    @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   routineExercises RoutineExercise[]
 
+  @@unique([label, userId])
   @@map("routines")
 }
 
@@ -121,14 +124,16 @@ model ExerciseSecondaryMuscleGroup {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  googleId  String   @unique @map("google_id")
-  email     String
-  name      String?
-  createdAt DateTime @default(now()) @map("created_at")
+  id          Int      @id @default(autoincrement())
+  googleId    String   @unique @map("google_id")
+  email       String
+  name        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  preferences Json?
 
   bodyWeights UserBodyWeight[]
   workouts    UserWorkout[]
+  routines    Routine[]
 
   @@map("users")
 }

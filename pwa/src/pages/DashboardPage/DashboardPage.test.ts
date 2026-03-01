@@ -226,6 +226,17 @@ describe('DashboardPage', () => {
     expect(cardLink).toHaveAttribute('href', '/workouts/42');
   });
 
+  it('should display See all link when routines exist', async () => {
+    const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
+    setupHandlers(routines, []);
+    renderPage();
+
+    await waitFor(() => {
+      const allRoutinesLink = screen.getByRole('link', { name: 'See all' });
+      expect(allRoutinesLink).toHaveAttribute('href', '/routines');
+    });
+  });
+
   it('should display See all link when workouts exist', async () => {
     const workouts = [
       {

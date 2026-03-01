@@ -1899,11 +1899,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     bodyWeights: number
     workouts: number
+    routines: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bodyWeights?: boolean | UserCountOutputTypeCountBodyWeightsArgs
     workouts?: boolean | UserCountOutputTypeCountWorkoutsArgs
+    routines?: boolean | UserCountOutputTypeCountRoutinesArgs
   }
 
   // Custom InputTypes
@@ -1929,6 +1931,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountWorkoutsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWorkoutWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountRoutinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoutineWhereInput
   }
 
 
@@ -5290,50 +5299,60 @@ export namespace Prisma {
 
   export type RoutineAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type RoutineSumAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type RoutineMinAggregateOutputType = {
     id: number | null
     label: string | null
+    userId: number | null
   }
 
   export type RoutineMaxAggregateOutputType = {
     id: number | null
     label: string | null
+    userId: number | null
   }
 
   export type RoutineCountAggregateOutputType = {
     id: number
     label: number
+    userId: number
     _all: number
   }
 
 
   export type RoutineAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type RoutineSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type RoutineMinAggregateInputType = {
     id?: true
     label?: true
+    userId?: true
   }
 
   export type RoutineMaxAggregateInputType = {
     id?: true
     label?: true
+    userId?: true
   }
 
   export type RoutineCountAggregateInputType = {
     id?: true
     label?: true
+    userId?: true
     _all?: true
   }
 
@@ -5425,7 +5444,8 @@ export namespace Prisma {
 
   export type RoutineGroupByOutputType = {
     id: number
-    label: string
+    label: string | null
+    userId: number | null
     _count: RoutineCountAggregateOutputType | null
     _avg: RoutineAvgAggregateOutputType | null
     _sum: RoutineSumAggregateOutputType | null
@@ -5450,6 +5470,8 @@ export namespace Prisma {
   export type RoutineSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     label?: boolean
+    userId?: boolean
+    user?: boolean | Routine$userArgs<ExtArgs>
     routineExercises?: boolean | Routine$routineExercisesArgs<ExtArgs>
     _count?: boolean | RoutineCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["routine"]>
@@ -5457,34 +5479,46 @@ export namespace Prisma {
   export type RoutineSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     label?: boolean
+    userId?: boolean
+    user?: boolean | Routine$userArgs<ExtArgs>
   }, ExtArgs["result"]["routine"]>
 
   export type RoutineSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     label?: boolean
+    userId?: boolean
+    user?: boolean | Routine$userArgs<ExtArgs>
   }, ExtArgs["result"]["routine"]>
 
   export type RoutineSelectScalar = {
     id?: boolean
     label?: boolean
+    userId?: boolean
   }
 
-  export type RoutineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label", ExtArgs["result"]["routine"]>
+  export type RoutineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "userId", ExtArgs["result"]["routine"]>
   export type RoutineInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | Routine$userArgs<ExtArgs>
     routineExercises?: boolean | Routine$routineExercisesArgs<ExtArgs>
     _count?: boolean | RoutineCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type RoutineIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type RoutineIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type RoutineIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | Routine$userArgs<ExtArgs>
+  }
+  export type RoutineIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | Routine$userArgs<ExtArgs>
+  }
 
   export type $RoutinePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Routine"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
       routineExercises: Prisma.$RoutineExercisePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      label: string
+      label: string | null
+      userId: number | null
     }, ExtArgs["result"]["routine"]>
     composites: {}
   }
@@ -5879,6 +5913,7 @@ export namespace Prisma {
    */
   export interface Prisma__RoutineClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends Routine$userArgs<ExtArgs> = {}>(args?: Subset<T, Routine$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     routineExercises<T extends Routine$routineExercisesArgs<ExtArgs> = {}>(args?: Subset<T, Routine$routineExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoutineExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5911,6 +5946,7 @@ export namespace Prisma {
   interface RoutineFieldRefs {
     readonly id: FieldRef<"Routine", 'Int'>
     readonly label: FieldRef<"Routine", 'String'>
+    readonly userId: FieldRef<"Routine", 'Int'>
   }
     
 
@@ -6129,7 +6165,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Routine.
      */
-    data: XOR<RoutineCreateInput, RoutineUncheckedCreateInput>
+    data?: XOR<RoutineCreateInput, RoutineUncheckedCreateInput>
   }
 
   /**
@@ -6160,6 +6196,10 @@ export namespace Prisma {
      */
     data: RoutineCreateManyInput | RoutineCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoutineIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6230,6 +6270,10 @@ export namespace Prisma {
      * Limit how many Routines to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoutineIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6296,6 +6340,25 @@ export namespace Prisma {
      * Limit how many Routines to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Routine.user
+   */
+  export type Routine$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -9595,6 +9658,7 @@ export namespace Prisma {
     email: number
     name: number
     createdAt: number
+    preferences: number
     _all: number
   }
 
@@ -9629,6 +9693,7 @@ export namespace Prisma {
     email?: true
     name?: true
     createdAt?: true
+    preferences?: true
     _all?: true
   }
 
@@ -9724,6 +9789,7 @@ export namespace Prisma {
     email: string
     name: string | null
     createdAt: Date
+    preferences: JsonValue | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -9751,8 +9817,10 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     createdAt?: boolean
+    preferences?: boolean
     bodyWeights?: boolean | User$bodyWeightsArgs<ExtArgs>
     workouts?: boolean | User$workoutsArgs<ExtArgs>
+    routines?: boolean | User$routinesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -9762,6 +9830,7 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     createdAt?: boolean
+    preferences?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9770,6 +9839,7 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     createdAt?: boolean
+    preferences?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -9778,12 +9848,14 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     createdAt?: boolean
+    preferences?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "googleId" | "email" | "name" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "googleId" | "email" | "name" | "createdAt" | "preferences", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bodyWeights?: boolean | User$bodyWeightsArgs<ExtArgs>
     workouts?: boolean | User$workoutsArgs<ExtArgs>
+    routines?: boolean | User$routinesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9794,6 +9866,7 @@ export namespace Prisma {
     objects: {
       bodyWeights: Prisma.$UserBodyWeightPayload<ExtArgs>[]
       workouts: Prisma.$UserWorkoutPayload<ExtArgs>[]
+      routines: Prisma.$RoutinePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -9801,6 +9874,7 @@ export namespace Prisma {
       email: string
       name: string | null
       createdAt: Date
+      preferences: Prisma.JsonValue | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -10197,6 +10271,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     bodyWeights<T extends User$bodyWeightsArgs<ExtArgs> = {}>(args?: Subset<T, User$bodyWeightsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBodyWeightPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workouts<T extends User$workoutsArgs<ExtArgs> = {}>(args?: Subset<T, User$workoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWorkoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    routines<T extends User$routinesArgs<ExtArgs> = {}>(args?: Subset<T, User$routinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoutinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10231,6 +10306,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly preferences: FieldRef<"User", 'Json'>
   }
     
 
@@ -10664,6 +10740,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserWorkoutScalarFieldEnum | UserWorkoutScalarFieldEnum[]
+  }
+
+  /**
+   * User.routines
+   */
+  export type User$routinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Routine
+     */
+    select?: RoutineSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Routine
+     */
+    omit?: RoutineOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoutineInclude<ExtArgs> | null
+    where?: RoutineWhereInput
+    orderBy?: RoutineOrderByWithRelationInput | RoutineOrderByWithRelationInput[]
+    cursor?: RoutineWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoutineScalarFieldEnum | RoutineScalarFieldEnum[]
   }
 
   /**
@@ -12988,7 +13088,8 @@ export namespace Prisma {
 
   export const RoutineScalarFieldEnum: {
     id: 'id',
-    label: 'label'
+    label: 'label',
+    userId: 'userId'
   };
 
   export type RoutineScalarFieldEnum = (typeof RoutineScalarFieldEnum)[keyof typeof RoutineScalarFieldEnum]
@@ -13024,7 +13125,8 @@ export namespace Prisma {
     googleId: 'googleId',
     email: 'email',
     name: 'name',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    preferences: 'preferences'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -13062,6 +13164,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const JsonNullValueInput: {
@@ -13186,20 +13296,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal[]'
-   */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -13210,6 +13306,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -13388,28 +13498,36 @@ export namespace Prisma {
     OR?: RoutineWhereInput[]
     NOT?: RoutineWhereInput | RoutineWhereInput[]
     id?: IntFilter<"Routine"> | number
-    label?: StringFilter<"Routine"> | string
+    label?: StringNullableFilter<"Routine"> | string | null
+    userId?: IntNullableFilter<"Routine"> | number | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     routineExercises?: RoutineExerciseListRelationFilter
   }
 
   export type RoutineOrderByWithRelationInput = {
     id?: SortOrder
-    label?: SortOrder
+    label?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
     routineExercises?: RoutineExerciseOrderByRelationAggregateInput
   }
 
   export type RoutineWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    label?: string
+    label_userId?: RoutineLabelUserIdCompoundUniqueInput
     AND?: RoutineWhereInput | RoutineWhereInput[]
     OR?: RoutineWhereInput[]
     NOT?: RoutineWhereInput | RoutineWhereInput[]
+    label?: StringNullableFilter<"Routine"> | string | null
+    userId?: IntNullableFilter<"Routine"> | number | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     routineExercises?: RoutineExerciseListRelationFilter
-  }, "id" | "label">
+  }, "id" | "label_userId">
 
   export type RoutineOrderByWithAggregationInput = {
     id?: SortOrder
-    label?: SortOrder
+    label?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     _count?: RoutineCountOrderByAggregateInput
     _avg?: RoutineAvgOrderByAggregateInput
     _max?: RoutineMaxOrderByAggregateInput
@@ -13422,7 +13540,8 @@ export namespace Prisma {
     OR?: RoutineScalarWhereWithAggregatesInput[]
     NOT?: RoutineScalarWhereWithAggregatesInput | RoutineScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Routine"> | number
-    label?: StringWithAggregatesFilter<"Routine"> | string
+    label?: StringNullableWithAggregatesFilter<"Routine"> | string | null
+    userId?: IntNullableWithAggregatesFilter<"Routine"> | number | null
   }
 
   export type RoutineExerciseWhereInput = {
@@ -13578,8 +13697,10 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    preferences?: JsonNullableFilter<"User">
     bodyWeights?: UserBodyWeightListRelationFilter
     workouts?: UserWorkoutListRelationFilter
+    routines?: RoutineListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -13588,8 +13709,10 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    preferences?: SortOrderInput | SortOrder
     bodyWeights?: UserBodyWeightOrderByRelationAggregateInput
     workouts?: UserWorkoutOrderByRelationAggregateInput
+    routines?: RoutineOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -13601,8 +13724,10 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
+    preferences?: JsonNullableFilter<"User">
     bodyWeights?: UserBodyWeightListRelationFilter
     workouts?: UserWorkoutListRelationFilter
+    routines?: RoutineListRelationFilter
   }, "id" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
@@ -13611,6 +13736,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    preferences?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -13627,6 +13753,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    preferences?: JsonNullableWithAggregatesFilter<"User">
   }
 
   export type UserBodyWeightWhereInput = {
@@ -13904,39 +14031,45 @@ export namespace Prisma {
   }
 
   export type RoutineCreateInput = {
-    label: string
+    label?: string | null
+    user?: UserCreateNestedOneWithoutRoutinesInput
     routineExercises?: RoutineExerciseCreateNestedManyWithoutRoutineInput
   }
 
   export type RoutineUncheckedCreateInput = {
     id?: number
-    label: string
+    label?: string | null
+    userId?: number | null
     routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutRoutineInput
   }
 
   export type RoutineUpdateInput = {
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneWithoutRoutinesNestedInput
     routineExercises?: RoutineExerciseUpdateManyWithoutRoutineNestedInput
   }
 
   export type RoutineUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
     routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutRoutineNestedInput
   }
 
   export type RoutineCreateManyInput = {
     id?: number
-    label: string
+    label?: string | null
+    userId?: number | null
   }
 
   export type RoutineUpdateManyMutationInput = {
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RoutineUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RoutineExerciseCreateInput = {
@@ -14052,8 +14185,10 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightCreateNestedManyWithoutUserInput
     workouts?: UserWorkoutCreateNestedManyWithoutUserInput
+    routines?: RoutineCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -14062,8 +14197,10 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUncheckedCreateNestedManyWithoutUserInput
     workouts?: UserWorkoutUncheckedCreateNestedManyWithoutUserInput
+    routines?: RoutineUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -14071,8 +14208,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUpdateManyWithoutUserNestedInput
     workouts?: UserWorkoutUpdateManyWithoutUserNestedInput
+    routines?: RoutineUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14081,8 +14220,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput
     workouts?: UserWorkoutUncheckedUpdateManyWithoutUserNestedInput
+    routines?: RoutineUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -14091,6 +14232,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUpdateManyMutationInput = {
@@ -14098,6 +14240,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -14106,6 +14249,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserBodyWeightCreateInput = {
@@ -14501,27 +14645,107 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type RoutineLabelUserIdCompoundUniqueInput = {
+    label: string
+    userId: number
+  }
+
   export type RoutineCountOrderByAggregateInput = {
     id?: SortOrder
     label?: SortOrder
+    userId?: SortOrder
   }
 
   export type RoutineAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type RoutineMaxOrderByAggregateInput = {
     id?: SortOrder
     label?: SortOrder
+    userId?: SortOrder
   }
 
   export type RoutineMinOrderByAggregateInput = {
     id?: SortOrder
     label?: SortOrder
+    userId?: SortOrder
   }
 
   export type RoutineSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type RoutineScalarRelationFilter = {
@@ -14638,20 +14862,28 @@ export namespace Prisma {
     exerciseId?: SortOrder
     muscleGroupId?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type UserBodyWeightListRelationFilter = {
@@ -14666,9 +14898,10 @@ export namespace Prisma {
     none?: UserWorkoutWhereInput
   }
 
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
+  export type RoutineListRelationFilter = {
+    every?: RoutineWhereInput
+    some?: RoutineWhereInput
+    none?: RoutineWhereInput
   }
 
   export type UserBodyWeightOrderByRelationAggregateInput = {
@@ -14679,12 +14912,17 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type RoutineOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     googleId?: SortOrder
     email?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    preferences?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -14710,23 +14948,31 @@ export namespace Prisma {
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
   }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -14792,17 +15038,6 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -14881,22 +15116,6 @@ export namespace Prisma {
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
     bodyWeightKg?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -15219,6 +15438,12 @@ export namespace Prisma {
     deleteMany?: RoutineExerciseScalarWhereInput | RoutineExerciseScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutRoutinesInput = {
+    create?: XOR<UserCreateWithoutRoutinesInput, UserUncheckedCreateWithoutRoutinesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRoutinesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type RoutineExerciseCreateNestedManyWithoutRoutineInput = {
     create?: XOR<RoutineExerciseCreateWithoutRoutineInput, RoutineExerciseUncheckedCreateWithoutRoutineInput> | RoutineExerciseCreateWithoutRoutineInput[] | RoutineExerciseUncheckedCreateWithoutRoutineInput[]
     connectOrCreate?: RoutineExerciseCreateOrConnectWithoutRoutineInput | RoutineExerciseCreateOrConnectWithoutRoutineInput[]
@@ -15233,6 +15458,20 @@ export namespace Prisma {
     connect?: RoutineExerciseWhereUniqueInput | RoutineExerciseWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneWithoutRoutinesNestedInput = {
+    create?: XOR<UserCreateWithoutRoutinesInput, UserUncheckedCreateWithoutRoutinesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRoutinesInput
+    upsert?: UserUpsertWithoutRoutinesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRoutinesInput, UserUpdateWithoutRoutinesInput>, UserUncheckedUpdateWithoutRoutinesInput>
+  }
+
   export type RoutineExerciseUpdateManyWithoutRoutineNestedInput = {
     create?: XOR<RoutineExerciseCreateWithoutRoutineInput, RoutineExerciseUncheckedCreateWithoutRoutineInput> | RoutineExerciseCreateWithoutRoutineInput[] | RoutineExerciseUncheckedCreateWithoutRoutineInput[]
     connectOrCreate?: RoutineExerciseCreateOrConnectWithoutRoutineInput | RoutineExerciseCreateOrConnectWithoutRoutineInput[]
@@ -15245,6 +15484,14 @@ export namespace Prisma {
     update?: RoutineExerciseUpdateWithWhereUniqueWithoutRoutineInput | RoutineExerciseUpdateWithWhereUniqueWithoutRoutineInput[]
     updateMany?: RoutineExerciseUpdateManyWithWhereWithoutRoutineInput | RoutineExerciseUpdateManyWithWhereWithoutRoutineInput[]
     deleteMany?: RoutineExerciseScalarWhereInput | RoutineExerciseScalarWhereInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type RoutineExerciseUncheckedUpdateManyWithoutRoutineNestedInput = {
@@ -15359,6 +15606,13 @@ export namespace Prisma {
     connect?: UserWorkoutWhereUniqueInput | UserWorkoutWhereUniqueInput[]
   }
 
+  export type RoutineCreateNestedManyWithoutUserInput = {
+    create?: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput> | RoutineCreateWithoutUserInput[] | RoutineUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RoutineCreateOrConnectWithoutUserInput | RoutineCreateOrConnectWithoutUserInput[]
+    createMany?: RoutineCreateManyUserInputEnvelope
+    connect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+  }
+
   export type UserBodyWeightUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
@@ -15373,8 +15627,11 @@ export namespace Prisma {
     connect?: UserWorkoutWhereUniqueInput | UserWorkoutWhereUniqueInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type RoutineUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput> | RoutineCreateWithoutUserInput[] | RoutineUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RoutineCreateOrConnectWithoutUserInput | RoutineCreateOrConnectWithoutUserInput[]
+    createMany?: RoutineCreateManyUserInputEnvelope
+    connect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
   }
 
   export type UserBodyWeightUpdateManyWithoutUserNestedInput = {
@@ -15405,6 +15662,20 @@ export namespace Prisma {
     deleteMany?: UserWorkoutScalarWhereInput | UserWorkoutScalarWhereInput[]
   }
 
+  export type RoutineUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput> | RoutineCreateWithoutUserInput[] | RoutineUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RoutineCreateOrConnectWithoutUserInput | RoutineCreateOrConnectWithoutUserInput[]
+    upsert?: RoutineUpsertWithWhereUniqueWithoutUserInput | RoutineUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RoutineCreateManyUserInputEnvelope
+    set?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    disconnect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    delete?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    connect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    update?: RoutineUpdateWithWhereUniqueWithoutUserInput | RoutineUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RoutineUpdateManyWithWhereWithoutUserInput | RoutineUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RoutineScalarWhereInput | RoutineScalarWhereInput[]
+  }
+
   export type UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserBodyWeightCreateWithoutUserInput, UserBodyWeightUncheckedCreateWithoutUserInput> | UserBodyWeightCreateWithoutUserInput[] | UserBodyWeightUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserBodyWeightCreateOrConnectWithoutUserInput | UserBodyWeightCreateOrConnectWithoutUserInput[]
@@ -15433,6 +15704,20 @@ export namespace Prisma {
     deleteMany?: UserWorkoutScalarWhereInput | UserWorkoutScalarWhereInput[]
   }
 
+  export type RoutineUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput> | RoutineCreateWithoutUserInput[] | RoutineUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RoutineCreateOrConnectWithoutUserInput | RoutineCreateOrConnectWithoutUserInput[]
+    upsert?: RoutineUpsertWithWhereUniqueWithoutUserInput | RoutineUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RoutineCreateManyUserInputEnvelope
+    set?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    disconnect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    delete?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    connect?: RoutineWhereUniqueInput | RoutineWhereUniqueInput[]
+    update?: RoutineUpdateWithWhereUniqueWithoutUserInput | RoutineUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RoutineUpdateManyWithWhereWithoutUserInput | RoutineUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RoutineScalarWhereInput | RoutineScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutBodyWeightsInput = {
     create?: XOR<UserCreateWithoutBodyWeightsInput, UserUncheckedCreateWithoutBodyWeightsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBodyWeightsInput
@@ -15459,14 +15744,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutWorkoutsInput, UserUncheckedCreateWithoutWorkoutsInput>
     connectOrCreate?: UserCreateOrConnectWithoutWorkoutsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutWorkoutsNestedInput = {
@@ -15636,6 +15913,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -15651,44 +15939,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15716,6 +15966,56 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -16020,6 +16320,32 @@ export namespace Prisma {
     position?: IntFilter<"RoutineExercise"> | number
   }
 
+  export type UserCreateWithoutRoutinesInput = {
+    googleId: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    bodyWeights?: UserBodyWeightCreateNestedManyWithoutUserInput
+    workouts?: UserWorkoutCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutRoutinesInput = {
+    id?: number
+    googleId: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    bodyWeights?: UserBodyWeightUncheckedCreateNestedManyWithoutUserInput
+    workouts?: UserWorkoutUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutRoutinesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRoutinesInput, UserUncheckedCreateWithoutRoutinesInput>
+  }
+
   export type RoutineExerciseCreateWithoutRoutineInput = {
     position: number
     exercise: ExerciseCreateNestedOneWithoutRoutineExercisesInput
@@ -16040,6 +16366,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserUpsertWithoutRoutinesInput = {
+    update: XOR<UserUpdateWithoutRoutinesInput, UserUncheckedUpdateWithoutRoutinesInput>
+    create: XOR<UserCreateWithoutRoutinesInput, UserUncheckedCreateWithoutRoutinesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRoutinesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRoutinesInput, UserUncheckedUpdateWithoutRoutinesInput>
+  }
+
+  export type UserUpdateWithoutRoutinesInput = {
+    googleId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    bodyWeights?: UserBodyWeightUpdateManyWithoutUserNestedInput
+    workouts?: UserWorkoutUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRoutinesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    googleId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
+    bodyWeights?: UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput
+    workouts?: UserWorkoutUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type RoutineExerciseUpsertWithWhereUniqueWithoutRoutineInput = {
     where: RoutineExerciseWhereUniqueInput
     update: XOR<RoutineExerciseUpdateWithoutRoutineInput, RoutineExerciseUncheckedUpdateWithoutRoutineInput>
@@ -16057,12 +16415,14 @@ export namespace Prisma {
   }
 
   export type RoutineCreateWithoutRoutineExercisesInput = {
-    label: string
+    label?: string | null
+    user?: UserCreateNestedOneWithoutRoutinesInput
   }
 
   export type RoutineUncheckedCreateWithoutRoutineExercisesInput = {
     id?: number
-    label: string
+    label?: string | null
+    userId?: number | null
   }
 
   export type RoutineCreateOrConnectWithoutRoutineExercisesInput = {
@@ -16104,12 +16464,14 @@ export namespace Prisma {
   }
 
   export type RoutineUpdateWithoutRoutineExercisesInput = {
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneWithoutRoutinesNestedInput
   }
 
   export type RoutineUncheckedUpdateWithoutRoutineExercisesInput = {
     id?: IntFieldUpdateOperationsInput | number
-    label?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ExerciseUpsertWithoutRoutineExercisesInput = {
@@ -16378,6 +16740,27 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoutineCreateWithoutUserInput = {
+    label?: string | null
+    routineExercises?: RoutineExerciseCreateNestedManyWithoutRoutineInput
+  }
+
+  export type RoutineUncheckedCreateWithoutUserInput = {
+    id?: number
+    label?: string | null
+    routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutRoutineInput
+  }
+
+  export type RoutineCreateOrConnectWithoutUserInput = {
+    where: RoutineWhereUniqueInput
+    create: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput>
+  }
+
+  export type RoutineCreateManyUserInputEnvelope = {
+    data: RoutineCreateManyUserInput | RoutineCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserBodyWeightUpsertWithWhereUniqueWithoutUserInput = {
     where: UserBodyWeightWhereUniqueInput
     update: XOR<UserBodyWeightUpdateWithoutUserInput, UserBodyWeightUncheckedUpdateWithoutUserInput>
@@ -16436,12 +16819,39 @@ export namespace Prisma {
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
   }
 
+  export type RoutineUpsertWithWhereUniqueWithoutUserInput = {
+    where: RoutineWhereUniqueInput
+    update: XOR<RoutineUpdateWithoutUserInput, RoutineUncheckedUpdateWithoutUserInput>
+    create: XOR<RoutineCreateWithoutUserInput, RoutineUncheckedCreateWithoutUserInput>
+  }
+
+  export type RoutineUpdateWithWhereUniqueWithoutUserInput = {
+    where: RoutineWhereUniqueInput
+    data: XOR<RoutineUpdateWithoutUserInput, RoutineUncheckedUpdateWithoutUserInput>
+  }
+
+  export type RoutineUpdateManyWithWhereWithoutUserInput = {
+    where: RoutineScalarWhereInput
+    data: XOR<RoutineUpdateManyMutationInput, RoutineUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type RoutineScalarWhereInput = {
+    AND?: RoutineScalarWhereInput | RoutineScalarWhereInput[]
+    OR?: RoutineScalarWhereInput[]
+    NOT?: RoutineScalarWhereInput | RoutineScalarWhereInput[]
+    id?: IntFilter<"Routine"> | number
+    label?: StringNullableFilter<"Routine"> | string | null
+    userId?: IntNullableFilter<"Routine"> | number | null
+  }
+
   export type UserCreateWithoutBodyWeightsInput = {
     googleId: string
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     workouts?: UserWorkoutCreateNestedManyWithoutUserInput
+    routines?: RoutineCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBodyWeightsInput = {
@@ -16450,7 +16860,9 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     workouts?: UserWorkoutUncheckedCreateNestedManyWithoutUserInput
+    routines?: RoutineUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBodyWeightsInput = {
@@ -16474,7 +16886,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     workouts?: UserWorkoutUpdateManyWithoutUserNestedInput
+    routines?: RoutineUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBodyWeightsInput = {
@@ -16483,7 +16897,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     workouts?: UserWorkoutUncheckedUpdateManyWithoutUserNestedInput
+    routines?: RoutineUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutWorkoutsInput = {
@@ -16491,7 +16907,9 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightCreateNestedManyWithoutUserInput
+    routines?: RoutineCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWorkoutsInput = {
@@ -16500,7 +16918,9 @@ export namespace Prisma {
     email: string
     name?: string | null
     createdAt?: Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUncheckedCreateNestedManyWithoutUserInput
+    routines?: RoutineUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWorkoutsInput = {
@@ -16524,7 +16944,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUpdateManyWithoutUserNestedInput
+    routines?: RoutineUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkoutsInput = {
@@ -16533,7 +16955,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferences?: NullableJsonNullValueInput | InputJsonValue
     bodyWeights?: UserBodyWeightUncheckedUpdateManyWithoutUserNestedInput
+    routines?: RoutineUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MuscleGroupCreateManyBodyAreaInput = {
@@ -16681,6 +17105,11 @@ export namespace Prisma {
     bodyWeightKg: Decimal | DecimalJsLike | number | string
   }
 
+  export type RoutineCreateManyUserInput = {
+    id?: number
+    label?: string | null
+  }
+
   export type UserBodyWeightUpdateWithoutUserInput = {
     weightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16731,6 +17160,22 @@ export namespace Prisma {
     exercisesCompleted?: JsonNullValueInput | InputJsonValue
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type RoutineUpdateWithoutUserInput = {
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    routineExercises?: RoutineExerciseUpdateManyWithoutRoutineNestedInput
+  }
+
+  export type RoutineUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutRoutineNestedInput
+  }
+
+  export type RoutineUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

@@ -68,3 +68,13 @@
     background: var(--em-error);
     color: var(--text-primary);
 }
+
+.removeButton {
+  color: var(--em-error);
+  padding: var(--spacing-unit-1);
+  flex-shrink: 0;
+}
+
+.removeButton:hover {
+  opacity: 0.7;
+}

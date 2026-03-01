@@ -74,24 +74,27 @@ onMounted(() => {
       <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
       <template v-else>
         <p v-if="routines.length === 0" :class="styles.emptyText">No routines available.</p>
-        <ul v-else :class="styles.routineList">
-          <li v-for="routine in routines" :key="routine.id" class="highlightCard">
-            <span class="heading-m">{{ routine.label }}</span>
-            <span class="flexSpaceBetween">
-              <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
-              <button
-                  type="button"
-                  class="buttonPrimary"
-                  :disabled="startingRoutineId === routine.id"
-                  @click="onNewWorkout(routine.id)"
-              >
-                {{
-                  startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue workout' : 'Start workout'
-                }}
-              </button>
-            </span>
-          </li>
-        </ul>
+        <template v-else>
+          <ul :class="styles.routineList">
+            <li v-for="routine in routines" :key="routine.id" class="highlightCard">
+              <span class="heading-m">{{ routine.label }}</span>
+              <span class="flexSpaceBetween">
+                <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
+                <button
+                    type="button"
+                    class="buttonPrimary"
+                    :disabled="startingRoutineId === routine.id"
+                    @click="onNewWorkout(routine.id)"
+                >
+                  {{
+                    startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue workout' : 'Start workout'
+                  }}
+                </button>
+              </span>
+            </li>
+          </ul>
+          <div class="indentToCardText"><router-link to="/routines" :class="styles.allWorkoutsLink">See all</router-link></div>
+        </template>
       </template>
     </section>
 

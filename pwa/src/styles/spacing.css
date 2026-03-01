@@ -1,6 +1,14 @@
 
+.marginTop2 {
+    margin-top: var(--spacing-unit-2);
+}
+
 .marginTop4 {
    margin-top: var(--spacing-unit-4);
+}
+
+.marginBottom1 {
+    margin-bottom: var(--spacing-unit-1);
 }
 
 .marginBottom2 {

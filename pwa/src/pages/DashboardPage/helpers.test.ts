@@ -21,11 +21,11 @@ const mockAuthFetchJson = vi.mocked(authFetchJson);
 describe('fetchRoutines', () => {
   it('should return at most 3 routines', async () => {
     const fiveRoutines: RoutineSummary[] = [
-      { id: 1, label: 'Routine A', exerciseCount: 3 },
-      { id: 2, label: 'Routine B', exerciseCount: 4 },
-      { id: 3, label: 'Routine C', exerciseCount: 2 },
-      { id: 4, label: 'Routine D', exerciseCount: 5 },
-      { id: 5, label: 'Routine E', exerciseCount: 1 },
+      { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
+      { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
+      { id: 3, label: 'Routine C', userId: null, exerciseCount: 2 },
+      { id: 4, label: 'Routine D', userId: null, exerciseCount: 5 },
+      { id: 5, label: 'Routine E', userId: null, exerciseCount: 1 },
     ];
     mockAuthFetchJson.mockResolvedValue(fiveRoutines);
 
@@ -38,8 +38,8 @@ describe('fetchRoutines', () => {
 
   it('should return all routines when fewer than 3', async () => {
     const twoRoutines: RoutineSummary[] = [
-      { id: 1, label: 'Routine A', exerciseCount: 3 },
-      { id: 2, label: 'Routine B', exerciseCount: 4 },
+      { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
+      { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
     ];
     mockAuthFetchJson.mockResolvedValue(twoRoutines);
 
@@ -143,7 +143,9 @@ describe('startWorkoutForRoutine', () => {
 });
 
 describe('loadDashboardData', () => {
-  const mockRoutines: RoutineSummary[] = [{ id: 1, label: 'Upper Body', exerciseCount: 3 }];
+  const mockRoutines: RoutineSummary[] = [
+    { id: 1, label: 'Upper Body', userId: null, exerciseCount: 3 },
+  ];
 
   const mockWorkout: UserWorkout = {
     id: 1,

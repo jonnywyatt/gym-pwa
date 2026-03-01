@@ -103,11 +103,14 @@ async function main() {
 
   // Seed routines
   for (const routine of routines) {
-    const upsertedRoutine = await prisma.routine.upsert({
-      where: { label: routine.label },
-      update: {},
-      create: { label: routine.label },
+    let upsertedRoutine = await prisma.routine.findFirst({
+      where: { label: routine.label, userId: null },
     });
+    if (!upsertedRoutine) {
+      upsertedRoutine = await prisma.routine.create({
+        data: { label: routine.label, userId: null },
+      });
+    }
 
     // Replace routine exercise relationships
     await prisma.routineExercise.deleteMany({

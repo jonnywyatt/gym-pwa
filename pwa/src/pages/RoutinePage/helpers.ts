@@ -41,7 +41,7 @@ export function createWorkoutFromRoutine(
     id: crypto.randomUUID(),
     userId,
     routineId,
-    routineLabel: routine.label,
+    routineLabel: routine.label ?? '',
     startedAt: new Date().toISOString(),
     exercisesCompleted: mapExercisesToWorkoutExercises(routine),
     bodyWeightKg,

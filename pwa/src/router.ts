@@ -39,6 +39,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/routines/:routineId/edit',
+      name: 'routine-edit',
+      component: () => import('./pages/EditRoutinePage/EditRoutinePage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/users/:userId',
       name: 'user-profile',
       component: () => import('./pages/UserPage/UserPage.vue'),

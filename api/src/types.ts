@@ -22,7 +22,9 @@ export type Exercise = Pick<PrismaExercise, 'id' | 'label' | 'recordSetsType'> &
 /**
  * Routine summary returned by GET /routines
  */
-export type RoutineSummary = Pick<PrismaRoutine, 'id' | 'label'> & {
+export type RoutineSummary = Pick<PrismaRoutine, 'id'> & {
+  label: string;
+  userId: number | null;
   exerciseCount: number;
 };
 
@@ -31,6 +33,10 @@ export type RoutineSummary = Pick<PrismaRoutine, 'id' | 'label'> & {
  */
 export type RoutineDetail = Pick<PrismaRoutine, 'id' | 'label'> & {
   exercises: Exercise[];
+};
+
+export type UserPreferences = {
+  showRecommendedRoutines: boolean;
 };
 
 export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {

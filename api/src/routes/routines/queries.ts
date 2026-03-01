@@ -21,13 +21,19 @@ export type RoutineWithExercises = Routine & {
   })[];
 };
 
-export async function getRoutinesWithExerciseCount(): Promise<RoutineWithExerciseCount[]> {
+export async function getRoutinesWithExerciseCount(
+  userId: number
+): Promise<RoutineWithExerciseCount[]> {
   return await prisma.routine.findMany({
+    where: {
+      OR: [{ userId: null }, { userId }],
+    },
     include: {
       _count: {
         select: { routineExercises: true },
       },
     },
+    orderBy: [{ userId: { sort: 'desc', nulls: 'last' } }, { id: 'asc' }],
   });
 }
 
@@ -53,5 +59,49 @@ export async function getRoutineWithExercises(
         },
       },
     },
+  });
+}
+
+export async function createRoutine(userId: number): Promise<Routine> {
+  return await prisma.routine.create({
+    data: { userId },
+  });
+}
+
+export async function updateRoutineLabel(routineId: number, label: string): Promise<Routine> {
+  return await prisma.routine.update({
+    where: { id: routineId },
+    data: { label },
+  });
+}
+
+export async function deleteRoutine(routineId: number): Promise<void> {
+  await prisma.routine.delete({ where: { id: routineId } });
+}
+
+export async function getNextPosition(routineId: number): Promise<number> {
+  const last = await prisma.routineExercise.findFirst({
+    where: { routineId },
+    orderBy: { position: 'desc' },
+  });
+  return (last?.position ?? -1) + 1;
+}
+
+export async function addExerciseToRoutine(
+  routineId: number,
+  exerciseId: number
+): Promise<RoutineExercise> {
+  const position = await getNextPosition(routineId);
+  return await prisma.routineExercise.create({
+    data: { routineId, exerciseId, position },
+  });
+}
+
+export async function removeExerciseFromRoutine(
+  routineId: number,
+  exerciseId: number
+): Promise<void> {
+  await prisma.routineExercise.delete({
+    where: { routineId_exerciseId: { routineId, exerciseId } },
   });
 }

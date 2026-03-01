@@ -1,0 +1,45 @@
+.nameInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.searchWrapper {
+  position: relative;
+  z-index: 51;
+}
+
+.searchBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: rgba(11, 18, 21, 0.85);
+}
+
+.searchResultsPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--spacing-unit-2);
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.exerciseCard {
+  flex: 1;
+  min-width: 0;
+}
+
+.searchResultButton {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.searchResultButton:hover .heading-s {
+  color: var(--accent-secondary);
+}

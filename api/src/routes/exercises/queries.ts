@@ -27,3 +27,27 @@ export async function getExercisesWithMuscleGroups(): Promise<ExerciseWithMuscle
     },
   });
 }
+
+export async function searchExercises(search: string): Promise<ExerciseWithMuscleGroups[]> {
+  return await prisma.exercise.findMany({
+    where: {
+      label: {
+        contains: search,
+        mode: 'insensitive',
+      },
+    },
+    include: {
+      primaryMuscleGroups: {
+        include: {
+          muscleGroup: true,
+        },
+      },
+      secondaryMuscleGroups: {
+        include: {
+          muscleGroup: true,
+        },
+      },
+    },
+    orderBy: { label: 'asc' },
+  });
+}

@@ -27,6 +27,10 @@
   gap: var(--spacing-unit-2);
 }
 
+.flexGap3Units {
+    gap: var(--spacing-unit-3);
+}
+
 .flexGap4Units {
   gap: var(--spacing-unit-4);
 }

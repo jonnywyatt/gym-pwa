@@ -1,0 +1,45 @@
+.inputBordered {
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.inputSearch {
+  width: 100%;
+  padding: var(--spacing-unit-2) var(--spacing-unit-3);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-14);
+}
+
+.inputSearch:focus {
+  outline: none;
+  border-color: var(--accent-secondary);
+}
+
+.inputInline {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-unit-1) 0;
+  color: var(--text-primary);
+}
+
+.inputInline:focus {
+  outline: none;
+  border-bottom-color: var(--accent-secondary);
+}
+
+.inputCompact {
+  width: var(--spacing-unit-10);
+  padding: var(--spacing-unit-1);
+  font-size: var(--font-size-13);
+  font-family: var(--font-stack-mono);
+  background: var(--background-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}

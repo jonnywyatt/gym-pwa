@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
-import { createBodyWeight, getLatestBodyWeight, getUserById } from './queries';
+import {
+  createBodyWeight,
+  getLatestBodyWeight,
+  getUserById,
+  getUserPreferences,
+  updateUserPreferences,
+} from './queries';
 import { transformUserProfile } from './transforms';
 
 const router = Router();
@@ -59,6 +65,48 @@ router.post('/users/:userId/body-weights', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error saving body weight:', error);
     res.status(500).json({ error: 'Failed to save body weight' });
+  }
+});
+
+router.get('/users/:userId/preferences', authenticate, async (req, res) => {
+  try {
+    const userId = parseInt(String(req.params.userId), 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    if (userId !== req.user?.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const preferences = await getUserPreferences(userId);
+    res.json(preferences);
+  } catch (error) {
+    console.error('Error fetching user preferences:', error);
+    res.status(500).json({ error: 'Failed to fetch user preferences' });
+  }
+});
+
+router.patch('/users/:userId/preferences', authenticate, async (req, res) => {
+  try {
+    const userId = parseInt(String(req.params.userId), 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    if (userId !== req.user?.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const preferences = await updateUserPreferences(userId, req.body);
+    res.json(preferences);
+  } catch (error) {
+    console.error('Error updating user preferences:', error);
+    res.status(500).json({ error: 'Failed to update user preferences' });
   }
 });
 

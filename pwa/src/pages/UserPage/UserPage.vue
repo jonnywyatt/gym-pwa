@@ -86,7 +86,7 @@ onMounted(() => {
             type="number"
             step="0.01"
             min="0"
-            :class="styles.weightInput"
+            :class="['inputBordered', styles.weightInput]"
             placeholder="e.g. 75.50"
           />
           <button

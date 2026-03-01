@@ -113,7 +113,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           <input
             v-if="inputFields.showWeight"
             type="number"
-            :class="styles.setInput"
+            class="inputCompact"
             :placeholder="inputFields.weightLabel"
             :aria-label="`${inputFields.weightLabel} for set ${index + 1}`"
             :value="set.weightKg ?? ''"
@@ -127,7 +127,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           <input
             v-if="inputFields.showReps"
             type="number"
-            :class="styles.setInput"
+            class="inputCompact"
             placeholder="Reps"
             :aria-label="`Reps for set ${index + 1}`"
             :value="set.reps ?? ''"
@@ -142,7 +142,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
             <div :class="styles.timeInputGroup">
               <input
                 type="number"
-                :class="styles.timeInput"
+                class="inputCompact"
                 placeholder="Min"
                 :aria-label="`Minutes for set ${index + 1}`"
                 :value="getMinutes(set.timeSeconds)"
@@ -152,7 +152,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
               <span :class="styles.timeSeparator">:</span>
               <input
                 type="number"
-                :class="styles.timeInput"
+                class="inputCompact"
                 placeholder="Sec"
                 :aria-label="`Seconds for set ${index + 1}`"
                 :value="getSeconds(set.timeSeconds)"
@@ -164,7 +164,7 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
           </template>
 
           <select
-            :class="styles.setTypeSelect"
+            :class="['inputBordered', styles.setTypeSelect]"
             :value="set.setType"
             :aria-label="`Set type for set ${index + 1}`"
             @change="(e) => emit('changeSetType', exercise.id, set.id, (e.target as HTMLSelectElement).value as SetType)"

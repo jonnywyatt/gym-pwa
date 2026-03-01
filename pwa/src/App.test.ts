@@ -202,6 +202,11 @@ describe('RoutinesPage', () => {
 
   beforeEach(() => {
     localStorage.setItem('access_token', 'test-token');
+    server.use(
+      http.get(`${mockApiUrl}/users/1/preferences`, () =>
+        HttpResponse.json({ showRecommendedRoutines: true })
+      )
+    );
   });
 
   it('should display loading state initially', async () => {

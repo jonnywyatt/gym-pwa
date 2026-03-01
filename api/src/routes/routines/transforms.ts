@@ -5,7 +5,8 @@ import type { RoutineWithExerciseCount, RoutineWithExercises } from './queries';
 export function transformRoutineSummaries(routines: RoutineWithExerciseCount[]): RoutineSummary[] {
   return routines.map((routine) => ({
     id: routine.id,
-    label: routine.label,
+    label: routine.label ?? '',
+    userId: routine.userId,
     exerciseCount: routine._count.routineExercises,
   }));
 }
@@ -25,7 +26,7 @@ export function transformRoutineDetail(routine: RoutineWithExercises): RoutineDe
 
   return {
     id: routine.id,
-    label: routine.label,
+    label: routine.label ?? '',
     exercises,
   };
 }
