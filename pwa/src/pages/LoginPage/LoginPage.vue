@@ -15,7 +15,7 @@ function handleLogin() {
       <h1 :class="styles.brandName">
         <img :src="duroLogo" alt="Duro" width="117" height="26" /></h1>
     <p>Track your workouts and progress</p>
-    <button @click="handleLogin" class="buttonPrimary">Sign in with Google</button>
+    <button @click="handleLogin" class="buttonPrimary buttonPrimary--large">Sign in with Google</button>
     </div>
   </main>
 </template>

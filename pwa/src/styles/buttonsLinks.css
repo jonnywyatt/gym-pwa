@@ -14,6 +14,10 @@
   background: var(--accent-primary-hover);
 }
 
+.buttonPrimary--large {
+    padding: var(--spacing-unit-2) var(--spacing-unit-4);
+}
+
 .buttonSecondary {
   padding: var(--spacing-unit-1) var(--spacing-unit-2);
   font-size: var(--font-size-14);
