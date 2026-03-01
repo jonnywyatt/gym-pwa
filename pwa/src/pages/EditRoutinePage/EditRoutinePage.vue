@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref, computed, onMounted, nextTick} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {Exercise} from 'gym-pwa-api/types';
 import styles from './EditRoutinePage.module.css';
@@ -18,11 +18,13 @@ const router = useRouter();
 const routineId = route.params.routineId;
 
 const routineName = ref('');
+const nameInput = ref<HTMLInputElement | null>(null);
 const exercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
 const searchResults = ref<Exercise[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
+const searchActive = computed(() => searchQuery.value.trim().length > 0);
 
 async function loadRoutine() {
   try {
@@ -33,6 +35,8 @@ async function loadRoutine() {
     error.value = e instanceof Error ? e.message : 'Failed to load routine';
   } finally {
     loading.value = false;
+    await nextTick();
+    nameInput.value?.focus();
   }
 }
 
@@ -100,13 +104,15 @@ onMounted(() => {
     <header class="marginBottom6 flexSpaceBetween flexGap3Units">
       <input
           v-if="!loading"
+          ref="nameInput"
           v-model="routineName"
           type="text"
-          placeholder="Routine name"
+          placeholder="New routine name"
           :class="['heading-l', 'inputInline', styles.nameInput]"
           @blur="onNameBlur"
       />
       <button
+          v-if="exercises.length > 0 && routineName.trim().length > 0"
           type="button"
           class="buttonPrimary"
           @click="onFinish"
@@ -118,24 +124,27 @@ onMounted(() => {
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else>
-      <div
-          v-if="searchResults.length > 0"
-          :class="styles.searchBackdrop"
-          data-testid="search-backdrop"
-          @click="clearSearch"
-      />
       <div :class="['marginBottom6', styles.searchWrapper]">
         <input
             v-model="searchQuery"
             type="search"
-            placeholder="Search exercises..."
+            placeholder="Search exercises to add..."
             class="inputSearch"
             @input="onSearchInput"
         />
+        <div
+            v-if="searchActive"
+            :class="styles.searchBackdrop"
+            data-testid="search-backdrop"
+            @click="clearSearch"
+        />
         <ul
-            v-if="searchResults.length > 0"
+            v-if="searchActive"
             :class="['list', 'flexVerticalColumn', 'flexGap2Units', styles.searchResultsPanel]"
         >
+          <li v-if="searchResults.length === 0" class="highlightCard highlightCardContents">
+            No exercises found
+          </li>
           <li
               v-for="result in searchResults"
               :key="result.id"

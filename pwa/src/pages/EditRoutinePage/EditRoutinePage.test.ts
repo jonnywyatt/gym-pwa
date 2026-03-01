@@ -80,8 +80,18 @@ describe('EditRoutinePage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    const nameInput = screen.getByPlaceholderText('Routine name');
+    const nameInput = screen.getByPlaceholderText('New routine name');
     expect(nameInput).toHaveValue('My Routine');
+  });
+
+  it('focuses the routine name input after loading', async () => {
+    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('New routine name')).toHaveFocus();
+    });
   });
 
   it('displays existing exercises in the routine', async () => {
@@ -96,7 +106,7 @@ describe('EditRoutinePage', () => {
     expect(screen.getByText('Primary groups: Abdominals')).toBeInTheDocument();
   });
 
-  it('shows Finish button', async () => {
+  it('shows Finish button when routine has a name and at least one exercise', async () => {
     server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
 
     renderPage();
@@ -104,6 +114,38 @@ describe('EditRoutinePage', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Finish' })).toBeInTheDocument();
     });
+  });
+
+  it('does not show Finish button when there are no exercises', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () =>
+        HttpResponse.json({ id: 5, label: 'My Routine', exercises: [] })
+      )
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('button', { name: 'Finish' })).not.toBeInTheDocument();
+  });
+
+  it('does not show Finish button when routine has no name', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () =>
+        HttpResponse.json({ id: 5, label: '', exercises: mockRoutine.exercises })
+      )
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('button', { name: 'Finish' })).not.toBeInTheDocument();
   });
 
   it('navigates to /routines when Finish is clicked', async () => {
@@ -137,10 +179,10 @@ describe('EditRoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Routine name')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('New routine name')).toBeInTheDocument();
     });
 
-    const nameInput = screen.getByPlaceholderText('Routine name');
+    const nameInput = screen.getByPlaceholderText('New routine name');
     await user.clear(nameInput);
     await user.type(nameInput, 'Updated Routine');
     await user.tab();
@@ -160,10 +202,10 @@ describe('EditRoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search exercises...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
     });
 
-    await user.type(screen.getByPlaceholderText('Search exercises...'), 'side');
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
 
     await waitFor(() => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
@@ -171,6 +213,57 @@ describe('EditRoutinePage', () => {
 
     expect(screen.getByText('Obliques')).toBeInTheDocument();
     expect(screen.getByText('Secondary muscle groups: Abdominals')).toBeInTheDocument();
+  });
+
+  it('shows "No exercises found" when search returns no matches', async () => {
+    const user = userEvent.setup();
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'xyz');
+
+    await waitFor(() => {
+      expect(screen.getByText('No exercises found')).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('search-backdrop')).toBeInTheDocument();
+  });
+
+  it('hides the results panel when the search input is cleared', async () => {
+    const user = userEvent.setup();
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    const searchInput = screen.getByPlaceholderText('Search exercises to add...');
+    await user.type(searchInput, 'xyz');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('search-backdrop')).toBeInTheDocument();
+    });
+
+    await user.clear(searchInput);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('search-backdrop')).not.toBeInTheDocument();
+    });
   });
 
   it('closes search results when clicking the overlay backdrop', async () => {
@@ -184,10 +277,10 @@ describe('EditRoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search exercises...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
     });
 
-    await user.type(screen.getByPlaceholderText('Search exercises...'), 'side');
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
 
     await waitFor(() => {
       expect(screen.getByTestId('search-backdrop')).toBeInTheDocument();
@@ -214,10 +307,10 @@ describe('EditRoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search exercises...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
     });
 
-    await user.type(screen.getByPlaceholderText('Search exercises...'), 'side');
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
 
     await waitFor(() => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
@@ -276,10 +369,10 @@ describe('EditRoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search exercises...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
     });
 
-    await user.type(screen.getByPlaceholderText('Search exercises...'), 'plank');
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'plank');
 
     await waitFor(() => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
