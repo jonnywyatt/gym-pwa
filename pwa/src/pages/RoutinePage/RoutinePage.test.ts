@@ -24,6 +24,15 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+const routerLinkStub = {
+  template: '<a :href="to"><slot /></a>',
+  props: ['to'],
+};
+
+function renderPage() {
+  return render(RoutinePage, { global: { stubs: { RouterLink: routerLinkStub } } });
+}
+
 describe('RoutinePage', () => {
   const mockApiUrl = 'http://localhost:3000';
 
@@ -45,7 +54,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
@@ -77,7 +86,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Test Routine routine')).toBeInTheDocument();
@@ -85,7 +94,31 @@ describe('RoutinePage', () => {
 
     expect(screen.getByText('Bench Press')).toBeInTheDocument();
     expect(screen.getByText('Squats')).toBeInTheDocument();
-    expect(screen.getByText('Start workout')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Edit' })).toBeInTheDocument();
+  });
+
+  it('should link Edit button to the edit routine page', async () => {
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute(
+        'href',
+        '/routines/1/edit'
+      );
+    });
   });
 
   it('should display error when routine fetch fails', async () => {
@@ -95,7 +128,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
@@ -115,7 +148,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('No exercises in this routine.')).toBeInTheDocument();
@@ -152,7 +185,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start workout')).toBeInTheDocument();
@@ -196,7 +229,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start workout')).toBeInTheDocument();
@@ -253,7 +286,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start workout')).toBeInTheDocument();
@@ -295,7 +328,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start workout')).toBeInTheDocument();
@@ -334,7 +367,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start workout')).toBeInTheDocument();

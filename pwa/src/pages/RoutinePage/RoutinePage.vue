@@ -2,7 +2,6 @@
 import {ref, onMounted} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {RoutineDetail} from 'gym-pwa-api/types';
-import baseStyles from '../../styles/base-classes.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout} from '../../lib/db';
 import {fetchRoutine, prepareWorkoutStart} from './helpers';
@@ -77,10 +76,9 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <header class="header flexSpaceBetween marginBottom6">
-      <h1 v-if="routine" class="heading-l">{{ routine.label }} routine</h1>
+    <h1 v-if="routine" class="heading-l marginBottom4">{{ routine.label }} routine</h1>
+    <div v-if="routine && !loading" class="flexVerticalCenter flexGap3Units marginBottom6">
       <button
-          v-if="routine && !loading"
           type="button"
           class="buttonPrimary"
           :disabled="startingWorkout"
@@ -88,7 +86,11 @@ onMounted(() => {
       >
         {{ startingWorkout ? 'Starting...' : 'Start workout' }}
       </button>
-    </header>
+      <router-link
+          :to="`/routines/${route.params.routineId}/edit`"
+          class="buttonSecondary"
+      >Edit</router-link>
+    </div>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else-if="routine">
