@@ -6,6 +6,7 @@ import styles from './AppLayout.module.css';
 import duroLogo from '../../assets/duro-logo.svg';
 import profileIcon from '../../assets/profile.svg';
 import InstallPrompt from '../InstallPrompt/InstallPrompt.vue';
+import ActiveWorkoutBanner from '../ActiveWorkoutBanner/ActiveWorkoutBanner.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -50,6 +51,7 @@ const isWorkoutsActive = computed(() => route.path.startsWith('/workouts'));
       </div>
     </nav>
     <InstallPrompt />
+    <ActiveWorkoutBanner />
     <router-view />
   </div>
 </template>

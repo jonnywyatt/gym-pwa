@@ -7,6 +7,10 @@ vi.mock('../InstallPrompt/InstallPrompt.vue', () => ({
   default: { template: '<div data-testid="install-prompt" />' },
 }));
 
+vi.mock('../ActiveWorkoutBanner/ActiveWorkoutBanner.vue', () => ({
+  default: { template: '<div />' },
+}));
+
 vi.mock('../../lib/auth/oauth', () => ({
   authService: {
     getUserName: () => 'Test User',

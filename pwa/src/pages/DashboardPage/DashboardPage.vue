@@ -82,6 +82,7 @@ onMounted(() => {
               <span class="flexSpaceBetween">
                 <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
                 <button
+                    v-if="activeWorkout === null || activeWorkout.routineId === routine.id"
                     type="button"
                     class="buttonPrimary"
                     :disabled="startingRoutineId === routine.id"

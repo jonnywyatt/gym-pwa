@@ -313,7 +313,7 @@ describe('DashboardPage', () => {
     expect(workouts[0].bodyWeightKg).toBe(80);
   });
 
-  it('should show Continue workout button for routine with active workout, Start workout for others', async () => {
+  it('should show Continue workout button for routine with active workout, and hide Start workout for others', async () => {
     await db.workouts.add({
       id: 'active-workout-id',
       userId: 1,
@@ -333,7 +333,7 @@ describe('DashboardPage', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
     });
   });
 
@@ -377,9 +377,7 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should redirect to existing workout if one is active when Start workout is clicked', async () => {
-    const user = userEvent.setup();
-
+  it('should hide the Start workout button when a different routine has an active workout', async () => {
     await db.workouts.add({
       id: 'existing-workout-id',
       userId: 1,
@@ -391,38 +389,15 @@ describe('DashboardPage', () => {
     });
 
     const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
-    const mockRoutineDetail = {
-      id: 1,
-      label: 'Upper Body',
-      exercises: [
-        {
-          id: 10,
-          label: 'Bench Press',
-          recordSetsType: 'WEIGHT',
-          primaryMuscleGroups: ['Pectoralis Major'],
-          secondaryMuscleGroups: ['Triceps'],
-        },
-      ],
-    };
-
     setupHandlers(routines, []);
-    server.use(
-      http.get(`${mockApiUrl}/routines/1`, () => {
-        return HttpResponse.json(mockRoutineDetail);
-      })
-    );
 
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'Start workout' }));
-
-    await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith('/workouts/existing-workout-id');
-    });
+    expect(mockRouterPush).not.toHaveBeenCalled();
   });
 
   it('should display error when routines fetch fails', async () => {

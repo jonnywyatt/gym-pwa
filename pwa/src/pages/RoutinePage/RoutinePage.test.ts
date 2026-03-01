@@ -282,7 +282,7 @@ describe('RoutinePage', () => {
     });
   });
 
-  it('should show "Start workout" button when the active workout belongs to a different routine', async () => {
+  it('should hide the "Start workout" button when the active workout belongs to a different routine', async () => {
     await db.workouts.add({
       id: 'other-workout-id',
       userId: 123,
@@ -308,14 +308,11 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
     });
   });
 
-  it('should redirect to existing workout if one is already active', async () => {
-    const user = userEvent.setup();
-
-    // Add existing active workout to IndexedDB
+  it('should hide the Start workout button when a different routine has an active workout', async () => {
     await db.workouts.add({
       id: 'existing-workout-id',
       userId: 123,
@@ -349,19 +346,10 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
-
-    await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith('/workouts/existing-workout-id');
-    });
-
-    // Should not create a new workout
-    const workouts = await db.workouts.toArray();
-    expect(workouts).toHaveLength(1);
-    expect(workouts[0].id).toBe('existing-workout-id');
+    expect(mockRouterPush).not.toHaveBeenCalled();
   });
 
   it('should show error when not authenticated', async () => {

@@ -3,7 +3,7 @@ import {ref, onMounted} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {RoutineDetail} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
-import {createWorkout, getActiveWorkout, getActiveWorkoutForRoutine} from '../../lib/db';
+import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
 import {fetchRoutine, prepareWorkoutStart} from './helpers';
 
 const route = useRoute();
@@ -12,7 +12,7 @@ const routine = ref<RoutineDetail | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const startingWorkout = ref(false);
-const hasActiveWorkoutForRoutine = ref(false);
+const activeWorkout = ref<LocalWorkout | null>(null);
 
 async function loadRoutine() {
   try {
@@ -73,8 +73,7 @@ async function handleStartWorkout() {
 async function checkActiveWorkout() {
   const userId = authService.getUserId();
   if (!userId) return;
-  const activeWorkout = await getActiveWorkoutForRoutine(userId, Number(route.params.routineId));
-  hasActiveWorkoutForRoutine.value = activeWorkout !== undefined;
+  activeWorkout.value = (await getActiveWorkout(userId)) ?? null;
 }
 
 onMounted(() => {
@@ -90,10 +89,11 @@ onMounted(() => {
       <button
           type="button"
           class="buttonPrimary"
+          v-if="activeWorkout === null || activeWorkout.routineId === Number(route.params.routineId)"
           :disabled="startingWorkout"
           @click="handleStartWorkout"
       >
-        {{ startingWorkout ? 'Starting...' : hasActiveWorkoutForRoutine ? 'Continue workout' : 'Start workout' }}
+        {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue workout' : 'Start workout' }}
       </button>
       <router-link
           :to="`/routines/${route.params.routineId}/edit`"
