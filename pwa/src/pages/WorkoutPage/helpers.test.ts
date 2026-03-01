@@ -53,8 +53,43 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('createDefaultSets', () => {
-    it('returns a warmup and two standard sets', () => {
-      const sets = createDefaultSets();
+    it('returns two standard sets for REPS exercises', () => {
+      const sets = createDefaultSets('REPS');
+      expect(sets).toHaveLength(2);
+      expect(sets[0].setType).toBe('Standard');
+      expect(sets[1].setType).toBe('Standard');
+    });
+
+    it('returns one standard set for WEIGHT_AND_TIME exercises', () => {
+      const sets = createDefaultSets('WEIGHT_AND_TIME');
+      expect(sets).toHaveLength(1);
+      expect(sets[0].setType).toBe('Standard');
+    });
+
+    it('returns one standard set for TIME exercises', () => {
+      const sets = createDefaultSets('TIME');
+      expect(sets).toHaveLength(1);
+      expect(sets[0].setType).toBe('Standard');
+    });
+
+    it('returns a warmup and two standard sets for WEIGHT exercises', () => {
+      const sets = createDefaultSets('WEIGHT');
+      expect(sets).toHaveLength(3);
+      expect(sets[0].setType).toBe('Warmup');
+      expect(sets[1].setType).toBe('Standard');
+      expect(sets[2].setType).toBe('Standard');
+    });
+
+    it('returns a warmup and two standard sets for BODYWEIGHT_PLUS_WEIGHT exercises', () => {
+      const sets = createDefaultSets('BODYWEIGHT_PLUS_WEIGHT');
+      expect(sets).toHaveLength(3);
+      expect(sets[0].setType).toBe('Warmup');
+      expect(sets[1].setType).toBe('Standard');
+      expect(sets[2].setType).toBe('Standard');
+    });
+
+    it('returns a warmup and two standard sets for BODYWEIGHT_MINUS_OFFSET exercises', () => {
+      const sets = createDefaultSets('BODYWEIGHT_MINUS_OFFSET');
       expect(sets).toHaveLength(3);
       expect(sets[0].setType).toBe('Warmup');
       expect(sets[1].setType).toBe('Standard');
@@ -62,14 +97,13 @@ describe('WorkoutPage helpers', () => {
     });
 
     it('sets all as incomplete', () => {
-      const sets = createDefaultSets();
-      expect(sets[0].completed).toBe(false);
-      expect(sets[1].completed).toBe(false);
-      expect(sets[2].completed).toBe(false);
+      const sets = createDefaultSets('WEIGHT');
+      const allIncomplete = sets.every((set) => set.completed === false);
+      expect(allIncomplete).toBe(true);
     });
 
     it('generates unique ids', () => {
-      const sets = createDefaultSets();
+      const sets = createDefaultSets('WEIGHT');
       const ids = sets.map((s) => s.id);
       expect(new Set(ids).size).toBe(ids.length);
     });
@@ -331,7 +365,7 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('startExercise', () => {
-    it('sets startedAt and creates default sets', () => {
+    it('sets startedAt and creates default sets for WEIGHT exercises', () => {
       const exercise: LocalWorkoutExercise = {
         id: 1,
         label: 'Bench Press',
@@ -347,6 +381,52 @@ describe('WorkoutPage helpers', () => {
       expect(result.sets[0].setType).toBe('Warmup');
       expect(result.sets[1].setType).toBe('Standard');
       expect(result.sets[2].setType).toBe('Standard');
+    });
+
+    it('creates two standard sets for REPS exercises', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Sit Ups',
+        recordSetsType: 'REPS',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+      };
+      const result = startExercise(exercise);
+      expect(result.sets).toHaveLength(2);
+      if (result.sets === undefined) throw new Error('sets should be defined');
+      expect(result.sets[0].setType).toBe('Standard');
+      expect(result.sets[1].setType).toBe('Standard');
+    });
+
+    it('creates one standard set for WEIGHT_AND_TIME exercises', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Plank Hold',
+        recordSetsType: 'WEIGHT_AND_TIME',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+      };
+      const result = startExercise(exercise);
+      expect(result.sets).toHaveLength(1);
+      if (result.sets === undefined) throw new Error('sets should be defined');
+      expect(result.sets[0].setType).toBe('Standard');
+    });
+
+    it('creates one standard set for TIME exercises', () => {
+      const exercise: LocalWorkoutExercise = {
+        id: 1,
+        label: 'Plank',
+        recordSetsType: 'TIME',
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        completed: false,
+      };
+      const result = startExercise(exercise);
+      expect(result.sets).toHaveLength(1);
+      if (result.sets === undefined) throw new Error('sets should be defined');
+      expect(result.sets[0].setType).toBe('Standard');
     });
 
     it('does not mutate the original exercise', () => {

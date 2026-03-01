@@ -26,23 +26,29 @@ export function formatStartTime(startedAt: string): string {
   return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
-export function createDefaultSets(): WorkoutSet[] {
+export function createDefaultSets(recordSetsType: RecordSetsType): WorkoutSet[] {
+  const standardSet = (): WorkoutSet => ({
+    id: crypto.randomUUID(),
+    setType: 'Standard',
+    completed: false,
+  });
+
+  if (recordSetsType === 'REPS') {
+    return [standardSet(), standardSet()];
+  }
+
+  if (recordSetsType === 'WEIGHT_AND_TIME' || recordSetsType === 'TIME') {
+    return [standardSet()];
+  }
+
   return [
     {
       id: crypto.randomUUID(),
       setType: 'Warmup',
       completed: false,
     },
-    {
-      id: crypto.randomUUID(),
-      setType: 'Standard',
-      completed: false,
-    },
-    {
-      id: crypto.randomUUID(),
-      setType: 'Standard',
-      completed: false,
-    },
+    standardSet(),
+    standardSet(),
   ];
 }
 
@@ -151,7 +157,7 @@ export function startExercise(exercise: LocalWorkoutExercise): LocalWorkoutExerc
   return {
     ...exercise,
     startedAt: new Date().toISOString(),
-    sets: createDefaultSets(),
+    sets: createDefaultSets(exercise.recordSetsType),
   };
 }
 
