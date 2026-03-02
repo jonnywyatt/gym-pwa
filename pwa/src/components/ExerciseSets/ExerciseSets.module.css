@@ -36,7 +36,7 @@
 .setRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-unit-3);
+  gap: var(--spacing-unit-2);
 }
 
 .timeInputGroup {
