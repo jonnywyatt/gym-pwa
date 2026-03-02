@@ -713,7 +713,7 @@ describe('WorkoutPage', () => {
       });
 
       expect(screen.queryByText('Finish')).not.toBeInTheDocument();
-      expect(screen.queryByText('Finishing...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Saving...')).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: 'Pause' })).not.toBeInTheDocument();
     });
 

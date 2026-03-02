@@ -318,7 +318,7 @@ onUnmounted(() => {
           <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight"><WeightKg :kg="workoutTotalWeightKg" /></span>
         </div>
         <button type="button" :disabled="finishing" @click="handleFinish" class="buttonSecondary">
-          {{ finishing ? 'Finishing...' : 'Finish' }}
+          {{ finishing ? 'Saving...' : 'Finish' }}
         </button>
       </nav>
 
