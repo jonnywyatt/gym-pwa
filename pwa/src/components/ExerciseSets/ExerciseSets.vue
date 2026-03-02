@@ -27,7 +27,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   start: [exerciseId: number];
-  updateSet: [exerciseId: number, setId: string, updates: { weightKg?: number; reps?: number; timeSeconds?: number; completed?: boolean }];
+  updateSet: [exerciseId: number, setId: string, updates: { weightKg?: number; reps?: number; timeSeconds?: number }];
   addSet: [exerciseId: number];
   changeSetType: [exerciseId: number, setId: string, setType: SetType];
 }>();

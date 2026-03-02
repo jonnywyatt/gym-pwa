@@ -18,6 +18,7 @@ import {
   calculateCompletedSetsTotalWeightKg,
   startExercise,
   createNewSet,
+  isSetFilledIn,
   fetchWorkout,
   formatSetDetails,
 } from './helpers';
@@ -184,11 +185,10 @@ function handleStartExercise(exerciseId: number) {
 function handleUpdateSet(
     exerciseId: number,
     setId: string,
-    updates: { weightKg?: number; reps?: number; timeSeconds?: number; completed?: boolean }
+    updates: { weightKg?: number; reps?: number; timeSeconds?: number }
 ) {
   if (!workout.value) return;
 
-  const bodyWeightKg = workout.value.bodyWeightKg;
   const updatedExercises = workout.value.exercisesCompleted.map((ex) => {
     if (ex.id !== exerciseId) return ex;
 
@@ -196,12 +196,8 @@ function handleUpdateSet(
         set.id === setId ? {...set, ...updates} : set
     );
 
-    if ('completed' in updates) {
-      const completed = updatedSets.some((s) => s.completed);
-      return {...ex, sets: updatedSets, completed};
-    }
-
-    return {...ex, sets: updatedSets};
+    const completed = updatedSets.some((s) => isSetFilledIn(s, ex.recordSetsType));
+    return {...ex, sets: updatedSets, completed};
   });
   updateExercises(updatedExercises);
 }
