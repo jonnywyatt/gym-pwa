@@ -190,7 +190,9 @@ describe('ExerciseSets', () => {
         props: { exercise: exerciseWithValues, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByText('1200 Kg')).toBeInTheDocument();
+      expect(
+        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '1200kg')
+      ).toBeInTheDocument();
     });
 
     it('allows 0 weight to be entered', async () => {
@@ -350,7 +352,9 @@ describe('ExerciseSets', () => {
 
       render(ExerciseSets, { props: { exercise: completedFarmersCarry, bodyWeightKg: 80 } });
 
-      expect(screen.getByText('20 Kg')).toBeInTheDocument();
+      expect(
+        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '20kg')
+      ).toBeInTheDocument();
       expect(screen.getByText('1m 30s')).toBeInTheDocument();
     });
 
@@ -365,7 +369,9 @@ describe('ExerciseSets', () => {
       render(ExerciseSets, { props: { exercise: completedBenchPress, bodyWeightKg: 80 } });
 
       expect(screen.queryByText(/\dm/)).not.toBeInTheDocument();
-      expect(screen.getByText('600 Kg')).toBeInTheDocument();
+      expect(
+        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '600kg')
+      ).toBeInTheDocument();
     });
   });
 

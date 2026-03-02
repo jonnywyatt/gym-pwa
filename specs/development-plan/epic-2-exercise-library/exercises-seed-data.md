@@ -30,7 +30,7 @@
 - primaryMuscleGroups - Latissimus Dorsi
 - secondaryMuscleGroups - Rhomboids, Trapezius, Rear Deltoids
 
-### Leg press horizontal machine
+### Leg press horizontal
 - recordSetsType - WEIGHT
 - primaryMuscleGroups - Quadriceps, Glutes
 - secondaryMuscleGroups - Hamstrings, Adductors

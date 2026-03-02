@@ -81,7 +81,7 @@ export const exercises: ExerciseSeed[] = [
     ],
   },
   {
-    label: 'Leg press horizontal machine',
+    label: 'Leg press horizontal',
     recordSetsType: RecordSetsType.WEIGHT,
     primaryMuscleGroupLabels: [MuscleGroupLabel.QUADRICEPS, MuscleGroupLabel.GLUTES],
     secondaryMuscleGroupLabels: [MuscleGroupLabel.HAMSTRINGS, MuscleGroupLabel.ADDUCTORS],

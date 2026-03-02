@@ -29,6 +29,7 @@ import {
   formatTotalWeight,
 } from '../WorkoutsListPage/helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
+import WeightKg from '../../components/WeightKg/WeightKg.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -314,9 +315,7 @@ onUnmounted(() => {
               @pause="handleTimerPause"
               @resume="handleTimerResume"
           />
-          <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight">
-            {{ workoutTotalWeightKg }} Kg
-          </span>
+          <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight"><WeightKg :kg="workoutTotalWeightKg" /></span>
         </div>
         <button type="button" :disabled="finishing" @click="handleFinish" class="buttonSecondary">
           {{ finishing ? 'Finishing...' : 'Finish' }}

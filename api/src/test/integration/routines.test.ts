@@ -51,7 +51,7 @@ describe('Routine Integration Tests', () => {
       "Farmer's carry",
       'Butterfly machine',
       'Lat pulldown',
-      'Leg press horizontal machine',
+      'Leg press horizontal',
       'Seated row',
       'Shoulder press (dumbell)',
       'Single leg sit-to-stand',

@@ -15,6 +15,7 @@ import {
   getSeconds,
 } from './helpers';
 import styles from './ExerciseSets.module.css';
+import WeightKg from '../WeightKg/WeightKg.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
 
@@ -49,10 +50,10 @@ const completedTimeSummary = computed((): string | null => {
   return total > 0 ? formatTotalTime(total) : null;
 });
 
-const completedWeightSummary = computed((): string | null => {
+const completedWeightSummary = computed((): number | null => {
   if (!props.exercise.completed || !inputFields.value.showWeight || !inputFields.value.showTime || !props.exercise.sets) return null;
   const weight = getRepresentativeWeightKg(props.exercise.sets);
-  return weight !== undefined ? `${weight} Kg` : null;
+  return weight !== undefined ? weight : null;
 });
 
 const completedRepsSummary = computed((): string | null => {
@@ -89,10 +90,10 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
       <span>{{ exercise.label }}</span>
       <div :class="styles.headerRight">
         <template v-if="completedTimeSummary">
-          <span v-if="completedWeightSummary" :class="styles.totalWeight">{{ completedWeightSummary }}</span>
+          <span v-if="completedWeightSummary !== null" :class="styles.totalWeight"><WeightKg :kg="completedWeightSummary" /></span>
           <span :class="styles.totalWeight">{{ completedTimeSummary }}</span>
         </template>
-        <span v-else-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight">{{ exerciseTotalWeightKg }} Kg</span>
+        <span v-else-if="exerciseTotalWeightKg > 0" :class="styles.totalWeight"><WeightKg :kg="exerciseTotalWeightKg" /></span>
         <span v-else-if="completedRepsSummary" :class="styles.totalWeight">{{ completedRepsSummary }}</span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>

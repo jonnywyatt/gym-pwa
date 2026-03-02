@@ -113,15 +113,17 @@ onMounted(() => {
           :to="`/routines/${route.params.routineId}/edit`"
           class="buttonSecondary"
       >Edit</router-link>
+      <div class="marginLeft4">
       <button
           type="button"
-          class="buttonIcon"
+          class="buttonDelete"
           aria-label="Delete routine"
           :disabled="deleting"
           @click="handleDeleteRoutine"
       >
-        <img :src="binSvg" width="16" height="16" alt="" />
+        Delete
       </button>
+      </div>
     </div>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>

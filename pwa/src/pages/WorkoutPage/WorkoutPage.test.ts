@@ -206,7 +206,9 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('1000 Kg')).toBeInTheDocument();
+      expect(
+        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '1000kg')
+      ).toBeInTheDocument();
     });
   });
 
@@ -280,8 +282,10 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      // 600 Kg appears in both navbar and the exercise completed summary
-      const weightTexts = screen.getAllByText('600 Kg');
+      // 600kg appears in both navbar and the exercise completed summary
+      const weightTexts = screen.getAllByText(
+        (_, el) => el?.tagName === 'SPAN' && el?.textContent === '600kg'
+      );
       expect(weightTexts.length).toBeGreaterThanOrEqual(2);
     });
   });
