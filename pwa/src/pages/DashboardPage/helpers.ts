@@ -17,7 +17,7 @@ export type NewWorkoutResult =
 
 export async function fetchRoutines(): Promise<RoutineSummary[]> {
   const routines = await authFetchJson<RoutineSummary[]>('/routines');
-  return routines.slice(0, 3);
+  return routines.slice(0, 2);
 }
 
 export async function fetchRecentWorkouts(userId: number): Promise<UserWorkout[]> {

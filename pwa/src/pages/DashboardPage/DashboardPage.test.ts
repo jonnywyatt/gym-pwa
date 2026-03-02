@@ -117,7 +117,7 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display up to 3 routines with Details and Start workout links', async () => {
+  it('should display up to 2 routines with Details and Start workout links', async () => {
     const routines = [
       { id: 1, label: 'Upper Body', exerciseCount: 5 },
       { id: 2, label: 'Lower Body', exerciseCount: 4 },
@@ -133,17 +133,16 @@ describe('DashboardPage', () => {
 
     expect(screen.getByText('Upper Body')).toBeInTheDocument();
     expect(screen.getByText('Lower Body')).toBeInTheDocument();
-    expect(screen.getByText('Core')).toBeInTheDocument();
+    expect(screen.queryByText('Core')).not.toBeInTheDocument();
     expect(screen.queryByText('Cardio')).not.toBeInTheDocument();
 
     const detailsLinks = screen.getAllByRole('link', { name: 'See exercises' });
-    expect(detailsLinks).toHaveLength(3);
+    expect(detailsLinks).toHaveLength(2);
     expect(detailsLinks[0]).toHaveAttribute('href', '/routines/1');
     expect(detailsLinks[1]).toHaveAttribute('href', '/routines/2');
-    expect(detailsLinks[2]).toHaveAttribute('href', '/routines/3');
 
     const newWorkoutButtons = screen.getAllByRole('button', { name: 'Start workout' });
-    expect(newWorkoutButtons).toHaveLength(3);
+    expect(newWorkoutButtons).toHaveLength(2);
   });
 
   it('should display up to 2 recent workouts', async () => {

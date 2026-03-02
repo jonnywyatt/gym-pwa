@@ -22,6 +22,14 @@ vi.mock('../../lib/auth/oauth', () => ({
 const mockRouter = { push: vi.fn() };
 const mockRouteParams = { routineId: '5' };
 
+HTMLDialogElement.prototype.showModal = function () {
+  this.setAttribute('open', '');
+};
+
+HTMLDialogElement.prototype.close = function () {
+  this.removeAttribute('open');
+};
+
 vi.mock('vue-router', () => ({
   useRouter: () => mockRouter,
   useRoute: () => ({ params: mockRouteParams }),
@@ -323,7 +331,7 @@ describe('EditRoutinePage', () => {
     });
   });
 
-  it('removes an exercise when Remove is clicked', async () => {
+  it('removes an exercise when Remove is clicked and confirmed', async () => {
     const user = userEvent.setup();
 
     server.use(
@@ -341,6 +349,7 @@ describe('EditRoutinePage', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Remove Plank' }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     await waitFor(() => {
       expect(screen.queryByText('Plank')).not.toBeInTheDocument();

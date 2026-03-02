@@ -19,7 +19,7 @@ import { authFetchJson } from '../../lib/api/client';
 const mockAuthFetchJson = vi.mocked(authFetchJson);
 
 describe('fetchRoutines', () => {
-  it('should return at most 3 routines', async () => {
+  it('should return at most 2 routines', async () => {
     const fiveRoutines: RoutineSummary[] = [
       { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
       { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
@@ -31,12 +31,12 @@ describe('fetchRoutines', () => {
 
     const result = await fetchRoutines();
 
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(2);
     expect(result[0].label).toBe('Routine A');
-    expect(result[2].label).toBe('Routine C');
+    expect(result[1].label).toBe('Routine B');
   });
 
-  it('should return all routines when fewer than 3', async () => {
+  it('should return all routines when fewer than 2', async () => {
     const twoRoutines: RoutineSummary[] = [
       { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
       { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },

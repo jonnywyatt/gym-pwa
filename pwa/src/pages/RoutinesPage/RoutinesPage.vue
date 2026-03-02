@@ -3,14 +3,12 @@ import {ref, onMounted, computed} from 'vue';
 import {useRouter} from 'vue-router';
 import type {RoutineSummary} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
-import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 import styles from './RoutinesPage.module.css';
 import {
   fetchRoutines,
   fetchPreferences,
   savePreferences,
   createRoutine,
-  deleteRoutineApi,
   filterRoutines,
 } from './helpers';
 
@@ -19,8 +17,6 @@ const routines = ref<RoutineSummary[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const showRecommended = ref(true);
-const showDeleteDialog = ref(false);
-const routineToDelete = ref<RoutineSummary | null>(null);
 const creating = ref(false);
 
 const userId = authService.getUserId();
@@ -69,30 +65,6 @@ async function onCreateRoutine() {
   }
 }
 
-function openDeleteDialog(routine: RoutineSummary) {
-  routineToDelete.value = routine;
-  showDeleteDialog.value = true;
-}
-
-function cancelDelete() {
-  showDeleteDialog.value = false;
-  routineToDelete.value = null;
-}
-
-async function confirmDelete() {
-  if (!routineToDelete.value) return;
-  const routineId = routineToDelete.value.id;
-  try {
-    await deleteRoutineApi(routineId);
-    routines.value = routines.value.filter((r) => r.id !== routineId);
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to delete routine';
-  } finally {
-    showDeleteDialog.value = false;
-    routineToDelete.value = null;
-  }
-}
-
 onMounted(() => {
   loadData();
 });
@@ -128,7 +100,7 @@ onMounted(() => {
       <li
           v-for="routine in visibleRoutines"
           :key="routine.id"
-          class="highlightCard marginBottom2"
+          class="highlightCard"
       >
         <router-link :to="`/routines/${routine.id}`" :class="styles.routineLink">
           <p v-if="routine.userId === null" class="labelCaps labelCaps--small marginBottom2">Recommended</p>
@@ -137,28 +109,8 @@ onMounted(() => {
             {{ routine.exerciseCount }} exercises
           </div>
         </router-link>
-        <div v-if="routine.userId === userId" :class="styles.routineActions">
-          <router-link :to="`/routines/${routine.id}/edit`" class="buttonSecondary">
-            Edit
-          </router-link>
-          <button
-              type="button"
-              class="buttonDelete"
-              :aria-label="`Delete ${routine.label || 'Untitled routine'}`"
-              @click="openDeleteDialog(routine)"
-          >
-            Delete
-          </button>
-        </div>
       </li>
     </ul>
 
-    <ConfirmDialog
-        :open="showDeleteDialog"
-        title="Delete routine?"
-        message="This action cannot be undone."
-        @confirm="confirmDelete"
-        @cancel="cancelDelete"
-    />
   </main>
 </template>

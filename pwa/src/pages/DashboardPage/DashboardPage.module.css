@@ -1,5 +1,5 @@
 .section {
-  margin-top: var(--spacing-unit-6);
+  margin-top: var(--spacing-unit-5);
 }
 
 .routineList {
@@ -7,7 +7,6 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-unit-2);
 }
 
 .routineDetailLink {
@@ -37,7 +36,6 @@
 
 .allWorkoutsLink {
   display: inline-block;
-  margin-top: var(--spacing-unit-3);
   color: var(--text-muted);
   text-decoration: none;
   font-size: var(--font-size-14);

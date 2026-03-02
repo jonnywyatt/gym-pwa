@@ -10,7 +10,7 @@ import {
   addExercise,
   removeExercise,
 } from './helpers';
-import binSvg from '../../assets/bin.svg';
+import DeleteIconButton from '../../components/DeleteIconButton/DeleteIconButton.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -140,7 +140,7 @@ onMounted(() => {
         />
         <ul
             v-if="searchActive"
-            :class="['list', 'flexVerticalColumn', 'flexGap2Units', styles.searchResultsPanel]"
+            :class="['list', 'flexVerticalColumn', styles.searchResultsPanel]"
         >
           <li v-if="searchResults.length === 0" class="highlightCard highlightCardContents">
             No exercises found
@@ -181,14 +181,12 @@ onMounted(() => {
               <div v-if="exercise.secondaryMuscleGroups.length > 0">Secondary groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
             </div>
           </div>
-          <button
-              type="button"
-              class="buttonIcon removeButton"
-              :aria-label="`Remove ${exercise.label}`"
-              @click="onRemoveExercise(exercise.id)"
-          >
-            <img :src="binSvg" width="16" height="16" alt="" />
-          </button>
+          <DeleteIconButton
+              :label="`Remove ${exercise.label}`"
+              confirm-title="Remove exercise?"
+              confirm-message="This action cannot be undone."
+              @confirm="onRemoveExercise(exercise.id)"
+          />
         </li>
       </ul>
     </template>

@@ -107,7 +107,7 @@ onMounted(() => {
       <template v-else>
         <p v-if="recentWorkouts.length === 0" :class="styles.emptyText">No workouts yet.</p>
         <template v-else>
-            <div v-for="workout in recentWorkouts" :key="workout.id" class="marginBottom2">
+            <div v-for="workout in recentWorkouts" :key="workout.id" >
               <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">
                 <div class="highlightCard highlightCardSecondary">
                   <span class="heading-m">{{ workout.routineLabel }}</span>

@@ -19,14 +19,6 @@ vi.mock('../../lib/auth/oauth', () => ({
   },
 }));
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 const mockApiUrl = 'http://localhost:3000';
 
 const mockRoutines = [
@@ -165,71 +157,6 @@ describe('RoutinesPage', () => {
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith('/routines/99/edit');
     });
-  });
-
-  it('shows Edit and Delete buttons only for user-owned routines', async () => {
-    setupDefaultHandlers();
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'My Routine' })).toBeInTheDocument();
-    });
-
-    expect(screen.getByRole('link', { name: 'Edit' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Delete My Routine/i })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Delete Strength/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Delete Abs/i })).not.toBeInTheDocument();
-  });
-
-  it('shows confirmation dialog when Delete is clicked', async () => {
-    const user = userEvent.setup();
-    setupDefaultHandlers();
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Delete My Routine/i })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: /Delete My Routine/i }));
-
-    expect(screen.getByRole('heading', { name: 'Delete routine?' })).toBeInTheDocument();
-  });
-
-  it('removes routine from list when delete is confirmed', async () => {
-    const user = userEvent.setup();
-    server.use(
-      http.get(`${mockApiUrl}/routines`, () => HttpResponse.json(mockRoutines)),
-      http.get(`${mockApiUrl}/users/1/preferences`, () => HttpResponse.json(mockPreferences)),
-      http.delete(`${mockApiUrl}/routines/3`, () => new HttpResponse(null, { status: 204 }))
-    );
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Delete My Routine/i })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: /Delete My Routine/i }));
-    await user.click(screen.getByRole('button', { name: 'Delete' }));
-
-    await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: 'My Routine' })).not.toBeInTheDocument();
-    });
-  });
-
-  it('keeps routine in list when delete is cancelled', async () => {
-    const user = userEvent.setup();
-    setupDefaultHandlers();
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Delete My Routine/i })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: /Delete My Routine/i }));
-    await user.click(screen.getByRole('button', { name: 'Cancel' }));
-
-    expect(screen.getByRole('heading', { name: 'My Routine' })).toBeInTheDocument();
   });
 
   it('shows Recommended label for default routines and not for user-owned routines', async () => {

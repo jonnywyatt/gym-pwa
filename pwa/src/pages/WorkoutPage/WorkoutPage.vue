@@ -374,7 +374,7 @@ onUnmounted(() => {
         <li
             v-for="exercise in completedWorkout.exercisesCompleted"
             :key="exercise.id"
-            class="highlightCard marginBottom4"
+            class="highlightCard"
         >
           <h2 class="heading-m marginBottom1">{{ exercise.label }}</h2>
           <div class="highlightCardContents">
