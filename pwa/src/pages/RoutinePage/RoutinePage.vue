@@ -5,7 +5,7 @@ import type {RoutineDetail} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
 import {fetchRoutine, prepareWorkoutStart, deleteRoutine} from './helpers';
-import binSvg from '../../assets/bin.svg';
+import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,6 +15,7 @@ const error = ref<string | null>(null);
 const startingWorkout = ref(false);
 const activeWorkout = ref<LocalWorkout | null>(null);
 const deleting = ref(false);
+const showDeleteDialog = ref(false);
 
 async function loadRoutine() {
   try {
@@ -78,7 +79,16 @@ async function checkActiveWorkout() {
   activeWorkout.value = (await getActiveWorkout(userId)) ?? null;
 }
 
-async function handleDeleteRoutine() {
+function openDeleteDialog() {
+  showDeleteDialog.value = true;
+}
+
+function cancelDelete() {
+  showDeleteDialog.value = false;
+}
+
+async function confirmDelete() {
+  showDeleteDialog.value = false;
   deleting.value = true;
   error.value = null;
   try {
@@ -99,31 +109,31 @@ onMounted(() => {
 <template>
   <main class="main">
     <h1 v-if="routine" class="heading-l marginBottom4">{{ routine.label }} routine</h1>
-    <div v-if="routine && !loading" class="flexVerticalCenter flexGap3Units marginBottom6">
-      <button
-          type="button"
-          class="buttonPrimary"
-          v-if="activeWorkout === null || activeWorkout.routineId === Number(route.params.routineId)"
-          :disabled="startingWorkout"
-          @click="handleStartWorkout"
-      >
-        {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue workout' : 'Start workout' }}
-      </button>
-      <router-link
-          :to="`/routines/${route.params.routineId}/edit`"
-          class="buttonSecondary"
-      >Edit</router-link>
-      <div class="marginLeft4">
+    <div v-if="routine && !loading" class="flexSpaceBetween marginBottom6">
+      <div class="flexVerticalCenter flexGap3Units">
+        <button
+            type="button"
+            class="buttonPrimary"
+            v-if="activeWorkout === null || activeWorkout.routineId === Number(route.params.routineId)"
+            :disabled="startingWorkout"
+            @click="handleStartWorkout"
+        >
+          {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue workout' : 'Start workout' }}
+        </button>
+        <router-link
+            :to="`/routines/${route.params.routineId}/edit`"
+            class="buttonSecondary"
+        >Edit</router-link>
+      </div>
       <button
           type="button"
           class="buttonDelete"
           aria-label="Delete routine"
           :disabled="deleting"
-          @click="handleDeleteRoutine"
+          @click="openDeleteDialog"
       >
         Delete
       </button>
-      </div>
     </div>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
@@ -139,5 +149,13 @@ onMounted(() => {
         </li>
       </ul>
     </template>
+
+    <ConfirmDialog
+        :open="showDeleteDialog"
+        title="Delete routine?"
+        message="This action cannot be undone."
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+    />
   </main>
 </template>

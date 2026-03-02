@@ -13,6 +13,14 @@ vi.mock('../../config', () => ({
   },
 }));
 
+HTMLDialogElement.prototype.showModal = function () {
+  this.setAttribute('open', '');
+};
+
+HTMLDialogElement.prototype.close = function () {
+  this.removeAttribute('open');
+};
+
 const mockRouterPush = vi.fn();
 
 vi.mock('vue-router', () => ({
@@ -99,7 +107,33 @@ describe('RoutinePage', () => {
     expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
   });
 
-  it('should delete routine and navigate to /routines when delete button is clicked', async () => {
+  it('should open a confirmation dialog when delete button is clicked', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+
+    expect(screen.getByRole('heading', { name: 'Delete routine?' })).toBeInTheDocument();
+    expect(mockRouterPush).not.toHaveBeenCalled();
+  });
+
+  it('should delete routine and navigate to /routines when confirmed in dialog', async () => {
     const user = userEvent.setup();
     const mockRoutine = {
       id: 1,
@@ -123,10 +157,38 @@ describe('RoutinePage', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith('/routines');
     });
+  });
+
+  it('should not delete routine when cancel is clicked in dialog', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(mockRouterPush).not.toHaveBeenCalled();
+    expect(screen.queryByRole('heading', { name: 'Delete routine?' })).not.toBeInTheDocument();
   });
 
   it('should show error when delete routine fails', async () => {
@@ -153,6 +215,7 @@ describe('RoutinePage', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
 
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
