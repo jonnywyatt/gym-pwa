@@ -96,6 +96,68 @@ describe('RoutinePage', () => {
     expect(screen.getByText('Squats')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Edit' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
+  });
+
+  it('should delete routine and navigate to /routines when delete button is clicked', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.delete(`${mockApiUrl}/routines/1`, () => {
+        return new HttpResponse(null, { status: 204 });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/routines');
+    });
+  });
+
+  it('should show error when delete routine fails', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.delete(`${mockApiUrl}/routines/1`, () => {
+        return new HttpResponse(null, { status: 500 });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Delete routine' }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error:/)).toBeInTheDocument();
+    });
+    expect(mockRouterPush).not.toHaveBeenCalled();
   });
 
   it('should link Edit button to the edit routine page', async () => {

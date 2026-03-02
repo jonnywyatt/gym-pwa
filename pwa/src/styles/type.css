@@ -49,6 +49,9 @@
 }
 
 .heading-l {
+    display: inline-block;
+    border-bottom: 1px solid var(--accent-quaternary);
+    padding-bottom: var(--spacing-unit-1);
     font-family: var(--font-stack-heading);
     font-weight: 400;
     font-size: var(--font-size-22);

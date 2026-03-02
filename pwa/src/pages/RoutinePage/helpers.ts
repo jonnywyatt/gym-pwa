@@ -1,6 +1,6 @@
 import type { RoutineDetail, UserProfile } from 'gym-pwa-api/types';
 import { toRaw } from 'vue';
-import { authFetchJson } from '../../lib/api/client';
+import { authFetch, authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout, LocalWorkoutExercise } from '../../lib/db';
 
 export async function fetchUserBodyWeight(userId: number): Promise<number> {
@@ -15,6 +15,13 @@ export async function fetchUserBodyWeight(userId: number): Promise<number> {
 
 export async function fetchRoutine(routineId: string | string[]): Promise<RoutineDetail> {
   return await authFetchJson<RoutineDetail>(`/routines/${routineId}`);
+}
+
+export async function deleteRoutine(routineId: string | string[]): Promise<void> {
+  const response = await authFetch(`/routines/${routineId}`, { method: 'DELETE' });
+  if (!response.ok) {
+    throw new Error(`Failed to delete routine: ${response.status}`);
+  }
 }
 
 export function mapExercisesToWorkoutExercises(routine: RoutineDetail): LocalWorkoutExercise[] {

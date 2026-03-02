@@ -1,14 +1,14 @@
 .exercise {
-  padding: var(--spacing-unit-4) 0;
   border-bottom: 1px solid var(--border-color);
 }
 
 .exerciseHeader {
   display: flex;
+    font-size: var(--font-size-16);
   justify-content: space-between;
+    padding: var(--spacing-unit-5) 0;
   align-items: center;
-  cursor: pointer;
-  user-select: none;
+  width: 100%;
 }
 
 .headerRight {
@@ -22,25 +22,21 @@
   color: var(--accent-primary);
 }
 
+.setContent {
+    padding-bottom: var(--spacing-unit-4);
+}
+
 .setsContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-unit-2);
-  margin-top: var(--spacing-unit-3);
+  gap: var(--spacing-unit-3);
   margin-bottom: var(--spacing-unit-3);
 }
 
 .setRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-unit-2);
-}
-
-.setLabel {
-  min-width: var(--spacing-unit-5);
-  font-size: var(--font-size-14);
-  font-weight: 400;
-  text-align: center;
+  gap: var(--spacing-unit-3);
 }
 
 .timeInputGroup {
@@ -56,7 +52,7 @@
 
 .setTypeSelect {
   font-size: var(--font-size-16);
-  padding: var(--spacing-unit-1);
+  padding: var(--spacing-unit-2);
 }
 
 .actionButtons {

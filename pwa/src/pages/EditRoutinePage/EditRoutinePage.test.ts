@@ -148,7 +148,7 @@ describe('EditRoutinePage', () => {
     expect(screen.queryByRole('button', { name: 'Finish' })).not.toBeInTheDocument();
   });
 
-  it('navigates to /routines when Finish is clicked', async () => {
+  it('navigates to the routine page when Finish is clicked', async () => {
     const user = userEvent.setup();
     server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
 
@@ -160,7 +160,7 @@ describe('EditRoutinePage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Finish' }));
 
-    expect(mockRouter.push).toHaveBeenCalledWith('/routines');
+    expect(mockRouter.push).toHaveBeenCalledWith('/routines/5');
   });
 
   it('saves routine name on blur', async () => {

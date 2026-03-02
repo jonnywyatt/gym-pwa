@@ -91,7 +91,7 @@ async function onRemoveExercise(exerciseId: number) {
 }
 
 async function onFinish() {
-  await router.push('/routines');
+  await router.push(`/routines/${routineId}`);
 }
 
 onMounted(() => {

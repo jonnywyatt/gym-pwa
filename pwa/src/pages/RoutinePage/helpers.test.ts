@@ -5,6 +5,7 @@ import type { LocalWorkout } from '../../lib/db';
 import { server } from '../../test/msw';
 import {
   createWorkoutFromRoutine,
+  deleteRoutine,
   fetchRoutine,
   fetchUserBodyWeight,
   mapExercisesToWorkoutExercises,
@@ -53,6 +54,31 @@ describe('RoutinePage helpers', () => {
       );
 
       await expect(fetchUserBodyWeight(1)).rejects.toThrow('MISSING_BODY_WEIGHT');
+    });
+  });
+
+  describe('deleteRoutine', () => {
+    it('sends DELETE request to the correct endpoint', async () => {
+      let deleteCalled = false;
+      server.use(
+        http.delete(`${mockApiUrl}/routines/1`, () => {
+          deleteCalled = true;
+          return new HttpResponse(null, { status: 204 });
+        })
+      );
+
+      await deleteRoutine('1');
+      expect(deleteCalled).toBe(true);
+    });
+
+    it('throws an error when the DELETE request fails', async () => {
+      server.use(
+        http.delete(`${mockApiUrl}/routines/1`, () => {
+          return new HttpResponse(null, { status: 500 });
+        })
+      );
+
+      await expect(deleteRoutine('1')).rejects.toThrow('Failed to delete routine: 500');
     });
   });
 

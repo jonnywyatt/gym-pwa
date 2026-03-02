@@ -4,7 +4,8 @@ import {useRoute, useRouter} from 'vue-router';
 import type {RoutineDetail} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
-import {fetchRoutine, prepareWorkoutStart} from './helpers';
+import {fetchRoutine, prepareWorkoutStart, deleteRoutine} from './helpers';
+import binSvg from '../../assets/bin.svg';
 
 const route = useRoute();
 const router = useRouter();
@@ -13,6 +14,7 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 const startingWorkout = ref(false);
 const activeWorkout = ref<LocalWorkout | null>(null);
+const deleting = ref(false);
 
 async function loadRoutine() {
   try {
@@ -76,6 +78,18 @@ async function checkActiveWorkout() {
   activeWorkout.value = (await getActiveWorkout(userId)) ?? null;
 }
 
+async function handleDeleteRoutine() {
+  deleting.value = true;
+  error.value = null;
+  try {
+    await deleteRoutine(route.params.routineId);
+    await router.push('/routines');
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Failed to delete routine';
+    deleting.value = false;
+  }
+}
+
 onMounted(() => {
   loadRoutine();
   checkActiveWorkout();
@@ -99,6 +113,15 @@ onMounted(() => {
           :to="`/routines/${route.params.routineId}/edit`"
           class="buttonSecondary"
       >Edit</router-link>
+      <button
+          type="button"
+          class="buttonIcon"
+          aria-label="Delete routine"
+          :disabled="deleting"
+          @click="handleDeleteRoutine"
+      >
+        <img :src="binSvg" width="16" height="16" alt="" />
+      </button>
     </div>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>

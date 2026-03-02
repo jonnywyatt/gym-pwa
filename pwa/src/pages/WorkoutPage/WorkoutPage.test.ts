@@ -134,11 +134,11 @@ describe('WorkoutPage', () => {
     await user.click(screen.getByRole('button', { name: /bench press/i }));
 
     await waitFor(() => {
-      expect(screen.getByText('W')).toBeInTheDocument();
-      expect(screen.getByText('1')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: 'Add Set' })).toBeInTheDocument();
+    expect(screen.getAllByPlaceholderText('Kg').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByPlaceholderText('Reps').length).toBeGreaterThanOrEqual(1);
   });
 
   it('should add a new set when Add Set is clicked', async () => {
@@ -178,7 +178,7 @@ describe('WorkoutPage', () => {
     await user.click(screen.getByRole('button', { name: 'Add Set' }));
 
     await waitFor(() => {
-      expect(screen.getByText('2')).toBeInTheDocument();
+      expect(screen.getAllByPlaceholderText('Kg')).toHaveLength(3);
     });
   });
 

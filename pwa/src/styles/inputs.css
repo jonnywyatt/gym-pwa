@@ -24,7 +24,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--border-color);
-  padding: var(--spacing-unit-1) 0;
+  padding: var(--spacing-unit-2);
   color: var(--text-primary);
 }
 
@@ -34,8 +34,8 @@
 }
 
 .inputCompact {
-  width: var(--spacing-unit-10);
-  padding: var(--spacing-unit-1);
+  width: var(--spacing-unit-12);
+  padding: var(--spacing-unit-2);
   font-size: var(--font-size-16);
   font-family: var(--font-stack-mono);
   background: var(--background-surface);

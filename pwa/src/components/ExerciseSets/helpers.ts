@@ -1,13 +1,11 @@
 import type { WorkoutSet } from '../../lib/db';
 
 export function getCompletedTotalTimeSeconds(sets: WorkoutSet[]): number {
-  return sets
-    .filter((set) => set.completed)
-    .reduce((total, set) => total + (set.timeSeconds ?? 0), 0);
+  return sets.reduce((total, set) => total + (set.timeSeconds ?? 0), 0);
 }
 
 export function getCompletedTotalReps(sets: WorkoutSet[]): number {
-  return sets.filter((set) => set.completed).reduce((total, set) => total + (set.reps ?? 0), 0);
+  return sets.reduce((total, set) => total + (set.reps ?? 0), 0);
 }
 
 export function formatTotalTime(totalSeconds: number): string {
@@ -19,9 +17,8 @@ export function formatTotalTime(totalSeconds: number): string {
 }
 
 export function getRepresentativeWeightKg(sets: WorkoutSet[]): number | undefined {
-  const completedSets = sets.filter((set) => set.completed);
-  const standardSet = completedSets.find((set) => set.setType !== 'Warmup');
-  const set = standardSet ?? completedSets[0];
+  const standardSet = sets.find((set) => set.setType !== 'Warmup' && set.weightKg !== undefined);
+  const set = standardSet ?? sets.find((s) => s.weightKg !== undefined);
   return set?.weightKg;
 }
 

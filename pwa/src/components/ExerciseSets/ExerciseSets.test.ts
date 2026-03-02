@@ -133,8 +133,6 @@ describe('ExerciseSets', () => {
 
       await user.click(screen.getByRole('button', { name: /bench press/i }));
 
-      expect(screen.getByText('W')).toBeInTheDocument();
-      expect(screen.getByText('1')).toBeInTheDocument();
       expect(screen.getAllByPlaceholderText('Kg')).toHaveLength(2);
       expect(screen.getAllByPlaceholderText('Reps')).toHaveLength(2);
     });
@@ -163,20 +161,6 @@ describe('ExerciseSets', () => {
       expect(emitted().addSet[0]).toEqual([1]);
     });
 
-    it('emits updateSet when checkbox is toggled', async () => {
-      const user = userEvent.setup();
-      const { emitted } = render(ExerciseSets, {
-        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
-      });
-
-      await user.click(screen.getByRole('button', { name: /bench press/i }));
-      const checkboxes = screen.getAllByRole('checkbox');
-      await user.click(checkboxes[0]);
-
-      expect(emitted().updateSet).toHaveLength(1);
-      expect(emitted().updateSet[0]).toEqual([1, 's1', { completed: true }]);
-    });
-
     it('emits changeSetType when dropdown changes', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
@@ -191,19 +175,19 @@ describe('ExerciseSets', () => {
       expect(emitted().changeSetType[0]).toEqual([1, 's2', 'Failure']);
     });
 
-    it('shows total weight for completed sets in header', () => {
-      const exerciseWithCompletedSets: LocalWorkoutExercise = {
+    it('shows total weight based on entered values, not completion status', () => {
+      const exerciseWithValues: LocalWorkoutExercise = {
         ...baseExercise,
         startedAt: '2025-01-15T14:00:00.000Z',
         sets: [
-          { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
-          { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
+          { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: false },
+          { id: 's2', setType: 'Standard', weightKg: 60, reps: 10, completed: false },
         ],
         completed: true,
       };
 
       render(ExerciseSets, {
-        props: { exercise: exerciseWithCompletedSets, bodyWeightKg: 80 },
+        props: { exercise: exerciseWithValues, bodyWeightKg: 80 },
       });
 
       expect(screen.getByText('1200 Kg')).toBeInTheDocument();
@@ -411,8 +395,8 @@ describe('ExerciseSets', () => {
       expect(screen.queryByPlaceholderText('Sec')).not.toBeInTheDocument();
     });
 
-    it('shows total reps in header when sets are completed', () => {
-      const repsExerciseWithCompletedSets: LocalWorkoutExercise = {
+    it('shows total reps in header as values are entered', () => {
+      const repsExerciseWithSets: LocalWorkoutExercise = {
         id: 4,
         label: 'Reverse Crunch',
         recordSetsType: 'REPS',
@@ -428,15 +412,21 @@ describe('ExerciseSets', () => {
       };
 
       render(ExerciseSets, {
-        props: { exercise: repsExerciseWithCompletedSets, bodyWeightKg: 80 },
+        props: { exercise: repsExerciseWithSets, bodyWeightKg: 80 },
       });
 
-      expect(screen.getByText('22 reps')).toBeInTheDocument();
+      expect(screen.getByText('30 reps')).toBeInTheDocument();
     });
 
-    it('does not show reps summary in header when no sets are completed', () => {
+    it('does not show reps summary in header when no reps are entered', () => {
       render(ExerciseSets, {
-        props: { exercise: repsExercise, bodyWeightKg: 80 },
+        props: {
+          exercise: {
+            ...repsExercise,
+            sets: [{ id: 's1', setType: 'Standard', completed: false }],
+          },
+          bodyWeightKg: 80,
+        },
       });
 
       expect(screen.queryByText(/reps/)).not.toBeInTheDocument();

@@ -14,5 +14,5 @@
   justify-content: space-between;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--spacing-unit-3) var(--spacing-unit-4);
+  padding: var(--spacing-unit-4) var(--spacing-unit-4);
 }

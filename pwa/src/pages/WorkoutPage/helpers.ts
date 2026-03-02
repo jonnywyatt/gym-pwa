@@ -118,14 +118,23 @@ export function calculateSetWeightKg(
   }
 }
 
+export function isSetFilledIn(set: WorkoutSet, recordSetsType: RecordSetsType): boolean {
+  const { showWeight, showReps, showTime } = getSetInputFields(recordSetsType);
+  if (showWeight && set.weightKg === undefined) return false;
+  if (showReps && set.reps === undefined) return false;
+  if (showTime && set.timeSeconds === undefined) return false;
+  return true;
+}
+
 export function calculateExerciseTotalWeightKg(
   recordSetsType: RecordSetsType,
   bodyWeightKg: number,
   sets: WorkoutSet[]
 ): number {
-  return sets
-    .filter((set) => set.completed)
-    .reduce((total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set), 0);
+  return sets.reduce(
+    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set),
+    0
+  );
 }
 
 export function calculateCompletedSetsTotalWeightKg(
@@ -169,7 +178,7 @@ export function getCompletedExercises(
     .map(({ completed, startedAt, ...exercise }) => ({
       ...exercise,
       sets: (exercise.sets ?? [])
-        .filter((set) => set.completed)
+        .filter((set) => isSetFilledIn(set, exercise.recordSetsType))
         .map(({ id, completed: setCompleted, ...set }) => set),
     }));
 }

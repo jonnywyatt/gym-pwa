@@ -220,4 +220,58 @@ export const exercises: ExerciseSeed[] = [
     ],
     secondaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS],
   },
+  {
+    label: 'Hip thrusts',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.GLUTES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.QUADRICEPS, MuscleGroupLabel.HAMSTRINGS],
+  },
+  {
+    label: 'Step ups',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.CALVES,
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.ADDUCTORS,
+    ],
+  },
+  {
+    label: 'Cable kickbacks',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.GLUTES],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.HAMSTRINGS,
+      MuscleGroupLabel.CALVES,
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.ABDOMINALS,
+    ],
+  },
+  {
+    label: 'Romanian deadlift',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.HAMSTRINGS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.LOWER_BACK,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.ADDUCTORS,
+      MuscleGroupLabel.TRAPEZIUS,
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+      MuscleGroupLabel.FOREARMS,
+    ],
+  },
+  {
+    label: 'Concentration curls',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.BICEPS],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.FOREARMS],
+  },
 ];

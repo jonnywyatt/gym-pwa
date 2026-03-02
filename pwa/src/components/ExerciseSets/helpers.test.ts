@@ -10,20 +10,18 @@ import {
 } from './helpers';
 
 describe('getCompletedTotalReps', () => {
-  it('returns 0 when no sets are completed', () => {
-    expect(
-      getCompletedTotalReps([{ id: 's1', setType: 'Standard', completed: false, reps: 10 }])
-    ).toBe(0);
+  it('returns 0 when sets have no reps', () => {
+    expect(getCompletedTotalReps([{ id: 's1', setType: 'Standard', completed: false }])).toBe(0);
   });
 
-  it('sums reps from completed sets only', () => {
+  it('sums reps from all sets regardless of completion', () => {
     expect(
       getCompletedTotalReps([
         { id: 's1', setType: 'Standard', completed: true, reps: 12 },
         { id: 's2', setType: 'Standard', completed: false, reps: 12 },
         { id: 's3', setType: 'Standard', completed: true, reps: 8 },
       ])
-    ).toBe(20);
+    ).toBe(32);
   });
 
   it('treats missing reps as 0', () => {
@@ -32,22 +30,20 @@ describe('getCompletedTotalReps', () => {
 });
 
 describe('getCompletedTotalTimeSeconds', () => {
-  it('returns 0 when no sets are completed', () => {
+  it('returns 0 when sets have no timeSeconds', () => {
     expect(
-      getCompletedTotalTimeSeconds([
-        { id: 's1', setType: 'Standard', completed: false, timeSeconds: 30 },
-      ])
+      getCompletedTotalTimeSeconds([{ id: 's1', setType: 'Standard', completed: false }])
     ).toBe(0);
   });
 
-  it('sums timeSeconds from completed sets only', () => {
+  it('sums timeSeconds from all sets regardless of completion', () => {
     expect(
       getCompletedTotalTimeSeconds([
         { id: 's1', setType: 'Standard', completed: true, timeSeconds: 30 },
         { id: 's2', setType: 'Standard', completed: false, timeSeconds: 30 },
         { id: 's3', setType: 'Standard', completed: true, timeSeconds: 45 },
       ])
-    ).toBe(75);
+    ).toBe(105);
   });
 
   it('treats missing timeSeconds as 0', () => {
@@ -76,28 +72,28 @@ describe('formatTotalTime', () => {
 });
 
 describe('getRepresentativeWeightKg', () => {
-  it('returns undefined when no sets are completed', () => {
+  it('returns undefined when sets have no weight', () => {
     expect(
-      getRepresentativeWeightKg([{ id: 's1', setType: 'Standard', completed: false, weightKg: 20 }])
+      getRepresentativeWeightKg([{ id: 's1', setType: 'Standard', completed: false }])
     ).toBeUndefined();
   });
 
-  it('returns weight from first completed standard set', () => {
+  it('returns weight from first standard set with weight', () => {
     expect(
       getRepresentativeWeightKg([
         { id: 's1', setType: 'Warmup', completed: true, weightKg: 10 },
-        { id: 's2', setType: 'Standard', completed: true, weightKg: 20 },
+        { id: 's2', setType: 'Standard', completed: false, weightKg: 20 },
       ])
     ).toBe(20);
   });
 
-  it('falls back to warmup set when no standard sets are completed', () => {
+  it('falls back to warmup set when no standard sets have weight', () => {
     expect(
-      getRepresentativeWeightKg([{ id: 's1', setType: 'Warmup', completed: true, weightKg: 10 }])
+      getRepresentativeWeightKg([{ id: 's1', setType: 'Warmup', completed: false, weightKg: 10 }])
     ).toBe(10);
   });
 
-  it('returns undefined when completed set has no weight', () => {
+  it('returns undefined when no set has weight', () => {
     expect(
       getRepresentativeWeightKg([{ id: 's1', setType: 'Standard', completed: true }])
     ).toBeUndefined();

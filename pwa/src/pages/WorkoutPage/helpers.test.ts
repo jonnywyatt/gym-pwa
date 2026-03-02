@@ -19,6 +19,7 @@ import {
   getCompletedExercises,
   getSetDisplayLabel,
   getSetInputFields,
+  isSetFilledIn,
   saveWorkout,
   startExercise,
 } from './helpers';
@@ -279,20 +280,77 @@ describe('WorkoutPage helpers', () => {
     });
   });
 
+  describe('isSetFilledIn', () => {
+    it('returns true for WEIGHT set with weightKg and reps', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Standard',
+        weightKg: 60,
+        reps: 10,
+        completed: false,
+      };
+      expect(isSetFilledIn(set, 'WEIGHT')).toBe(true);
+    });
+
+    it('returns false for WEIGHT set missing reps', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', weightKg: 60, completed: false };
+      expect(isSetFilledIn(set, 'WEIGHT')).toBe(false);
+    });
+
+    it('returns false for WEIGHT set missing weightKg', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', reps: 10, completed: false };
+      expect(isSetFilledIn(set, 'WEIGHT')).toBe(false);
+    });
+
+    it('returns true for TIME set with timeSeconds', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', timeSeconds: 60, completed: false };
+      expect(isSetFilledIn(set, 'TIME')).toBe(true);
+    });
+
+    it('returns false for TIME set missing timeSeconds', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', completed: false };
+      expect(isSetFilledIn(set, 'TIME')).toBe(false);
+    });
+
+    it('returns true for REPS set with reps', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', reps: 10, completed: false };
+      expect(isSetFilledIn(set, 'REPS')).toBe(true);
+    });
+
+    it('returns false for REPS set missing reps', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', completed: false };
+      expect(isSetFilledIn(set, 'REPS')).toBe(false);
+    });
+
+    it('returns true for WEIGHT_AND_TIME set with weightKg and timeSeconds', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Standard',
+        weightKg: 20,
+        timeSeconds: 60,
+        completed: false,
+      };
+      expect(isSetFilledIn(set, 'WEIGHT_AND_TIME')).toBe(true);
+    });
+
+    it('returns false for WEIGHT_AND_TIME set missing timeSeconds', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', weightKg: 20, completed: false };
+      expect(isSetFilledIn(set, 'WEIGHT_AND_TIME')).toBe(false);
+    });
+  });
+
   describe('calculateExerciseTotalWeightKg', () => {
-    it('sums weight of completed sets only', () => {
+    it('sums weight from all sets regardless of completion', () => {
       const sets: WorkoutSet[] = [
         { id: '1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
         { id: '2', setType: 'Standard', weightKg: 60, reps: 8, completed: true },
         { id: '3', setType: 'Standard', weightKg: 60, reps: 6, completed: false },
       ];
-      expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(1080);
+      expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(1440);
     });
 
-    it('returns 0 when no sets are completed', () => {
-      const sets: WorkoutSet[] = [
-        { id: '1', setType: 'Standard', weightKg: 60, reps: 10, completed: false },
-      ];
+    it('returns 0 when sets have no values', () => {
+      const sets: WorkoutSet[] = [{ id: '1', setType: 'Standard', completed: false }];
       expect(calculateExerciseTotalWeightKg('WEIGHT', 80, sets)).toBe(0);
     });
   });
@@ -474,7 +532,7 @@ describe('WorkoutPage helpers', () => {
       expect(result[0].sets[0]).not.toHaveProperty('completed');
     });
 
-    it('filters out incomplete sets from completed exercises', () => {
+    it('filters out sets missing required inputs from completed exercises', () => {
       const exercises: LocalWorkoutExercise[] = [
         {
           id: 1,
@@ -485,8 +543,8 @@ describe('WorkoutPage helpers', () => {
           completed: true,
           startedAt: '2025-01-15T14:00:00.000Z',
           sets: [
-            { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true },
-            { id: 's2', setType: 'Standard', weightKg: 60, reps: 8, completed: false },
+            { id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: false },
+            { id: 's2', setType: 'Standard', completed: false },
           ],
         },
       ];

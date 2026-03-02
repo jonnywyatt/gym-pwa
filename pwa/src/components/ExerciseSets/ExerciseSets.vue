@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import type { LocalWorkoutExercise, SetType } from '../../lib/db';
 import {
   calculateExerciseTotalWeightKg,
-  getSetDisplayLabel,
   getSetInputFields,
 } from '../../pages/WorkoutPage/helpers';
 import {
@@ -81,10 +80,8 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
 
 <template>
   <div :class="styles.exercise">
-    <div
+    <button
       :class="styles.exerciseHeader"
-      role="button"
-      tabindex="0"
       @click="togglePanel"
       @keydown.enter="togglePanel"
       @keydown.space.prevent="togglePanel"
@@ -99,17 +96,15 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
         <span v-else-if="completedRepsSummary" :class="styles.totalWeight">{{ completedRepsSummary }}</span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
-    </div>
+    </button>
 
-    <div v-if="isOpen && exercise.sets">
+    <div v-if="isOpen && exercise.sets" :class="styles.setContent">
       <div :class="styles.setsContainer">
         <div
           v-for="(set, index) in exercise.sets"
           :key="set.id"
           :class="styles.setRow"
         >
-          <span :class="styles.setLabel">{{ getSetDisplayLabel(exercise.sets ?? [], index) }}</span>
-
           <input
             v-if="inputFields.showWeight"
             type="number"
@@ -174,12 +169,6 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
             <option value="Failure">Failure</option>
           </select>
 
-          <input
-            type="checkbox"
-            :checked="set.completed"
-            :aria-label="`Complete set ${index + 1}`"
-            @change="(e) => emit('updateSet', exercise.id, set.id, { completed: (e.target as HTMLInputElement).checked })"
-          />
         </div>
       </div>
 
