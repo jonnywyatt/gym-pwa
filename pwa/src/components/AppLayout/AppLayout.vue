@@ -35,7 +35,7 @@ const isWorkoutsActive = computed(() => route.path.startsWith('/workouts'));
           <img :src="duroLogo" alt="Duro" width="78" height="17" />
         </router-link>
         <template v-if="!isDashboard">
-          <router-link to="/workouts" :class="[styles.navLink, isWorkoutsActive && styles.navLinkActive]">Workouts</router-link>
+          <router-link to="/workouts" :class="[styles.navLink, isWorkoutsActive && styles.navLinkActive]">Sessions</router-link>
           <router-link to="/routines" :class="[styles.navLink, isRoutinesActive && styles.navLinkActive]">Routines</router-link>
         </template>
       </div>

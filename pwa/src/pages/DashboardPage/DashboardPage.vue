@@ -89,7 +89,7 @@ onMounted(() => {
                     @click="onNewWorkout(routine.id)"
                 >
                   {{
-                    startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue workout' : 'Start workout'
+                    startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue session' : 'Start session'
                   }}
                 </button>
               </span>
@@ -101,11 +101,11 @@ onMounted(() => {
     </section>
 
     <section :class="styles.section">
-      <h2 class="sectionHeading">Recent workouts</h2>
-      <p v-if="workoutLoading" :class="styles.loading">Loading workouts...</p>
+      <h2 class="sectionHeading">Recent sessions</h2>
+      <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
-        <p v-if="recentWorkouts.length === 0" :class="styles.emptyText">No workouts yet.</p>
+        <p v-if="recentWorkouts.length === 0" :class="styles.emptyText">No sessions yet.</p>
         <template v-else>
             <div v-for="workout in recentWorkouts" :key="workout.id" >
               <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">

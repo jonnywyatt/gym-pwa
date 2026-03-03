@@ -39,12 +39,12 @@ onMounted(() => {
 <template>
   <main class="main">
     <header class="header marginBottom6">
-      <h1 class="heading-l">Workouts</h1>
+      <h1 class="heading-l heading-l-session">Sessions</h1>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else>
-      <p v-if="workouts.length === 0">No workouts yet. Start a routine to log your first workout!</p>
+      <p v-if="workouts.length === 0">No sessions yet. Start a routine to log your first session!</p>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">
           <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">

@@ -12,7 +12,7 @@
 
 .highlightCardSecondary {
     composes: highlightCard;
-    border-left-color: var(--accent-tertiary);
+    border-left-color: var(--accent-quaternary);
 }
 
 .indentToCardText {

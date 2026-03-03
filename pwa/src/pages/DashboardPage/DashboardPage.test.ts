@@ -80,7 +80,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     expect(screen.getByRole('heading', { level: 2, name: 'Routines' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 2, name: 'Recent workouts' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Recent sessions' })).toBeInTheDocument();
   });
 
   it('should display loading state for routines', async () => {
@@ -95,7 +95,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Loading workouts...')).toBeInTheDocument();
+      expect(screen.getByText('Loading sessions...')).toBeInTheDocument();
     });
   });
 
@@ -113,7 +113,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('No workouts yet.')).toBeInTheDocument();
+      expect(screen.getByText('No sessions yet.')).toBeInTheDocument();
     });
   });
 
@@ -141,7 +141,7 @@ describe('DashboardPage', () => {
     expect(detailsLinks[0]).toHaveAttribute('href', '/routines/1');
     expect(detailsLinks[1]).toHaveAttribute('href', '/routines/2');
 
-    const newWorkoutButtons = screen.getAllByRole('button', { name: 'Start workout' });
+    const newWorkoutButtons = screen.getAllByRole('button', { name: 'Start session' });
     expect(newWorkoutButtons).toHaveLength(2);
   });
 
@@ -294,10 +294,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Start session' })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'Start workout' }));
+    await user.click(screen.getByRole('button', { name: 'Start session' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
@@ -331,8 +331,8 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Continue session' })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start session' })).not.toBeInTheDocument();
     });
   });
 
@@ -366,10 +366,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Continue session' })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'Continue workout' }));
+    await user.click(screen.getByRole('button', { name: 'Continue session' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith('/workouts/active-workout-id');
@@ -393,7 +393,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start session' })).not.toBeInTheDocument();
     });
 
     expect(mockRouterPush).not.toHaveBeenCalled();

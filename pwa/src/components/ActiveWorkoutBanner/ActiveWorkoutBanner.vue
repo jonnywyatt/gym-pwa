@@ -34,7 +34,7 @@ watch(() => route.name, checkActiveWorkout, { immediate: true });
 <template>
   <div v-if="showBanner" :class="styles.banner">
     <div :class="styles.inner">
-      <span>In-progress workout: {{ activeWorkout?.routineLabel }}</span>
+      <span>In-progress session: {{ activeWorkout?.routineLabel }}</span>
       <button type="button" class="buttonPrimary" @click="handleContinue">Continue</button>
     </div>
   </div>

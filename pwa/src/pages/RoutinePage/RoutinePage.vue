@@ -118,7 +118,7 @@ onMounted(() => {
             :disabled="startingWorkout"
             @click="handleStartWorkout"
         >
-          {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue workout' : 'Start workout' }}
+          {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue session' : 'Start session' }}
         </button>
         <router-link
             :to="`/routines/${route.params.routineId}/edit`"

@@ -323,7 +323,7 @@ onUnmounted(() => {
       </nav>
 
       <header class="marginTop4 marginBottom4">
-        <h1 class="heading-l">{{ workout.routineLabel }} workout</h1>
+        <h1 class="heading-l">{{ workout.routineLabel }} session</h1>
       </header>
 
       <ul class="list">
@@ -346,7 +346,7 @@ onUnmounted(() => {
     <!-- Summary mode -->
     <template v-else-if="mode === 'summary' && completedWorkout">
       <header class="header marginBottom4">
-        <h1 class="heading-l">{{ completedWorkout.routineLabel }} workout</h1>
+        <h1 class="heading-l">{{ completedWorkout.routineLabel }} session</h1>
       </header>
 
       <div class="flexVerticalColumn flexGap1Unit marginBottom6">
@@ -405,13 +405,13 @@ onUnmounted(() => {
             :disabled="deleting"
             @click="showDeleteDialog = true"
         >
-          Delete workout
+          Delete session
         </button>
       </div>
 
       <ConfirmDialog
           :open="showDeleteDialog"
-          title="Delete workout?"
+          title="Delete session?"
           message="This action cannot be undone."
           @confirm="handleDeleteWorkout"
           @cancel="showDeleteDialog = false"

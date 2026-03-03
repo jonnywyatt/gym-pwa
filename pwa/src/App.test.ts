@@ -435,10 +435,10 @@ describe('RoutinePage', () => {
     render(RoutinePage);
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith('/users/123');
@@ -479,10 +479,10 @@ describe('RoutinePage', () => {
     render(RoutinePage);
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();

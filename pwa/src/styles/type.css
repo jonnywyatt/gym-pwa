@@ -50,11 +50,15 @@
 
 .heading-l {
     display: inline-block;
-    border-bottom: 1px solid var(--accent-quaternary);
+    border-bottom: 1px solid var(--accent-secondary);
     padding-bottom: var(--spacing-unit-1);
     font-family: var(--font-stack-heading);
     font-weight: 400;
     font-size: var(--font-size-22);
+}
+
+.heading-l-session {
+    border-bottom-color: var(--accent-quaternary);
 }
 
 .heading-m {

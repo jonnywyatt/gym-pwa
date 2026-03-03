@@ -93,7 +93,7 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Routine workout')).toBeInTheDocument();
+      expect(screen.getByText('Test Routine session')).toBeInTheDocument();
     });
 
     expect(screen.getByText('Bench Press')).toBeInTheDocument();
@@ -591,7 +591,7 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByText('Strength Training workout')).toBeInTheDocument();
+        expect(screen.getByText('Strength Training session')).toBeInTheDocument();
       });
 
       expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
@@ -623,7 +623,7 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByText('Test Workout workout')).toBeInTheDocument();
+        expect(screen.getByText('Test Workout session')).toBeInTheDocument();
       });
 
       expect(screen.getByText('Body weight: 80kg')).toBeInTheDocument();
@@ -667,7 +667,7 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByText('Mixed Workout workout')).toBeInTheDocument();
+        expect(screen.getByText('Mixed Workout session')).toBeInTheDocument();
       });
 
       expect(screen.getByText('Standard · 1m')).toBeInTheDocument();
@@ -709,7 +709,7 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByText('Test Workout workout')).toBeInTheDocument();
+        expect(screen.getByText('Test Workout session')).toBeInTheDocument();
       });
 
       expect(screen.queryByText('Finish')).not.toBeInTheDocument();
@@ -738,10 +738,10 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByText('Test Workout workout')).toBeInTheDocument();
+        expect(screen.getByText('Test Workout session')).toBeInTheDocument();
       });
 
-      expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Delete session' })).toBeInTheDocument();
     });
 
     it('should navigate to /workouts after confirming delete', async () => {
@@ -770,13 +770,13 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Delete session' })).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole('button', { name: 'Delete workout' }));
+      await user.click(screen.getByRole('button', { name: 'Delete session' }));
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { name: 'Delete workout?' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Delete session?' })).toBeInTheDocument();
       });
 
       await user.click(screen.getByRole('button', { name: 'Delete' }));
@@ -812,10 +812,10 @@ describe('WorkoutPage', () => {
       render(WorkoutPage);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: 'Delete workout' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Delete session' })).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole('button', { name: 'Delete workout' }));
+      await user.click(screen.getByRole('button', { name: 'Delete session' }));
       await user.click(screen.getByRole('button', { name: 'Delete' }));
 
       await waitFor(() => {
@@ -830,9 +830,9 @@ describe('WorkoutPage', () => {
     render(WorkoutPage);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Routine workout')).toBeInTheDocument();
+      expect(screen.getByText('Test Routine session')).toBeInTheDocument();
     });
 
-    expect(screen.queryByRole('button', { name: 'Delete workout' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete session' })).not.toBeInTheDocument();
   });
 });

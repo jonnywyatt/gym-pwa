@@ -56,7 +56,7 @@ describe('ActiveWorkoutBanner', () => {
     await renderBannerAtRoute('/');
 
     await waitFor(() => {
-      expect(screen.getByText('In-progress workout: Upper Body')).toBeInTheDocument();
+      expect(screen.getByText('In-progress session: Upper Body')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
     });
   });

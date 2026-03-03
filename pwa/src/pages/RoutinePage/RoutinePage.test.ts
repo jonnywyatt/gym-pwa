@@ -102,7 +102,7 @@ describe('RoutinePage', () => {
 
     expect(screen.getByText('Bench Press')).toBeInTheDocument();
     expect(screen.getByText('Squats')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Start workout' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start session' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Edit' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Delete routine' })).toBeInTheDocument();
   });
@@ -313,10 +313,10 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(screen.getByText(/Please set your body weight first/)).toBeInTheDocument();
@@ -357,10 +357,10 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
@@ -403,7 +403,7 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Continue workout' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Continue session' })).toBeInTheDocument();
     });
   });
 
@@ -433,7 +433,7 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start session' })).not.toBeInTheDocument();
     });
   });
 
@@ -471,7 +471,7 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'Start workout' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Start session' })).not.toBeInTheDocument();
     });
 
     expect(mockRouterPush).not.toHaveBeenCalled();
@@ -504,10 +504,10 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(screen.getByText(/User not authenticated/)).toBeInTheDocument();
@@ -543,10 +543,10 @@ describe('RoutinePage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Start workout')).toBeInTheDocument();
+      expect(screen.getByText('Start session')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByText('Start workout'));
+    await user.click(screen.getByText('Start session'));
 
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();

@@ -1,7 +1,6 @@
 .workoutLink {
   display: block;
   flex: 1;
-  padding: var(--spacing-unit-3) 0;
   text-decoration: none;
   color: inherit;
   min-width: 0;

@@ -63,7 +63,7 @@ describe('WorkoutsListPage', () => {
     });
 
     expect(
-      screen.getByText('No workouts yet. Start a routine to log your first workout!')
+      screen.getByText('No sessions yet. Start a routine to log your first session!')
     ).toBeInTheDocument();
   });
 
