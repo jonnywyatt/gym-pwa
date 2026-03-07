@@ -49,7 +49,7 @@ async function handleStartWorkout() {
 
     switch (action.type) {
       case 'navigate-to-existing':
-        await router.push(`/workouts/${action.workoutId}`);
+        await router.push(`/sessions/${action.workoutId}`);
         break;
 
       case 'navigate-to-user-page':
@@ -59,7 +59,7 @@ async function handleStartWorkout() {
 
       case 'create-new-workout':
         await createWorkout(action.workout);
-        await router.push(`/workouts/${action.workout.id}`);
+        await router.push(`/sessions/${action.workout.id}`);
         break;
 
       case 'error':

@@ -219,6 +219,6 @@ describe('WorkoutsListPage', () => {
     });
 
     const link = screen.getByText('Strength').closest('a');
-    expect(link).toHaveAttribute('href', '/workouts/42');
+    expect(link).toHaveAttribute('href', '/sessions/42');
   });
 });

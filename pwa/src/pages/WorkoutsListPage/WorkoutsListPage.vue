@@ -47,7 +47,7 @@ onMounted(() => {
       <p v-if="workouts.length === 0">No sessions yet. Start a routine to log your first session!</p>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">
-          <router-link :to="`/workouts/${workout.id}`" :class="styles.workoutLink">
+          <router-link :to="`/sessions/${workout.id}`" :class="styles.workoutLink">
             <h2 class="heading-m marginBottom2">
              {{ workout.routineLabel }}
             </h2>

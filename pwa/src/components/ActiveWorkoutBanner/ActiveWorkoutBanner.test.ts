@@ -29,7 +29,7 @@ function createTestRouter() {
       { path: '/login', name: 'login', component: { template: '<div />' } },
       { path: '/auth/callback', name: 'auth-callback', component: { template: '<div />' } },
       { path: '/routines', name: 'routines', component: { template: '<div />' } },
-      { path: '/workouts/:workoutId', name: 'workout-detail', component: { template: '<div />' } },
+      { path: '/sessions/:workoutId', name: 'workout-detail', component: { template: '<div />' } },
     ],
   });
 }
@@ -89,7 +89,7 @@ describe('ActiveWorkoutBanner', () => {
 
   it('should not show the banner on the workout detail page', async () => {
     await db.workouts.add(activeWorkoutEntry);
-    await renderBannerAtRoute('/workouts/workout-123');
+    await renderBannerAtRoute('/sessions/workout-123');
 
     await waitFor(() => {
       expect(screen.queryByRole('button', { name: 'Continue' })).not.toBeInTheDocument();
@@ -108,7 +108,7 @@ describe('ActiveWorkoutBanner', () => {
     await user.click(screen.getByRole('button', { name: 'Continue' }));
 
     await waitFor(() => {
-      expect(router.currentRoute.value.path).toBe('/workouts/workout-123');
+      expect(router.currentRoute.value.path).toBe('/sessions/workout-123');
     });
   });
 

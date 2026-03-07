@@ -25,7 +25,7 @@ async function checkActiveWorkout() {
 
 async function handleContinue() {
   if (!activeWorkout.value) return;
-  await router.push(`/workouts/${activeWorkout.value.id}`);
+  await router.push(`/sessions/${activeWorkout.value.id}`);
 }
 
 watch(() => route.name, checkActiveWorkout, { immediate: true });

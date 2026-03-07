@@ -114,7 +114,7 @@ onMounted(() => {
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
         <div v-for="workout in recentWorkouts" :key="workout.id">
-          <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">
+          <router-link :to="`/sessions/${workout.id}`" :data-testid="`workout-${workout.id}`">
             <div class="highlightCard highlightCardSecondary">
               <span class="heading-m">{{ workout.routineLabel }}</span>
               <div :class="styles.workoutMeta">
@@ -129,7 +129,7 @@ onMounted(() => {
             </div>
           </router-link>
         </div>
-        <div><router-link to="/workouts" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
+        <div><router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
       </template>
     </section>
   </main>

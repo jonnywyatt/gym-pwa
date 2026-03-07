@@ -236,8 +236,8 @@ describe('DashboardPage', () => {
       expect(screen.getByTestId('workout-1')).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId('workout-1')).toHaveAttribute('href', '/workouts/1');
-    expect(screen.getByTestId('workout-2')).toHaveAttribute('href', '/workouts/2');
+    expect(screen.getByTestId('workout-1')).toHaveAttribute('href', '/sessions/1');
+    expect(screen.getByTestId('workout-2')).toHaveAttribute('href', '/sessions/2');
     expect(screen.queryByTestId('workout-3')).not.toBeInTheDocument();
   });
 
@@ -267,7 +267,7 @@ describe('DashboardPage', () => {
     expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
 
     const cardLink = screen.getByTestId('workout-42');
-    expect(cardLink).toHaveAttribute('href', '/workouts/42');
+    expect(cardLink).toHaveAttribute('href', '/sessions/42');
   });
 
   it('should display Create new routine button alongside All routines link when routines exist', async () => {
@@ -334,7 +334,7 @@ describe('DashboardPage', () => {
 
     await waitFor(() => {
       const allWorkoutsLink = screen.getByRole('link', { name: 'All sessions' });
-      expect(allWorkoutsLink).toHaveAttribute('href', '/workouts');
+      expect(allWorkoutsLink).toHaveAttribute('href', '/sessions');
     });
   });
 
@@ -380,7 +380,7 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
       const call = mockRouterPush.mock.calls[0][0] as string;
-      expect(call).toMatch(/^\/workouts\//);
+      expect(call).toMatch(/^\/sessions\//);
     });
 
     const workouts = await db.workouts.toArray();

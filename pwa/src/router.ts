@@ -51,13 +51,13 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/workouts',
+      path: '/sessions',
       name: 'workouts-list',
       component: () => import('./pages/WorkoutsListPage/WorkoutsListPage.vue'),
       meta: { requiresAuth: true },
     },
     {
-      path: '/workouts/:workoutId',
+      path: '/sessions/:workoutId',
       name: 'workout-detail',
       component: () => import('./pages/WorkoutPage/WorkoutPage.vue'),
       meta: { requiresAuth: true },

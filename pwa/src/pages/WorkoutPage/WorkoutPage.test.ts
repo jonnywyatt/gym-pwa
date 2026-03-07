@@ -390,7 +390,7 @@ describe('WorkoutPage', () => {
     await user.click(screen.getByText('Finish'));
 
     await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith('/workouts');
+      expect(mockRouterPush).toHaveBeenCalledWith('/sessions');
     });
 
     const workoutAfter = await db.workouts.get('test-workout-id');
@@ -744,7 +744,7 @@ describe('WorkoutPage', () => {
       expect(screen.getByRole('button', { name: 'Delete session' })).toBeInTheDocument();
     });
 
-    it('should navigate to /workouts after confirming delete', async () => {
+    it('should navigate to /sessions after confirming delete', async () => {
       const user = userEvent.setup();
 
       server.use(
@@ -782,7 +782,7 @@ describe('WorkoutPage', () => {
       await user.click(screen.getByRole('button', { name: 'Delete' }));
 
       await waitFor(() => {
-        expect(mockRouterPush).toHaveBeenCalledWith('/workouts');
+        expect(mockRouterPush).toHaveBeenCalledWith('/sessions');
       });
     });
 

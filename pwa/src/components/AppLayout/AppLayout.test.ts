@@ -54,7 +54,7 @@ describe('AppLayout', () => {
     expect(routinesLink).toHaveAttribute('href', '/routines');
 
     const workoutsLink = screen.getByRole('link', { name: 'Sessions' });
-    expect(workoutsLink).toHaveAttribute('href', '/workouts');
+    expect(workoutsLink).toHaveAttribute('href', '/sessions');
   });
 
   it('should highlight the Routines link when on the routines list page', async () => {
@@ -72,14 +72,14 @@ describe('AppLayout', () => {
   });
 
   it('should highlight the Workouts link when on the workouts list page', async () => {
-    await renderWithRoute('workouts-list', '/workouts');
+    await renderWithRoute('workouts-list', '/sessions');
 
     expect(screen.getByRole('link', { name: 'Sessions' }).className).toContain('navLinkActive');
     expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
   });
 
   it('should highlight the Workouts link when on a workout detail page', async () => {
-    await renderWithRoute('workout-detail', '/workouts/42');
+    await renderWithRoute('workout-detail', '/sessions/42');
 
     expect(screen.getByRole('link', { name: 'Sessions' }).className).toContain('navLinkActive');
     expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');

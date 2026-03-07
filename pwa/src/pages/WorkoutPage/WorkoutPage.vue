@@ -260,7 +260,7 @@ async function handleFinish() {
     await saveWorkout(userId, workoutPayload);
 
     await deleteWorkout(workout.value.id);
-    await router.push('/workouts');
+    await router.push('/sessions');
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to finish workout';
   } finally {
@@ -282,7 +282,7 @@ async function handleDeleteWorkout() {
 
   try {
     await deleteWorkoutApi(userId, completedWorkout.value.id);
-    await router.push('/workouts');
+    await router.push('/sessions');
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to delete workout';
   } finally {

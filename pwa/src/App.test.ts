@@ -487,7 +487,7 @@ describe('RoutinePage', () => {
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
       const call = mockRouterPush.mock.calls[0][0];
-      expect(call).toMatch(/^\/workouts\//);
+      expect(call).toMatch(/^\/sessions\//);
     });
   });
 });
