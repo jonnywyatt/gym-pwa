@@ -82,7 +82,9 @@ router.get('/users/:userId/workouts', authenticate, async (req, res) => {
       return;
     }
 
-    const workouts = await getUserWorkouts(userId);
+    const sinceParam = typeof req.query.since === 'string' ? req.query.since : undefined;
+    const since = sinceParam ? new Date(sinceParam) : undefined;
+    const workouts = await getUserWorkouts(userId, since);
     const transformed = transformUserWorkouts(workouts);
     res.json(transformed);
   } catch (error) {

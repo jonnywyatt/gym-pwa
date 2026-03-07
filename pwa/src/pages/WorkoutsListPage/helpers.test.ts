@@ -4,9 +4,11 @@ import { server } from '../../test/msw';
 import {
   calculateDuration,
   deleteWorkoutApi,
+  fetchWorkouts,
   formatDateTime,
   formatDuration,
   formatTotalWeight,
+  getFilterStartDate,
 } from './helpers';
 
 vi.mock('../../config', () => ({
@@ -133,6 +135,70 @@ describe('formatDuration', () => {
     const result = formatDuration(seconds);
 
     expect(result).toBe('2h 3m 4s');
+  });
+});
+
+describe('getFilterStartDate', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-07T12:00:00Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('returns null for "all"', () => {
+    expect(getFilterStartDate('all')).toBeNull();
+  });
+
+  it('returns 30 days ago for "30d"', () => {
+    const result = getFilterStartDate('30d');
+    expect(result?.toISOString()).toBe('2026-02-05T12:00:00.000Z');
+  });
+
+  it('returns 3 months ago for "3m"', () => {
+    const result = getFilterStartDate('3m');
+    expect(result?.toISOString()).toBe('2025-12-07T12:00:00.000Z');
+  });
+
+  it('returns 1 year ago for "1y"', () => {
+    const result = getFilterStartDate('1y');
+    expect(result?.toISOString()).toBe('2025-03-07T12:00:00.000Z');
+  });
+});
+
+describe('fetchWorkouts', () => {
+  const mockApiUrl = 'http://localhost:3000';
+
+  it('fetches workouts without since param when not provided', async () => {
+    let capturedUrl = '';
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json([]);
+      })
+    );
+
+    await fetchWorkouts(1);
+
+    expect(capturedUrl).toBe(`${mockApiUrl}/users/1/workouts`);
+  });
+
+  it('fetches workouts with since query param when provided', async () => {
+    let capturedUrl = '';
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json([]);
+      })
+    );
+
+    const since = new Date('2026-02-05T12:00:00.000Z');
+    await fetchWorkouts(1, since);
+
+    expect(capturedUrl).toContain(`${mockApiUrl}/users/1/workouts?since=`);
+    expect(capturedUrl).toContain('2026-02-05T12');
   });
 });
 

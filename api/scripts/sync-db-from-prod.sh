@@ -25,7 +25,7 @@ echo "Dumping production database..."
 pg_dump "$PROD_URL" --no-owner --no-acl -Fc -f /tmp/gym_prod_dump.dump
 
 echo "Restoring to local database..."
-pg_restore --no-owner --no-acl --clean --if-exists -d "$LOCAL_URL" /tmp/gym_prod_dump.dump
+pg_restore --no-owner --no-acl --clean --if-exists -d "$LOCAL_URL" /tmp/gym_prod_dump.dump || true
 
 rm /tmp/gym_prod_dump.dump
 

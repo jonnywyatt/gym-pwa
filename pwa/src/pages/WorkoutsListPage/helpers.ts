@@ -2,8 +2,35 @@ import type { UserWorkout } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
 import { formatDateTime as formatDateTimeUtil } from '../../utils/time';
 
-export async function fetchWorkouts(userId: number): Promise<UserWorkout[]> {
-  return await authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
+export type FilterPeriod = '30d' | '3m' | '1y' | 'all';
+
+export function getFilterStartDate(period: FilterPeriod): Date | null {
+  if (period === 'all') return null;
+  const now = new Date();
+  switch (period) {
+    case '30d': {
+      const d = new Date(now);
+      d.setDate(d.getDate() - 30);
+      return d;
+    }
+    case '3m': {
+      const d = new Date(now);
+      d.setMonth(d.getMonth() - 3);
+      return d;
+    }
+    case '1y': {
+      const d = new Date(now);
+      d.setFullYear(d.getFullYear() - 1);
+      return d;
+    }
+  }
+}
+
+export async function fetchWorkouts(userId: number, since?: Date): Promise<UserWorkout[]> {
+  const url = since
+    ? `/users/${userId}/workouts?since=${since.toISOString()}`
+    : `/users/${userId}/workouts`;
+  return await authFetchJson<UserWorkout[]>(url);
 }
 
 export async function deleteWorkoutApi(userId: number, workoutId: number): Promise<void> {

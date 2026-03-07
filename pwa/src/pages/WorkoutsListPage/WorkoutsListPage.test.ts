@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -62,9 +63,7 @@ describe('WorkoutsListPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText('No sessions yet. Start a routine to log your first session!')
-    ).toBeInTheDocument();
+    expect(screen.getByText('No sessions in this period.')).toBeInTheDocument();
   });
 
   it('should display workouts with formatted duration when durationSeconds is available', async () => {
@@ -174,6 +173,131 @@ describe('WorkoutsListPage', () => {
     expect(screen.getByText('Lower Body')).toBeInTheDocument();
     expect(screen.getByText('1h')).toBeInTheDocument();
     expect(screen.getByText('1,200kg total')).toBeInTheDocument();
+  });
+
+  it('should display filter buttons', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: '30 days' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '3 months' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '1 year' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
+  });
+
+  it('should display session count', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([
+          {
+            id: 1,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Strength',
+            startedAt: '2024-01-15T10:00:00Z',
+            finishedAt: '2024-01-15T11:00:00Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            bodyWeightKg: 80,
+            totalWeightKg: 0,
+          },
+          {
+            id: 2,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Cardio',
+            startedAt: '2024-01-16T10:00:00Z',
+            finishedAt: '2024-01-16T11:00:00Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            bodyWeightKg: 80,
+            totalWeightKg: 0,
+          },
+        ]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('2 sessions')).toBeInTheDocument();
+    });
+  });
+
+  it('should display singular session count for one session', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([
+          {
+            id: 1,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Strength',
+            startedAt: '2024-01-15T10:00:00Z',
+            finishedAt: '2024-01-15T11:00:00Z',
+            durationSeconds: 3600,
+            exercisesCompleted: [],
+            bodyWeightKg: 80,
+            totalWeightKg: 0,
+          },
+        ]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('1 session')).toBeInTheDocument();
+    });
+  });
+
+  it('should re-fetch with since param when filter is changed', async () => {
+    let capturedUrl = '';
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'All' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(capturedUrl).toBe(`${mockApiUrl}/users/1/workouts`);
+  });
+
+  it('should show "No sessions in this period" when filtered and empty', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText('No sessions in this period.')).toBeInTheDocument();
   });
 
   it('should display error message when fetch fails', async () => {

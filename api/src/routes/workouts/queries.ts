@@ -23,9 +23,12 @@ export async function createUserWorkout(
   });
 }
 
-export async function getUserWorkouts(userId: number): Promise<UserWorkoutFromDB[]> {
+export async function getUserWorkouts(userId: number, since?: Date): Promise<UserWorkoutFromDB[]> {
   return await prisma.userWorkout.findMany({
-    where: { userId },
+    where: {
+      userId,
+      ...(since ? { startedAt: { gte: since } } : {}),
+    },
     orderBy: { finishedAt: 'desc' },
   });
 }
