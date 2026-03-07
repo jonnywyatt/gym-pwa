@@ -15,7 +15,6 @@ import {
 
 const FILTER_OPTIONS: Array<{ period: FilterPeriod; label: string }> = [
   { period: '30d', label: '30 days' },
-  { period: '3m', label: '3 months' },
   { period: '1y', label: '1 year' },
   { period: 'all', label: 'All' },
 ];

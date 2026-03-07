@@ -189,7 +189,6 @@ describe('WorkoutsListPage', () => {
     });
 
     expect(screen.getByRole('button', { name: '30 days' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '3 months' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '1 year' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
   });

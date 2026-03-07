@@ -157,11 +157,6 @@ describe('getFilterStartDate', () => {
     expect(result?.toISOString()).toBe('2026-02-05T12:00:00.000Z');
   });
 
-  it('returns 3 months ago for "3m"', () => {
-    const result = getFilterStartDate('3m');
-    expect(result?.toISOString()).toBe('2025-12-07T12:00:00.000Z');
-  });
-
   it('returns 1 year ago for "1y"', () => {
     const result = getFilterStartDate('1y');
     expect(result?.toISOString()).toBe('2025-03-07T12:00:00.000Z');
