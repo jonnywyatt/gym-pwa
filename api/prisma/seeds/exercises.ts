@@ -274,4 +274,128 @@ export const exercises: ExerciseSeed[] = [
     primaryMuscleGroupLabels: [MuscleGroupLabel.BICEPS],
     secondaryMuscleGroupLabels: [MuscleGroupLabel.FOREARMS],
   },
+  {
+    label: 'Bench press (dumbell)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+      MuscleGroupLabel.FRONT_DELTOIDS,
+      MuscleGroupLabel.TRICEPS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.OBLIQUES,
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+    ],
+  },
+  {
+    label: 'Crunch',
+    recordSetsType: RecordSetsType.REPS,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [],
+  },
+  {
+    label: 'Deadlift',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.HAMSTRINGS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.ADDUCTORS,
+      MuscleGroupLabel.TRAPEZIUS,
+      MuscleGroupLabel.FOREARMS,
+    ],
+  },
+  {
+    label: 'Dumbbell squats',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.ADDUCTORS,
+      MuscleGroupLabel.CALVES,
+      MuscleGroupLabel.LOWER_BACK,
+    ],
+  },
+  {
+    label: 'Lunge',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+    ],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.CALVES,
+      MuscleGroupLabel.ADDUCTORS,
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.LOWER_BACK,
+    ],
+  },
+  {
+    label: 'Cable Twist (Down to up)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.REAR_DELTOIDS,
+    ],
+  },
+  {
+    label: 'Cable Twist (Up to down)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.LOWER_BACK,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.REAR_DELTOIDS,
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+    ],
+  },
+  {
+    label: 'Dead Bug',
+    recordSetsType: RecordSetsType.REPS,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.OBLIQUES, MuscleGroupLabel.LOWER_BACK],
+  },
+  {
+    label: 'Flutter Kicks',
+    recordSetsType: RecordSetsType.REPS,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.QUADRICEPS],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.OBLIQUES, MuscleGroupLabel.LOWER_BACK],
+  },
+  {
+    label: 'Renegade Row (dumbbell)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.LATISSIMUS_DORSI, MuscleGroupLabel.RHOMBOIDS],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.ABDOMINALS,
+      MuscleGroupLabel.OBLIQUES,
+      MuscleGroupLabel.BICEPS,
+      MuscleGroupLabel.TRICEPS,
+      MuscleGroupLabel.TRAPEZIUS,
+    ],
+  },
+  {
+    label: 'Russian Twist',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.LOWER_BACK],
+  },
+  {
+    label: 'Seated squat',
+    recordSetsType: RecordSetsType.WEIGHT,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.QUADRICEPS, MuscleGroupLabel.GLUTES],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.HAMSTRINGS, MuscleGroupLabel.ADDUCTORS],
+  },
 ];

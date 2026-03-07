@@ -14,7 +14,8 @@
       "!**/dist",
       "!**/api/prisma/migrations",
       "!**/api/src/prisma-client",
-      "!**/pwa/.svelte-kit"
+      "!**/pwa/.svelte-kit",
+      "!**/api/scripts"
     ]
   },
   "formatter": {
