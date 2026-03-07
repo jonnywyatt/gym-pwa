@@ -2,10 +2,12 @@ import type { RoutineDetail, RoutineSummary, UserWorkout } from 'gym-pwa-api/typ
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import {
+  createRoutine,
   fetchRecentWorkouts,
   fetchRoutines,
   handleNewWorkout,
   loadDashboardData,
+  sortRoutinesByLastUsed,
   startWorkoutForRoutine,
 } from './helpers';
 
@@ -18,8 +20,19 @@ import { authFetchJson } from '../../lib/api/client';
 
 const mockAuthFetchJson = vi.mocked(authFetchJson);
 
+describe('createRoutine', () => {
+  it('should POST to /routines and return the new routine id', async () => {
+    mockAuthFetchJson.mockResolvedValue({ id: 42 });
+
+    const result = await createRoutine();
+
+    expect(mockAuthFetchJson).toHaveBeenCalledWith('/routines', { method: 'POST' });
+    expect(result).toBe(42);
+  });
+});
+
 describe('fetchRoutines', () => {
-  it('should return at most 2 routines', async () => {
+  it('should return all routines from the API', async () => {
     const fiveRoutines: RoutineSummary[] = [
       { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
       { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
@@ -31,21 +44,9 @@ describe('fetchRoutines', () => {
 
     const result = await fetchRoutines();
 
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(5);
     expect(result[0].label).toBe('Routine A');
-    expect(result[1].label).toBe('Routine B');
-  });
-
-  it('should return all routines when fewer than 2', async () => {
-    const twoRoutines: RoutineSummary[] = [
-      { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
-      { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
-    ];
-    mockAuthFetchJson.mockResolvedValue(twoRoutines);
-
-    const result = await fetchRoutines();
-
-    expect(result).toHaveLength(2);
+    expect(result[4].label).toBe('Routine E');
   });
 });
 
@@ -63,24 +64,15 @@ describe('fetchRecentWorkouts', () => {
     totalWeightKg: 2500,
   };
 
-  it('should return up to 2 workouts', async () => {
+  it('should return all workouts from the API', async () => {
     const fiveWorkouts: UserWorkout[] = [1, 2, 3, 4, 5].map((n) => ({ ...mockWorkout, id: n }));
     mockAuthFetchJson.mockResolvedValue(fiveWorkouts);
 
     const result = await fetchRecentWorkouts(1);
 
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(5);
     expect(result[0].id).toBe(1);
-    expect(result[1].id).toBe(2);
-  });
-
-  it('should return all workouts when fewer than 3', async () => {
-    const twoWorkouts: UserWorkout[] = [1, 2].map((n) => ({ ...mockWorkout, id: n }));
-    mockAuthFetchJson.mockResolvedValue(twoWorkouts);
-
-    const result = await fetchRecentWorkouts(1);
-
-    expect(result).toHaveLength(2);
+    expect(result[4].id).toBe(5);
   });
 
   it('should return empty array when no workouts', async () => {
@@ -139,6 +131,78 @@ describe('startWorkoutForRoutine', () => {
     if (result.type === 'navigate-to-existing') {
       expect(result.workoutId).toBe('existing-id');
     }
+  });
+});
+
+describe('sortRoutinesByLastUsed', () => {
+  const makeRoutine = (id: number, label: string): RoutineSummary => ({
+    id,
+    label,
+    userId: null,
+    exerciseCount: 3,
+  });
+
+  const makeWorkout = (routineId: number, startedAt: string): UserWorkout => ({
+    id: routineId,
+    userId: 1,
+    routineId,
+    routineLabel: `Routine ${routineId}`,
+    startedAt,
+    finishedAt: startedAt,
+    durationSeconds: 3600,
+    exercisesCompleted: [],
+    bodyWeightKg: 80,
+    totalWeightKg: 0,
+  });
+
+  it('should sort routines by most recently used when all have workouts', () => {
+    const routines = [makeRoutine(1, 'A'), makeRoutine(2, 'B'), makeRoutine(3, 'C')];
+    const workouts = [
+      makeWorkout(2, '2024-01-15T10:00:00Z'),
+      makeWorkout(3, '2024-01-14T10:00:00Z'),
+      makeWorkout(1, '2024-01-13T10:00:00Z'),
+    ];
+
+    const result = sortRoutinesByLastUsed(routines, workouts);
+
+    expect(result[0].id).toBe(2);
+    expect(result[1].id).toBe(3);
+    expect(result[2].id).toBe(1);
+  });
+
+  it('should place used routines before unused routines', () => {
+    const routines = [makeRoutine(1, 'A'), makeRoutine(2, 'B'), makeRoutine(3, 'C')];
+    const workouts = [makeWorkout(3, '2024-01-10T10:00:00Z')];
+
+    const result = sortRoutinesByLastUsed(routines, workouts);
+
+    expect(result[0].id).toBe(3);
+    expect(result[1].id).toBe(1);
+    expect(result[2].id).toBe(2);
+  });
+
+  it('should preserve API order for unused routines', () => {
+    const routines = [makeRoutine(1, 'A'), makeRoutine(2, 'B'), makeRoutine(3, 'C')];
+
+    const result = sortRoutinesByLastUsed(routines, []);
+
+    expect(result[0].id).toBe(1);
+    expect(result[1].id).toBe(2);
+    expect(result[2].id).toBe(3);
+  });
+
+  it('should use the most recent workout date per routine when used multiple times', () => {
+    const routines = [makeRoutine(1, 'A'), makeRoutine(2, 'B')];
+    const workouts = [
+      makeWorkout(1, '2024-01-10T10:00:00Z'),
+      makeWorkout(2, '2024-01-15T10:00:00Z'),
+      makeWorkout(1, '2024-01-05T10:00:00Z'),
+    ];
+
+    const result = sortRoutinesByLastUsed(routines, workouts);
+
+    expect(result[0].id).toBe(2);
+    expect(result[1].id).toBe(1);
   });
 });
 
@@ -205,6 +269,36 @@ describe('loadDashboardData', () => {
     expect(result.routines).toEqual(mockRoutines);
     expect(result.recentWorkouts).toEqual([]);
     expect(result.workoutError).toBeNull();
+  });
+
+  it('should sort routines by most recently used and return up to 2', async () => {
+    const routines: RoutineSummary[] = [
+      { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
+      { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
+      { id: 3, label: 'Routine C', userId: null, exerciseCount: 2 },
+    ];
+    const workouts: UserWorkout[] = [
+      { ...mockWorkout, id: 1, routineId: 3, startedAt: '2024-01-15T10:00:00Z' },
+      { ...mockWorkout, id: 2, routineId: 2, startedAt: '2024-01-14T10:00:00Z' },
+    ];
+    mockAuthFetchJson.mockResolvedValueOnce(routines).mockResolvedValueOnce(workouts);
+
+    const result = await loadDashboardData(1);
+
+    expect(result.routines).toHaveLength(2);
+    expect(result.routines[0].id).toBe(3);
+    expect(result.routines[1].id).toBe(2);
+  });
+
+  it('should return only 2 recent workouts for display', async () => {
+    const workouts: UserWorkout[] = [1, 2, 3, 4].map((n) => ({ ...mockWorkout, id: n }));
+    mockAuthFetchJson.mockResolvedValueOnce([mockWorkout]).mockResolvedValueOnce(workouts);
+
+    const result = await loadDashboardData(1);
+
+    expect(result.recentWorkouts).toHaveLength(2);
+    expect(result.recentWorkouts[0].id).toBe(1);
+    expect(result.recentWorkouts[1].id).toBe(2);
   });
 
   it('should return both errors when both fetches fail', async () => {

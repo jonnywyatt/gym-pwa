@@ -64,7 +64,7 @@ describe('UserPage', () => {
     });
 
     expect(screen.getByText('Test User')).toBeInTheDocument();
-    const input = screen.getByLabelText('Body weight (kg)') as HTMLInputElement;
+    const input = screen.getByLabelText('Body weight') as HTMLInputElement;
     expect(input).toBeInTheDocument();
     expect(input.value).toBe('');
   });
@@ -90,8 +90,23 @@ describe('UserPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    const input = screen.getByLabelText('Body weight (kg)') as HTMLInputElement;
+    expect(screen.getByLabelText('Update bodyweight')).toBeInTheDocument();
+    const input = screen.getByLabelText('Update bodyweight') as HTMLInputElement;
     expect(input.value).toBe('75.5');
+  });
+
+  it('should display kg suffix after the input', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({ id: 1, name: 'Test User', latestBodyWeight: null });
+      })
+    );
+
+    render(UserPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('kg')).toBeInTheDocument();
+    });
   });
 
   it('should save weight and show success message', async () => {
@@ -117,7 +132,7 @@ describe('UserPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    const input = screen.getByLabelText('Body weight (kg)');
+    const input = screen.getByLabelText('Body weight');
     await user.type(input, '80.25');
     await user.click(screen.getByText('Save'));
 

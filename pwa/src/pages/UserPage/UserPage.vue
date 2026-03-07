@@ -78,8 +78,9 @@ onMounted(() => {
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else-if="profile">
       <form :class="styles.weightForm" @submit.prevent="handleSaveWeight">
-        <label :class="styles.label" for="body-weight">Body weight (kg)</label>
-        <div :class="styles.inputRow">
+        <label :class="styles.label" for="body-weight">{{ isFirstTimeUser ? 'Body weight' : 'Update bodyweight' }}</label>
+        <div class="flexVerticalCenter flexGap4Units">
+          <div class="flexVerticalCenter flexGap1Unit">
           <input
             id="body-weight"
             v-model="weight"
@@ -89,6 +90,8 @@ onMounted(() => {
             :class="['inputBordered', styles.weightInput]"
             placeholder="e.g. 75.50"
           />
+          <span>kg</span>
+        </div>
           <button
             type="submit"
             class="buttonPrimary"

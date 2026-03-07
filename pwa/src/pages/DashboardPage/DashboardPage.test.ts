@@ -79,7 +79,7 @@ describe('DashboardPage', () => {
     setupHandlers();
     renderPage();
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Routines' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Start a session' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Recent sessions' })).toBeInTheDocument();
   });
 
@@ -99,25 +99,78 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display empty state when no routines', async () => {
+  it('should display the two most recently used routines', async () => {
+    const routines = [
+      { id: 1, label: 'Upper Body', exerciseCount: 5 },
+      { id: 2, label: 'Lower Body', exerciseCount: 4 },
+      { id: 3, label: 'Core', exerciseCount: 3 },
+      { id: 4, label: 'Cardio', exerciseCount: 2 },
+    ];
+    const workouts = [
+      {
+        id: 1,
+        userId: 1,
+        routineId: 4,
+        routineLabel: 'Cardio',
+        startedAt: '2024-01-15T10:00:00Z',
+        finishedAt: '2024-01-15T11:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+      {
+        id: 2,
+        userId: 1,
+        routineId: 3,
+        routineLabel: 'Core',
+        startedAt: '2024-01-14T10:00:00Z',
+        finishedAt: '2024-01-14T11:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+    ];
+    setupHandlers(routines, workouts);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Cardio' })).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: 'Cardio' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Core' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Upper Body' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Lower Body' })).not.toBeInTheDocument();
+  });
+
+  it('should display a create routine link when there are no routines', async () => {
     setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('No routines available.')).toBeInTheDocument();
+      const link = screen.getByRole('link', { name: 'Start by creating a routine' });
+      expect(link).toHaveAttribute('href', '/routines');
     });
+
+    expect(
+      screen.queryByRole('heading', { level: 2, name: 'Start a session' })
+    ).not.toBeInTheDocument();
   });
 
-  it('should display empty state when no workouts', async () => {
+  it('should hide the Recent sessions section when there are no workouts', async () => {
     setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('No sessions yet.')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { level: 2, name: 'Recent sessions' })
+      ).not.toBeInTheDocument();
     });
   });
 
-  it('should display up to 2 routines with Details and Start workout links', async () => {
+  it('should display up to 2 routines as clickable cards', async () => {
     const routines = [
       { id: 1, label: 'Upper Body', exerciseCount: 5 },
       { id: 2, label: 'Lower Body', exerciseCount: 4 },
@@ -128,21 +181,13 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Upper Body')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Upper Body')).toBeInTheDocument();
-    expect(screen.getByText('Lower Body')).toBeInTheDocument();
-    expect(screen.queryByText('Core')).not.toBeInTheDocument();
-    expect(screen.queryByText('Cardio')).not.toBeInTheDocument();
-
-    const detailsLinks = screen.getAllByRole('link', { name: 'See exercises' });
-    expect(detailsLinks).toHaveLength(2);
-    expect(detailsLinks[0]).toHaveAttribute('href', '/routines/1');
-    expect(detailsLinks[1]).toHaveAttribute('href', '/routines/2');
-
-    const newWorkoutButtons = screen.getAllByRole('button', { name: 'Start session' });
-    expect(newWorkoutButtons).toHaveLength(2);
+    expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Lower Body' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Core' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Cardio' })).not.toBeInTheDocument();
   });
 
   it('should display up to 2 recent workouts', async () => {
@@ -225,13 +270,46 @@ describe('DashboardPage', () => {
     expect(cardLink).toHaveAttribute('href', '/workouts/42');
   });
 
+  it('should display Create new routine button alongside All routines link when routines exist', async () => {
+    const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
+    setupHandlers(routines, []);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'All routines' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Create new routine' })).toBeInTheDocument();
+    });
+  });
+
+  it('should create a routine and navigate to the edit page when Create new routine is clicked', async () => {
+    const user = userEvent.setup();
+    const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
+    setupHandlers(routines, []);
+    server.use(
+      http.post(`${mockApiUrl}/routines`, () => {
+        return HttpResponse.json({ id: 99 });
+      })
+    );
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Create new routine' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Create new routine' }));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/routines/99/edit');
+    });
+  });
+
   it('should display See all link when routines exist', async () => {
     const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
     setupHandlers(routines, []);
     renderPage();
 
     await waitFor(() => {
-      const allRoutinesLink = screen.getByRole('link', { name: 'See all' });
+      const allRoutinesLink = screen.getByRole('link', { name: 'All routines' });
       expect(allRoutinesLink).toHaveAttribute('href', '/routines');
     });
   });
@@ -255,7 +333,7 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      const allWorkoutsLink = screen.getByRole('link', { name: 'See all' });
+      const allWorkoutsLink = screen.getByRole('link', { name: 'All sessions' });
       expect(allWorkoutsLink).toHaveAttribute('href', '/workouts');
     });
   });
@@ -294,10 +372,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Start session' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'Start session' }));
+    await user.click(screen.getByRole('button', { name: 'Upper Body' }));
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
@@ -312,7 +390,7 @@ describe('DashboardPage', () => {
     expect(workouts[0].bodyWeightKg).toBe(80);
   });
 
-  it('should show Continue workout button for routine with active workout, and hide Start workout for others', async () => {
+  it('should hide the routines section when an active workout exists', async () => {
     await db.workouts.add({
       id: 'active-workout-id',
       userId: 1,
@@ -327,52 +405,43 @@ describe('DashboardPage', () => {
       { id: 1, label: 'Upper Body', exerciseCount: 5 },
       { id: 2, label: 'Lower Body', exerciseCount: 4 },
     ];
-    setupHandlers(routines, []);
+    const workouts = [
+      {
+        id: 1,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Upper Body',
+        startedAt: '2025-01-15T14:00:00Z',
+        finishedAt: '2025-01-15T15:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+    ];
+    setupHandlers(routines, workouts);
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Continue session' })).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: 'Start session' })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { level: 2, name: 'Start a session' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'Recent sessions' })
+      ).toBeInTheDocument();
     });
   });
 
-  it('should navigate to active workout when Continue workout is clicked', async () => {
-    const user = userEvent.setup();
-
-    await db.workouts.add({
-      id: 'active-workout-id',
-      userId: 1,
-      routineId: 1,
-      routineLabel: 'Upper Body',
-      startedAt: '2025-01-15T14:00:00.000Z',
-      bodyWeightKg: 80,
-      exercisesCompleted: [],
-    });
-
+  it('should show the routines section when there is no active workout', async () => {
     const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
-    const mockRoutineDetail = {
-      id: 1,
-      label: 'Upper Body',
-      exercises: [],
-    };
-
     setupHandlers(routines, []);
-    server.use(
-      http.get(`${mockApiUrl}/routines/1`, () => {
-        return HttpResponse.json(mockRoutineDetail);
-      })
-    );
-
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Continue session' })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: 'Continue session' }));
-
-    await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith('/workouts/active-workout-id');
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'Start a session' })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
     });
   });
 

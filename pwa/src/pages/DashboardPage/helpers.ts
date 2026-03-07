@@ -16,13 +16,38 @@ export type NewWorkoutResult =
   | { type: 'error'; error: string };
 
 export async function fetchRoutines(): Promise<RoutineSummary[]> {
-  const routines = await authFetchJson<RoutineSummary[]>('/routines');
-  return routines.slice(0, 2);
+  return authFetchJson<RoutineSummary[]>('/routines');
 }
 
 export async function fetchRecentWorkouts(userId: number): Promise<UserWorkout[]> {
-  const workouts = await authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
-  return workouts.slice(0, 2);
+  return authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
+}
+
+export function sortRoutinesByLastUsed(
+  routines: RoutineSummary[],
+  workouts: UserWorkout[]
+): RoutineSummary[] {
+  const lastUsedMap = new Map<number, string>();
+  for (const workout of workouts) {
+    const existing = lastUsedMap.get(workout.routineId);
+    if (!existing || workout.startedAt > existing) {
+      lastUsedMap.set(workout.routineId, workout.startedAt);
+    }
+  }
+
+  return [...routines].sort((a, b) => {
+    const aDate = lastUsedMap.get(a.id);
+    const bDate = lastUsedMap.get(b.id);
+    if (aDate && bDate) return bDate.localeCompare(aDate);
+    if (aDate) return -1;
+    if (bDate) return 1;
+    return 0;
+  });
+}
+
+export async function createRoutine(): Promise<number> {
+  const response = await authFetchJson<{ id: number }>('/routines', { method: 'POST' });
+  return response.id;
 }
 
 export async function startWorkoutForRoutine(
@@ -40,15 +65,18 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
     userId !== null ? fetchRecentWorkouts(userId) : Promise.resolve([]),
   ]);
 
+  const allRoutines = routinesResult.status === 'fulfilled' ? routinesResult.value : [];
+  const allWorkouts = workoutsResult.status === 'fulfilled' ? workoutsResult.value : [];
+
   return {
-    routines: routinesResult.status === 'fulfilled' ? routinesResult.value : [],
+    routines: sortRoutinesByLastUsed(allRoutines, allWorkouts).slice(0, 2),
     routinesError:
       routinesResult.status === 'rejected'
         ? routinesResult.reason instanceof Error
           ? routinesResult.reason.message
           : 'Failed to fetch routines'
         : null,
-    recentWorkouts: workoutsResult.status === 'fulfilled' ? workoutsResult.value : [],
+    recentWorkouts: allWorkouts.slice(0, 2),
     workoutError:
       workoutsResult.status === 'rejected'
         ? workoutsResult.reason instanceof Error

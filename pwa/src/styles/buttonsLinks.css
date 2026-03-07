@@ -33,6 +33,7 @@
 }
 
 .buttonLink {
+    appearance: none;
   color: var(--accent-secondary);
   text-decoration: none;
   cursor: pointer;
@@ -41,6 +42,12 @@
 
 .buttonLink:hover {
   color: var(--text-primary);
+}
+
+.buttonLink--secondary {
+    color: var(--text-muted);
+    font-size: var(--font-size-15);
+    line-height: 1.2;
 }
 
 .buttonIcon {
@@ -77,4 +84,9 @@
 
 .removeButton:hover {
   opacity: 0.7;
+}
+
+.linkDivider {
+    color: var(--text-secondary);
+    font-size: var(--font-size-12);
 }

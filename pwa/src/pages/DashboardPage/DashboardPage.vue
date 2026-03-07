@@ -5,7 +5,7 @@ import type {RoutineSummary, UserWorkout} from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
-import {loadDashboardData, handleNewWorkout} from './helpers';
+import {loadDashboardData, handleNewWorkout, createRoutine} from './helpers';
 import {
   formatDateTime,
   formatDuration,
@@ -21,6 +21,7 @@ const workoutLoading = ref(true);
 const routinesError = ref<string | null>(null);
 const workoutError = ref<string | null>(null);
 const startingRoutineId = ref<number | null>(null);
+const creating = ref(false);
 
 async function loadData() {
   const userId = authService.getUserId();
@@ -61,6 +62,19 @@ async function onNewWorkout(routineId: number) {
   startingRoutineId.value = null;
 }
 
+async function onCreateRoutine() {
+  creating.value = true;
+  routinesError.value = null;
+  try {
+    const id = await createRoutine();
+    await router.push(`/routines/${id}/edit`);
+  } catch (e) {
+    routinesError.value = e instanceof Error ? e.message : 'Failed to create routine';
+  } finally {
+    creating.value = false;
+  }
+}
+
 onMounted(() => {
   loadData();
 });
@@ -68,63 +82,54 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <section :class="styles.section">
-      <h2 class="sectionHeading">Routines</h2>
-      <p v-if="routinesLoading" :class="styles.loading">Loading...</p>
-      <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
-      <template v-else>
-        <p v-if="routines.length === 0" :class="styles.emptyText">No routines available.</p>
+    <template v-if="activeWorkout === null">
+      <p v-if="!routinesLoading && !routinesError && routines.length === 0" :class="styles.createRoutinePrompt">
+        <router-link to="/routines">Start by creating a routine</router-link>
+      </p>
+      <section v-else :class="styles.section">
+        <h2 class="sectionHeading">Start a session</h2>
+        <p v-if="routinesLoading" :class="styles.loading">Loading...</p>
+        <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
         <template v-else>
-          <ul :class="styles.routineList">
-            <li v-for="routine in routines" :key="routine.id" class="highlightCard">
-              <p v-if="routine.userId === null" class="labelCaps labelCaps--small">Recommended</p>
-              <span class="heading-m">{{ routine.label }}</span>
-              <span class="flexSpaceBetween">
-                <router-link :to="`/routines/${routine.id}`" :class="styles.routineDetailLink">See exercises</router-link>
-                <button
-                    v-if="activeWorkout === null || activeWorkout.routineId === routine.id"
+          <div :class="styles.routineList">
+            <button v-for="routine in routines" :key="routine.id" class="highlightCard"
                     type="button"
-                    class="buttonPrimary"
                     :disabled="startingRoutineId === routine.id"
-                    @click="onNewWorkout(routine.id)"
-                >
-                  {{
-                    startingRoutineId === routine.id ? 'Starting...' : activeWorkout?.routineId === routine.id ? 'Continue session' : 'Start session'
-                  }}
-                </button>
-              </span>
-            </li>
-          </ul>
-          <div class="indentToCardText"><router-link to="/routines" :class="styles.allWorkoutsLink">See all</router-link></div>
+                    @click="onNewWorkout(routine.id)">
+              <span class="heading-m">{{ routine.label }}</span>
+            </button>
+          </div>
+          <div class=" flexVerticalCenter flexGap3Units">
+            <router-link to="/routines" class="buttonLink buttonLink--secondary">All routines</router-link>
+            <span aria-hidden="true" class="linkDivider">|</span>
+            <button type="button" class="buttonLink buttonLink--secondary" :disabled="creating" @click="onCreateRoutine">Create new routine</button>
+          </div>
         </template>
-      </template>
-    </section>
+      </section>
+    </template>
 
-    <section :class="styles.section">
+    <section v-if="workoutLoading || workoutError || recentWorkouts.length > 0" :class="styles.section">
       <h2 class="sectionHeading">Recent sessions</h2>
       <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
-        <p v-if="recentWorkouts.length === 0" :class="styles.emptyText">No sessions yet.</p>
-        <template v-else>
-            <div v-for="workout in recentWorkouts" :key="workout.id" >
-              <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">
-                <div class="highlightCard highlightCardSecondary">
-                  <span class="heading-m">{{ workout.routineLabel }}</span>
-                  <div :class="styles.workoutMeta">
-                    <span>{{ formatDateTime(workout.startedAt) }}</span>
-                    <span v-if="workout.durationSeconds !== undefined">{{
-                        formatDuration(workout.durationSeconds)
-                      }}</span>
-                  </div>
-                  <div class="weight-sm" v-if="workout.totalWeightKg">{{
-                      formatTotalWeight(workout.totalWeightKg)
-                    }} total</div>
-                </div>
-              </router-link>
+        <div v-for="workout in recentWorkouts" :key="workout.id">
+          <router-link :to="`/workouts/${workout.id}`" :data-testid="`workout-${workout.id}`">
+            <div class="highlightCard highlightCardSecondary">
+              <span class="heading-m">{{ workout.routineLabel }}</span>
+              <div :class="styles.workoutMeta">
+                <span>{{ formatDateTime(workout.startedAt) }}</span>
+                <span v-if="workout.durationSeconds !== undefined">{{
+                    formatDuration(workout.durationSeconds)
+                  }}</span>
+              </div>
+              <div class="weight-sm" v-if="workout.totalWeightKg">{{
+                  formatTotalWeight(workout.totalWeightKg)
+                }} total</div>
             </div>
-          <div class="indentToCardText"><router-link to="/workouts" :class="styles.allWorkoutsLink">See all</router-link></div>
-        </template>
+          </router-link>
+        </div>
+        <div><router-link to="/workouts" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
       </template>
     </section>
   </main>
