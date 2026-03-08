@@ -35,6 +35,9 @@
 .buttonLink {
     appearance: none;
   color: var(--accent-secondary);
+    font-family: var(--font-stack-heading);
+    font-weight: 100;
+    letter-spacing: 0.05em;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease-in-out;

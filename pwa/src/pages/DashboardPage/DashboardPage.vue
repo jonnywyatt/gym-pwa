@@ -99,7 +99,7 @@ onMounted(() => {
               <span class="heading-m">{{ routine.label }}</span>
             </button>
           </div>
-          <div class=" flexVerticalCenter flexGap3Units">
+          <div class="flexVerticalCenter flexGap3Units indentToCardText">
             <router-link to="/routines" class="buttonLink buttonLink--secondary">All routines</router-link>
             <span aria-hidden="true" class="linkDivider">|</span>
             <button type="button" class="buttonLink buttonLink--secondary" :disabled="creating" @click="onCreateRoutine">Create new routine</button>
@@ -117,11 +117,11 @@ onMounted(() => {
           <router-link :to="`/sessions/${workout.id}`" :data-testid="`workout-${workout.id}`">
             <div class="highlightCard highlightCardSecondary">
               <span class="heading-m">{{ workout.routineLabel }}</span>
-              <div :class="styles.workoutMeta">
-                <span>{{ formatDateTime(workout.startedAt) }}</span>
-                <span v-if="workout.durationSeconds !== undefined">{{
+              <div class="highlightCardContents">
+                <div>{{ formatDateTime(workout.startedAt) }}</div>
+                <div v-if="workout.durationSeconds !== undefined">{{
                     formatDuration(workout.durationSeconds)
-                  }}</span>
+                  }}</div>
               </div>
               <div class="weight-sm" v-if="workout.totalWeightKg">{{
                   formatTotalWeight(workout.totalWeightKg)
@@ -129,7 +129,7 @@ onMounted(() => {
             </div>
           </router-link>
         </div>
-        <div><router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
+        <div class="indentToCardText"><router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
       </template>
     </section>
   </main>

@@ -30,6 +30,7 @@
 
 .sectionHeading {
     font-size: var(--font-size-12);
+    font-family: var(--font-stack-heading);
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.3em;
@@ -75,7 +76,7 @@
 }
 
 .weight-sm {
-    font-family: var(--font-stack-heading);
+    font-family: var(--font-stack-mono);
     color: var(--accent-primary);
-    font-size: var(--font-size-13);
+    font-size: var(--font-size-12);
 }
