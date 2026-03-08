@@ -107,7 +107,7 @@ onMounted(() => {
               <span class="heading-m">{{ routine.label }}</span>
             </button>
           </div>
-          <div class="flexVerticalCenter flexGap3Units indentToCardText">
+          <div class="flexVerticalCenter flexGap3Units">
             <router-link to="/routines" class="buttonLink buttonLink--secondary">All routines</router-link>
             <span aria-hidden="true" class="linkDivider">|</span>
             <button type="button" class="buttonLink buttonLink--secondary" :disabled="creating" @click="onCreateRoutine">Create new routine</button>
@@ -138,7 +138,7 @@ onMounted(() => {
             :sessions="sessionHistory"
           />
         </div>
-        <div class="indentToCardText">
+        <div>
           <router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link>
         </div>
       </template>

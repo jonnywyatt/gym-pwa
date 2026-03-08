@@ -35,7 +35,7 @@
     text-transform: uppercase;
     letter-spacing: 0.3em;
     color: var(--text-secondary);
-    margin-bottom: var(--spacing-unit-3);
+    margin-bottom: var(--spacing-unit-4);
 }
 
 .accentPrimary {
