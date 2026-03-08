@@ -8,8 +8,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { type MuscleGroupLabel, RecordSetsType } from '../src/prisma-client';
-import { muscleGroupDisplayNames } from '../src/utils/display-names';
+import { RecordSetsType, SetType } from '../src/prisma-client';
 import { prisma } from '../src/utils/prisma';
 
 // ---------------------------------------------------------------------------
@@ -90,10 +89,7 @@ type CompletedSet = {
 
 type CompletedExercise = {
   id: number;
-  label: string;
   recordSetsType: string;
-  primaryMuscleGroups: string[];
-  secondaryMuscleGroups: string[];
   sets: CompletedSet[];
 };
 
@@ -233,29 +229,15 @@ async function main() {
   });
   const routineIdByLabel = new Map(routineRows.map((r) => [r.label!, r.id]));
 
-  // Load all exercises with muscle groups
   const dbExercises = await prisma.exercise.findMany({
-    include: {
-      primaryMuscleGroups: { include: { muscleGroup: true } },
-      secondaryMuscleGroups: { include: { muscleGroup: true } },
-    },
+    select: { id: true, label: true, recordSetsType: true },
   });
 
   type DbExercise = (typeof dbExercises)[number];
   const exerciseByLabel = new Map<string, DbExercise>(dbExercises.map((e) => [e.label, e]));
 
   function toCompletedExerciseBase(ex: DbExercise): Omit<CompletedExercise, 'sets'> {
-    return {
-      id: ex.id,
-      label: ex.label,
-      recordSetsType: ex.recordSetsType,
-      primaryMuscleGroups: ex.primaryMuscleGroups.map(
-        (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label as MuscleGroupLabel]
-      ),
-      secondaryMuscleGroups: ex.secondaryMuscleGroups.map(
-        (smg) => muscleGroupDisplayNames[smg.muscleGroup.label as MuscleGroupLabel]
-      ),
-    };
+    return { id: ex.id, recordSetsType: ex.recordSetsType };
   }
 
   // Parse CSV and group into workouts keyed by title+start_time
@@ -357,9 +339,23 @@ async function main() {
           startedAt,
           finishedAt,
           durationSeconds,
-          exercisesCompleted: exercisesCompleted as object[],
           totalWeightKg,
           bodyWeightKg: BODY_WEIGHT_KG,
+          exercises: {
+            create: exercisesCompleted.map((exercise, position) => ({
+              exerciseId: exercise.id,
+              position,
+              sets: {
+                create: exercise.sets.map((set, setPosition) => ({
+                  position: setPosition,
+                  setType: SetType.STANDARD,
+                  weightKg: set.weightKg,
+                  reps: set.reps,
+                  timeSeconds: set.timeSeconds,
+                })),
+              },
+            })),
+          },
         },
       });
     }

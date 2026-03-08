@@ -1,5 +1,13 @@
-import type { UserWorkout } from '../../types';
+import { type MuscleGroupLabel, SetType } from '../../prisma-client';
+import type { SetType as ApiSetType, UserWorkout } from '../../types';
+import { muscleGroupDisplayNames } from '../../utils/display-names';
 import type { UserWorkoutFromDB } from './queries';
+
+const setTypeToApi: Record<SetType, ApiSetType> = {
+  [SetType.WARMUP]: 'Warmup',
+  [SetType.STANDARD]: 'Standard',
+  [SetType.FAILURE]: 'Failure',
+};
 
 export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
   return {
@@ -10,9 +18,25 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
     startedAt: workout.startedAt.toISOString(),
     finishedAt: workout.finishedAt.toISOString(),
     durationSeconds: workout.durationSeconds ?? undefined,
-    exercisesCompleted: workout.exercisesCompleted as UserWorkout['exercisesCompleted'],
     totalWeightKg: workout.totalWeightKg ?? 0,
     bodyWeightKg: Number(workout.bodyWeightKg),
+    exercisesCompleted: workout.exercises.map((we) => ({
+      id: we.exercise.id,
+      label: we.exercise.label,
+      recordSetsType: we.exercise.recordSetsType,
+      primaryMuscleGroups: we.exercise.primaryMuscleGroups.map(
+        (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label as MuscleGroupLabel]
+      ),
+      secondaryMuscleGroups: we.exercise.secondaryMuscleGroups.map(
+        (smg) => muscleGroupDisplayNames[smg.muscleGroup.label as MuscleGroupLabel]
+      ),
+      sets: we.sets.map((set) => ({
+        setType: setTypeToApi[set.setType],
+        weightKg: set.weightKg !== null ? Number(set.weightKg) : undefined,
+        reps: set.reps ?? undefined,
+        timeSeconds: set.timeSeconds ?? undefined,
+      })),
+    })),
   };
 }
 

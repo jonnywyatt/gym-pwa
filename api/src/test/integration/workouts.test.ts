@@ -38,7 +38,6 @@ describe('Workout Routes - DELETE', () => {
         startedAt: new Date('2025-01-15T10:00:00Z'),
         finishedAt: new Date('2025-01-15T11:00:00Z'),
         durationSeconds: 3600,
-        exercisesCompleted: [],
         totalWeightKg: 0,
         bodyWeightKg: 75,
       },

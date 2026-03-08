@@ -184,9 +184,25 @@ exports.Prisma.UserWorkoutScalarFieldEnum = {
   startedAt: 'startedAt',
   finishedAt: 'finishedAt',
   durationSeconds: 'durationSeconds',
-  exercisesCompleted: 'exercisesCompleted',
   totalWeightKg: 'totalWeightKg',
   bodyWeightKg: 'bodyWeightKg'
+};
+
+exports.Prisma.WorkoutExerciseScalarFieldEnum = {
+  id: 'id',
+  workoutId: 'workoutId',
+  exerciseId: 'exerciseId',
+  position: 'position'
+};
+
+exports.Prisma.WorkoutSetScalarFieldEnum = {
+  id: 'id',
+  workoutExerciseId: 'workoutExerciseId',
+  position: 'position',
+  setType: 'setType',
+  weightKg: 'weightKg',
+  reps: 'reps',
+  timeSeconds: 'timeSeconds'
 };
 
 exports.Prisma.SortOrder = {
@@ -196,10 +212,6 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
-};
-
-exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -257,6 +269,12 @@ exports.RecordSetsType = exports.$Enums.RecordSetsType = {
   REPS: 'REPS'
 };
 
+exports.SetType = exports.$Enums.SetType = {
+  WARMUP: 'WARMUP',
+  STANDARD: 'STANDARD',
+  FAILURE: 'FAILURE'
+};
+
 exports.Prisma.ModelName = {
   BodyArea: 'BodyArea',
   MuscleGroup: 'MuscleGroup',
@@ -267,7 +285,9 @@ exports.Prisma.ModelName = {
   ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
   User: 'User',
   UserBodyWeight: 'UserBodyWeight',
-  UserWorkout: 'UserWorkout'
+  UserWorkout: 'UserWorkout',
+  WorkoutExercise: 'WorkoutExercise',
+  WorkoutSet: 'WorkoutSet'
 };
 
 /**

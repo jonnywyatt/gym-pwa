@@ -1,8 +1,29 @@
-import type { UserWorkout as PrismaUserWorkout } from '../../prisma-client';
-import type { CreateWorkoutRequest } from '../../types';
+import { type Prisma, SetType } from '../../prisma-client';
+import type { SetType as ApiSetType, CreateWorkoutRequest } from '../../types';
 import { prisma } from '../../utils/prisma';
 
-export type UserWorkoutFromDB = PrismaUserWorkout;
+const setTypeToDb: Record<ApiSetType, SetType> = {
+  Warmup: SetType.WARMUP,
+  Standard: SetType.STANDARD,
+  Failure: SetType.FAILURE,
+};
+
+const workoutInclude = {
+  exercises: {
+    orderBy: { position: 'asc' as const },
+    include: {
+      exercise: {
+        include: {
+          primaryMuscleGroups: { include: { muscleGroup: true } },
+          secondaryMuscleGroups: { include: { muscleGroup: true } },
+        },
+      },
+      sets: { orderBy: { position: 'asc' as const } },
+    },
+  },
+} satisfies Prisma.UserWorkoutInclude;
+
+export type UserWorkoutFromDB = Prisma.UserWorkoutGetPayload<{ include: typeof workoutInclude }>;
 
 export async function createUserWorkout(
   userId: number,
@@ -16,10 +37,25 @@ export async function createUserWorkout(
       startedAt: new Date(workout.startedAt),
       finishedAt: new Date(workout.finishedAt),
       durationSeconds: workout.durationSeconds,
-      exercisesCompleted: workout.exercisesCompleted,
       totalWeightKg: workout.totalWeightKg,
       bodyWeightKg: workout.bodyWeightKg,
+      exercises: {
+        create: workout.exercisesCompleted.map((exercise, position) => ({
+          exerciseId: exercise.id,
+          position,
+          sets: {
+            create: exercise.sets.map((set, setPosition) => ({
+              position: setPosition,
+              setType: setTypeToDb[set.setType],
+              weightKg: set.weightKg,
+              reps: set.reps,
+              timeSeconds: set.timeSeconds,
+            })),
+          },
+        })),
+      },
     },
+    include: workoutInclude,
   });
 }
 
@@ -30,6 +66,7 @@ export async function getUserWorkouts(userId: number, since?: Date): Promise<Use
       ...(since ? { startedAt: { gte: since } } : {}),
     },
     orderBy: { finishedAt: 'desc' },
+    include: workoutInclude,
   });
 }
 
@@ -37,6 +74,7 @@ export async function getLatestUserWorkout(userId: number): Promise<UserWorkoutF
   return await prisma.userWorkout.findFirst({
     where: { userId },
     orderBy: { finishedAt: 'desc' },
+    include: workoutInclude,
   });
 }
 
@@ -46,6 +84,7 @@ export async function getUserWorkout(
 ): Promise<UserWorkoutFromDB | null> {
   return await prisma.userWorkout.findFirst({
     where: { id: workoutId, userId },
+    include: workoutInclude,
   });
 }
 
@@ -55,15 +94,14 @@ export async function deleteUserWorkout(
 ): Promise<UserWorkoutFromDB | null> {
   const workout = await prisma.userWorkout.findFirst({
     where: { id: workoutId, userId },
+    include: workoutInclude,
   });
 
   if (!workout) {
     return null;
   }
 
-  await prisma.userWorkout.delete({
-    where: { id: workoutId },
-  });
+  await prisma.userWorkout.delete({ where: { id: workoutId } });
 
   return workout;
 }

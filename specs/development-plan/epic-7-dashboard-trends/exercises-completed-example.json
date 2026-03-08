@@ -1,0 +1,189 @@
+[
+  {
+    "id": 6,
+    "sets": [
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 32
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 66
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 66
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 73
+      }
+    ],
+    "label": "Lat pulldown",
+    "recordSetsType": "WEIGHT",
+    "primaryMuscleGroups": [
+      "Latissimus Dorsi"
+    ],
+    "secondaryMuscleGroups": [
+      "Rhomboids",
+      "Trapezius",
+      "Rear Deltoids"
+    ]
+  },
+  {
+    "id": 5,
+    "sets": [
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 66
+      },
+      {
+        "reps": 10,
+        "setType": "Standard",
+        "weightKg": 113
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 113
+      }
+    ],
+    "label": "Butterfly machine",
+    "recordSetsType": "WEIGHT",
+    "primaryMuscleGroups": [
+      "Pectoralis Minor",
+      "Pectoralis Major"
+    ],
+    "secondaryMuscleGroups": [
+      "Front Deltoids"
+    ]
+  },
+  {
+    "id": 1,
+    "sets": [
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 9
+      },
+      {
+        "reps": 7,
+        "setType": "Standard"
+      },
+      {
+        "reps": 6,
+        "setType": "Standard"
+      }
+    ],
+    "label": "Pull up (assisted)",
+    "recordSetsType": "BODYWEIGHT_MINUS_OFFSET",
+    "primaryMuscleGroups": [
+      "Latissimus Dorsi",
+      "Biceps"
+    ],
+    "secondaryMuscleGroups": [
+      "Rear Deltoids",
+      "Rhomboids",
+      "Abdominals",
+      "Trapezius",
+      "Forearms"
+    ]
+  },
+  {
+    "id": 2,
+    "sets": [
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 45
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 79
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 79
+      }
+    ],
+    "label": "Chest press machine",
+    "recordSetsType": "WEIGHT",
+    "primaryMuscleGroups": [
+      "Pectoralis Major",
+      "Front Deltoids",
+      "Triceps"
+    ],
+    "secondaryMuscleGroups": [
+      "Pectoralis Minor",
+      "Abdominals"
+    ]
+  },
+  {
+    "id": 8,
+    "sets": [
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 27
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 41
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 45
+      },
+      {
+        "reps": 8,
+        "setType": "Standard",
+        "weightKg": 45
+      }
+    ],
+    "label": "Seated row",
+    "recordSetsType": "WEIGHT",
+    "primaryMuscleGroups": [
+      "Trapezius",
+      "Rhomboids"
+    ],
+    "secondaryMuscleGroups": [
+      "Rear Deltoids",
+      "Biceps",
+      "Latissimus Dorsi"
+    ]
+  },
+  {
+    "id": 4,
+    "sets": [
+      {
+        "setType": "Standard",
+        "weightKg": 60,
+        "timeSeconds": 65
+      }
+    ],
+    "label": "Farmer's carry",
+    "recordSetsType": "WEIGHT_AND_TIME",
+    "primaryMuscleGroups": [
+      "Abdominals",
+      "Rear Deltoids",
+      "Trapezius",
+      "Rhomboids",
+      "Forearms"
+    ],
+    "secondaryMuscleGroups": [
+      "Quadriceps",
+      "Glutes",
+      "Hamstrings",
+      "Calves"
+    ]
+  }
+]
