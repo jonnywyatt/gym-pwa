@@ -5,7 +5,7 @@ import type {RoutineSummary, UserWorkout} from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
-import {loadDashboardData, handleNewWorkout, createRoutine} from './helpers';
+import {loadDashboardData, handleNewWorkout, createRoutine, consumeDashboardPrefetch} from './helpers';
 import SessionCalendar from '../../components/SessionCalendar/SessionCalendar.vue';
 import {buildRoutineColourMap, getRoutineSummaries} from '../../components/SessionCalendar/helpers';
 
@@ -33,7 +33,7 @@ const routineSummaries = computed(() => getRoutineSummaries(sessionHistory.value
 
 async function loadData() {
   const userId = authService.getUserId();
-  const data = await loadDashboardData(userId);
+  const data = await (consumeDashboardPrefetch() ?? loadDashboardData(userId));
 
   routines.value = data.routines;
   sessionHistory.value = data.sessionHistory;

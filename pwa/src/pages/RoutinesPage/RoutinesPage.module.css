@@ -8,6 +8,8 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-unit-2);
+    font-size: var(--font-size-14);
+    color: var(--text-secondary);
   cursor: pointer;
 }
 

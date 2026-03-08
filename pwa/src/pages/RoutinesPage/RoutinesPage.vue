@@ -84,7 +84,7 @@ onMounted(() => {
       </button>
     </header>
 
-    <label :class="['highlightCardContents', 'marginBottom6', styles.checkboxLabel]">
+    <label :class="[ 'marginBottom6', styles.checkboxLabel]">
       <input
           type="checkbox"
           :checked="showRecommended"

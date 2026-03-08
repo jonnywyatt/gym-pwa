@@ -2,11 +2,13 @@ import type { RoutineDetail, RoutineSummary, UserWorkout } from 'gym-pwa-api/typ
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import {
+  consumeDashboardPrefetch,
   createRoutine,
   fetchRecentWorkouts,
   fetchRoutines,
   handleNewWorkout,
   loadDashboardData,
+  prefetchDashboardData,
   sortRoutinesByLastUsed,
   startWorkoutForRoutine,
 } from './helpers';
@@ -397,5 +399,58 @@ describe('handleNewWorkout', () => {
     const result = await handleNewWorkout(1, 1, vi.fn(), vi.fn());
 
     expect(result).toEqual({ type: 'error', error: 'Fetch failed' });
+  });
+});
+
+describe('prefetchDashboardData / consumeDashboardPrefetch', () => {
+  it('consumeDashboardPrefetch returns null when no prefetch has been started', () => {
+    expect(consumeDashboardPrefetch()).toBeNull();
+  });
+
+  it('prefetchDashboardData starts a fetch and consumeDashboardPrefetch returns its promise', async () => {
+    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+
+    prefetchDashboardData(1);
+    const promise = consumeDashboardPrefetch();
+
+    expect(promise).toBeInstanceOf(Promise);
+    if (!promise) throw new Error('Expected promise to be set');
+    const data = await promise;
+    expect(data).toBeDefined();
+    expect(data.routines).toEqual([]);
+  });
+
+  it('consumeDashboardPrefetch clears the stored promise so subsequent calls return null', () => {
+    mockAuthFetchJson.mockResolvedValue([]);
+
+    prefetchDashboardData(1);
+    consumeDashboardPrefetch();
+
+    expect(consumeDashboardPrefetch()).toBeNull();
+  });
+
+  it('calling prefetchDashboardData twice does not start a second fetch', async () => {
+    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+
+    prefetchDashboardData(1);
+    prefetchDashboardData(1);
+
+    await consumeDashboardPrefetch();
+
+    // loadDashboardData makes 2 API calls (routines + workouts); a second prefetch would make 4
+    expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
+  });
+
+  it('after consuming, prefetchDashboardData can start a new fetch', async () => {
+    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+
+    prefetchDashboardData(1);
+    consumeDashboardPrefetch();
+
+    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    prefetchDashboardData(1);
+    const promise = consumeDashboardPrefetch();
+
+    expect(promise).toBeInstanceOf(Promise);
   });
 });

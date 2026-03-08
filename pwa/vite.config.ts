@@ -1,11 +1,8 @@
 import vue from '@vitejs/plugin-vue';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  const apiUrl = env.VITE_API_URL;
-
+export default defineConfig(() => {
   return {
     plugins: [
       vue(),
@@ -33,14 +30,6 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           runtimeCaching: [
-            {
-              urlPattern: ({ url }) => url.href.startsWith(apiUrl),
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'api-cache',
-                expiration: { maxAgeSeconds: 60 * 60 * 24 },
-              },
-            },
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
               handler: 'StaleWhileRevalidate',

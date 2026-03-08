@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   if (req.method === 'GET') {
-    res.set('Cache-Control', 'private, max-age=0, stale-while-revalidate=60');
+    res.set('Cache-Control', 'no-cache');
   }
   next();
 });

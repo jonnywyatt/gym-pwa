@@ -3,6 +3,19 @@ import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
+let dashboardPrefetch: Promise<DashboardData> | null = null;
+
+export function prefetchDashboardData(userId: number | null): void {
+  if (dashboardPrefetch) return;
+  dashboardPrefetch = loadDashboardData(userId);
+}
+
+export function consumeDashboardPrefetch(): Promise<DashboardData> | null {
+  const promise = dashboardPrefetch;
+  dashboardPrefetch = null;
+  return promise;
+}
+
 export interface DashboardData {
   routines: RoutineSummary[];
   sessionHistory: UserWorkout[];

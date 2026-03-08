@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '../../lib/db';
 import { server } from '../../test/msw';
 import DashboardPage from './DashboardPage.vue';
+import { consumeDashboardPrefetch, prefetchDashboardData } from './helpers';
 
 vi.mock('../../config', () => ({
   config: {
@@ -63,10 +64,12 @@ describe('DashboardPage', () => {
     localStorage.setItem('access_token', 'test-token');
     mockRouterPush.mockClear();
     await db.workouts.clear();
+    consumeDashboardPrefetch();
   });
 
   afterEach(async () => {
     await db.workouts.clear();
+    consumeDashboardPrefetch();
   });
 
   function renderPage() {
@@ -485,5 +488,18 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
     });
+  });
+
+  it('should use prefetched data when available without making new API calls', async () => {
+    setupHandlers([{ id: 1, label: 'Prefetched Routine', exerciseCount: 3 }], []);
+    prefetchDashboardData(1);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Prefetched Routine' })).toBeInTheDocument();
+    });
+
+    expect(consumeDashboardPrefetch()).toBeNull();
   });
 });
