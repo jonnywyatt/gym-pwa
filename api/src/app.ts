@@ -16,6 +16,13 @@ app.use(
 );
 app.use(express.json());
 
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    res.set('Cache-Control', 'private, max-age=0, stale-while-revalidate=60');
+  }
+  next();
+});
+
 // Routes
 app.use(routes);
 
