@@ -20,6 +20,7 @@ export interface CalendarDay {
   dateNumber: number | null;
   routineIds: number[];
   hasSession: boolean;
+  isToday: boolean;
 }
 
 export function buildRoutineColourMap(sessions: UserWorkout[]): Map<number, string> {
@@ -63,7 +64,8 @@ export function getRoutineSummaries(
 export function buildCalendarDays(
   startDate: Date,
   endDate: Date,
-  sessions: UserWorkout[]
+  sessions: UserWorkout[],
+  today = new Date()
 ): CalendarDay[] {
   const sessionsByDate = new Map<string, Set<number>>();
   for (const session of sessions) {
@@ -79,6 +81,7 @@ export function buildCalendarDays(
 
   const normalizedStart = normalizeToDay(startDate);
   const normalizedEnd = normalizeToDay(endDate);
+  const todayKey = toDateKey(normalizeToDay(today));
   const gridStart = getMondayOnOrBefore(normalizedStart);
   const gridEnd = getSundayOnOrAfter(normalizedEnd);
 
@@ -97,6 +100,7 @@ export function buildCalendarDays(
       dateNumber: isInRange ? current.getDate() : null,
       routineIds,
       hasSession: routineIds.length > 0,
+      isToday: isInRange && key === todayKey,
     });
 
     current.setDate(current.getDate() + 1);

@@ -15,7 +15,7 @@
 .weekHeaders {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: var(--spacing-unit-1);
+  gap: var(--spacing-unit-4);
   margin-bottom: var(--spacing-unit-4);
 }
 
@@ -46,6 +46,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.dotToday {
+  outline: 1px solid var(--em-text-primary);
+  outline-offset: 2px;
 }
 
 .dateNumber {

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/vue';
 import type { UserWorkout } from 'gym-pwa-api/types';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SessionCalendar from './SessionCalendar.vue';
 
 const makeWorkout = (
@@ -100,6 +100,44 @@ describe('SessionCalendar', () => {
 
     const jan1Number = screen.getByText('1');
     expect(jan1Number.style.color).toContain('var(--em-text-primary)');
+  });
+
+  describe('today outline', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date('2024-01-15T12:00:00'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('applies dotToday class to today dot', () => {
+      renderCalendar();
+
+      const jan15 = screen.getByText('15').parentElement;
+      expect(jan15?.className).toContain('dotToday');
+    });
+
+    it('does not apply dotToday class to other dots', () => {
+      renderCalendar();
+
+      const jan1 = screen.getByText('1').parentElement;
+      expect(jan1?.className).not.toContain('dotToday');
+    });
+  });
+
+  it('renders the most recent week first', () => {
+    // Jan 1-28: 4 complete weeks. Reversed: week 4 (Jan 22-28) is first row.
+    renderCalendar();
+
+    const allDateNumbers = screen
+      .getAllByText(/^\d{1,2}$/)
+      .map((el) => Number(el.textContent?.trim()));
+
+    expect(allDateNumbers[0]).toBe(22); // Monday of most recent week
+    expect(allDateNumbers[6]).toBe(28); // Sunday of most recent week
+    expect(allDateNumbers[21]).toBe(1); // Monday of oldest week
+    expect(allDateNumbers[27]).toBe(7); // Sunday of oldest week
   });
 
   it('does not split the dot when the same routine is used twice in one day', () => {

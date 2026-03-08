@@ -204,6 +204,28 @@ describe('buildCalendarDays', () => {
     expect(days.find((d) => d.dateNumber === 1)?.hasSession).toBe(false);
   });
 
+  it('marks isToday correctly using the injected today param', () => {
+    const startDate = new Date('2024-01-01T00:00:00');
+    const endDate = new Date('2024-01-07T00:00:00');
+    const today = new Date('2024-01-04T14:30:00'); // Friday, mid-day
+
+    const days = buildCalendarDays(startDate, endDate, [], today);
+
+    expect(days.find((d) => d.dateNumber === 4)?.isToday).toBe(true);
+    expect(days.find((d) => d.dateNumber === 3)?.isToday).toBe(false);
+    expect(days.find((d) => d.dateNumber === 5)?.isToday).toBe(false);
+  });
+
+  it('marks isToday false for padding cells', () => {
+    const startDate = new Date('2024-01-03T00:00:00'); // Wednesday
+    const endDate = new Date('2024-01-07T00:00:00');
+    const today = new Date('2024-01-01T00:00:00'); // Monday — a padding cell
+
+    const days = buildCalendarDays(startDate, endDate, [], today);
+
+    expect(days[0].isToday).toBe(false); // padding cell is never isToday
+  });
+
   it('generates unique keys for all days', () => {
     const startDate = new Date('2024-01-01T00:00:00');
     const endDate = new Date('2024-01-28T00:00:00');

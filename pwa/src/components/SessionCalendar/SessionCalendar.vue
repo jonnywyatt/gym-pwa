@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import type { UserWorkout } from 'gym-pwa-api/types';
 import styles from './SessionCalendar.module.css';
-import { buildCalendarDays, buildRoutineColourMap, getDotBackground } from './helpers';
+import { buildCalendarDays, buildRoutineColourMap, getDotBackground, type CalendarDay } from './helpers';
 
 const props = defineProps<{
   startDate: Date;
@@ -14,9 +14,14 @@ const WEEK_DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
 const colourMap = computed(() => buildRoutineColourMap(props.sessions));
 
-const calendarDays = computed(() =>
-  buildCalendarDays(props.startDate, props.endDate, props.sessions)
-);
+const calendarDays = computed(() => {
+  const days = buildCalendarDays(props.startDate, props.endDate, props.sessions);
+  const weeks: CalendarDay[][] = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
+  return weeks.reverse().flat();
+});
 
 function dotStyle(routineIds: number[]) {
   return { background: getDotBackground(routineIds, colourMap.value) };
@@ -41,7 +46,7 @@ function dateNumberStyle(hasSession: boolean) {
       <div v-for="day in calendarDays" :key="day.key" :class="styles.dayCell">
         <div
           v-if="day.dateNumber !== null"
-          :class="styles.dot"
+          :class="[styles.dot, day.isToday && styles.dotToday]"
           :style="dotStyle(day.routineIds)"
         >
           <span :class="styles.dateNumber" :style="dateNumberStyle(day.hasSession)">
