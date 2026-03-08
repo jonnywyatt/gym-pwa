@@ -28,14 +28,17 @@
     font-size: var(--font-size-11);
 }
 
-.sectionHeading {
+.uppercase {
     font-size: var(--font-size-12);
     font-family: var(--font-stack-heading);
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.3em;
     color: var(--text-secondary);
-    margin-bottom: var(--spacing-unit-4);
+}
+
+.uppercase--small {
+    font-size: var(--font-size-10);
 }
 
 .accentPrimary {

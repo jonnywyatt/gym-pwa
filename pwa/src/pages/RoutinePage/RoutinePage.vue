@@ -143,7 +143,7 @@ onMounted(() => {
         <li v-for="exercise in routine.exercises" :key="exercise.id" class="highlightCard">
           <h2 class="heading-m">{{ exercise.label }}</h2>
           <div class="highlightCardContents">
-            <div class="marginBottom2">{{ exercise.primaryMuscleGroups.join(', ') }}</div>
+            <div>{{ exercise.primaryMuscleGroups.join(', ') }}</div>
             <div>Secondary muscle groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
           </div>
         </li>

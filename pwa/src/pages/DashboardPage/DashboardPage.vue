@@ -95,7 +95,7 @@ onMounted(() => {
         <router-link to="/routines">Start by creating a routine</router-link>
       </p>
       <section v-else :class="styles.section">
-        <h2 class="sectionHeading">Start a session</h2>
+        <h2 class="uppercase marginBottom4">Start a session</h2>
         <p v-if="routinesLoading" :class="styles.loading">Loading...</p>
         <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
         <template v-else>
@@ -118,7 +118,7 @@ onMounted(() => {
     </template>
 
     <section :class="styles.section">
-      <h2 class="sectionHeading">Last 4 weeks sessions</h2>
+      <h2 class="uppercase marginBottom4">Last 4 weeks sessions</h2>
       <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>

@@ -349,25 +349,17 @@ onUnmounted(() => {
         <h1 class="heading-l">{{ completedWorkout.routineLabel }} session</h1>
       </header>
 
-      <div class="flexVerticalColumn flexGap1Unit marginBottom6">
-        <div class="highlightCardContents">
-          <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{
-              formatTotalWeight(completedWorkout.totalWeightKg)
-            }} total</span>
-        </div>
-        <div class="highlightCardContents">
-          <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
-        </div>
-        <div class="highlightCardContents">
+      <div class="highlightCardContents marginBottom6">
+        <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{
+            formatTotalWeight(completedWorkout.totalWeightKg)
+          }} total</span>
+        <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
         <span v-if="completedWorkout.durationSeconds !== undefined">{{
             formatDuration(completedWorkout.durationSeconds)
           }}</span>
-        </div>
-        <div class="highlightCardContents">
-          <span v-if="completedWorkout.bodyWeightKg">Body weight: {{
-              formatTotalWeight(completedWorkout.bodyWeightKg)
-            }}</span>
-        </div>
+        <span v-if="completedWorkout.bodyWeightKg">Body weight: {{
+            formatTotalWeight(completedWorkout.bodyWeightKg)
+          }}</span>
       </div>
 
       <ul class="list">
@@ -385,16 +377,13 @@ onUnmounted(() => {
                 formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets))
               }}
             </span>
-          </div>
-          <ul :class="styles.summarySetsList">
-            <li
+            <span
                 v-for="(set, index) in exercise.sets"
                 :key="index"
-                class="highlightCardContents"
             >
               {{ formatSetDetails(set, exercise.recordSetsType) }}
-            </li>
-          </ul>
+            </span>
+          </div>
         </li>
       </ul>
 

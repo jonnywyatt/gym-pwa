@@ -14,9 +14,9 @@ import {
 } from './helpers';
 
 const FILTER_OPTIONS: Array<{ period: FilterPeriod; label: string }> = [
-  { period: '30d', label: '30 days' },
-  { period: '1y', label: '1 year' },
-  { period: 'all', label: 'All' },
+  {period: '30d', label: '30 days'},
+  {period: '1y', label: '1 year'},
+  {period: 'all', label: 'All'},
 ];
 
 const workouts = ref<UserWorkout[]>([]);
@@ -61,10 +61,10 @@ onMounted(() => {
     </header>
     <div class="flexVerticalCenter flexGap2Units marginBottom4">
       <button
-        v-for="option in FILTER_OPTIONS"
-        :key="option.period"
-        :class="['buttonSecondary', selectedFilter === option.period ? styles.filterActive : '']"
-        @click="selectFilter(option.period)"
+          v-for="option in FILTER_OPTIONS"
+          :key="option.period"
+          :class="['buttonSecondary', selectedFilter === option.period ? styles.filterActive : '']"
+          @click="selectFilter(option.period)"
       >
         {{ option.label }}
       </button>
@@ -73,28 +73,25 @@ onMounted(() => {
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else>
       <p class="marginBottom4">{{ workouts.length }} {{ workouts.length === 1 ? 'session' : 'sessions' }}</p>
-      <p v-if="workouts.length === 0 && selectedFilter === 'all'">No sessions yet. Start a routine to log your first session!</p>
+      <p v-if="workouts.length === 0 && selectedFilter === 'all'">No sessions yet. Start a routine to log your first
+        session!</p>
       <p v-else-if="workouts.length === 0">No sessions in this period.</p>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">
           <router-link :to="`/sessions/${workout.id}`" :class="styles.workoutLink">
+            <div class="uppercase uppercase--small marginBottom1">{{ formatDateTime(workout.startedAt) }}</div>
             <h2 class="heading-m marginBottom2">
-             {{ workout.routineLabel }}
+              {{ workout.routineLabel }}
             </h2>
-            <div class="flexVerticalColumn flexGap1Unit">
-              <div class="highlightCardContents">
-                <span>{{ formatDateTime(workout.startedAt) }}</span>
-              </div>
-              <div class="highlightCardContents">
-                <span v-if="workout.durationSeconds !== undefined">{{
-                    formatDuration(workout.durationSeconds)
-                  }}</span>
-                <span v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</span>
-              </div>
-              <div class="highlightCardContents">
-                <span>{{ workout.exercisesCompleted.length }} exercises</span>
-              </div>
-              <div class="highlightCardContents">
+            <div class="highlightCardContents">
+              <div class="flexSpaceBetween">
+                <div>
+                  <div v-if="workout.durationSeconds !== undefined">{{
+                      formatDuration(workout.durationSeconds)
+                    }}</div>
+                  <div v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</div>
+                  <div>{{ workout.exercisesCompleted.length }} exercises</div>
+                </div>
                 <span v-if="workout.totalWeightKg" class="accentPrimary">{{
                     formatTotalWeight(workout.totalWeightKg)
                   }} total</span>

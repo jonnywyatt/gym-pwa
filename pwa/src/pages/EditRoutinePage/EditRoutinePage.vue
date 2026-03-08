@@ -177,7 +177,7 @@ onMounted(() => {
           <div :class="['highlightCard', 'marginBottom2', styles.exerciseCard]">
             <div class="heading-s">{{ exercise.label }}</div>
             <div class="highlightCardContents">
-              <div class="marginBottom1">Primary groups: {{ exercise.primaryMuscleGroups.join(', ') }}</div>
+              <div>Primary groups: {{ exercise.primaryMuscleGroups.join(', ') }}</div>
               <div v-if="exercise.secondaryMuscleGroups.length > 0">Secondary groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
             </div>
           </div>
