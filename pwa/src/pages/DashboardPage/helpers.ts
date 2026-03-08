@@ -5,7 +5,7 @@ import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
 export interface DashboardData {
   routines: RoutineSummary[];
-  recentWorkouts: UserWorkout[];
+  sessionHistory: UserWorkout[];
   routinesError: string | null;
   workoutError: string | null;
 }
@@ -19,8 +19,9 @@ export async function fetchRoutines(): Promise<RoutineSummary[]> {
   return authFetchJson<RoutineSummary[]>('/routines');
 }
 
-export async function fetchRecentWorkouts(userId: number): Promise<UserWorkout[]> {
-  return authFetchJson<UserWorkout[]>(`/users/${userId}/workouts`);
+export async function fetchRecentWorkouts(userId: number, since?: Date): Promise<UserWorkout[]> {
+  const params = since ? `?since=${since.toISOString()}` : '';
+  return authFetchJson<UserWorkout[]>(`/users/${userId}/workouts${params}`);
 }
 
 export function sortRoutinesByLastUsed(
@@ -60,9 +61,13 @@ export async function startWorkoutForRoutine(
 }
 
 export async function loadDashboardData(userId: number | null): Promise<DashboardData> {
+  const since = new Date();
+  since.setDate(since.getDate() - 27);
+  since.setHours(0, 0, 0, 0);
+
   const [routinesResult, workoutsResult] = await Promise.allSettled([
     fetchRoutines(),
-    userId !== null ? fetchRecentWorkouts(userId) : Promise.resolve([]),
+    userId !== null ? fetchRecentWorkouts(userId, since) : Promise.resolve([]),
   ]);
 
   const allRoutines = routinesResult.status === 'fulfilled' ? routinesResult.value : [];
@@ -76,7 +81,7 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
           ? routinesResult.reason.message
           : 'Failed to fetch routines'
         : null,
-    recentWorkouts: allWorkouts.slice(0, 2),
+    sessionHistory: allWorkouts,
     workoutError:
       workoutsResult.status === 'rejected'
         ? workoutsResult.reason instanceof Error

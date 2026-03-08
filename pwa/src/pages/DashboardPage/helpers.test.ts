@@ -82,6 +82,25 @@ describe('fetchRecentWorkouts', () => {
 
     expect(result).toHaveLength(0);
   });
+
+  it('should append since query param when provided', async () => {
+    mockAuthFetchJson.mockResolvedValue([]);
+    const since = new Date('2024-01-01T00:00:00.000Z');
+
+    await fetchRecentWorkouts(1, since);
+
+    expect(mockAuthFetchJson).toHaveBeenCalledWith(
+      `/users/1/workouts?since=${since.toISOString()}`
+    );
+  });
+
+  it('should omit since query param when not provided', async () => {
+    mockAuthFetchJson.mockResolvedValue([]);
+
+    await fetchRecentWorkouts(1);
+
+    expect(mockAuthFetchJson).toHaveBeenCalledWith('/users/1/workouts');
+  });
 });
 
 describe('startWorkoutForRoutine', () => {
@@ -224,13 +243,13 @@ describe('loadDashboardData', () => {
     totalWeightKg: 2500,
   };
 
-  it('should return routines and recent workouts on success', async () => {
+  it('should return routines and session history on success', async () => {
     mockAuthFetchJson.mockResolvedValueOnce(mockRoutines).mockResolvedValueOnce([mockWorkout]);
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual(mockRoutines);
-    expect(result.recentWorkouts).toEqual([mockWorkout]);
+    expect(result.sessionHistory).toEqual([mockWorkout]);
     expect(result.routinesError).toBeNull();
     expect(result.workoutError).toBeNull();
   });
@@ -244,7 +263,7 @@ describe('loadDashboardData', () => {
 
     expect(result.routines).toEqual([]);
     expect(result.routinesError).toBe('Network error');
-    expect(result.recentWorkouts).toEqual([mockWorkout]);
+    expect(result.sessionHistory).toEqual([mockWorkout]);
     expect(result.workoutError).toBeNull();
   });
 
@@ -257,17 +276,17 @@ describe('loadDashboardData', () => {
 
     expect(result.routines).toEqual(mockRoutines);
     expect(result.routinesError).toBeNull();
-    expect(result.recentWorkouts).toEqual([]);
+    expect(result.sessionHistory).toEqual([]);
     expect(result.workoutError).toBe('HTTP error: 500');
   });
 
-  it('should return empty workouts with no error when userId is null', async () => {
+  it('should return empty session history with no error when userId is null', async () => {
     mockAuthFetchJson.mockResolvedValueOnce(mockRoutines);
 
     const result = await loadDashboardData(null);
 
     expect(result.routines).toEqual(mockRoutines);
-    expect(result.recentWorkouts).toEqual([]);
+    expect(result.sessionHistory).toEqual([]);
     expect(result.workoutError).toBeNull();
   });
 
@@ -290,15 +309,13 @@ describe('loadDashboardData', () => {
     expect(result.routines[1].id).toBe(2);
   });
 
-  it('should return only 2 recent workouts for display', async () => {
+  it('should return all workouts in session history without slicing', async () => {
     const workouts: UserWorkout[] = [1, 2, 3, 4].map((n) => ({ ...mockWorkout, id: n }));
     mockAuthFetchJson.mockResolvedValueOnce([mockWorkout]).mockResolvedValueOnce(workouts);
 
     const result = await loadDashboardData(1);
 
-    expect(result.recentWorkouts).toHaveLength(2);
-    expect(result.recentWorkouts[0].id).toBe(1);
-    expect(result.recentWorkouts[1].id).toBe(2);
+    expect(result.sessionHistory).toHaveLength(4);
   });
 
   it('should return both errors when both fetches fail', async () => {
@@ -310,7 +327,7 @@ describe('loadDashboardData', () => {
 
     expect(result.routines).toEqual([]);
     expect(result.routinesError).toBe('Routines error');
-    expect(result.recentWorkouts).toEqual([]);
+    expect(result.sessionHistory).toEqual([]);
     expect(result.workoutError).toBe('HTTP error: 500');
   });
 });

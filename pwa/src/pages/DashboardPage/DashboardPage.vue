@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import type {RoutineSummary, UserWorkout} from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
 import {loadDashboardData, handleNewWorkout, createRoutine} from './helpers';
-import {
-  formatDateTime,
-  formatDuration,
-  formatTotalWeight,
-} from '../WorkoutsListPage/helpers';
+import SessionCalendar from '../../components/SessionCalendar/SessionCalendar.vue';
+import {buildRoutineColourMap, getRoutineSummaries} from '../../components/SessionCalendar/helpers';
 
 const router = useRouter();
 const routines = ref<RoutineSummary[]>([]);
-const recentWorkouts = ref<UserWorkout[]>([]);
+const sessionHistory = ref<UserWorkout[]>([]);
 const activeWorkout = ref<LocalWorkout | null>(null);
 const routinesLoading = ref(true);
 const workoutLoading = ref(true);
@@ -23,12 +20,23 @@ const workoutError = ref<string | null>(null);
 const startingRoutineId = ref<number | null>(null);
 const creating = ref(false);
 
+const calendarEnd = computed(() => new Date());
+const calendarStart = computed(() => {
+  const d = new Date();
+  d.setDate(d.getDate() - 27);
+  d.setHours(0, 0, 0, 0);
+  return d;
+});
+
+const colourMap = computed(() => buildRoutineColourMap(sessionHistory.value));
+const routineSummaries = computed(() => getRoutineSummaries(sessionHistory.value, colourMap.value));
+
 async function loadData() {
   const userId = authService.getUserId();
   const data = await loadDashboardData(userId);
 
   routines.value = data.routines;
-  recentWorkouts.value = data.recentWorkouts;
+  sessionHistory.value = data.sessionHistory;
   routinesError.value = data.routinesError;
   workoutError.value = data.workoutError;
   routinesLoading.value = false;
@@ -108,28 +116,31 @@ onMounted(() => {
       </section>
     </template>
 
-    <section v-if="workoutLoading || workoutError || recentWorkouts.length > 0" :class="styles.section">
-      <h2 class="sectionHeading">Recent sessions</h2>
+    <section :class="styles.section">
+      <h2 class="sectionHeading">Last 4 weeks sessions</h2>
       <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else>
-        <div v-for="workout in recentWorkouts" :key="workout.id">
-          <router-link :to="`/sessions/${workout.id}`" :data-testid="`workout-${workout.id}`">
-            <div class="highlightCard highlightCardSecondary">
-              <span class="heading-m">{{ workout.routineLabel }}</span>
-              <div class="highlightCardContents">
-                <div>{{ formatDateTime(workout.startedAt) }}</div>
-                <div v-if="workout.durationSeconds !== undefined">{{
-                    formatDuration(workout.durationSeconds)
-                  }}</div>
-              </div>
-              <div class="weight-sm" v-if="workout.totalWeightKg">{{
-                  formatTotalWeight(workout.totalWeightKg)
-                }} total</div>
+        <div :class="styles.habitLayout">
+          <div class="flexVerticalColumn flexGap3Units">
+            <div
+              v-for="summary in routineSummaries"
+              :key="summary.routineId"
+              class="flexVerticalEnd flexGap2Units"
+            >
+              <span :class="styles.summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
+              <span :class="styles.summaryLabel">{{ summary.label }}</span>
             </div>
-          </router-link>
+          </div>
+          <SessionCalendar
+            :startDate="calendarStart"
+            :endDate="calendarEnd"
+            :sessions="sessionHistory"
+          />
         </div>
-        <div class="indentToCardText"><router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link></div>
+        <div class="indentToCardText">
+          <router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link>
+        </div>
       </template>
     </section>
   </main>

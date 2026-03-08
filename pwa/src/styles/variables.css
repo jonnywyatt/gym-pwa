@@ -15,12 +15,17 @@
     --em-accent-lime-hover: #b8e600;
     --em-accent-teal: #00f5ff;
     --em-accent-purple: #8239AA;
+    --em-accent-flat-purple: #C256D1;
     --em-accent-fuchsia: #FF00A5;
+    --em-accent-mint: #00FFB2;
+    --em-accent-aqua: #00ADB3;
+    --em-accent-emerald: #00C734;
     --em-neutral: #94a3b8;
     --em-text-primary: #ffffff;
     --em-text-secondary: #94a3b8;
     --em-text-tertiary: #7b848f;
     --em-text-muted: #64748b;
+    --em-text-inverse: #313131;
     --em-border: #2a3f4a;
     --em-error: #ff4d4d;
     --em-success: #00f5ff;

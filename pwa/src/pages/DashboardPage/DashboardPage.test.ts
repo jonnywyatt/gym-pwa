@@ -80,7 +80,9 @@ describe('DashboardPage', () => {
     renderPage();
 
     expect(screen.getByRole('heading', { level: 2, name: 'Start a session' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 2, name: 'Recent sessions' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Last 4 weeks sessions' })
+    ).toBeInTheDocument();
   });
 
   it('should display loading state for routines', async () => {
@@ -159,14 +161,14 @@ describe('DashboardPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('should hide the Recent sessions section when there are no workouts', async () => {
+  it('should always show the Last 4 weeks section even with no workouts', async () => {
     setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
       expect(
-        screen.queryByRole('heading', { level: 2, name: 'Recent sessions' })
-      ).not.toBeInTheDocument();
+        screen.getByRole('heading', { level: 2, name: 'Last 4 weeks sessions' })
+      ).toBeInTheDocument();
     });
   });
 
@@ -190,7 +192,7 @@ describe('DashboardPage', () => {
     expect(screen.queryByRole('button', { name: 'Cardio' })).not.toBeInTheDocument();
   });
 
-  it('should display up to 2 recent workouts', async () => {
+  it('should display routine summaries when sessions exist', async () => {
     const workouts = [
       {
         id: 1,
@@ -198,20 +200,20 @@ describe('DashboardPage', () => {
         routineId: 1,
         routineLabel: 'Strength',
         startedAt: '2024-01-15T10:00:00Z',
-        finishedAt: '2024-01-15T11:05:30Z',
-        durationSeconds: 3930,
+        finishedAt: '2024-01-15T11:00:00Z',
+        durationSeconds: 3600,
         exercisesCompleted: [],
         bodyWeightKg: 80,
-        totalWeightKg: 2500,
+        totalWeightKg: 0,
       },
       {
         id: 2,
         userId: 1,
-        routineId: 2,
-        routineLabel: 'Cardio',
-        startedAt: '2024-01-14T10:00:00Z',
-        finishedAt: '2024-01-14T10:30:00Z',
-        durationSeconds: 1800,
+        routineId: 1,
+        routineLabel: 'Strength',
+        startedAt: '2024-01-16T10:00:00Z',
+        finishedAt: '2024-01-16T11:00:00Z',
+        durationSeconds: 3600,
         exercisesCompleted: [],
         bodyWeightKg: 80,
         totalWeightKg: 0,
@@ -219,41 +221,14 @@ describe('DashboardPage', () => {
       {
         id: 3,
         userId: 1,
-        routineId: 1,
-        routineLabel: 'Strength',
-        startedAt: '2024-01-13T10:00:00Z',
-        finishedAt: '2024-01-13T11:00:00Z',
+        routineId: 2,
+        routineLabel: 'Cardio',
+        startedAt: '2024-01-17T10:00:00Z',
+        finishedAt: '2024-01-17T11:00:00Z',
         durationSeconds: 3600,
         exercisesCompleted: [],
         bodyWeightKg: 80,
-        totalWeightKg: 2000,
-      },
-    ];
-    setupHandlers([], workouts);
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByTestId('workout-1')).toBeInTheDocument();
-    });
-
-    expect(screen.getByTestId('workout-1')).toHaveAttribute('href', '/sessions/1');
-    expect(screen.getByTestId('workout-2')).toHaveAttribute('href', '/sessions/2');
-    expect(screen.queryByTestId('workout-3')).not.toBeInTheDocument();
-  });
-
-  it('should display workout stats', async () => {
-    const workouts = [
-      {
-        id: 42,
-        userId: 1,
-        routineId: 1,
-        routineLabel: 'Strength',
-        startedAt: '2024-01-15T10:00:00Z',
-        finishedAt: '2024-01-15T11:05:30Z',
-        durationSeconds: 3930,
-        exercisesCompleted: [],
-        bodyWeightKg: 80,
-        totalWeightKg: 2500,
+        totalWeightKg: 0,
       },
     ];
     setupHandlers([], workouts);
@@ -263,11 +238,11 @@ describe('DashboardPage', () => {
       expect(screen.getByText('Strength')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('2,500kg total')).toBeInTheDocument();
-    expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
-
-    const cardLink = screen.getByTestId('workout-42');
-    expect(cardLink).toHaveAttribute('href', '/sessions/42');
+    // Routine labels appear in the summary section
+    expect(screen.getByText('Strength')).toBeInTheDocument();
+    expect(screen.getByText('Cardio')).toBeInTheDocument();
+    // Summary count for the top routine (2 sessions for Strength)
+    expect(screen.getByText('Strength').previousSibling?.textContent?.trim()).toBe('2');
   });
 
   it('should display Create new routine button alongside All routines link when routines exist', async () => {
@@ -314,22 +289,8 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display See all link when workouts exist', async () => {
-    const workouts = [
-      {
-        id: 1,
-        userId: 1,
-        routineId: 1,
-        routineLabel: 'Test',
-        startedAt: '2024-01-15T10:00:00Z',
-        finishedAt: '2024-01-15T11:00:00Z',
-        durationSeconds: 3600,
-        exercisesCompleted: [],
-        bodyWeightKg: 80,
-        totalWeightKg: 0,
-      },
-    ];
-    setupHandlers([], workouts);
+  it('should always show All sessions link', async () => {
+    setupHandlers([], []);
     renderPage();
 
     await waitFor(() => {
@@ -427,7 +388,7 @@ describe('DashboardPage', () => {
         screen.queryByRole('heading', { level: 2, name: 'Start a session' })
       ).not.toBeInTheDocument();
       expect(
-        screen.getByRole('heading', { level: 2, name: 'Recent sessions' })
+        screen.getByRole('heading', { level: 2, name: 'Last 4 weeks sessions' })
       ).toBeInTheDocument();
     });
   });
