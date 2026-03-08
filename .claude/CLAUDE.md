@@ -5,6 +5,9 @@
 
 [Development plan](./development-plan/goal-1-api-returns-data.md)
 
+## Environment
+- At the start of every session, run `source ~/.zshrc && nvm use` to ensure the Node.js version matches `.node-version` before running any npm or node commands
+
 ## Rules
 - when asked to open a URL, always use Chrome devtools MCP server
 - when researching and installing NPM libraries, always use the latest stable major version

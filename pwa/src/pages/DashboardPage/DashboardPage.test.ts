@@ -429,6 +429,32 @@ describe('DashboardPage', () => {
     expect(mockRouterPush).not.toHaveBeenCalled();
   });
 
+  it('should disable the routine button while a workout is being created', async () => {
+    const user = userEvent.setup();
+    const routines = [{ id: 1, label: 'Upper Body', exerciseCount: 5 }];
+
+    setupHandlers(routines, []);
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, async () => {
+        await delay('infinite');
+        return HttpResponse.json({});
+      }),
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({ id: 1, name: 'Test User', latestBodyWeight: { weightKg: 80 } });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Upper Body' }));
+
+    expect(screen.getByRole('button', { name: 'Upper Body' })).toBeDisabled();
+  });
+
   it('should display error when routines fetch fails', async () => {
     server.use(
       http.get(`${mockApiUrl}/routines`, () => {

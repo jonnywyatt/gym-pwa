@@ -13,6 +13,25 @@
     }
 }
 
+@keyframes sweepRight {
+  from { background-size: 0% 100%; }
+  to { background-size: 100% 100%; }
+}
+
+.routineButtonLoading {
+  color: var(--text-muted);
+  opacity: 1;
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--accent-secondary) 30%, transparent),
+    color-mix(in srgb, var(--accent-secondary) 30%, transparent)
+  );
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  animation: sweepRight 2s linear forwards;
+}
+
 .emptyText {
   color: var(--text-muted);
   font-size: var(--font-size-14);

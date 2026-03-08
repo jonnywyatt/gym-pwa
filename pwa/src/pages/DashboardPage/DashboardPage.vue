@@ -102,6 +102,7 @@ onMounted(() => {
           <div :class="styles.routineList">
             <button v-for="routine in routines" :key="routine.id" class="highlightCard"
                     type="button"
+                    :class="startingRoutineId === routine.id ? styles.routineButtonLoading : ''"
                     :disabled="startingRoutineId === routine.id"
                     @click="onNewWorkout(routine.id)">
               <span class="heading-m">{{ routine.label }}</span>
