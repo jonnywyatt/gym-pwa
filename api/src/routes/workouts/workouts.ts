@@ -6,9 +6,9 @@ import {
   deleteUserWorkout,
   getLatestUserWorkout,
   getUserWorkout,
-  getUserWorkouts,
+  getUserWorkoutSummaries,
 } from './queries';
-import { transformUserWorkout, transformUserWorkouts } from './transforms';
+import { transformUserWorkout, transformUserWorkoutSummaries } from './transforms';
 
 const router = Router();
 
@@ -84,8 +84,8 @@ router.get('/users/:userId/workouts', authenticate, async (req, res) => {
 
     const sinceParam = typeof req.query.since === 'string' ? req.query.since : undefined;
     const since = sinceParam ? new Date(sinceParam) : undefined;
-    const workouts = await getUserWorkouts(userId, since);
-    const transformed = transformUserWorkouts(workouts);
+    const workouts = await getUserWorkoutSummaries(userId, since);
+    const transformed = transformUserWorkoutSummaries(workouts);
     res.json(transformed);
   } catch (error) {
     console.error('Error fetching workouts:', error);

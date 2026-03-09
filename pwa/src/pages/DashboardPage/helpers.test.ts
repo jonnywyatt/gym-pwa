@@ -1,4 +1,4 @@
-import type { RoutineDetail, RoutineSummary, UserWorkout } from 'gym-pwa-api/types';
+import type { RoutineDetail, RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import {
@@ -53,7 +53,7 @@ describe('fetchRoutines', () => {
 });
 
 describe('fetchRecentWorkouts', () => {
-  const mockWorkout: UserWorkout = {
+  const mockWorkout: UserWorkoutSummary = {
     id: 1,
     userId: 1,
     routineId: 1,
@@ -61,13 +61,16 @@ describe('fetchRecentWorkouts', () => {
     startedAt: '2024-01-15T10:00:00Z',
     finishedAt: '2024-01-15T11:00:00Z',
     durationSeconds: 3600,
-    exercisesCompleted: [],
+    exerciseCount: 0,
     bodyWeightKg: 80,
     totalWeightKg: 2500,
   };
 
   it('should return all workouts from the API', async () => {
-    const fiveWorkouts: UserWorkout[] = [1, 2, 3, 4, 5].map((n) => ({ ...mockWorkout, id: n }));
+    const fiveWorkouts: UserWorkoutSummary[] = [1, 2, 3, 4, 5].map((n) => ({
+      ...mockWorkout,
+      id: n,
+    }));
     mockAuthFetchJson.mockResolvedValue(fiveWorkouts);
 
     const result = await fetchRecentWorkouts(1);
@@ -143,7 +146,7 @@ describe('startWorkoutForRoutine', () => {
       routineLabel: 'Other',
       startedAt: '2024-01-01T00:00:00Z',
       bodyWeightKg: 75,
-      exercisesCompleted: [],
+      exerciseCount: 0,
     });
 
     const result = await startWorkoutForRoutine(1, 1, getActiveWorkout);
@@ -163,7 +166,7 @@ describe('sortRoutinesByLastUsed', () => {
     exerciseCount: 3,
   });
 
-  const makeWorkout = (routineId: number, startedAt: string): UserWorkout => ({
+  const makeWorkout = (routineId: number, startedAt: string): UserWorkoutSummary => ({
     id: routineId,
     userId: 1,
     routineId,
@@ -171,7 +174,7 @@ describe('sortRoutinesByLastUsed', () => {
     startedAt,
     finishedAt: startedAt,
     durationSeconds: 3600,
-    exercisesCompleted: [],
+    exerciseCount: 0,
     bodyWeightKg: 80,
     totalWeightKg: 0,
   });
@@ -232,7 +235,7 @@ describe('loadDashboardData', () => {
     { id: 1, label: 'Upper Body', userId: null, exerciseCount: 3 },
   ];
 
-  const mockWorkout: UserWorkout = {
+  const mockWorkout: UserWorkoutSummary = {
     id: 1,
     userId: 1,
     routineId: 1,
@@ -240,7 +243,7 @@ describe('loadDashboardData', () => {
     startedAt: '2024-01-15T10:00:00Z',
     finishedAt: '2024-01-15T11:00:00Z',
     durationSeconds: 3600,
-    exercisesCompleted: [],
+    exerciseCount: 0,
     bodyWeightKg: 80,
     totalWeightKg: 2500,
   };
@@ -298,7 +301,7 @@ describe('loadDashboardData', () => {
       { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
       { id: 3, label: 'Routine C', userId: null, exerciseCount: 2 },
     ];
-    const workouts: UserWorkout[] = [
+    const workouts: UserWorkoutSummary[] = [
       { ...mockWorkout, id: 1, routineId: 3, startedAt: '2024-01-15T10:00:00Z' },
       { ...mockWorkout, id: 2, routineId: 2, startedAt: '2024-01-14T10:00:00Z' },
     ];
@@ -312,7 +315,7 @@ describe('loadDashboardData', () => {
   });
 
   it('should return all workouts in session history without slicing', async () => {
-    const workouts: UserWorkout[] = [1, 2, 3, 4].map((n) => ({ ...mockWorkout, id: n }));
+    const workouts: UserWorkoutSummary[] = [1, 2, 3, 4].map((n) => ({ ...mockWorkout, id: n }));
     mockAuthFetchJson.mockResolvedValueOnce([mockWorkout]).mockResolvedValueOnce(workouts);
 
     const result = await loadDashboardData(1);
@@ -365,7 +368,7 @@ describe('handleNewWorkout', () => {
       routineLabel: 'Other',
       startedAt: '2024-01-01T00:00:00Z',
       bodyWeightKg: 75,
-      exercisesCompleted: [],
+      exerciseCount: 0,
     });
 
     const result = await handleNewWorkout(1, 1, getActiveWorkout, vi.fn());

@@ -1,4 +1,4 @@
-import type { RoutineSummary, UserWorkout } from 'gym-pwa-api/types';
+import type { RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
@@ -18,7 +18,7 @@ export function consumeDashboardPrefetch(): Promise<DashboardData> | null {
 
 export interface DashboardData {
   routines: RoutineSummary[];
-  sessionHistory: UserWorkout[];
+  sessionHistory: UserWorkoutSummary[];
   routinesError: string | null;
   workoutError: string | null;
 }
@@ -32,14 +32,17 @@ export async function fetchRoutines(): Promise<RoutineSummary[]> {
   return authFetchJson<RoutineSummary[]>('/routines');
 }
 
-export async function fetchRecentWorkouts(userId: number, since?: Date): Promise<UserWorkout[]> {
+export async function fetchRecentWorkouts(
+  userId: number,
+  since?: Date
+): Promise<UserWorkoutSummary[]> {
   const params = since ? `?since=${since.toISOString()}` : '';
-  return authFetchJson<UserWorkout[]>(`/users/${userId}/workouts${params}`);
+  return authFetchJson<UserWorkoutSummary[]>(`/users/${userId}/workouts${params}`);
 }
 
 export function sortRoutinesByLastUsed(
   routines: RoutineSummary[],
-  workouts: UserWorkout[]
+  workouts: UserWorkoutSummary[]
 ): RoutineSummary[] {
   const lastUsedMap = new Map<number, string>();
   for (const workout of workouts) {

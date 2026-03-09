@@ -70,6 +70,37 @@ export async function getUserWorkouts(userId: number, since?: Date): Promise<Use
   });
 }
 
+const workoutSummarySelect = {
+  id: true,
+  userId: true,
+  routineId: true,
+  routineLabel: true,
+  startedAt: true,
+  finishedAt: true,
+  durationSeconds: true,
+  totalWeightKg: true,
+  bodyWeightKg: true,
+  _count: { select: { exercises: true } },
+} satisfies Prisma.UserWorkoutSelect;
+
+export type UserWorkoutSummaryFromDB = Prisma.UserWorkoutGetPayload<{
+  select: typeof workoutSummarySelect;
+}>;
+
+export async function getUserWorkoutSummaries(
+  userId: number,
+  since?: Date
+): Promise<UserWorkoutSummaryFromDB[]> {
+  return await prisma.userWorkout.findMany({
+    where: {
+      userId,
+      ...(since ? { startedAt: { gte: since } } : {}),
+    },
+    orderBy: { finishedAt: 'desc' },
+    select: workoutSummarySelect,
+  });
+}
+
 export async function getLatestUserWorkout(userId: number): Promise<UserWorkoutFromDB | null> {
   return await prisma.userWorkout.findFirst({
     where: { userId },

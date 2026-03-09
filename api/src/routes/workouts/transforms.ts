@@ -1,7 +1,7 @@
 import { type MuscleGroupLabel, SetType } from '../../prisma-client';
-import type { SetType as ApiSetType, UserWorkout } from '../../types';
+import type { SetType as ApiSetType, UserWorkout, UserWorkoutSummary } from '../../types';
 import { muscleGroupDisplayNames } from '../../utils/display-names';
-import type { UserWorkoutFromDB } from './queries';
+import type { UserWorkoutFromDB, UserWorkoutSummaryFromDB } from './queries';
 
 const setTypeToApi: Record<SetType, ApiSetType> = {
   [SetType.WARMUP]: 'Warmup',
@@ -42,4 +42,25 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
 
 export function transformUserWorkouts(workouts: UserWorkoutFromDB[]): UserWorkout[] {
   return workouts.map(transformUserWorkout);
+}
+
+export function transformUserWorkoutSummary(workout: UserWorkoutSummaryFromDB): UserWorkoutSummary {
+  return {
+    id: workout.id,
+    userId: workout.userId,
+    routineId: workout.routineId,
+    routineLabel: workout.routineLabel,
+    startedAt: workout.startedAt.toISOString(),
+    finishedAt: workout.finishedAt.toISOString(),
+    durationSeconds: workout.durationSeconds ?? undefined,
+    totalWeightKg: workout.totalWeightKg ?? 0,
+    bodyWeightKg: Number(workout.bodyWeightKg),
+    exerciseCount: workout._count.exercises,
+  };
+}
+
+export function transformUserWorkoutSummaries(
+  workouts: UserWorkoutSummaryFromDB[]
+): UserWorkoutSummary[] {
+  return workouts.map(transformUserWorkoutSummary);
 }

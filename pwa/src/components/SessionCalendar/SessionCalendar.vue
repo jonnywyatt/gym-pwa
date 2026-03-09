@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { UserWorkout } from 'gym-pwa-api/types';
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import styles from './SessionCalendar.module.css';
 import { buildCalendarDays, buildRoutineColourMap, getDotBackground, type CalendarDay } from './helpers';
 
 const props = defineProps<{
   startDate: Date;
   endDate: Date;
-  sessions: UserWorkout[];
+  sessions: UserWorkoutSummary[];
 }>();
 
 const WEEK_DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];

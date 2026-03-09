@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
-import type {RoutineSummary, UserWorkout} from 'gym-pwa-api/types';
+import type {RoutineSummary, UserWorkoutSummary} from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
@@ -11,7 +11,7 @@ import {buildRoutineColourMap, getRoutineSummaries} from '../../components/Sessi
 
 const router = useRouter();
 const routines = ref<RoutineSummary[]>([]);
-const sessionHistory = ref<UserWorkout[]>([]);
+const sessionHistory = ref<UserWorkoutSummary[]>([]);
 const activeWorkout = ref<LocalWorkout | null>(null);
 const routinesLoading = ref(true);
 const workoutLoading = ref(true);

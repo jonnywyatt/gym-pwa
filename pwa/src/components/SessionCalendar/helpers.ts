@@ -1,4 +1,4 @@
-import type { UserWorkout } from 'gym-pwa-api/types';
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 
 export const ROUTINE_COLOURS = [
   'var(--em-accent-mint)',
@@ -23,7 +23,7 @@ export interface CalendarDay {
   isToday: boolean;
 }
 
-export function buildRoutineColourMap(sessions: UserWorkout[]): Map<number, string> {
+export function buildRoutineColourMap(sessions: UserWorkoutSummary[]): Map<number, string> {
   const countMap = new Map<number, number>();
   for (const session of sessions) {
     countMap.set(session.routineId, (countMap.get(session.routineId) ?? 0) + 1);
@@ -37,7 +37,7 @@ export function buildRoutineColourMap(sessions: UserWorkout[]): Map<number, stri
 }
 
 export function getRoutineSummaries(
-  sessions: UserWorkout[],
+  sessions: UserWorkoutSummary[],
   colourMap: Map<number, string>
 ): RoutineSummaryItem[] {
   const dataMap = new Map<number, { label: string; count: number }>();
@@ -64,7 +64,7 @@ export function getRoutineSummaries(
 export function buildCalendarDays(
   startDate: Date,
   endDate: Date,
-  sessions: UserWorkout[],
+  sessions: UserWorkoutSummary[],
   today = new Date()
 ): CalendarDay[] {
   const sessionsByDate = new Map<string, Set<number>>();

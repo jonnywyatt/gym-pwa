@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/vue';
-import type { UserWorkout } from 'gym-pwa-api/types';
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SessionCalendar from './SessionCalendar.vue';
 
@@ -8,7 +8,7 @@ const makeWorkout = (
   routineId: number,
   routineLabel: string,
   startedAt: string
-): UserWorkout => ({
+): UserWorkoutSummary => ({
   id,
   userId: 1,
   routineId,
@@ -16,7 +16,7 @@ const makeWorkout = (
   startedAt,
   finishedAt: startedAt,
   durationSeconds: 3600,
-  exercisesCompleted: [],
+  exerciseCount: 0,
   bodyWeightKg: 80,
   totalWeightKg: 0,
 });
@@ -25,7 +25,7 @@ const makeWorkout = (
 const startDate = new Date('2024-01-01T00:00:00');
 const endDate = new Date('2024-01-28T00:00:00'); // 28 days, ends on Sunday
 
-function renderCalendar(sessions: UserWorkout[] = []) {
+function renderCalendar(sessions: UserWorkoutSummary[] = []) {
   return render(SessionCalendar, {
     props: { startDate, endDate, sessions },
   });

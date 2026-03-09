@@ -78,3 +78,7 @@ export type UserWorkout = CreateWorkoutRequest & {
   id: number;
   userId: number;
 };
+
+export type UserWorkoutSummary = Omit<UserWorkout, 'exercisesCompleted'> & {
+  exerciseCount: number;
+};

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
-import type {UserWorkout} from 'gym-pwa-api/types';
+import type {UserWorkoutSummary} from 'gym-pwa-api/types';
 import styles from './WorkoutsListPage.module.css';
 import {authService} from '../../lib/auth/oauth';
 import {
@@ -19,7 +19,7 @@ const FILTER_OPTIONS: Array<{ period: FilterPeriod; label: string }> = [
   {period: 'all', label: 'All'},
 ];
 
-const workouts = ref<UserWorkout[]>([]);
+const workouts = ref<UserWorkoutSummary[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const selectedFilter = ref<FilterPeriod>('30d');
@@ -90,7 +90,7 @@ onMounted(() => {
                       formatDuration(workout.durationSeconds)
                     }}</div>
                   <div v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</div>
-                  <div>{{ workout.exercisesCompleted.length }} exercises</div>
+                  <div>{{ workout.exerciseCount }} exercises</div>
                 </div>
                 <span v-if="workout.totalWeightKg" class="accentPrimary">{{
                     formatTotalWeight(workout.totalWeightKg)

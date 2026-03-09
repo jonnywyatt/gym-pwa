@@ -1,4 +1,4 @@
-import type { UserWorkout } from 'gym-pwa-api/types';
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
 import { formatDateTime as formatDateTimeUtil } from '../../utils/time';
 
@@ -21,11 +21,11 @@ export function getFilterStartDate(period: FilterPeriod): Date | null {
   }
 }
 
-export async function fetchWorkouts(userId: number, since?: Date): Promise<UserWorkout[]> {
+export async function fetchWorkouts(userId: number, since?: Date): Promise<UserWorkoutSummary[]> {
   const url = since
     ? `/users/${userId}/workouts?since=${since.toISOString()}`
     : `/users/${userId}/workouts`;
-  return await authFetchJson<UserWorkout[]>(url);
+  return await authFetchJson<UserWorkoutSummary[]>(url);
 }
 
 export async function deleteWorkoutApi(userId: number, workoutId: number): Promise<void> {

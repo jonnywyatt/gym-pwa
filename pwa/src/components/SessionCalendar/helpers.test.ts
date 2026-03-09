@@ -1,4 +1,4 @@
-import type { UserWorkout } from 'gym-pwa-api/types';
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { describe, expect, it } from 'vitest';
 import {
   buildCalendarDays,
@@ -13,7 +13,7 @@ const makeWorkout = (
   routineId: number,
   routineLabel: string,
   startedAt: string
-): UserWorkout => ({
+): UserWorkoutSummary => ({
   id,
   userId: 1,
   routineId,
@@ -21,7 +21,7 @@ const makeWorkout = (
   startedAt,
   finishedAt: startedAt,
   durationSeconds: 3600,
-  exercisesCompleted: [],
+  exerciseCount: 0,
   bodyWeightKg: 80,
   totalWeightKg: 0,
 });
