@@ -37,6 +37,19 @@ describe('WorkoutsListPage', () => {
     });
   }
 
+  it('should display a Start session link', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    const link = screen.getByRole('link', { name: 'Start session' });
+    expect(link).toHaveAttribute('href', '/sessions/start');
+  });
+
   it('should display loading state initially', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, async () => {

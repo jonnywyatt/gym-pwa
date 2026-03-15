@@ -56,8 +56,9 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <header class="header marginBottom4">
+    <header :class="[styles.header, 'marginBottom4']">
       <h1 class="heading-l heading-l-session">Sessions</h1>
+      <router-link to="/sessions/start" class="buttonPrimary">Start session</router-link>
     </header>
     <div class="flexVerticalCenter flexGap2Units marginBottom4">
       <button
@@ -74,8 +75,7 @@ onMounted(() => {
     <template v-else>
       <p v-if="workouts.length > 0" class="marginBottom4">{{ workouts.length }} {{ workouts.length === 1 ? 'session' : 'sessions' }}</p>
       <div v-if="workouts.length === 0">
-        <p>No sessions in this period.</p>
-        <router-link to="/" class="buttonLink">Start a session</router-link>
+        <p class="marginBottom4">No sessions in this period.</p>
       </div>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">

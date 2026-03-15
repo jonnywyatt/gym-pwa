@@ -7,6 +7,7 @@ import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
 import {loadDashboardData, handleNewWorkout, createRoutine, consumeDashboardPrefetch} from './helpers';
 import SessionCalendar from '../../components/SessionCalendar/SessionCalendar.vue';
+import StartSessionBlock from '../../components/StartSessionBlock/StartSessionBlock.vue';
 import {buildRoutineColourMap, getRoutineSummaries} from '../../components/SessionCalendar/helpers';
 
 const router = useRouter();
@@ -96,24 +97,18 @@ onMounted(() => {
       </p>
       <section v-else :class="styles.section">
         <h2 class="uppercase marginBottom4">Start a session</h2>
-        <p v-if="routinesLoading" :class="styles.loading">Loading...</p>
-        <p v-else-if="routinesError" :class="styles.error">Error: {{ routinesError }}</p>
-        <template v-else>
-          <div :class="styles.routineList">
-            <button v-for="routine in routines" :key="routine.id" class="highlightCard"
-                    type="button"
-                    :class="startingRoutineId === routine.id ? styles.routineButtonLoading : ''"
-                    :disabled="startingRoutineId === routine.id"
-                    @click="onNewWorkout(routine.id)">
-              <span class="heading-m">{{ routine.label }}</span>
-            </button>
-          </div>
-          <div class="flexVerticalCenter flexGap3Units">
-            <router-link to="/routines" class="buttonLink buttonLink--secondary">All routines</router-link>
-            <span aria-hidden="true" class="linkDivider">|</span>
-            <button type="button" class="buttonLink buttonLink--secondary" :disabled="creating" @click="onCreateRoutine">Create new routine</button>
-          </div>
-        </template>
+        <StartSessionBlock
+          :routines="routines"
+          :loading="routinesLoading"
+          :error="routinesError"
+          :startingRoutineId="startingRoutineId"
+          @startSession="onNewWorkout"
+        />
+        <div v-if="!routinesLoading && !routinesError" class="flexVerticalCenter flexGap3Units">
+          <router-link to="/routines" class="buttonLink buttonLink--secondary">All routines</router-link>
+          <span aria-hidden="true" class="linkDivider">|</span>
+          <button type="button" class="buttonLink buttonLink--secondary" :disabled="creating" @click="onCreateRoutine">Create new routine</button>
+        </div>
       </section>
     </template>
 

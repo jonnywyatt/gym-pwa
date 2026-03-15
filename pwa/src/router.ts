@@ -57,6 +57,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/sessions/start',
+      name: 'start-session',
+      component: () => import('./pages/StartSessionPage/StartSessionPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/sessions/:workoutId',
       name: 'workout-detail',
       component: () => import('./pages/WorkoutPage/WorkoutPage.vue'),
