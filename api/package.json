@@ -12,10 +12,12 @@
     "node": ">=24.0.0"
   },
   "scripts": {
+    "predev": "npm run docker:start",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
+    "db:setup": "docker exec gym-postgres psql -U postgres -c 'DROP DATABASE IF EXISTS gym_dev' && docker exec gym-postgres psql -U postgres -c 'CREATE DATABASE gym_dev' && prisma migrate deploy && prisma db seed",
     "db:test:reset": "docker exec gym-postgres psql -U postgres -c 'DROP DATABASE IF EXISTS gym_test' && docker exec gym-postgres psql -U postgres -c 'CREATE DATABASE gym_test' && DATABASE_URL='postgresql://postgres:localdev@localhost:5432/gym_test' prisma migrate deploy && DATABASE_URL='postgresql://postgres:localdev@localhost:5432/gym_test' prisma db seed",
     "pretest": "npm run docker:start && npm run db:test:reset",
     "test": "vitest",
