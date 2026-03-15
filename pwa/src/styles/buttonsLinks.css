@@ -41,6 +41,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease-in-out;
+    font-size: inherit;
 }
 
 .buttonLink:hover {

@@ -2,6 +2,10 @@
   color: var(--text-secondary);
 }
 
+.textSecondary--small {
+  font-size: var(--font-size-13);
+}
+
 .error {
   color: var(--text-error);
 }

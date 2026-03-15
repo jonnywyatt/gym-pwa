@@ -121,7 +121,7 @@ onMounted(() => {
       <h2 class="uppercase marginBottom4">Last 4 weeks sessions</h2>
       <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
-      <template v-else>
+      <template v-else-if="sessionHistory.length > 0">
         <div :class="styles.habitLayout">
           <div class="flexVerticalColumn flexGap3Units">
             <div
@@ -143,6 +143,7 @@ onMounted(() => {
           <router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link>
         </div>
       </template>
+      <div class="textSecondary textSecondary--small" v-else>No recent sessions</div>
     </section>
   </main>
 </template>

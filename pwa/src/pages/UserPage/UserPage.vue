@@ -78,6 +78,7 @@ onMounted(() => {
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else-if="profile">
       <form :class="styles.weightForm" @submit.prevent="handleSaveWeight">
+        <div v-if="isFirstTimeUser" class="textSecondary textSecondary--small marginBottom4">Your bodyweight will be used to calculate the weight moved for some exercises eg tricep dips, pull up.</div>
         <label :class="styles.label" for="body-weight">{{ isFirstTimeUser ? 'Body weight' : 'Update bodyweight' }}</label>
         <div class="flexVerticalCenter flexGap4Units">
           <div class="flexVerticalCenter flexGap1Unit">

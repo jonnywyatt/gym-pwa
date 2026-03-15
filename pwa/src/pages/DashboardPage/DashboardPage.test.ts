@@ -292,13 +292,36 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should always show All sessions link', async () => {
-    setupHandlers([], []);
+  it('should show All sessions link when sessions exist', async () => {
+    const workouts = [
+      {
+        id: 1,
+        userId: 1,
+        routineId: 1,
+        routineLabel: 'Strength',
+        startedAt: '2024-01-15T10:00:00Z',
+        finishedAt: '2024-01-15T11:00:00Z',
+        durationSeconds: 3600,
+        exercisesCompleted: [],
+        bodyWeightKg: 80,
+        totalWeightKg: 0,
+      },
+    ];
+    setupHandlers([], workouts);
     renderPage();
 
     await waitFor(() => {
       const allWorkoutsLink = screen.getByRole('link', { name: 'All sessions' });
       expect(allWorkoutsLink).toHaveAttribute('href', '/sessions');
+    });
+  });
+
+  it('should not show All sessions link when there are no sessions', async () => {
+    setupHandlers([], []);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByRole('link', { name: 'All sessions' })).not.toBeInTheDocument();
     });
   });
 

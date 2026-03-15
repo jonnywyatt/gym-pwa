@@ -72,10 +72,11 @@ onMounted(() => {
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else>
-      <p class="marginBottom4">{{ workouts.length }} {{ workouts.length === 1 ? 'session' : 'sessions' }}</p>
-      <p v-if="workouts.length === 0 && selectedFilter === 'all'">No sessions yet. Start a routine to log your first
-        session!</p>
-      <p v-else-if="workouts.length === 0">No sessions in this period.</p>
+      <p v-if="workouts.length > 0" class="marginBottom4">{{ workouts.length }} {{ workouts.length === 1 ? 'session' : 'sessions' }}</p>
+      <div v-if="workouts.length === 0">
+        <p>No sessions in this period.</p>
+        <router-link to="/" class="buttonLink">Start a session</router-link>
+      </div>
       <ul v-else class="list">
         <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">
           <router-link :to="`/sessions/${workout.id}`" :class="styles.workoutLink">
