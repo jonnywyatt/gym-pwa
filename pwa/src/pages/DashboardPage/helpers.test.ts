@@ -112,6 +112,7 @@ describe('startWorkoutForRoutine', () => {
   const mockRoutine: RoutineDetail = {
     id: 1,
     label: 'Upper Body',
+    userId: 1,
     exercises: [
       {
         id: 10,
@@ -341,6 +342,7 @@ describe('handleNewWorkout', () => {
   const mockRoutine: RoutineDetail = {
     id: 1,
     label: 'Upper Body',
+    userId: 1,
     exercises: [
       {
         id: 10,

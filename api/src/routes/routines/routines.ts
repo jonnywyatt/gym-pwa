@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
 import {
   addExerciseToRoutine,
+  copyRoutine,
   createRoutine,
   deleteRoutine,
   getRoutinesWithExerciseCount,
@@ -63,6 +64,28 @@ router.post('/routines', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error creating routine:', error);
     res.status(500).json({ error: 'Failed to create routine' });
+  }
+});
+
+router.post('/routines/:routineId/copy', authenticate, async (req, res) => {
+  try {
+    const routineId = parseInt(String(req.params.routineId), 10);
+    if (Number.isNaN(routineId)) {
+      res.status(400).json({ error: 'Invalid routine ID' });
+      return;
+    }
+
+    const userId = req.user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const routine = await copyRoutine(routineId, userId);
+    res.status(201).json({ id: routine.id });
+  } catch (error) {
+    console.error('Error copying routine:', error);
+    res.status(500).json({ error: 'Failed to copy routine' });
   }
 });
 

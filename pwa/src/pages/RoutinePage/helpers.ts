@@ -24,6 +24,15 @@ export async function deleteRoutine(routineId: string | string[]): Promise<void>
   }
 }
 
+export async function copyRoutine(routineId: string | string[]): Promise<number> {
+  const response = await authFetch(`/routines/${routineId}/copy`, { method: 'POST' });
+  if (!response.ok) {
+    throw new Error(`Failed to copy routine: ${response.status}`);
+  }
+  const data = (await response.json()) as { id: number };
+  return data.id;
+}
+
 export function mapExercisesToWorkoutExercises(routine: RoutineDetail): LocalWorkoutExercise[] {
   return routine.exercises.map((ex) => {
     const rawEx = toRaw(ex);

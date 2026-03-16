@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import { server } from '../../test/msw';
 import {
+  copyRoutine,
   createWorkoutFromRoutine,
   deleteRoutine,
   fetchRoutine,
@@ -82,6 +83,29 @@ describe('RoutinePage helpers', () => {
     });
   });
 
+  describe('copyRoutine', () => {
+    it('sends POST request to the copy endpoint and returns the new routine id', async () => {
+      server.use(
+        http.post(`${mockApiUrl}/routines/1/copy`, () => {
+          return HttpResponse.json({ id: 42 }, { status: 201 });
+        })
+      );
+
+      const newId = await copyRoutine('1');
+      expect(newId).toBe(42);
+    });
+
+    it('throws an error when the copy request fails', async () => {
+      server.use(
+        http.post(`${mockApiUrl}/routines/1/copy`, () => {
+          return new HttpResponse(null, { status: 500 });
+        })
+      );
+
+      await expect(copyRoutine('1')).rejects.toThrow('Failed to copy routine: 500');
+    });
+  });
+
   describe('fetchRoutine', () => {
     it('fetches routine by id', async () => {
       const mockRoutine = {
@@ -114,6 +138,7 @@ describe('RoutinePage helpers', () => {
       const routine: RoutineDetail = {
         id: 1,
         label: 'Test Routine',
+        userId: 1,
         exercises: [
           {
             id: 1,
@@ -157,6 +182,7 @@ describe('RoutinePage helpers', () => {
       const routine: RoutineDetail = {
         id: 1,
         label: 'Test Routine',
+        userId: 1,
         exercises: [
           {
             id: 1,
@@ -185,6 +211,7 @@ describe('RoutinePage helpers', () => {
       const routine: RoutineDetail = {
         id: 1,
         label: 'Test Routine',
+        userId: 1,
         exercises: [
           {
             id: 1,
@@ -213,6 +240,7 @@ describe('RoutinePage helpers', () => {
       const routine: RoutineDetail = {
         id: 1,
         label: 'Test Routine',
+        userId: 1,
         exercises: [],
       };
 
@@ -227,6 +255,7 @@ describe('RoutinePage helpers', () => {
     const mockRoutine: RoutineDetail = {
       id: 1,
       label: 'Test Routine',
+      userId: 1,
       exercises: [
         {
           id: 1,

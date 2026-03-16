@@ -89,13 +89,12 @@ onMounted(() => {
             step="0.01"
             min="0"
             :class="['inputBordered', styles.weightInput]"
-            placeholder="e.g. 75.50"
           />
           <span>kg</span>
         </div>
           <button
             type="submit"
-            class="buttonPrimary"
+            class="buttonPrimary buttonPrimary--large"
             :disabled="saving || !weight"
           >
             {{ saving ? 'Saving...' : 'Save' }}

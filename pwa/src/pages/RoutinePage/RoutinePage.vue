@@ -4,7 +4,7 @@ import {useRoute, useRouter} from 'vue-router';
 import type {RoutineDetail} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
-import {fetchRoutine, prepareWorkoutStart, deleteRoutine} from './helpers';
+import {fetchRoutine, prepareWorkoutStart, deleteRoutine, copyRoutine} from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 
 const route = useRoute();
@@ -16,6 +16,7 @@ const startingWorkout = ref(false);
 const activeWorkout = ref<LocalWorkout | null>(null);
 const deleting = ref(false);
 const showDeleteDialog = ref(false);
+const copying = ref(false);
 
 async function loadRoutine() {
   try {
@@ -100,6 +101,18 @@ async function confirmDelete() {
   }
 }
 
+async function handleCopyAndEdit() {
+  copying.value = true;
+  error.value = null;
+  try {
+    const newRoutineId = await copyRoutine(route.params.routineId);
+    await router.push(`/routines/${newRoutineId}/edit`);
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Failed to copy routine';
+    copying.value = false;
+  }
+}
+
 onMounted(() => {
   loadRoutine();
   checkActiveWorkout();
@@ -120,12 +133,25 @@ onMounted(() => {
         >
           {{ startingWorkout ? 'Starting...' : activeWorkout?.routineId === Number(route.params.routineId) ? 'Continue session' : 'Start session' }}
         </button>
-        <router-link
-            :to="`/routines/${route.params.routineId}/edit`"
-            class="buttonSecondary"
-        >Edit</router-link>
+        <template v-if="routine.userId === null">
+          <button
+              type="button"
+              class="buttonSecondary"
+              :disabled="copying"
+              @click="handleCopyAndEdit"
+          >
+            {{ copying ? 'Copying...' : 'Copy & edit' }}
+          </button>
+        </template>
+        <template v-else>
+          <router-link
+              :to="`/routines/${route.params.routineId}/edit`"
+              class="buttonSecondary"
+          >Edit</router-link>
+        </template>
       </div>
       <button
+          v-if="routine.userId !== null"
           type="button"
           class="buttonDelete"
           aria-label="Delete routine"

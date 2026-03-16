@@ -105,3 +105,36 @@ export async function removeExerciseFromRoutine(
     where: { routineId_exerciseId: { routineId, exerciseId } },
   });
 }
+
+export async function copyRoutine(sourceRoutineId: number, userId: number): Promise<Routine> {
+  const source = await prisma.routine.findUnique({
+    where: { id: sourceRoutineId },
+    include: {
+      routineExercises: {
+        orderBy: { position: 'asc' },
+      },
+    },
+  });
+
+  if (!source) {
+    throw new Error('Source routine not found');
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const newRoutine = await tx.routine.create({
+      data: { label: source.label ? `${source.label} (copy)` : null, userId },
+    });
+
+    if (source.routineExercises.length > 0) {
+      await tx.routineExercise.createMany({
+        data: source.routineExercises.map((re) => ({
+          routineId: newRoutine.id,
+          exerciseId: re.exerciseId,
+          position: re.position,
+        })),
+      });
+    }
+
+    return newRoutine;
+  });
+}

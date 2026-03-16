@@ -1,15 +1,22 @@
 # Welcome to Duro
 
-Skip the blurb and get started
+## Consistency beats intensity
 
-Duro is a gym tracker to build a habit that will last.
+To build a fitness habit that will stick, do lighter sessions, more often, rather than intense, less frequent ones.
 
-The key to success is to focus on consistency over intensity.
+By focusing on a higher frequency, you are building a "Low-Floor, High-Ceiling" habit — making it easier to show up, which eventually makes increased strength and heavier lifting inevitable.
+
+Behavioral science heavily supports the idea that consistency (frequency) is a much stronger predictor of long-term health and habit adherence than intensity (load) *
+
+* Gardner, Lally, and Wardle (2012)
+
+## Remember
+- turn up - a bad session beats no session
+- you don't have to progress every time. Be comfortable with a lower intensity session if you're fatigued
+- avoid injury by pushing less weight with good form and slower reps
 
 To prevent gym fatigue, use Duro to track and visualise all sessions, and use consistency as motivation.
 
-- lift light with good form, not failure sets that could get you injured
-- 
 Use the in-built routines or create your own. See your progress front-and-centre on the home screen
 
 
@@ -22,20 +29,6 @@ Good things:
 Bad things:
 - guilty, dragging yourself in for a session
 - infrequent sessions where you lift heavy to compensate, and risk injury
-
-
-
-
-solidifying a gym routine
-
-grow a positive attitude to the gym
-
-watch your progress to build motivation / a habit
-
-
-Here's the nerdy bit - 
-Behavioral science heavily supports the idea that consistency (frequency) is a much stronger predictor of long-term health and habit adherence than intensity (load).
-By focusing on the "cadence," you are helping users build a "Low-Floor, High-Ceiling" habit—making it easy to show up, which eventually makes the heavy lifting inevitable.
 
 
 # Why not streaks

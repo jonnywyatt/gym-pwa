@@ -32,6 +32,7 @@ export type RoutineSummary = Pick<PrismaRoutine, 'id'> & {
  * Routine detail returned by GET /routines/:routineId
  */
 export type RoutineDetail = Pick<PrismaRoutine, 'id' | 'label'> & {
+  userId: number | null;
   exercises: Exercise[];
 };
 

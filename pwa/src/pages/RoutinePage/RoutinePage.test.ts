@@ -70,6 +70,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -112,6 +113,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -138,6 +140,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -169,6 +172,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -196,6 +200,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -227,6 +232,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -264,6 +270,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Empty Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -286,6 +293,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -330,6 +338,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -391,6 +400,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -421,6 +431,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [],
     };
 
@@ -451,6 +462,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -484,6 +496,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -520,6 +533,7 @@ describe('RoutinePage', () => {
     const mockRoutine = {
       id: 1,
       label: 'Test Routine',
+      userId: 123,
       exercises: [
         {
           id: 1,
@@ -551,5 +565,92 @@ describe('RoutinePage', () => {
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
     });
+  });
+
+  it('should show "Copy & edit" button for default routines and hide Edit and Delete', async () => {
+    const mockRoutine = {
+      id: 1,
+      label: 'Default Routine',
+      userId: null,
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Copy & edit' })).toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('link', { name: 'Edit' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete routine' })).not.toBeInTheDocument();
+  });
+
+  it('should copy default routine and navigate to its edit page', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Default Routine',
+      userId: null,
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.post(`${mockApiUrl}/routines/1/copy`, () => {
+        return HttpResponse.json({ id: 42 }, { status: 201 });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Copy & edit' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Copy & edit' }));
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/routines/42/edit');
+    });
+  });
+
+  it('should show error when copying a routine fails', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Default Routine',
+      userId: null,
+      exercises: [],
+    };
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/1`, () => {
+        return HttpResponse.json(mockRoutine);
+      }),
+      http.post(`${mockApiUrl}/routines/1/copy`, () => {
+        return new HttpResponse(null, { status: 500 });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Copy & edit' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Copy & edit' }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error:/)).toBeInTheDocument();
+    });
+    expect(mockRouterPush).not.toHaveBeenCalled();
   });
 });

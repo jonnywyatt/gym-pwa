@@ -27,6 +27,7 @@ export function transformRoutineDetail(routine: RoutineWithExercises): RoutineDe
   return {
     id: routine.id,
     label: routine.label ?? '',
+    userId: routine.userId,
     exercises,
   };
 }
