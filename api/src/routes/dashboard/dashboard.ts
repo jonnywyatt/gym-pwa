@@ -29,6 +29,7 @@ router.get('/dashboard', authenticate, async (req, res) => {
       recentWorkouts: transformUserWorkoutSummaries(workoutSummaries),
     };
 
+    res.set('Cache-Control', 'private, max-age=0');
     res.json(response);
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
