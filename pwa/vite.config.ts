@@ -8,6 +8,9 @@ export default defineConfig(() => {
       vue(),
       VitePWA({
         registerType: 'autoUpdate',
+        strategies: 'injectManifest',
+        srcDir: 'src',
+        filename: 'sw.ts',
         manifest: {
           name: 'Duro',
           short_name: 'Duro',
@@ -28,31 +31,8 @@ export default defineConfig(() => {
             },
           ],
         },
-        workbox: {
-          runtimeCaching: [
-            {
-              urlPattern: /\/dashboard(\?.*)?$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'dashboard-api',
-                cacheableResponse: { statuses: [200] },
-                matchOptions: { ignoreVary: true },
-              },
-            },
-            {
-              urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
-              handler: 'StaleWhileRevalidate',
-              options: { cacheName: 'google-fonts-stylesheets' },
-            },
-            {
-              urlPattern: /^https:\/\/fonts\.gstatic\.com\//,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'google-fonts-webfonts',
-                expiration: { maxAgeSeconds: 60 * 60 * 24 * 30 },
-              },
-            },
-          ],
+        injectManifest: {
+          globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}'],
         },
       }),
     ],
