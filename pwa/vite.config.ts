@@ -36,6 +36,7 @@ export default defineConfig(() => {
               options: {
                 cacheName: 'dashboard-api',
                 cacheableResponse: { statuses: [200] },
+                matchOptions: { ignoreVary: true },
               },
             },
             {
