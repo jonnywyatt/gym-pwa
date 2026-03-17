@@ -34,7 +34,10 @@ const routineSummaries = computed(() => getRoutineSummaries(sessionHistory.value
 
 async function loadData() {
   const userId = authService.getUserId();
-  const data = await (consumeDashboardPrefetch() ?? loadDashboardData(userId));
+  const [data, localWorkout] = await Promise.all([
+    consumeDashboardPrefetch() ?? loadDashboardData(userId),
+    userId !== null ? getActiveWorkout(userId) : Promise.resolve(undefined),
+  ]);
 
   routines.value = data.routines;
   sessionHistory.value = data.sessionHistory;
@@ -42,10 +45,7 @@ async function loadData() {
   workoutError.value = data.workoutError;
   routinesLoading.value = false;
   workoutLoading.value = false;
-
-  if (userId !== null) {
-    activeWorkout.value = (await getActiveWorkout(userId)) ?? null;
-  }
+  activeWorkout.value = localWorkout ?? null;
 }
 
 async function onNewWorkout(routineId: number) {

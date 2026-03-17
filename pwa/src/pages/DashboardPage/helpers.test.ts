@@ -1,11 +1,15 @@
-import type { RoutineDetail, RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
+import type {
+  DashboardResponse,
+  RoutineDetail,
+  RoutineSummary,
+  UserWorkoutSummary,
+} from 'gym-pwa-api/types';
 import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkout } from '../../lib/db';
 import {
   consumeDashboardPrefetch,
   createRoutine,
-  fetchRecentWorkouts,
-  fetchRoutines,
+  fetchDashboard,
   handleNewWorkout,
   loadDashboardData,
   prefetchDashboardData,
@@ -33,78 +37,20 @@ describe('createRoutine', () => {
   });
 });
 
-describe('fetchRoutines', () => {
-  it('should return all routines from the API', async () => {
-    const fiveRoutines: RoutineSummary[] = [
-      { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
-      { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
-      { id: 3, label: 'Routine C', userId: null, exerciseCount: 2 },
-      { id: 4, label: 'Routine D', userId: null, exerciseCount: 5 },
-      { id: 5, label: 'Routine E', userId: null, exerciseCount: 1 },
-    ];
-    mockAuthFetchJson.mockResolvedValue(fiveRoutines);
-
-    const result = await fetchRoutines();
-
-    expect(result).toHaveLength(5);
-    expect(result[0].label).toBe('Routine A');
-    expect(result[4].label).toBe('Routine E');
-  });
-});
-
-describe('fetchRecentWorkouts', () => {
-  const mockWorkout: UserWorkoutSummary = {
-    id: 1,
-    userId: 1,
-    routineId: 1,
-    routineLabel: 'Strength',
-    startedAt: '2024-01-15T10:00:00Z',
-    finishedAt: '2024-01-15T11:00:00Z',
-    durationSeconds: 3600,
-    exerciseCount: 0,
-    bodyWeightKg: 80,
-    totalWeightKg: 2500,
+describe('fetchDashboard', () => {
+  const mockResponse: DashboardResponse = {
+    routines: [{ id: 1, label: 'Routine A', userId: null, exerciseCount: 3 }],
+    recentWorkouts: [],
   };
 
-  it('should return all workouts from the API', async () => {
-    const fiveWorkouts: UserWorkoutSummary[] = [1, 2, 3, 4, 5].map((n) => ({
-      ...mockWorkout,
-      id: n,
-    }));
-    mockAuthFetchJson.mockResolvedValue(fiveWorkouts);
-
-    const result = await fetchRecentWorkouts(1);
-
-    expect(result).toHaveLength(5);
-    expect(result[0].id).toBe(1);
-    expect(result[4].id).toBe(5);
-  });
-
-  it('should return empty array when no workouts', async () => {
-    mockAuthFetchJson.mockResolvedValue([]);
-
-    const result = await fetchRecentWorkouts(1);
-
-    expect(result).toHaveLength(0);
-  });
-
-  it('should append since query param when provided', async () => {
-    mockAuthFetchJson.mockResolvedValue([]);
+  it('should call the dashboard endpoint with the since param', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockResponse);
     const since = new Date('2024-01-01T00:00:00.000Z');
 
-    await fetchRecentWorkouts(1, since);
+    const result = await fetchDashboard(since);
 
-    expect(mockAuthFetchJson).toHaveBeenCalledWith(
-      `/users/1/workouts?since=${since.toISOString()}`
-    );
-  });
-
-  it('should omit since query param when not provided', async () => {
-    mockAuthFetchJson.mockResolvedValue([]);
-
-    await fetchRecentWorkouts(1);
-
-    expect(mockAuthFetchJson).toHaveBeenCalledWith('/users/1/workouts');
+    expect(mockAuthFetchJson).toHaveBeenCalledWith(`/dashboard?since=${since.toISOString()}`);
+    expect(result).toEqual(mockResponse);
   });
 });
 
@@ -249,8 +195,13 @@ describe('loadDashboardData', () => {
     totalWeightKg: 2500,
   };
 
+  const mockDashboardResponse: DashboardResponse = {
+    routines: mockRoutines,
+    recentWorkouts: [mockWorkout],
+  };
+
   it('should return routines and session history on success', async () => {
-    mockAuthFetchJson.mockResolvedValueOnce(mockRoutines).mockResolvedValueOnce([mockWorkout]);
+    mockAuthFetchJson.mockResolvedValueOnce(mockDashboardResponse);
 
     const result = await loadDashboardData(1);
 
@@ -260,34 +211,19 @@ describe('loadDashboardData', () => {
     expect(result.workoutError).toBeNull();
   });
 
-  it('should return routinesError when routines fetch fails', async () => {
-    mockAuthFetchJson
-      .mockRejectedValueOnce(new Error('Network error'))
-      .mockResolvedValueOnce([mockWorkout]);
+  it('should return errors for both fields when the dashboard fetch fails', async () => {
+    mockAuthFetchJson.mockRejectedValueOnce(new Error('Network error'));
 
     const result = await loadDashboardData(1);
 
     expect(result.routines).toEqual([]);
     expect(result.routinesError).toBe('Network error');
-    expect(result.sessionHistory).toEqual([mockWorkout]);
-    expect(result.workoutError).toBeNull();
-  });
-
-  it('should return workoutError when workouts fetch fails', async () => {
-    mockAuthFetchJson
-      .mockResolvedValueOnce(mockRoutines)
-      .mockRejectedValueOnce(new Error('HTTP error: 500'));
-
-    const result = await loadDashboardData(1);
-
-    expect(result.routines).toEqual(mockRoutines);
-    expect(result.routinesError).toBeNull();
     expect(result.sessionHistory).toEqual([]);
-    expect(result.workoutError).toBe('HTTP error: 500');
+    expect(result.workoutError).toBe('Network error');
   });
 
   it('should return empty session history with no error when userId is null', async () => {
-    mockAuthFetchJson.mockResolvedValueOnce(mockRoutines);
+    mockAuthFetchJson.mockResolvedValueOnce({ routines: mockRoutines, recentWorkouts: [] });
 
     const result = await loadDashboardData(null);
 
@@ -306,7 +242,7 @@ describe('loadDashboardData', () => {
       { ...mockWorkout, id: 1, routineId: 3, startedAt: '2024-01-15T10:00:00Z' },
       { ...mockWorkout, id: 2, routineId: 2, startedAt: '2024-01-14T10:00:00Z' },
     ];
-    mockAuthFetchJson.mockResolvedValueOnce(routines).mockResolvedValueOnce(workouts);
+    mockAuthFetchJson.mockResolvedValueOnce({ routines, recentWorkouts: workouts });
 
     const result = await loadDashboardData(1);
 
@@ -317,24 +253,11 @@ describe('loadDashboardData', () => {
 
   it('should return all workouts in session history without slicing', async () => {
     const workouts: UserWorkoutSummary[] = [1, 2, 3, 4].map((n) => ({ ...mockWorkout, id: n }));
-    mockAuthFetchJson.mockResolvedValueOnce([mockWorkout]).mockResolvedValueOnce(workouts);
+    mockAuthFetchJson.mockResolvedValueOnce({ routines: mockRoutines, recentWorkouts: workouts });
 
     const result = await loadDashboardData(1);
 
     expect(result.sessionHistory).toHaveLength(4);
-  });
-
-  it('should return both errors when both fetches fail', async () => {
-    mockAuthFetchJson
-      .mockRejectedValueOnce(new Error('Routines error'))
-      .mockRejectedValueOnce(new Error('HTTP error: 500'));
-
-    const result = await loadDashboardData(1);
-
-    expect(result.routines).toEqual([]);
-    expect(result.routinesError).toBe('Routines error');
-    expect(result.sessionHistory).toEqual([]);
-    expect(result.workoutError).toBe('HTTP error: 500');
   });
 });
 
@@ -408,12 +331,14 @@ describe('handleNewWorkout', () => {
 });
 
 describe('prefetchDashboardData / consumeDashboardPrefetch', () => {
+  const emptyDashboard: DashboardResponse = { routines: [], recentWorkouts: [] };
+
   it('consumeDashboardPrefetch returns null when no prefetch has been started', () => {
     expect(consumeDashboardPrefetch()).toBeNull();
   });
 
   it('prefetchDashboardData starts a fetch and consumeDashboardPrefetch returns its promise', async () => {
-    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    mockAuthFetchJson.mockResolvedValueOnce(emptyDashboard);
 
     prefetchDashboardData(1);
     const promise = consumeDashboardPrefetch();
@@ -426,7 +351,7 @@ describe('prefetchDashboardData / consumeDashboardPrefetch', () => {
   });
 
   it('consumeDashboardPrefetch clears the stored promise so subsequent calls return null', () => {
-    mockAuthFetchJson.mockResolvedValue([]);
+    mockAuthFetchJson.mockResolvedValue(emptyDashboard);
 
     prefetchDashboardData(1);
     consumeDashboardPrefetch();
@@ -435,24 +360,24 @@ describe('prefetchDashboardData / consumeDashboardPrefetch', () => {
   });
 
   it('calling prefetchDashboardData twice does not start a second fetch', async () => {
-    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    mockAuthFetchJson.mockResolvedValueOnce(emptyDashboard);
 
     prefetchDashboardData(1);
     prefetchDashboardData(1);
 
     await consumeDashboardPrefetch();
 
-    // loadDashboardData makes 2 API calls (routines + workouts); a second prefetch would make 4
-    expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
+    // loadDashboardData makes 1 API call; a second prefetch would make 2
+    expect(mockAuthFetchJson).toHaveBeenCalledTimes(1);
   });
 
   it('after consuming, prefetchDashboardData can start a new fetch', async () => {
-    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    mockAuthFetchJson.mockResolvedValueOnce(emptyDashboard);
 
     prefetchDashboardData(1);
     consumeDashboardPrefetch();
 
-    mockAuthFetchJson.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    mockAuthFetchJson.mockResolvedValueOnce(emptyDashboard);
     prefetchDashboardData(1);
     const promise = consumeDashboardPrefetch();
 

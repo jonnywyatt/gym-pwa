@@ -31,6 +31,14 @@ export default defineConfig(() => {
         workbox: {
           runtimeCaching: [
             {
+              urlPattern: /\/dashboard(\?.*)?$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'dashboard-api',
+                cacheableResponse: { statuses: [200] },
+              },
+            },
+            {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
               handler: 'StaleWhileRevalidate',
               options: { cacheName: 'google-fonts-stylesheets' },

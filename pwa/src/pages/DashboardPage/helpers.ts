@@ -1,4 +1,4 @@
-import type { RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
+import type { DashboardResponse, RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
@@ -28,16 +28,12 @@ export type NewWorkoutResult =
   | { type: 'navigate-with-error'; path: string; error: string }
   | { type: 'error'; error: string };
 
-export async function fetchRoutines(): Promise<RoutineSummary[]> {
-  return authFetchJson<RoutineSummary[]>('/routines');
+export async function fetchDashboard(since: Date): Promise<DashboardResponse> {
+  return authFetchJson<DashboardResponse>(`/dashboard?since=${since.toISOString()}`);
 }
 
-export async function fetchRecentWorkouts(
-  userId: number,
-  since?: Date
-): Promise<UserWorkoutSummary[]> {
-  const params = since ? `?since=${since.toISOString()}` : '';
-  return authFetchJson<UserWorkoutSummary[]>(`/users/${userId}/workouts${params}`);
+export async function fetchRoutines(): Promise<RoutineSummary[]> {
+  return authFetchJson<RoutineSummary[]>('/routines');
 }
 
 export function sortRoutinesByLastUsed(
@@ -81,30 +77,41 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
   since.setDate(since.getDate() - 27);
   since.setHours(0, 0, 0, 0);
 
-  const [routinesResult, workoutsResult] = await Promise.allSettled([
-    fetchRoutines(),
-    userId !== null ? fetchRecentWorkouts(userId, since) : Promise.resolve([]),
-  ]);
+  if (userId === null) {
+    try {
+      const data = await fetchDashboard(since);
+      return {
+        routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts).slice(0, 2),
+        sessionHistory: [],
+        routinesError: null,
+        workoutError: null,
+      };
+    } catch (e) {
+      return {
+        routines: [],
+        sessionHistory: [],
+        routinesError: e instanceof Error ? e.message : 'Failed to fetch routines',
+        workoutError: null,
+      };
+    }
+  }
 
-  const allRoutines = routinesResult.status === 'fulfilled' ? routinesResult.value : [];
-  const allWorkouts = workoutsResult.status === 'fulfilled' ? workoutsResult.value : [];
-
-  return {
-    routines: sortRoutinesByLastUsed(allRoutines, allWorkouts).slice(0, 2),
-    routinesError:
-      routinesResult.status === 'rejected'
-        ? routinesResult.reason instanceof Error
-          ? routinesResult.reason.message
-          : 'Failed to fetch routines'
-        : null,
-    sessionHistory: allWorkouts,
-    workoutError:
-      workoutsResult.status === 'rejected'
-        ? workoutsResult.reason instanceof Error
-          ? workoutsResult.reason.message
-          : 'Failed to fetch workouts'
-        : null,
-  };
+  try {
+    const data = await fetchDashboard(since);
+    return {
+      routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts).slice(0, 2),
+      sessionHistory: data.recentWorkouts,
+      routinesError: null,
+      workoutError: null,
+    };
+  } catch (e) {
+    return {
+      routines: [],
+      sessionHistory: [],
+      routinesError: e instanceof Error ? e.message : 'Failed to fetch dashboard data',
+      workoutError: e instanceof Error ? e.message : 'Failed to fetch dashboard data',
+    };
+  }
 }
 
 export async function handleNewWorkout(

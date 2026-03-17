@@ -39,22 +39,15 @@ const mockApiUrl = 'http://localhost:3000';
 function setupHandlers(
   routines: unknown[] = [],
   workouts: unknown[] = [],
-  options: { routinesDelay?: boolean; workoutDelay?: boolean } = {}
+  options: { delay?: boolean } = {}
 ) {
   server.use(
-    http.get(`${mockApiUrl}/routines`, async () => {
-      if (options.routinesDelay) {
+    http.get(`${mockApiUrl}/dashboard`, async () => {
+      if (options.delay) {
         await delay('infinite');
-        return HttpResponse.json([]);
+        return HttpResponse.json({ routines: [], recentWorkouts: [] });
       }
-      return HttpResponse.json(routines);
-    }),
-    http.get(`${mockApiUrl}/users/1/workouts`, async () => {
-      if (options.workoutDelay) {
-        await delay('infinite');
-        return HttpResponse.json([]);
-      }
-      return HttpResponse.json(workouts);
+      return HttpResponse.json({ routines, recentWorkouts: workouts });
     })
   );
 }
@@ -89,14 +82,14 @@ describe('DashboardPage', () => {
   });
 
   it('should display loading state for routines', async () => {
-    setupHandlers([], [], { routinesDelay: true });
+    setupHandlers([], [], { delay: true });
     renderPage();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('should display loading state for workouts', async () => {
-    setupHandlers([], [], { workoutDelay: true });
+    setupHandlers([], [], { delay: true });
     renderPage();
 
     await waitFor(() => {
@@ -481,35 +474,16 @@ describe('DashboardPage', () => {
     expect(screen.getByRole('button', { name: 'Upper Body' })).toBeDisabled();
   });
 
-  it('should display error when routines fetch fails', async () => {
+  it('should display error when dashboard fetch fails', async () => {
     server.use(
-      http.get(`${mockApiUrl}/routines`, () => {
-        return HttpResponse.json({ error: 'Server error' }, { status: 500 });
-      }),
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([]);
-      })
-    );
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByText(/Error:/)).toBeInTheDocument();
-    });
-  });
-
-  it('should display error when workout fetch fails', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/routines`, () => {
-        return HttpResponse.json([]);
-      }),
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+      http.get(`${mockApiUrl}/dashboard`, () => {
         return HttpResponse.json({ error: 'Server error' }, { status: 500 });
       })
     );
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText(/Error:/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Error:/).length).toBeGreaterThan(0);
     });
   });
 

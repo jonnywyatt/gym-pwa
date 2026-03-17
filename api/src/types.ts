@@ -83,3 +83,8 @@ export type UserWorkout = CreateWorkoutRequest & {
 export type UserWorkoutSummary = Omit<UserWorkout, 'exercisesCompleted'> & {
   exerciseCount: number;
 };
+
+export type DashboardResponse = {
+  routines: RoutineSummary[];
+  recentWorkouts: UserWorkoutSummary[];
+};

@@ -2,33 +2,22 @@
 
 ## Consistency beats intensity
 
-To build a fitness habit that will stick, do lighter sessions, more often, rather than intense, less frequent ones.
+To build a fitness habit that will stick, do lighter sessions, more often, rather than intense, less frequent ones. This is a "Low-Floor, High-Ceiling" habit — making it easier to show up, which eventually makes increased strength and heavier lifting inevitable.
 
-By focusing on a higher frequency, you are building a "Low-Floor, High-Ceiling" habit — making it easier to show up, which eventually makes increased strength and heavier lifting inevitable.
-
-Behavioral science heavily supports the idea that consistency (frequency) is a much stronger predictor of long-term health and habit adherence than intensity (load) *
-
-* Gardner, Lally, and Wardle (2012)
+Over a few months, aim to build from 1 session per week to 2, then consistently to 3 sessions per week. Give your body time to adapt to each increase in the number of sessions per week. Going too quickly can lead to injury which will set you back.
 
 ## Remember
 - turn up - a bad session beats no session
 - you don't have to progress every time. Be comfortable with a lower intensity session if you're fatigued
-- avoid injury by pushing less weight with good form and slower reps
+- avoid injury by pushing less weight with good form and slower reps; your strength will gradually increase and you'll know when you can increase the weight
 
-To prevent gym fatigue, use Duro to track and visualise all sessions, and use consistency as motivation.
+## How Duro will help
 
-Use the in-built routines or create your own. See your progress front-and-centre on the home screen
+Use Duro to record your sessions, and see your progress front-and-centre on the dashboard. Use the in-built routines or copy and adapt them, or create your own from scratch.
 
 
-Good things:
-- body confidence
-- strength & durability
-- energised
-- a bad session beats no session
 
-Bad things:
-- guilty, dragging yourself in for a session
-- infrequent sessions where you lift heavy to compensate, and risk injury
+Behavioral science heavily supports the idea that consistency is a much stronger predictor of long-term health and habit adherence than intensity (* Gardner, et al 2012)
 
 
 # Why not streaks
