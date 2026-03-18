@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, onUnmounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import type {RoutineSummary, UserWorkoutSummary} from 'gym-pwa-api/types';
 import styles from './DashboardPage.module.css';
@@ -84,8 +84,19 @@ async function onCreateRoutine() {
   }
 }
 
+function onSwMessage(event: MessageEvent) {
+  if (event.data?.type === 'DASHBOARD_UPDATED') {
+    loadData();
+  }
+}
+
 onMounted(() => {
   loadData();
+  navigator.serviceWorker?.addEventListener('message', onSwMessage);
+});
+
+onUnmounted(() => {
+  navigator.serviceWorker?.removeEventListener('message', onSwMessage);
 });
 </script>
 

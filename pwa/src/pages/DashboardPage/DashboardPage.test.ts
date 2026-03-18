@@ -499,4 +499,38 @@ describe('DashboardPage', () => {
 
     expect(consumeDashboardPrefetch()).toBeNull();
   });
+
+  it('should reload data when service worker sends DASHBOARD_UPDATED message', async () => {
+    let swMessageListener: ((event: MessageEvent) => void) | undefined;
+    const mockAddEventListener = vi.fn((event: string, handler: (event: MessageEvent) => void) => {
+      if (event === 'message') {
+        swMessageListener = handler;
+      }
+    });
+    const mockRemoveEventListener = vi.fn();
+
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: {
+        addEventListener: mockAddEventListener,
+        removeEventListener: mockRemoveEventListener,
+      },
+      configurable: true,
+    });
+
+    setupHandlers([{ id: 1, label: 'Initial Routine', exerciseCount: 3 }], []);
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Initial Routine' })).toBeInTheDocument();
+    });
+
+    setupHandlers([{ id: 2, label: 'Updated Routine', exerciseCount: 4 }], []);
+
+    if (!swMessageListener) throw new Error('SW message listener not registered');
+    swMessageListener({ data: { type: 'DASHBOARD_UPDATED' } } as MessageEvent);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Updated Routine' })).toBeInTheDocument();
+    });
+  });
 });

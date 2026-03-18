@@ -9,7 +9,10 @@ import {
 import { NavigationRoute, Route, registerRoute } from 'workbox-routing';
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 
-declare const self: ServiceWorkerGlobalScope & { skipWaiting(): void };
+declare const self: ServiceWorkerGlobalScope & {
+  skipWaiting(): void;
+  clients: { matchAll(): Promise<{ postMessage(msg: unknown): void }[]> };
+};
 
 self.skipWaiting();
 clientsClaim();
@@ -24,6 +27,14 @@ registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')));
 // Dashboard API: stale-while-revalidate with manual cache.put() to bypass
 // the browser's restriction on caching responses to credentialed requests.
 const DASHBOARD_CACHE = 'dashboard-api';
+const DASHBOARD_TTL_MS = 48 * 60 * 60 * 1000;
+
+function isCachedResponseFresh(cachedResponse: Response): boolean {
+  const cachedAt = cachedResponse.headers.get('x-cached-at');
+  if (!cachedAt) return false;
+  return Date.now() - new Date(cachedAt).getTime() < DASHBOARD_TTL_MS;
+}
+
 const dashboardRoute = new Route(
   ({ url }) => /\/dashboard(\?.*)?$/.test(url.href),
   async ({ request }) => {
@@ -32,12 +43,31 @@ const dashboardRoute = new Route(
 
     const fetchAndCache = fetch(request).then(async (networkResponse) => {
       if (networkResponse.ok) {
-        await cache.put(request, networkResponse.clone());
+        const headers = new Headers(networkResponse.headers);
+        headers.set('x-cached-at', new Date().toISOString());
+        const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
+          status: networkResponse.status,
+          statusText: networkResponse.statusText,
+          headers,
+        });
+        await cache.put(request, responseToCache);
+
+        if (cachedResponse) {
+          const clients = await self.clients.matchAll();
+          for (const client of clients) {
+            client.postMessage({ type: 'DASHBOARD_UPDATED' });
+          }
+        }
       }
       return networkResponse;
     });
 
-    return cachedResponse ?? fetchAndCache;
+    if (cachedResponse && isCachedResponseFresh(cachedResponse)) {
+      fetchAndCache.catch(() => {});
+      return cachedResponse;
+    }
+
+    return fetchAndCache;
   },
   'GET'
 );
