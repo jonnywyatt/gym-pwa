@@ -52,6 +52,14 @@ export const handlers = [
     const body = (await request.json()) as { weightKg?: number };
     return HttpResponse.json({ weightKg: String(body.weightKg) }, { status: 201 });
   }),
+
+  http.patch(`${mockApiUrl}/routines/:routineId/label`, ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];
 
 export const server = setupServer(...handlers);

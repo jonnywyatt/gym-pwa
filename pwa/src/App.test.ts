@@ -298,6 +298,11 @@ describe('RoutinesPage', () => {
 
 describe('RoutinePage', () => {
   const mockApiUrl = 'http://localhost:3000';
+  const routerLinkStub = { template: '<a :href="to"><slot /></a>', props: ['to'] };
+
+  function renderPage() {
+    return render(RoutinePage, { global: { stubs: { RouterLink: routerLinkStub } } });
+  }
 
   beforeEach(() => {
     localStorage.setItem('access_token', 'test-token');
@@ -311,7 +316,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
@@ -348,7 +353,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -366,7 +371,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -392,7 +397,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -432,7 +437,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start session')).toBeInTheDocument();
@@ -476,7 +481,7 @@ describe('RoutinePage', () => {
       })
     );
 
-    render(RoutinePage);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('Start session')).toBeInTheDocument();

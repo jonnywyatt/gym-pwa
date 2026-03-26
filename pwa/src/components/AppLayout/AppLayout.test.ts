@@ -23,7 +23,10 @@ vi.mock('../../lib/auth/oauth', () => ({
 function createTestRouter(routeName: string, routePath: string) {
   return createRouter({
     history: createMemoryHistory(),
-    routes: [{ path: routePath, name: routeName, component: { template: '<div />' } }],
+    routes: [
+      { path: routePath, name: routeName, component: { template: '<div />' } },
+      { path: '/:pathMatch(.*)*', component: { template: '<div />' } },
+    ],
   });
 }
 
