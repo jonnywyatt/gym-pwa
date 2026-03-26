@@ -25,6 +25,13 @@ export interface CalendarDay {
   isToday: boolean;
 }
 
+export function formatPopupDate(date: Date, today = new Date()): string {
+  const day = date.getDate();
+  const month = date.toLocaleDateString('en-GB', { month: 'long' });
+  const year = date.getFullYear() !== today.getFullYear() ? ` ${date.getFullYear()}` : '';
+  return `${day} ${month}${year}`;
+}
+
 export function formatSessionStat(
   totalWeightKg: number,
   durationSeconds: number | undefined

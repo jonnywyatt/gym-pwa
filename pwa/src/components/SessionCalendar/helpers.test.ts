@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildCalendarDays,
   buildRoutineColourMap,
+  formatPopupDate,
   formatSessionStat,
   getDotBackground,
   getRoutineSummaries,
@@ -320,6 +321,20 @@ describe('getDotBackground', () => {
     const result = getDotBackground([99], colourMap);
 
     expect(result).toBe(ROUTINE_COLOURS[0]);
+  });
+});
+
+describe('formatPopupDate', () => {
+  it('formats date without year when same year as today', () => {
+    const date = new Date('2024-02-26T00:00:00');
+    const today = new Date('2024-06-01T00:00:00');
+    expect(formatPopupDate(date, today)).toBe('26 February');
+  });
+
+  it('includes year when different year from today', () => {
+    const date = new Date('2023-11-05T00:00:00');
+    const today = new Date('2024-06-01T00:00:00');
+    expect(formatPopupDate(date, today)).toBe('5 November 2023');
   });
 });
 

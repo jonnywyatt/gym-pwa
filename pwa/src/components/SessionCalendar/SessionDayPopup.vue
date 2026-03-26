@@ -2,9 +2,10 @@
 import { onMounted, onUnmounted } from 'vue';
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import styles from './SessionDayPopup.module.css';
-import { formatSessionStat } from './helpers';
+import { formatPopupDate, formatSessionStat } from './helpers';
 
 defineProps<{
+  date: Date;
   sessions: UserWorkoutSummary[];
 }>();
 
@@ -36,6 +37,7 @@ onUnmounted(() => {
         <line x1="16" y1="8" x2="8" y2="16" stroke="var(--em-surface)" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
+    <p class="uppercase uppercase--small marginBottom3">{{ formatPopupDate(date) }}</p>
     <ul :class="styles.sessionList">
       <li v-for="session in sessions" :key="session.id" :class="styles.sessionItem">
         <router-link :to="`/sessions/${session.id}`" :class="styles.sessionName" @click="emit('close')">

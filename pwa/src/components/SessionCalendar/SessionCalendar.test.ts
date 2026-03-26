@@ -171,6 +171,17 @@ describe('SessionCalendar', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
+    it('shows the date without year when same year', async () => {
+      vi.setSystemTime(new Date('2024-06-01T00:00:00'));
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByText('15 January')).toBeInTheDocument();
+      vi.useRealTimers();
+    });
+
     it('shows session name and weight when totalWeightKg > 0', async () => {
       const sessions = [
         { ...makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z'), totalWeightKg: 250 },

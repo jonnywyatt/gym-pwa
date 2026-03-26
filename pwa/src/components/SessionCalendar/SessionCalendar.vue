@@ -89,7 +89,8 @@ onUnmounted(() => {
       </div>
     </div>
     <SessionDayPopup
-      v-if="activeDay !== null"
+      v-if="activeDay !== null && activeDay.date !== null"
+      :date="activeDay.date"
       :sessions="activeDay.daySessions"
       @close="activeDay = null"
     />
