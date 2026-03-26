@@ -1,4 +1,5 @@
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
+import { formatDuration } from '../../pages/WorkoutsListPage/helpers';
 
 export const ROUTINE_COLOURS = [
   'var(--em-accent-mint)',
@@ -19,8 +20,19 @@ export interface CalendarDay {
   date: Date | null;
   dateNumber: number | null;
   routineIds: number[];
+  daySessions: UserWorkoutSummary[];
   hasSession: boolean;
   isToday: boolean;
+}
+
+export function formatSessionStat(
+  totalWeightKg: number,
+  durationSeconds: number | undefined
+): string {
+  if (totalWeightKg > 0) {
+    return `${totalWeightKg} kg`;
+  }
+  return durationSeconds !== undefined ? formatDuration(durationSeconds) : '';
 }
 
 export function buildRoutineColourMap(sessions: UserWorkoutSummary[]): Map<number, string> {
@@ -61,21 +73,27 @@ export function getRoutineSummaries(
     .slice(0, 3);
 }
 
+interface DateSessions {
+  routineIds: Set<number>;
+  sessions: UserWorkoutSummary[];
+}
+
 export function buildCalendarDays(
   startDate: Date,
   endDate: Date,
   sessions: UserWorkoutSummary[],
   today = new Date()
 ): CalendarDay[] {
-  const sessionsByDate = new Map<string, Set<number>>();
+  const sessionsByDate = new Map<string, DateSessions>();
   for (const session of sessions) {
     const date = new Date(session.startedAt);
     const key = toDateKey(date);
     const existing = sessionsByDate.get(key);
     if (existing) {
-      existing.add(session.routineId);
+      existing.routineIds.add(session.routineId);
+      existing.sessions.push(session);
     } else {
-      sessionsByDate.set(key, new Set([session.routineId]));
+      sessionsByDate.set(key, { routineIds: new Set([session.routineId]), sessions: [session] });
     }
   }
 
@@ -92,13 +110,16 @@ export function buildCalendarDays(
   while (current <= gridEnd) {
     const isInRange = current >= normalizedStart && current <= normalizedEnd;
     const key = toDateKey(current);
-    const routineIds = isInRange ? [...(sessionsByDate.get(key) ?? [])] : [];
+    const dateSessions = isInRange ? sessionsByDate.get(key) : undefined;
+    const routineIds = dateSessions ? [...dateSessions.routineIds] : [];
+    const daySessions = dateSessions ? dateSessions.sessions : [];
 
     days.push({
       key: `${key}-${index}`,
       date: isInRange ? new Date(current) : null,
       dateNumber: isInRange ? current.getDate() : null,
       routineIds,
+      daySessions,
       hasSession: routineIds.length > 0,
       isToday: isInRange && key === todayKey,
     });

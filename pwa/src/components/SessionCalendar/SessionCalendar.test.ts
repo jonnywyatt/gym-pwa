@@ -1,7 +1,14 @@
+import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/vue';
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import SessionCalendar from './SessionCalendar.vue';
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [{ path: '/:pathMatch(.*)*', component: { template: '<div />' } }],
+});
 
 const makeWorkout = (
   id: number,
@@ -28,6 +35,7 @@ const endDate = new Date('2024-01-28T00:00:00'); // 28 days, ends on Sunday
 function renderCalendar(sessions: UserWorkoutSummary[] = []) {
   return render(SessionCalendar, {
     props: { startDate, endDate, sessions },
+    global: { plugins: [router] },
   });
 }
 
@@ -47,6 +55,7 @@ describe('SessionCalendar', () => {
 
     render(SessionCalendar, {
       props: { startDate: wednesdayStart, endDate: sundayEnd, sessions: [] },
+      global: { plugins: [router] },
     });
 
     // Days 1 and 2 (padding) should not appear
@@ -150,5 +159,99 @@ describe('SessionCalendar', () => {
 
     const jan5 = screen.getByText('5').parentElement;
     expect(jan5?.style.background).toBe('var(--em-accent-mint)');
+  });
+
+  describe('session day popup', () => {
+    it('opens popup on click of a session dot', async () => {
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+
+    it('shows session name and weight when totalWeightKg > 0', async () => {
+      const sessions = [
+        { ...makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z'), totalWeightKg: 250 },
+      ];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
+      expect(screen.getByText('250 kg')).toBeInTheDocument();
+    });
+
+    it('shows duration instead of weight when totalWeightKg is 0', async () => {
+      const sessions = [
+        {
+          ...makeWorkout(99, 10, 'Yoga', '2024-01-15T10:00:00Z'),
+          totalWeightKg: 0,
+          durationSeconds: 3600,
+        },
+      ];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByText('1h')).toBeInTheDocument();
+    });
+
+    it('popup session name links to the session page', async () => {
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByRole('link', { name: 'Strength' })).toHaveAttribute(
+        'href',
+        expect.stringContaining('/sessions/99')
+      );
+    });
+
+    it('shows all sessions when multiple sessions on the same day', async () => {
+      const sessions = [
+        makeWorkout(10, 10, 'Strength', '2024-01-15T09:00:00Z'),
+        makeWorkout(11, 20, 'Cardio', '2024-01-15T17:00:00Z'),
+      ];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Cardio' })).toBeInTheDocument();
+    });
+
+    it('closes popup when clicking the backdrop', async () => {
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      const { container } = renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      const backdrop = container.querySelector('[role="dialog"]')?.parentElement as HTMLElement;
+      await userEvent.click(backdrop);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('closes popup on Escape key', async () => {
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      await userEvent.keyboard('{Escape}');
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('does not open popup when clicking a day with no sessions', async () => {
+      renderCalendar();
+
+      await userEvent.click(screen.getByText('1').parentElement as HTMLElement);
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
   });
 });

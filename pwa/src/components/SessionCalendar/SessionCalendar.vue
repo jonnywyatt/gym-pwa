@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import styles from './SessionCalendar.module.css';
 import { buildCalendarDays, buildRoutineColourMap, getDotBackground, type CalendarDay } from './helpers';
+import SessionDayPopup from './SessionDayPopup.vue';
 
 const props = defineProps<{
   startDate: Date;
@@ -23,6 +24,8 @@ const calendarDays = computed(() => {
   return weeks.reverse().flat();
 });
 
+const activeDay = ref<CalendarDay | null>(null);
+
 function dotStyle(routineIds: number[]) {
   return { background: getDotBackground(routineIds, colourMap.value) };
 }
@@ -32,6 +35,11 @@ function dateNumberStyle(hasSession: boolean) {
     return { color: 'var(--em-text-inverse)' };
   }
   return { color: 'color-mix(in srgb, var(--em-text-primary) 60%, transparent)' };
+}
+
+function onDotClick(day: CalendarDay) {
+  if (!day.hasSession) return;
+  activeDay.value = activeDay.value?.key === day.key ? null : day;
 }
 </script>
 
@@ -44,16 +52,33 @@ function dateNumberStyle(hasSession: boolean) {
     </div>
     <div :class="styles.calendarGrid">
       <div v-for="day in calendarDays" :key="day.key" :class="styles.dayCell">
+        <button
+          v-if="day.dateNumber !== null && day.hasSession"
+          type="button"
+          :class="[styles.dot, styles.dotButton, day.isToday && styles.dotToday]"
+          :style="dotStyle(day.routineIds)"
+          :aria-label="`Sessions on day ${day.dateNumber}`"
+          @click="onDotClick(day)"
+        >
+          <span :class="styles.dateNumber" :style="dateNumberStyle(true)">
+            {{ day.dateNumber }}
+          </span>
+        </button>
         <div
-          v-if="day.dateNumber !== null"
+          v-else-if="day.dateNumber !== null"
           :class="[styles.dot, day.isToday && styles.dotToday]"
           :style="dotStyle(day.routineIds)"
         >
-          <span :class="styles.dateNumber" :style="dateNumberStyle(day.hasSession)">
+          <span :class="styles.dateNumber" :style="dateNumberStyle(false)">
             {{ day.dateNumber }}
           </span>
         </div>
       </div>
     </div>
+    <SessionDayPopup
+      v-if="activeDay !== null"
+      :sessions="activeDay.daySessions"
+      @close="activeDay = null"
+    />
   </div>
 </template>

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildCalendarDays,
   buildRoutineColourMap,
+  formatSessionStat,
   getDotBackground,
   getRoutineSummaries,
   ROUTINE_COLOURS,
@@ -178,6 +179,26 @@ describe('buildCalendarDays', () => {
     expect(jan2?.hasSession).toBe(false);
   });
 
+  it('populates daySessions for days with sessions', () => {
+    const startDate = new Date('2024-01-01T00:00:00');
+    const endDate = new Date('2024-01-07T00:00:00');
+    const w42 = makeWorkout(42, 10, 'Strength', '2024-01-01T10:00:00Z');
+    const w43 = makeWorkout(43, 20, 'Cardio', '2024-01-01T14:00:00Z');
+    const w44 = makeWorkout(44, 30, 'Abs', '2024-01-03T10:00:00Z');
+    const sessions = [w42, w43, w44];
+
+    const days = buildCalendarDays(startDate, endDate, sessions);
+
+    const jan1 = days.find((d) => d.dateNumber === 1);
+    const jan3 = days.find((d) => d.dateNumber === 3);
+    const jan2 = days.find((d) => d.dateNumber === 2);
+
+    expect(jan1?.daySessions).toContainEqual(w42);
+    expect(jan1?.daySessions).toContainEqual(w43);
+    expect(jan3?.daySessions).toEqual([w44]);
+    expect(jan2?.daySessions).toHaveLength(0);
+  });
+
   it('deduplicates routineIds per day when same routine used multiple times', () => {
     const startDate = new Date('2024-01-01T00:00:00');
     const endDate = new Date('2024-01-07T00:00:00');
@@ -299,5 +320,23 @@ describe('getDotBackground', () => {
     const result = getDotBackground([99], colourMap);
 
     expect(result).toBe(ROUTINE_COLOURS[0]);
+  });
+});
+
+describe('formatSessionStat', () => {
+  it('returns weight when totalWeightKg is greater than 0', () => {
+    expect(formatSessionStat(150, 3600)).toBe('150 kg');
+  });
+
+  it('returns duration when totalWeightKg is 0', () => {
+    expect(formatSessionStat(0, 3600)).toBe('1h');
+  });
+
+  it('returns duration with minutes when totalWeightKg is 0', () => {
+    expect(formatSessionStat(0, 5400)).toBe('1h 30m');
+  });
+
+  it('returns empty string when totalWeightKg is 0 and durationSeconds is undefined', () => {
+    expect(formatSessionStat(0, undefined)).toBe('');
   });
 });

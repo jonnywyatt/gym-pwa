@@ -1,0 +1,52 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.popup {
+  position: fixed;
+  bottom: var(--spacing-unit-6);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--em-surface);
+  border: 1px solid var(--accent-secondary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-unit-3);
+  min-width: 200px;
+  max-width: 280px;
+  z-index: 101;
+}
+
+.sessionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-4);
+}
+
+.sessionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-unit-3);
+}
+
+.sessionName {
+  font-size: var(--font-size-13);
+  color: var(--em-text-primary);
+  text-decoration: none;
+}
+
+.sessionName:hover {
+  color: var(--accent-primary);
+}
+
+.sessionWeight {
+  font-family: var(--font-stack-mono);
+  font-size: var(--font-size-12);
+  color: var(--accent-primary);
+  white-space: nowrap;
+}
