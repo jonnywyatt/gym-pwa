@@ -223,16 +223,41 @@ describe('SessionCalendar', () => {
       expect(screen.getByRole('link', { name: 'Cardio' })).toBeInTheDocument();
     });
 
-    it('closes popup when clicking the backdrop', async () => {
+    it('closes popup when clicking the close button', async () => {
       const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
-      const { container } = renderCalendar(sessions);
+      renderCalendar(sessions);
 
       await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
       expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-      const backdrop = container.querySelector('[role="dialog"]')?.parentElement as HTMLElement;
-      await userEvent.click(backdrop);
+      await userEvent.click(screen.getByRole('button', { name: 'Close' }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('closes popup when clicking outside', async () => {
+      const sessions = [makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z')];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      await userEvent.click(document.body);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('shows popup for a different dot when clicked while popup is open', async () => {
+      const sessions = [
+        makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z'),
+        makeWorkout(100, 20, 'Cardio', '2024-01-16T10:00:00Z'),
+      ];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('16').parentElement as HTMLElement);
+      expect(screen.queryByRole('link', { name: 'Strength' })).not.toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Cardio' })).toBeInTheDocument();
     });
 
     it('closes popup on Escape key', async () => {

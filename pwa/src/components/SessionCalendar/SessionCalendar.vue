@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import styles from './SessionCalendar.module.css';
 import { buildCalendarDays, buildRoutineColourMap, getDotBackground, type CalendarDay } from './helpers';
@@ -37,10 +37,23 @@ function dateNumberStyle(hasSession: boolean) {
   return { color: 'color-mix(in srgb, var(--em-text-primary) 60%, transparent)' };
 }
 
-function onDotClick(day: CalendarDay) {
+function onDotClick(event: MouseEvent, day: CalendarDay) {
   if (!day.hasSession) return;
+  event.stopPropagation();
   activeDay.value = activeDay.value?.key === day.key ? null : day;
 }
+
+function onDocumentClick() {
+  activeDay.value = null;
+}
+
+onMounted(() => {
+  document.addEventListener('click', onDocumentClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', onDocumentClick);
+});
 </script>
 
 <template>
@@ -58,7 +71,7 @@ function onDotClick(day: CalendarDay) {
           :class="[styles.dot, styles.dotButton, day.isToday && styles.dotToday]"
           :style="dotStyle(day.routineIds)"
           :aria-label="`Sessions on day ${day.dateNumber}`"
-          @click="onDotClick(day)"
+          @click="onDotClick($event, day)"
         >
           <span :class="styles.dateNumber" :style="dateNumberStyle(true)">
             {{ day.dateNumber }}
