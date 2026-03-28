@@ -35,11 +35,13 @@ function isCachedResponseFresh(cachedResponse: Response): boolean {
   return Date.now() - new Date(cachedAt).getTime() < DASHBOARD_TTL_MS;
 }
 
+const DASHBOARD_CACHE_KEY = '/dashboard';
+
 const dashboardRoute = new Route(
   ({ url }) => /\/dashboard(\?.*)?$/.test(url.href),
   async ({ request }) => {
     const cache = await caches.open(DASHBOARD_CACHE);
-    const cachedResponse = await cache.match(request, { ignoreVary: true });
+    const cachedResponse = await cache.match(DASHBOARD_CACHE_KEY, { ignoreVary: true });
 
     const fetchAndCache = fetch(request).then(async (networkResponse) => {
       if (networkResponse.ok) {
@@ -50,7 +52,7 @@ const dashboardRoute = new Route(
           statusText: networkResponse.statusText,
           headers,
         });
-        await cache.put(request, responseToCache);
+        await cache.put(DASHBOARD_CACHE_KEY, responseToCache);
 
         if (cachedResponse) {
           const clients = await self.clients.matchAll();
