@@ -68,6 +68,12 @@ const router = createRouter({
       component: () => import('./pages/WorkoutPage/WorkoutPage.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/session-trends',
+      name: 'session-trends',
+      component: () => import('./pages/SessionTrendsPage/SessionTrendsPage.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 

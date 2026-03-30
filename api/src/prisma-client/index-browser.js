@@ -185,6 +185,7 @@ exports.Prisma.UserWorkoutScalarFieldEnum = {
   finishedAt: 'finishedAt',
   durationSeconds: 'durationSeconds',
   totalWeightKg: 'totalWeightKg',
+  totalReps: 'totalReps',
   bodyWeightKg: 'bodyWeightKg'
 };
 

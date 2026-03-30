@@ -73,6 +73,7 @@ export type CreateWorkoutRequest = {
   exercisesCompleted: CompletedWorkoutExercise[];
   bodyWeightKg: number;
   totalWeightKg: number;
+  totalReps: number;
 };
 
 export type UserWorkout = CreateWorkoutRequest & {
@@ -88,3 +89,19 @@ export type DashboardResponse = {
   routines: RoutineSummary[];
   recentWorkouts: UserWorkoutSummary[];
 };
+
+export type RoutineSessionPoint = {
+  date: string;
+  durationSeconds: number;
+  totalWeightKg: number;
+  totalReps: number;
+};
+
+export type RoutineTrendData = {
+  routineId: number;
+  routineLabel: string;
+  secondMetric: 'weight' | 'reps' | null;
+  sessions: RoutineSessionPoint[];
+};
+
+export type SessionTrendsResponse = RoutineTrendData[];

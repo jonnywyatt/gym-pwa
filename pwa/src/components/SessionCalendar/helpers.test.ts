@@ -26,6 +26,7 @@ const makeWorkout = (
   exerciseCount: 0,
   bodyWeightKg: 80,
   totalWeightKg: 0,
+  totalReps: 0,
 });
 
 describe('buildRoutineColourMap', () => {

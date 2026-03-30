@@ -26,6 +26,7 @@ const makeWorkout = (
   exerciseCount: 0,
   bodyWeightKg: 80,
   totalWeightKg: 0,
+  totalReps: 0,
 });
 
 // 2024-01-01 is a Monday — no padding needed for this range

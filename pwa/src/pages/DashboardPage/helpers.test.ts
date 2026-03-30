@@ -124,6 +124,7 @@ describe('sortRoutinesByLastUsed', () => {
     exerciseCount: 0,
     bodyWeightKg: 80,
     totalWeightKg: 0,
+    totalReps: 0,
   });
 
   it('should sort routines by most recently used when all have workouts', () => {
@@ -193,6 +194,7 @@ describe('loadDashboardData', () => {
     exerciseCount: 0,
     bodyWeightKg: 80,
     totalWeightKg: 2500,
+    totalReps: 0,
   };
 
   const mockDashboardResponse: DashboardResponse = {

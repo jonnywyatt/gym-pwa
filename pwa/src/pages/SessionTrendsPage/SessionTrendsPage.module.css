@@ -1,0 +1,46 @@
+.filterActive {
+  color: var(--accent-secondary);
+}
+
+.loading {
+  color: var(--text-secondary);
+}
+
+.error {
+  color: var(--em-error);
+}
+
+.routineSection {
+  margin-bottom: var(--spacing-unit-8);
+}
+
+.routineName {
+  font-size: var(--font-size-20);
+  margin-bottom: var(--spacing-unit-2);
+}
+
+.metricLabel {
+  font-size: var(--font-size-13);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-unit-3);
+}
+
+.chartWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+}
+
+.sessionPopup {
+  composes: popup from '../../styles/popup.css';
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 10px));
+  padding: var(--spacing-unit-2) var(--spacing-unit-3);
+  font-size: var(--font-size-13);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.closeButton {
+  composes: popupCloseButton from '../../styles/popup.css';
+}

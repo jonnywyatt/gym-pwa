@@ -162,6 +162,23 @@ export function calculateWorkoutTotalWeightKg(
     );
 }
 
+const REPS_RECORD_TYPES: RecordSetsType[] = [
+  'WEIGHT',
+  'BODYWEIGHT_PLUS_WEIGHT',
+  'BODYWEIGHT_MINUS_OFFSET',
+  'REPS',
+];
+
+export function calculateWorkoutTotalReps(exercises: LocalWorkoutExercise[]): number {
+  return exercises
+    .filter((exercise) => exercise.completed && REPS_RECORD_TYPES.includes(exercise.recordSetsType))
+    .reduce(
+      (total, exercise) =>
+        total + (exercise.sets ?? []).reduce((setTotal, set) => setTotal + (set.reps ?? 0), 0),
+      0
+    );
+}
+
 export function startExercise(exercise: LocalWorkoutExercise): LocalWorkoutExercise {
   return {
     ...exercise,
@@ -197,6 +214,7 @@ export function createWorkoutPayload(
     exercisesCompleted: getCompletedExercises(workout.exercisesCompleted),
     bodyWeightKg: workout.bodyWeightKg,
     totalWeightKg: calculateWorkoutTotalWeightKg(workout.exercisesCompleted, workout.bodyWeightKg),
+    totalReps: calculateWorkoutTotalReps(workout.exercisesCompleted),
   };
 }
 

@@ -652,6 +652,7 @@ describe('WorkoutPage helpers', () => {
         exercisesCompleted: [],
         bodyWeightKg: 75.5,
         totalWeightKg: 0,
+        totalReps: 0,
       });
 
       expect(result).toEqual(mockResponse);
@@ -673,6 +674,7 @@ describe('WorkoutPage helpers', () => {
           exercisesCompleted: [],
           bodyWeightKg: 75.5,
           totalWeightKg: 0,
+          totalReps: 0,
         })
       ).rejects.toThrow();
     });

@@ -19,6 +19,7 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
     finishedAt: workout.finishedAt.toISOString(),
     durationSeconds: workout.durationSeconds ?? undefined,
     totalWeightKg: workout.totalWeightKg ?? 0,
+    totalReps: workout.totalReps ?? 0,
     bodyWeightKg: Number(workout.bodyWeightKg),
     exercisesCompleted: workout.exercises.map((we) => ({
       id: we.exercise.id,
@@ -54,6 +55,7 @@ export function transformUserWorkoutSummary(workout: UserWorkoutSummaryFromDB): 
     finishedAt: workout.finishedAt.toISOString(),
     durationSeconds: workout.durationSeconds ?? undefined,
     totalWeightKg: workout.totalWeightKg ?? 0,
+    totalReps: workout.totalReps ?? 0,
     bodyWeightKg: Number(workout.bodyWeightKg),
     exerciseCount: workout._count.exercises,
   };

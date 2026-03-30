@@ -12184,6 +12184,7 @@ export namespace Prisma {
     routineId: number | null
     durationSeconds: number | null
     totalWeightKg: number | null
+    totalReps: number | null
     bodyWeightKg: Decimal | null
   }
 
@@ -12193,6 +12194,7 @@ export namespace Prisma {
     routineId: number | null
     durationSeconds: number | null
     totalWeightKg: number | null
+    totalReps: number | null
     bodyWeightKg: Decimal | null
   }
 
@@ -12205,6 +12207,7 @@ export namespace Prisma {
     finishedAt: Date | null
     durationSeconds: number | null
     totalWeightKg: number | null
+    totalReps: number | null
     bodyWeightKg: Decimal | null
   }
 
@@ -12217,6 +12220,7 @@ export namespace Prisma {
     finishedAt: Date | null
     durationSeconds: number | null
     totalWeightKg: number | null
+    totalReps: number | null
     bodyWeightKg: Decimal | null
   }
 
@@ -12229,6 +12233,7 @@ export namespace Prisma {
     finishedAt: number
     durationSeconds: number
     totalWeightKg: number
+    totalReps: number
     bodyWeightKg: number
     _all: number
   }
@@ -12240,6 +12245,7 @@ export namespace Prisma {
     routineId?: true
     durationSeconds?: true
     totalWeightKg?: true
+    totalReps?: true
     bodyWeightKg?: true
   }
 
@@ -12249,6 +12255,7 @@ export namespace Prisma {
     routineId?: true
     durationSeconds?: true
     totalWeightKg?: true
+    totalReps?: true
     bodyWeightKg?: true
   }
 
@@ -12261,6 +12268,7 @@ export namespace Prisma {
     finishedAt?: true
     durationSeconds?: true
     totalWeightKg?: true
+    totalReps?: true
     bodyWeightKg?: true
   }
 
@@ -12273,6 +12281,7 @@ export namespace Prisma {
     finishedAt?: true
     durationSeconds?: true
     totalWeightKg?: true
+    totalReps?: true
     bodyWeightKg?: true
   }
 
@@ -12285,6 +12294,7 @@ export namespace Prisma {
     finishedAt?: true
     durationSeconds?: true
     totalWeightKg?: true
+    totalReps?: true
     bodyWeightKg?: true
     _all?: true
   }
@@ -12384,6 +12394,7 @@ export namespace Prisma {
     finishedAt: Date
     durationSeconds: number | null
     totalWeightKg: number | null
+    totalReps: number | null
     bodyWeightKg: Decimal
     _count: UserWorkoutCountAggregateOutputType | null
     _avg: UserWorkoutAvgAggregateOutputType | null
@@ -12415,6 +12426,7 @@ export namespace Prisma {
     finishedAt?: boolean
     durationSeconds?: boolean
     totalWeightKg?: boolean
+    totalReps?: boolean
     bodyWeightKg?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     exercises?: boolean | UserWorkout$exercisesArgs<ExtArgs>
@@ -12430,6 +12442,7 @@ export namespace Prisma {
     finishedAt?: boolean
     durationSeconds?: boolean
     totalWeightKg?: boolean
+    totalReps?: boolean
     bodyWeightKg?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
@@ -12443,6 +12456,7 @@ export namespace Prisma {
     finishedAt?: boolean
     durationSeconds?: boolean
     totalWeightKg?: boolean
+    totalReps?: boolean
     bodyWeightKg?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
@@ -12456,10 +12470,11 @@ export namespace Prisma {
     finishedAt?: boolean
     durationSeconds?: boolean
     totalWeightKg?: boolean
+    totalReps?: boolean
     bodyWeightKg?: boolean
   }
 
-  export type UserWorkoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "routineId" | "routineLabel" | "startedAt" | "finishedAt" | "durationSeconds" | "totalWeightKg" | "bodyWeightKg", ExtArgs["result"]["userWorkout"]>
+  export type UserWorkoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "routineId" | "routineLabel" | "startedAt" | "finishedAt" | "durationSeconds" | "totalWeightKg" | "totalReps" | "bodyWeightKg", ExtArgs["result"]["userWorkout"]>
   export type UserWorkoutInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     exercises?: boolean | UserWorkout$exercisesArgs<ExtArgs>
@@ -12487,6 +12502,7 @@ export namespace Prisma {
       finishedAt: Date
       durationSeconds: number | null
       totalWeightKg: number | null
+      totalReps: number | null
       bodyWeightKg: Prisma.Decimal
     }, ExtArgs["result"]["userWorkout"]>
     composites: {}
@@ -12921,6 +12937,7 @@ export namespace Prisma {
     readonly finishedAt: FieldRef<"UserWorkout", 'DateTime'>
     readonly durationSeconds: FieldRef<"UserWorkout", 'Int'>
     readonly totalWeightKg: FieldRef<"UserWorkout", 'Int'>
+    readonly totalReps: FieldRef<"UserWorkout", 'Int'>
     readonly bodyWeightKg: FieldRef<"UserWorkout", 'Decimal'>
   }
     
@@ -15733,6 +15750,7 @@ export namespace Prisma {
     finishedAt: 'finishedAt',
     durationSeconds: 'durationSeconds',
     totalWeightKg: 'totalWeightKg',
+    totalReps: 'totalReps',
     bodyWeightKg: 'bodyWeightKg'
   };
 
@@ -16434,6 +16452,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     durationSeconds?: IntNullableFilter<"UserWorkout"> | number | null
     totalWeightKg?: IntNullableFilter<"UserWorkout"> | number | null
+    totalReps?: IntNullableFilter<"UserWorkout"> | number | null
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     exercises?: WorkoutExerciseListRelationFilter
@@ -16448,6 +16467,7 @@ export namespace Prisma {
     finishedAt?: SortOrder
     durationSeconds?: SortOrderInput | SortOrder
     totalWeightKg?: SortOrderInput | SortOrder
+    totalReps?: SortOrderInput | SortOrder
     bodyWeightKg?: SortOrder
     user?: UserOrderByWithRelationInput
     exercises?: WorkoutExerciseOrderByRelationAggregateInput
@@ -16465,6 +16485,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     durationSeconds?: IntNullableFilter<"UserWorkout"> | number | null
     totalWeightKg?: IntNullableFilter<"UserWorkout"> | number | null
+    totalReps?: IntNullableFilter<"UserWorkout"> | number | null
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     exercises?: WorkoutExerciseListRelationFilter
@@ -16479,6 +16500,7 @@ export namespace Prisma {
     finishedAt?: SortOrder
     durationSeconds?: SortOrderInput | SortOrder
     totalWeightKg?: SortOrderInput | SortOrder
+    totalReps?: SortOrderInput | SortOrder
     bodyWeightKg?: SortOrder
     _count?: UserWorkoutCountOrderByAggregateInput
     _avg?: UserWorkoutAvgOrderByAggregateInput
@@ -16499,6 +16521,7 @@ export namespace Prisma {
     finishedAt?: DateTimeWithAggregatesFilter<"UserWorkout"> | Date | string
     durationSeconds?: IntNullableWithAggregatesFilter<"UserWorkout"> | number | null
     totalWeightKg?: IntNullableWithAggregatesFilter<"UserWorkout"> | number | null
+    totalReps?: IntNullableWithAggregatesFilter<"UserWorkout"> | number | null
     bodyWeightKg?: DecimalWithAggregatesFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -17045,6 +17068,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     user: UserCreateNestedOneWithoutWorkoutsInput
     exercises?: WorkoutExerciseCreateNestedManyWithoutWorkoutInput
@@ -17059,6 +17083,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput
   }
@@ -17070,6 +17095,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
     exercises?: WorkoutExerciseUpdateManyWithoutWorkoutNestedInput
@@ -17084,6 +17110,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput
   }
@@ -17097,6 +17124,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
   }
 
@@ -17107,6 +17135,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -17119,6 +17148,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -17911,6 +17941,7 @@ export namespace Prisma {
     finishedAt?: SortOrder
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
+    totalReps?: SortOrder
     bodyWeightKg?: SortOrder
   }
 
@@ -17920,6 +17951,7 @@ export namespace Prisma {
     routineId?: SortOrder
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
+    totalReps?: SortOrder
     bodyWeightKg?: SortOrder
   }
 
@@ -17932,6 +17964,7 @@ export namespace Prisma {
     finishedAt?: SortOrder
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
+    totalReps?: SortOrder
     bodyWeightKg?: SortOrder
   }
 
@@ -17944,6 +17977,7 @@ export namespace Prisma {
     finishedAt?: SortOrder
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
+    totalReps?: SortOrder
     bodyWeightKg?: SortOrder
   }
 
@@ -17953,6 +17987,7 @@ export namespace Prisma {
     routineId?: SortOrder
     durationSeconds?: SortOrder
     totalWeightKg?: SortOrder
+    totalReps?: SortOrder
     bodyWeightKg?: SortOrder
   }
 
@@ -19935,6 +19970,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseCreateNestedManyWithoutWorkoutInput
   }
@@ -19947,6 +19983,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput
   }
@@ -20036,6 +20073,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFilter<"UserWorkout"> | Date | string
     durationSeconds?: IntNullableFilter<"UserWorkout"> | number | null
     totalWeightKg?: IntNullableFilter<"UserWorkout"> | number | null
+    totalReps?: IntNullableFilter<"UserWorkout"> | number | null
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -20226,6 +20264,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     user: UserCreateNestedOneWithoutWorkoutsInput
   }
@@ -20239,6 +20278,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
   }
 
@@ -20316,6 +20356,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
   }
@@ -20329,6 +20370,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -20599,6 +20641,7 @@ export namespace Prisma {
     finishedAt: Date | string
     durationSeconds?: number | null
     totalWeightKg?: number | null
+    totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
   }
 
@@ -20631,6 +20674,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUpdateManyWithoutWorkoutNestedInput
   }
@@ -20643,6 +20687,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput
   }
@@ -20655,6 +20700,7 @@ export namespace Prisma {
     finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 

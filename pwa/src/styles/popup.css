@@ -1,0 +1,28 @@
+.popup {
+  background: var(--em-surface);
+  border: 1px solid var(--accent-secondary);
+  border-radius: var(--border-radius);
+}
+
+.popupCloseButton {
+  appearance: none;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  color: var(--em-text-tertiary);
+  width: 32px;
+  height: 32px;
+}
+
+.popupCloseButton:hover {
+  color: var(--em-text-secondary);
+}
+
+.popupCloseButton svg {
+  width: 100%;
+  height: 100%;
+}

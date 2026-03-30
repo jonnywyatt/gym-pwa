@@ -1,11 +1,9 @@
 .popup {
+  composes: popup from '../../styles/popup.css';
   position: fixed;
   bottom: var(--spacing-unit-6);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--em-surface);
-  border: 1px solid var(--accent-secondary);
-  border-radius: var(--border-radius);
   padding: var(--spacing-unit-3);
   min-width: 200px;
   max-width: 280px;
@@ -13,26 +11,7 @@
 }
 
 .closeButton {
-  appearance: none;
-  border: none;
-  padding: 0;
-  background: none;
-  cursor: pointer;
-  position: absolute;
-  top: -16px;
-  right: -16px;
-  color: var(--em-text-tertiary);
-  width: 32px;
-  height: 32px;
-}
-
-.closeButton:hover {
-  color: var(--em-text-secondary);
-}
-
-.closeButton svg {
-  width: 100%;
-  height: 100%;
+  composes: popupCloseButton from '../../styles/popup.css';
 }
 
 .sessionList {

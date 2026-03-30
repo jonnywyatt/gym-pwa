@@ -145,8 +145,10 @@ onUnmounted(() => {
             :sessions="sessionHistory"
           />
         </div>
-        <div>
+        <div class="flexVerticalCenter flexGap3Units">
           <router-link to="/sessions" class="buttonLink buttonLink--secondary">All sessions</router-link>
+          <span aria-hidden="true" class="linkDivider">|</span>
+          <router-link to="/session-trends" class="buttonLink buttonLink--secondary">Session trends</router-link>
         </div>
       </template>
       <div class="textSecondary textSecondary--small" v-else>No recent sessions</div>

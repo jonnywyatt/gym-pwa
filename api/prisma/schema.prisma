@@ -164,6 +164,7 @@ model UserWorkout {
   finishedAt      DateTime          @map("finished_at")
   durationSeconds Int?              @map("duration_seconds")
   totalWeightKg   Int?              @map("total_weight_kg")
+  totalReps       Int?              @map("total_reps")
   bodyWeightKg    Decimal           @db.Decimal(5, 2) @map("body_weight_kg")
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercises       WorkoutExercise[]

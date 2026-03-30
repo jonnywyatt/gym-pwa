@@ -38,6 +38,7 @@ export async function createUserWorkout(
       finishedAt: new Date(workout.finishedAt),
       durationSeconds: workout.durationSeconds,
       totalWeightKg: workout.totalWeightKg,
+      totalReps: workout.totalReps,
       bodyWeightKg: workout.bodyWeightKg,
       exercises: {
         create: workout.exercisesCompleted.map((exercise, position) => ({
@@ -79,6 +80,7 @@ const workoutSummarySelect = {
   finishedAt: true,
   durationSeconds: true,
   totalWeightKg: true,
+  totalReps: true,
   bodyWeightKg: true,
   _count: { select: { exercises: true } },
 } satisfies Prisma.UserWorkoutSelect;
