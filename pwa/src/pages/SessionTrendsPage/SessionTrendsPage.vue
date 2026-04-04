@@ -87,13 +87,13 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 class="uppercase marginBottom4">Session trends</h1>
+    <h1 class="heading-l heading-l-session marginBottom4">Session trends</h1>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <button
         v-for="option in TREND_PERIOD_OPTIONS"
         :key="option.period"
         type="button"
-        :class="['buttonLink', 'buttonLink--secondary', selectedPeriod === option.period ? styles.filterActive : '']"
+        :class="['buttonLink', 'buttonLink--secondary', selectedPeriod === option.period ? 'buttonLink--active' : '']"
         @click="selectPeriod(option.period)"
       >
         {{ option.label }}
@@ -108,7 +108,7 @@ onMounted(() => {
         :key="routine.routineId"
         :class="styles.routineSection"
       >
-        <h2 :class="styles.routineName">{{ routine.routineLabel }}</h2>
+        <h2 class="heading-m marginBottom2">{{ routine.routineLabel }}</h2>
         <p v-if="routine.sessions.length === 0" class="textSecondary textSecondary--small">No sessions recorded.</p>
         <template v-else>
           <p :class="styles.metricLabel">{{ buildMetricSubtitle(routine) }}</p>

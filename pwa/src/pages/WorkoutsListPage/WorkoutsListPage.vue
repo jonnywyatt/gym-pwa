@@ -60,11 +60,12 @@ onMounted(() => {
       <h1 class="heading-l heading-l-session">Sessions</h1>
       <router-link to="/sessions/start" class="buttonPrimary">Start session</router-link>
     </header>
-    <div class="flexVerticalCenter flexGap2Units marginBottom4">
+    <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <button
           v-for="option in FILTER_OPTIONS"
           :key="option.period"
-          :class="['buttonSecondary', selectedFilter === option.period ? styles.filterActive : '']"
+          type="button"
+          :class="['buttonLink', 'buttonLink--secondary', selectedFilter === option.period ? 'buttonLink--active' : '']"
           @click="selectFilter(option.period)"
       >
         {{ option.label }}

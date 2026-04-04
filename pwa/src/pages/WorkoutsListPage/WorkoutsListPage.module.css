@@ -12,8 +12,3 @@
   min-width: 0;
 }
 
-.filterActive {
-  border-color: var(--accent-secondary);
-  color: var(--accent-secondary);
-}
-
