@@ -1,4 +1,11 @@
-import type { ChartData, ChartOptions, TooltipPositionerFunction } from 'chart.js';
+import type {
+  Chart,
+  ChartData,
+  ChartOptions,
+  ChartTypeRegistry,
+  Plugin,
+  TooltipPositionerFunction,
+} from 'chart.js';
 import { Tooltip } from 'chart.js';
 import type { RoutineTrendData, SessionTrendsResponse } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
@@ -92,40 +99,113 @@ export function getMetricLabel(secondMetric: RoutineTrendData['secondMetric']): 
   return 'Session duration';
 }
 
-export function linearRegression(xValues: number[], yValues: number[]): [number, number] | null {
-  const n = xValues.length;
-  if (n < 2) return null;
+export function buildMetricSubtitle(routine: RoutineTrendData): string {
+  return getMetricLabel(routine.secondMetric);
+}
 
-  let sumX = 0;
-  let sumY = 0;
-  let sumXY = 0;
-  let sumXX = 0;
+function iqrFilter(values: number[]): boolean[] {
+  if (values.length < 4) return values.map(() => true);
+  const sorted = [...values].sort((a, b) => a - b);
+  const q1 = sorted[Math.floor(sorted.length * 0.25)];
+  const q3 = sorted[Math.floor(sorted.length * 0.75)];
+  const iqr = q3 - q1;
+  const lower = q1 - 1.5 * iqr;
+  const upper = q3 + 1.5 * iqr;
+  return values.map((v) => v >= lower && v <= upper);
+}
 
-  for (let i = 0; i < n; i++) {
-    sumX += xValues[i];
-    sumY += yValues[i];
-    sumXY += xValues[i] * yValues[i];
-    sumXX += xValues[i] * xValues[i];
+function tricube(u: number): number {
+  const absU = Math.abs(u);
+  if (absU >= 1) return 0;
+  const t = 1 - absU ** 3;
+  return t * t * t;
+}
+
+function weightedLinearFit(xs: number[], ys: number[], weights: number[]): [number, number] {
+  let sumW = 0,
+    sumWX = 0,
+    sumWY = 0,
+    sumWXX = 0,
+    sumWXY = 0;
+  for (let i = 0; i < xs.length; i++) {
+    sumW += weights[i];
+    sumWX += weights[i] * xs[i];
+    sumWY += weights[i] * ys[i];
+    sumWXX += weights[i] * xs[i] * xs[i];
+    sumWXY += weights[i] * xs[i] * ys[i];
   }
-
-  const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-  const intercept = (sumY - slope * sumX) / n;
+  const denom = sumW * sumWXX - sumWX * sumWX;
+  if (denom === 0) return [0, sumWY / sumW];
+  const slope = (sumW * sumWXY - sumWX * sumWY) / denom;
+  const intercept = (sumWY - slope * sumWX) / sumW;
   return [slope, intercept];
 }
 
-export function buildTrendlineData(dates: string[], values: number[]): { x: number; y: number }[] {
+function loessEval(trainX: number[], trainY: number[], queryX: number, bandwidth: number): number {
+  const k = Math.max(2, Math.floor(bandwidth * trainX.length));
+  const distances = trainX.map((x) => Math.abs(x - queryX));
+  const sortedIndices = distances
+    .map((d, i) => ({ d, i }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, k)
+    .map((item) => item.i);
+  const maxDist = distances[sortedIndices[sortedIndices.length - 1]];
+  const xs = sortedIndices.map((i) => trainX[i]);
+  const ys = sortedIndices.map((i) => trainY[i]);
+  const ws = sortedIndices.map((i) => tricube(distances[i] / (maxDist === 0 ? 1 : maxDist)));
+  const [slope, intercept] = weightedLinearFit(xs, ys, ws);
+  return slope * queryX + intercept;
+}
+
+const LOESS_NEIGHBOURS_BY_PERIOD: Record<TrendPeriod, number> = {
+  '3m': 4,
+  '6m': 5,
+  '1y': 6,
+  all: 8,
+};
+const LOESS_GRID_SIZE = 100;
+
+export interface TrendlineEndValues {
+  start: number;
+  end: number;
+}
+
+export function getTrendlineEndValues(
+  trendlineData: { x: number; y: number }[]
+): TrendlineEndValues | null {
+  if (trendlineData.length < 2) return null;
+  return { start: trendlineData[0].y, end: trendlineData[trendlineData.length - 1].y };
+}
+
+export function buildTrendlineData(
+  dates: string[],
+  values: number[],
+  period: TrendPeriod
+): { x: number; y: number }[] {
   const n = dates.length;
   if (n < 2) return [];
 
   const timestamps = dates.map((d) => new Date(d).getTime());
   const origin = timestamps[0];
-  const xDays = timestamps.map((t) => (t - origin) / 86400000);
+  const span = timestamps[n - 1] - origin;
+  if (span === 0) return [];
 
-  const result = linearRegression(xDays, values);
-  if (result === null) return [];
+  const xNorm = timestamps.map((t) => (t - origin) / span);
 
-  const [slope, intercept] = result;
-  return timestamps.map((x, i) => ({ x, y: slope * xDays[i] + intercept }));
+  const keep = iqrFilter(values);
+  let trainX = xNorm.filter((_, i) => keep[i]);
+  let trainY = values.filter((_, i) => keep[i]);
+  if (trainX.length < 2) {
+    trainX = xNorm;
+    trainY = values;
+  }
+
+  const gridXNorm = Array.from({ length: LOESS_GRID_SIZE }, (_, i) => i / (LOESS_GRID_SIZE - 1));
+  const gridTimestamps = gridXNorm.map((x) => origin + x * span);
+  const effectiveBandwidth = LOESS_NEIGHBOURS_BY_PERIOD[period] / trainX.length;
+  const gridY = gridXNorm.map((qx) => loessEval(trainX, trainY, qx, effectiveBandwidth));
+
+  return gridTimestamps.map((x, i) => ({ x, y: gridY[i] }));
 }
 
 const COLOR_DOT = '#FF00A5';
@@ -160,7 +240,19 @@ function makeTrendlineDataset(data: { x: number; y: number }[], yAxisID: string)
   };
 }
 
-export function buildChartData(routine: RoutineTrendData): ChartData<'line'> {
+export function getRoutineTrendlineEndValues(
+  routine: RoutineTrendData,
+  period: TrendPeriod
+): TrendlineEndValues | null {
+  const dates = routine.sessions.map((s) => s.date);
+  const values =
+    routine.secondMetric === 'weight'
+      ? routine.sessions.map((s) => s.totalWeightKg)
+      : routine.sessions.map((s) => s.durationSeconds);
+  return getTrendlineEndValues(buildTrendlineData(dates, values, period));
+}
+
+export function buildChartData(routine: RoutineTrendData, period: TrendPeriod): ChartData<'line'> {
   const dates = routine.sessions.map((s) => s.date);
   const timestamps = dates.map((d) => new Date(d).getTime());
 
@@ -176,7 +268,7 @@ export function buildChartData(routine: RoutineTrendData): ChartData<'line'> {
           order: 1,
           ...dotStyle,
         },
-        makeTrendlineDataset(buildTrendlineData(dates, values), 'y'),
+        makeTrendlineDataset(buildTrendlineData(dates, values, period), 'y'),
       ],
     };
   }
@@ -192,7 +284,7 @@ export function buildChartData(routine: RoutineTrendData): ChartData<'line'> {
         order: 1,
         ...dotStyle,
       },
-      makeTrendlineDataset(buildTrendlineData(dates, values), 'y'),
+      makeTrendlineDataset(buildTrendlineData(dates, values, period), 'y'),
     ],
   };
 }
@@ -270,6 +362,72 @@ function buildXAxis(period: TrendPeriod): ChartOptions<'line'>['scales'] {
       },
     },
   };
+}
+
+const TREND_LABEL_FONT = '12px sans-serif';
+const TREND_LABEL_PADDING = 4;
+const TREND_LABEL_BG = 'rgba(11, 18, 21, 0.85)';
+
+export function buildTrendEndLabelPlugin(
+  endValues: TrendlineEndValues,
+  formatValue: (v: number) => string
+): Plugin<keyof ChartTypeRegistry> {
+  return {
+    id: 'trendEndLabels',
+    afterDraw(chart: Chart) {
+      const trendDataset = chart.data.datasets.find((d: { label?: string }) => d.label === 'Trend');
+      if (trendDataset === undefined) return;
+
+      const trendIndex = chart.data.datasets.indexOf(trendDataset);
+      const meta = chart.getDatasetMeta(trendIndex);
+      if (meta.data.length < 2) return;
+
+      const ctx = chart.ctx;
+      const startPoint = meta.data[0];
+      const endPoint = meta.data[meta.data.length - 1];
+
+      const startLabel = formatValue(endValues.start);
+      const endLabel = formatValue(endValues.end);
+
+      ctx.save();
+      ctx.font = TREND_LABEL_FONT;
+      ctx.textBaseline = 'middle';
+
+      const drawLabel = (text: string, x: number, y: number, align: CanvasTextAlign) => {
+        ctx.textAlign = align;
+        const metrics = ctx.measureText(text);
+        const textWidth = metrics.width;
+        const textHeight = 12;
+        const bgX =
+          align === 'left' ? x - TREND_LABEL_PADDING : x - textWidth - TREND_LABEL_PADDING;
+        const bgY = y - textHeight / 2 - TREND_LABEL_PADDING;
+        const bgW = textWidth + TREND_LABEL_PADDING * 2;
+        const bgH = textHeight + TREND_LABEL_PADDING * 2;
+        ctx.fillStyle = TREND_LABEL_BG;
+        ctx.fillRect(bgX, bgY, bgW, bgH);
+        ctx.fillStyle = COLOR_TRENDLINE;
+        ctx.fillText(text, x, y);
+      };
+
+      drawLabel(startLabel, startPoint.x, startPoint.y, 'left');
+      drawLabel(endLabel, endPoint.x, endPoint.y, 'right');
+
+      ctx.restore();
+    },
+  };
+}
+
+export function buildRoutineTrendPlugin(
+  routine: RoutineTrendData,
+  period: TrendPeriod
+): Plugin<keyof ChartTypeRegistry> | null {
+  const endValues = getRoutineTrendlineEndValues(routine, period);
+  if (endValues === null) return null;
+  const isWeight = routine.secondMetric === 'weight';
+  const formatValue = isWeight
+    ? (v: number) => formatWeightKThousands(v)
+    : (v: number) => formatMinutes(v);
+  return buildTrendEndLabelPlugin(endValues, formatValue);
 }
 
 export function buildChartOptions(

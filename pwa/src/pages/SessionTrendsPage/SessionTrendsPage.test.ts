@@ -122,7 +122,7 @@ describe('SessionTrendsPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Total weight (kg)')).toBeInTheDocument();
+      expect(screen.getByText(/Total weight \(kg\)/)).toBeInTheDocument();
     });
   });
 
@@ -134,7 +134,7 @@ describe('SessionTrendsPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Session duration')).toBeInTheDocument();
+      expect(screen.getByText(/Session duration/)).toBeInTheDocument();
     });
   });
 
@@ -146,7 +146,7 @@ describe('SessionTrendsPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Session duration')).toBeInTheDocument();
+      expect(screen.getByText(/Session duration/)).toBeInTheDocument();
     });
   });
 

@@ -12,9 +12,10 @@ import {
   type TrendPeriod,
   buildChartData,
   buildChartOptions,
+  buildMetricSubtitle,
+  buildRoutineTrendPlugin,
   buildSessionPopup,
   fetchSessionTrends,
-  getMetricLabel,
 } from './helpers';
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, TimeScale);
@@ -110,11 +111,12 @@ onMounted(() => {
         <h2 :class="styles.routineName">{{ routine.routineLabel }}</h2>
         <p v-if="routine.sessions.length === 0" class="textSecondary textSecondary--small">No sessions recorded.</p>
         <template v-else>
-          <p :class="styles.metricLabel">{{ getMetricLabel(routine.secondMetric) }}</p>
+          <p :class="styles.metricLabel">{{ buildMetricSubtitle(routine) }}</p>
           <div :class="styles.chartWrapper" @click="(e) => handleChartClick(e, routine)">
             <Line
-              :data="buildChartData(routine)"
+              :data="buildChartData(routine, selectedPeriod)"
               :options="buildChartOptions(routine.secondMetric, selectedPeriod)"
+              :plugins="[buildRoutineTrendPlugin(routine, selectedPeriod)].filter(p => p !== null)"
             />
             <template v-if="sessionPopups.get(routine.routineId) != null">
               <div

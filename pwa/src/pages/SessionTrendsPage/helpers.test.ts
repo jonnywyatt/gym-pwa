@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   buildChartData,
   buildChartOptions,
+  buildMetricSubtitle,
+  buildRoutineTrendPlugin,
   buildSessionPopup,
   buildTrendlineData,
   formatDate,
@@ -11,7 +13,8 @@ import {
   formatWeightKThousands,
   getMetricLabel,
   getPeriodSince,
-  linearRegression,
+  getRoutineTrendlineEndValues,
+  getTrendlineEndValues,
 } from './helpers';
 
 describe('getPeriodSince', () => {
@@ -144,28 +147,25 @@ const baseSession = {
   totalReps: 50,
 };
 
-describe('linearRegression', () => {
-  it('returns null for fewer than 2 values', () => {
-    expect(linearRegression([], [])).toBeNull();
-    expect(linearRegression([0], [5])).toBeNull();
+describe('buildMetricSubtitle', () => {
+  it('returns the weight label for weight metric', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Push',
+      secondMetric: 'weight',
+      sessions: [baseSession],
+    };
+    expect(buildMetricSubtitle(routine)).toBe('Total weight (kg)');
   });
 
-  it('calculates slope and intercept for a perfectly linear series', () => {
-    const result = linearRegression([0, 1, 2, 3], [0, 2, 4, 6]);
-    expect(result).not.toBeNull();
-    if (result === null) return;
-    const [slope, intercept] = result;
-    expect(slope).toBeCloseTo(2);
-    expect(intercept).toBeCloseTo(0);
-  });
-
-  it('calculates slope and intercept for a flat series', () => {
-    const result = linearRegression([0, 1, 2], [5, 5, 5]);
-    expect(result).not.toBeNull();
-    if (result === null) return;
-    const [slope, intercept] = result;
-    expect(slope).toBeCloseTo(0);
-    expect(intercept).toBeCloseTo(5);
+  it('returns the duration label for null metric', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Cardio',
+      secondMetric: null,
+      sessions: [baseSession],
+    };
+    expect(buildMetricSubtitle(routine)).toBe('Session duration');
   });
 });
 
@@ -173,36 +173,119 @@ const DAY_MS = 86400000;
 
 describe('buildTrendlineData', () => {
   it('returns empty array for fewer than 2 values', () => {
-    expect(buildTrendlineData(['2026-01-01T00:00:00Z'], [42])).toEqual([]);
+    expect(buildTrendlineData(['2026-01-01T00:00:00Z'], [42], '3m')).toEqual([]);
   });
 
-  it('returns a point per session with predicted y values', () => {
+  it('returns 100 points spanning the full date range', () => {
     const origin = new Date('2026-01-01T00:00:00Z').getTime();
     const dates = [0, 1, 2, 3].map((i) => new Date(origin + i * DAY_MS).toISOString());
-    const result = buildTrendlineData(dates, [0, 2, 4, 6]);
-    expect(result).toHaveLength(4);
+    const result = buildTrendlineData(dates, [0, 2, 4, 6], '3m');
+    expect(result).toHaveLength(100);
     expect(result[0].x).toBe(origin);
-    expect(result[0].y).toBeCloseTo(0);
-    expect(result[3].x).toBe(origin + 3 * DAY_MS);
-    expect(result[3].y).toBeCloseTo(6);
+    expect(result[99].x).toBe(origin + 3 * DAY_MS);
   });
 
-  it('returns a point per session for a two-point series', () => {
+  it('endpoints are close to actual first and last session values for a linear series', () => {
+    const origin = new Date('2026-01-01T00:00:00Z').getTime();
+    const dates = [0, 1, 2, 3].map((i) => new Date(origin + i * DAY_MS).toISOString());
+    const result = buildTrendlineData(dates, [0, 2, 4, 6], '3m');
+    expect(result[0].y).toBeCloseTo(0, 0);
+    expect(result[99].y).toBeCloseTo(6, 0);
+  });
+
+  it('produces a curve close to the flat value for a flat series', () => {
+    const origin = new Date('2026-01-01T00:00:00Z').getTime();
+    const dates = [0, 1, 2, 3, 4].map((i) => new Date(origin + i * DAY_MS).toISOString());
+    const result = buildTrendlineData(dates, [10, 10, 10, 10, 10], '3m');
+    for (const point of result) {
+      expect(Math.abs(point.y - 10)).toBeLessThan(2);
+    }
+  });
+
+  it('excludes outliers so they do not distort the curve', () => {
+    const origin = new Date('2026-01-01T00:00:00Z').getTime();
+    // 8 regular sessions near 100, plus one extreme outlier
+    const dates = [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) =>
+      new Date(origin + i * DAY_MS).toISOString()
+    );
+    const values = [100, 100, 100, 100, 9999, 100, 100, 100, 100];
+    const result = buildTrendlineData(dates, values, '3m');
+    expect(result[0].y).toBeCloseTo(100, -1);
+    expect(result[99].y).toBeCloseTo(100, -1);
+  });
+
+  it('handles two-point series', () => {
     const origin = new Date('2026-01-01T00:00:00Z').getTime();
     const dates = [0, 1].map((i) => new Date(origin + i * DAY_MS).toISOString());
-    const result = buildTrendlineData(dates, [10, 20]);
-    expect(result).toHaveLength(2);
-    expect(result[0].y).toBeCloseTo(10);
-    expect(result[1].y).toBeCloseTo(20);
+    const result = buildTrendlineData(dates, [10, 20], '3m');
+    expect(result).toHaveLength(100);
+    expect(result[0].y).toBeCloseTo(10, 0);
+    expect(result[99].y).toBeCloseTo(20, 0);
+  });
+});
+
+describe('getTrendlineEndValues', () => {
+  it('returns null for empty array', () => {
+    expect(getTrendlineEndValues([])).toBeNull();
   });
 
-  it('accounts for unequal time gaps between sessions', () => {
-    const origin = new Date('2026-01-01T00:00:00Z').getTime();
-    const dates = [0, 1, 10].map((i) => new Date(origin + i * DAY_MS).toISOString());
-    const result = buildTrendlineData(dates, [10, 10, 10]);
-    expect(result).toHaveLength(3);
-    expect(result[0].y).toBeCloseTo(10);
-    expect(result[2].y).toBeCloseTo(10);
+  it('returns null for single point', () => {
+    expect(getTrendlineEndValues([{ x: 1, y: 5 }])).toBeNull();
+  });
+
+  it('returns start and end y values for two or more points', () => {
+    const result = getTrendlineEndValues([
+      { x: 1, y: 10 },
+      { x: 2, y: 20 },
+      { x: 3, y: 30 },
+    ]);
+    expect(result).not.toBeNull();
+    expect(result?.start).toBe(10);
+    expect(result?.end).toBe(30);
+  });
+});
+
+describe('getRoutineTrendlineEndValues', () => {
+  it('returns null when fewer than 2 sessions', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Push',
+      secondMetric: 'weight',
+      sessions: [baseSession],
+    };
+    expect(getRoutineTrendlineEndValues(routine, '3m')).toBeNull();
+  });
+
+  it('returns end values based on weight when secondMetric is weight', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Push',
+      secondMetric: 'weight',
+      sessions: [
+        { ...baseSession, date: '2026-01-01T00:00:00Z', totalWeightKg: 1000 },
+        { ...baseSession, date: '2026-01-08T00:00:00Z', totalWeightKg: 2000 },
+      ],
+    };
+    const result = getRoutineTrendlineEndValues(routine, '3m');
+    expect(result).not.toBeNull();
+    expect(result?.start).toBeCloseTo(1000);
+    expect(result?.end).toBeCloseTo(2000);
+  });
+
+  it('returns end values based on duration when secondMetric is not weight', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Cardio',
+      secondMetric: 'reps',
+      sessions: [
+        { ...baseSession, date: '2026-01-01T00:00:00Z', durationSeconds: 3600 },
+        { ...baseSession, date: '2026-01-08T00:00:00Z', durationSeconds: 7200 },
+      ],
+    };
+    const result = getRoutineTrendlineEndValues(routine, '3m');
+    expect(result).not.toBeNull();
+    expect(result?.start).toBeCloseTo(3600);
+    expect(result?.end).toBeCloseTo(7200);
   });
 });
 
@@ -214,7 +297,7 @@ describe('buildChartData', () => {
       secondMetric: null,
       sessions: [baseSession, baseSession],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     expect(data.datasets).toHaveLength(2);
     expect(data.datasets[0].label).toBe('Duration');
     expect(data.datasets[0].yAxisID).toBe('y');
@@ -228,7 +311,7 @@ describe('buildChartData', () => {
       secondMetric: 'reps',
       sessions: [baseSession, baseSession],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     expect(data.datasets).toHaveLength(2);
     expect(data.datasets[0].label).toBe('Duration');
     expect(data.datasets[1].label).toBe('Trend');
@@ -241,7 +324,7 @@ describe('buildChartData', () => {
       secondMetric: 'weight',
       sessions: [baseSession, baseSession],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     expect(data.datasets).toHaveLength(2);
     expect(data.datasets[0].label).toBe('Weight (kg)');
     expect(data.datasets[0].yAxisID).toBe('y');
@@ -255,7 +338,7 @@ describe('buildChartData', () => {
       secondMetric: null,
       sessions: [baseSession, baseSession],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     expect(data.datasets[1].borderDash).toEqual([4, 4]);
   });
 
@@ -266,7 +349,7 @@ describe('buildChartData', () => {
       secondMetric: null,
       sessions: [baseSession],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     expect(data.datasets[0].pointRadius).toBe(1.5);
     expect((data.datasets[0] as { showLine: boolean }).showLine).toBe(false);
   });
@@ -281,10 +364,52 @@ describe('buildChartData', () => {
         { ...baseSession, date: '2026-01-08T10:00:00Z' },
       ],
     };
-    const data = buildChartData(routine);
+    const data = buildChartData(routine, '3m');
     const points = data.datasets[0].data as { x: number; y: number }[];
     expect(points[0].x).toBe(new Date('2026-01-01T10:00:00Z').getTime());
     expect(points[1].x).toBe(new Date('2026-01-08T10:00:00Z').getTime());
+  });
+});
+
+describe('buildRoutineTrendPlugin', () => {
+  it('returns null when routine has fewer than 2 sessions', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Push',
+      secondMetric: 'weight',
+      sessions: [baseSession],
+    };
+    expect(buildRoutineTrendPlugin(routine, '3m')).toBeNull();
+  });
+
+  it('returns a plugin with id trendEndLabels for weight routine', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Push',
+      secondMetric: 'weight',
+      sessions: [
+        { ...baseSession, date: '2026-01-01T00:00:00Z' },
+        { ...baseSession, date: '2026-01-08T00:00:00Z' },
+      ],
+    };
+    const plugin = buildRoutineTrendPlugin(routine, '3m');
+    expect(plugin).not.toBeNull();
+    expect(plugin?.id).toBe('trendEndLabels');
+  });
+
+  it('returns a plugin with id trendEndLabels for duration routine', () => {
+    const routine: RoutineTrendData = {
+      routineId: 1,
+      routineLabel: 'Cardio',
+      secondMetric: null,
+      sessions: [
+        { ...baseSession, date: '2026-01-01T00:00:00Z' },
+        { ...baseSession, date: '2026-01-08T00:00:00Z' },
+      ],
+    };
+    const plugin = buildRoutineTrendPlugin(routine, '3m');
+    expect(plugin).not.toBeNull();
+    expect(plugin?.id).toBe('trendEndLabels');
   });
 });
 
