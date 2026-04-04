@@ -1,8 +1,15 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/vue';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkoutExercise } from '../../lib/db';
 import ExerciseSets from './ExerciseSets.vue';
+
+HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+  this.open = true;
+});
+HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+  this.open = false;
+});
 
 describe('ExerciseSets', () => {
   const baseExercise: LocalWorkoutExercise = {
@@ -463,6 +470,110 @@ describe('ExerciseSets', () => {
       expect(screen.getByPlaceholderText('Min')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Sec')).toBeInTheDocument();
       expect(screen.queryByPlaceholderText('Reps')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('stopwatch button and exercise timer', () => {
+    const timeExerciseWithSets: LocalWorkoutExercise = {
+      id: 2,
+      label: 'Dead Hang',
+      recordSetsType: 'TIME',
+      primaryMuscleGroups: ['Forearms'],
+      secondaryMuscleGroups: [],
+      completed: false,
+      startedAt: '2025-01-15T14:00:00.000Z',
+      sets: [
+        { id: 's1', setType: 'Standard', completed: false },
+        { id: 's2', setType: 'Standard', completed: false },
+      ],
+    };
+
+    const weightExercise: LocalWorkoutExercise = {
+      id: 1,
+      label: 'Bench Press',
+      recordSetsType: 'WEIGHT',
+      primaryMuscleGroups: ['Pectoralis Major'],
+      secondaryMuscleGroups: [],
+      completed: false,
+      startedAt: '2025-01-15T14:00:00.000Z',
+      sets: [{ id: 's1', setType: 'Standard', completed: false }],
+    };
+
+    it('shows stopwatch button for TIME exercises', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, { props: { exercise: timeExerciseWithSets, bodyWeightKg: 80 } });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
+
+      expect(screen.getAllByRole('button', { name: /open timer for set/i })).toHaveLength(2);
+    });
+
+    it('does not show stopwatch button for WEIGHT exercises', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, { props: { exercise: weightExercise, bodyWeightKg: 80 } });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      expect(screen.queryByRole('button', { name: /open timer for set/i })).not.toBeInTheDocument();
+    });
+
+    it('shows stopwatch button for WEIGHT_AND_TIME exercises', async () => {
+      const user = userEvent.setup();
+      const weightTimeExercise: LocalWorkoutExercise = {
+        id: 3,
+        label: "Farmer's Carry",
+        recordSetsType: 'WEIGHT_AND_TIME',
+        primaryMuscleGroups: ['Forearms'],
+        secondaryMuscleGroups: [],
+        completed: false,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [{ id: 's1', setType: 'Standard', completed: false }],
+      };
+      render(ExerciseSets, { props: { exercise: weightTimeExercise, bodyWeightKg: 80 } });
+
+      await user.click(screen.getByRole('button', { name: /farmer/i }));
+
+      expect(screen.getByRole('button', { name: /open timer for set 1/i })).toBeInTheDocument();
+    });
+
+    it('opens the timer modal when stopwatch button is clicked', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, { props: { exercise: timeExerciseWithSets, bodyWeightKg: 80 } });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
+      await user.click(screen.getByRole('button', { name: /open timer for set 1/i }));
+
+      expect(screen.getByRole('button', { name: 'Start timer' })).toBeInTheDocument();
+    });
+
+    it('emits updateSet with timeSeconds when timer Finish is clicked', async () => {
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { emitted } = render(ExerciseSets, {
+        props: { exercise: timeExerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
+      await user.click(screen.getByRole('button', { name: /open timer for set 1/i }));
+      await user.click(screen.getByRole('button', { name: 'Start timer' }));
+      vi.advanceTimersByTime(45000);
+      await user.click(screen.getByRole('button', { name: 'Finish' }));
+
+      vi.useRealTimers();
+
+      const updates = emitted().updateSet as unknown[][];
+      const lastUpdate = updates[updates.length - 1];
+      expect(lastUpdate).toEqual([2, 's1', { timeSeconds: 45 }]);
+    });
+
+    it('does not show a Cancel button in the timer', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, { props: { exercise: timeExerciseWithSets, bodyWeightKg: 80 } });
+
+      await user.click(screen.getByRole('button', { name: /dead hang/i }));
+      await user.click(screen.getByRole('button', { name: /open timer for set 1/i }));
+
+      expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
     });
   });
 });

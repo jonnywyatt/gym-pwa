@@ -16,8 +16,10 @@ import {
 } from './helpers';
 import styles from './ExerciseSets.module.css';
 import WeightKg from '../WeightKg/WeightKg.vue';
+import ExerciseTimer from '../ExerciseTimer/ExerciseTimer.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
+import stopwatchSvg from '../../assets/stopwatch.svg';
 
 interface Props {
   exercise: LocalWorkoutExercise;
@@ -77,6 +79,20 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
   const timeSeconds = combineTimeSeconds(currentTimeSeconds, field, value);
   emit('updateSet', props.exercise.id, setId, { timeSeconds });
 }
+
+const timerOpenForSetId = ref<string | null>(null);
+
+function openTimer(setId: string) {
+  timerOpenForSetId.value = setId;
+}
+
+function handleTimerFinish(timeSeconds: number) {
+  if (timerOpenForSetId.value !== null) {
+    emit('updateSet', props.exercise.id, timerOpenForSetId.value, { timeSeconds });
+  }
+  timerOpenForSetId.value = null;
+}
+
 </script>
 
 <template>
@@ -157,6 +173,14 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
                 @input="(e) => handleTimeUpdate(set.id, set.timeSeconds, 'seconds', (e.target as HTMLInputElement).value)"
               />
             </div>
+            <button
+              type="button"
+              :class="styles.stopwatchButton"
+              :aria-label="`Open timer for set ${index + 1}`"
+              @click="openTimer(set.id)"
+            >
+              <img :src="stopwatchSvg" alt="" width="24" height="24" />
+            </button>
           </template>
 
           <select
@@ -179,5 +203,12 @@ function handleTimeUpdate(setId: string, currentTimeSeconds: number | undefined,
         </button>
       </div>
     </div>
+
+    <ExerciseTimer
+      v-if="timerOpenForSetId !== null"
+      :open="timerOpenForSetId !== null"
+      :exercise-label="exercise.label"
+      @finish="handleTimerFinish"
+    />
   </div>
 </template>

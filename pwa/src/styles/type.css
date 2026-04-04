@@ -45,6 +45,10 @@
     font-size: var(--font-size-10);
 }
 
+.uppercase--medium {
+    font-size: var(--font-size-14);
+}
+
 .accentPrimary {
     color: var(--accent-primary);
 }
