@@ -37,6 +37,8 @@ const emit = defineEmits<{
 
 const inputFields = computed(() => getSetInputFields(props.exercise.recordSetsType));
 
+const useShortSetTypeLabels = computed(() => props.exercise.recordSetsType === 'WEIGHT_AND_TIME');
+
 const exerciseTotalWeightKg = computed(() => {
   if (!props.exercise.sets) return 0;
   return calculateExerciseTotalWeightKg(
@@ -189,9 +191,9 @@ function handleTimerFinish(timeSeconds: number) {
             :aria-label="`Set type for set ${index + 1}`"
             @change="(e) => emit('changeSetType', exercise.id, set.id, (e.target as HTMLSelectElement).value as SetType)"
           >
-            <option value="Warmup">Warmup</option>
-            <option value="Standard">Standard</option>
-            <option value="Failure">Failure</option>
+            <option value="Warmup">{{ useShortSetTypeLabels ? 'W' : 'Warmup' }}</option>
+            <option value="Standard">{{ useShortSetTypeLabels ? 'S' : 'Standard' }}</option>
+            <option value="Failure">{{ useShortSetTypeLabels ? 'F' : 'Failure' }}</option>
           </select>
 
         </div>

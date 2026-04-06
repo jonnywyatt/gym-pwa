@@ -168,6 +168,19 @@ describe('ExerciseSets', () => {
       expect(emitted().addSet[0]).toEqual([1]);
     });
 
+    it('shows full set type labels for non-WEIGHT_AND_TIME exercises', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      const select = screen.getByRole('combobox', { name: /set type for set 1/i });
+      const options = Array.from(select.querySelectorAll('option'));
+      expect(options.map((o) => o.textContent)).toEqual(['Warmup', 'Standard', 'Failure']);
+    });
+
     it('emits changeSetType when dropdown changes', async () => {
       const user = userEvent.setup();
       const { emitted } = render(ExerciseSets, {
@@ -457,6 +470,19 @@ describe('ExerciseSets', () => {
       startedAt: '2025-01-15T14:00:00.000Z',
       sets: [{ id: 's1', setType: 'Standard', completed: false }],
     };
+
+    it('shows abbreviated set type labels (Std, Wrm) in dropdown', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: weightTimeExercise, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /farmer/i }));
+
+      const select = screen.getByRole('combobox', { name: /set type for set 1/i });
+      const options = Array.from(select.querySelectorAll('option'));
+      expect(options.map((o) => o.textContent)).toEqual(['W', 'S', 'F']);
+    });
 
     it('shows weight, minutes and seconds inputs but not reps', async () => {
       const user = userEvent.setup();
