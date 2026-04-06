@@ -75,6 +75,50 @@ const dashboardRoute = new Route(
 );
 registerRoute(dashboardRoute);
 
+// Session Trends API: stale-while-revalidate with 1-week TTL.
+// Uses the same manual cache.put() approach as dashboard to bypass
+// the browser's restriction on caching responses to credentialed requests.
+const TRENDS_CACHE = 'session-trends-api';
+const TRENDS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function isTrendsCacheFresh(cachedResponse: Response): boolean {
+  const cachedAt = cachedResponse.headers.get('x-cached-at');
+  if (!cachedAt) return false;
+  return Date.now() - new Date(cachedAt).getTime() < TRENDS_TTL_MS;
+}
+
+const trendsRoute = new Route(
+  ({ url }) => /\/session-trends(\?.*)?$/.test(url.href),
+  async ({ request }) => {
+    const cache = await caches.open(TRENDS_CACHE);
+    const cacheKey = new URL(request.url).pathname + new URL(request.url).search;
+    const cachedResponse = await cache.match(cacheKey, { ignoreVary: true });
+
+    const fetchAndCache = fetch(request).then(async (networkResponse) => {
+      if (networkResponse.ok) {
+        const headers = new Headers(networkResponse.headers);
+        headers.set('x-cached-at', new Date().toISOString());
+        const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
+          status: networkResponse.status,
+          statusText: networkResponse.statusText,
+          headers,
+        });
+        await cache.put(cacheKey, responseToCache);
+      }
+      return networkResponse;
+    });
+
+    if (cachedResponse && isTrendsCacheFresh(cachedResponse)) {
+      fetchAndCache.catch(() => {});
+      return cachedResponse;
+    }
+
+    return fetchAndCache;
+  },
+  'GET'
+);
+registerRoute(trendsRoute);
+
 // Google Fonts stylesheets
 registerRoute(
   /^https:\/\/fonts\.googleapis\.com\//,

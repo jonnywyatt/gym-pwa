@@ -33,16 +33,52 @@ export function getPeriodSince(period: TrendPeriod): Date | null {
   if (period === '3m') d.setMonth(d.getMonth() - 3);
   if (period === '6m') d.setMonth(d.getMonth() - 6);
   if (period === '1y') d.setFullYear(d.getFullYear() - 1);
+  d.setHours(0, 0, 0, 0);
   return d;
+}
+
+const trendsCache = new Map<TrendPeriod, { data: SessionTrendsResponse; fetchedAt: number }>();
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+export function clearTrendsCache(): void {
+  trendsCache.clear();
+}
+
+function fetchFromApi(userId: number, period: TrendPeriod): Promise<SessionTrendsResponse> {
+  const since = getPeriodSince(period);
+  const query = since ? `?since=${since.toISOString()}` : '';
+  return authFetchJson<SessionTrendsResponse>(`/users/${userId}/session-trends${query}`);
 }
 
 export async function fetchSessionTrends(
   userId: number,
   period: TrendPeriod
 ): Promise<SessionTrendsResponse> {
-  const since = getPeriodSince(period);
-  const query = since ? `?since=${since.toISOString()}` : '';
-  return await authFetchJson<SessionTrendsResponse>(`/users/${userId}/session-trends${query}`);
+  const cached = trendsCache.get(period);
+  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  const prefetched = consumeTrendsPrefetch();
+  const data = prefetched ? await prefetched : await fetchFromApi(userId, period);
+  trendsCache.set(period, { data, fetchedAt: Date.now() });
+  return data;
+}
+
+let trendsPrefetch: Promise<SessionTrendsResponse> | null = null;
+
+export function prefetchSessionTrends(userId: number | null): void {
+  if (trendsPrefetch || userId === null) return;
+  trendsPrefetch = fetchFromApi(userId, '3m');
+  trendsPrefetch.catch(() => {
+    trendsPrefetch = null;
+  });
+}
+
+export function consumeTrendsPrefetch(): Promise<SessionTrendsResponse> | null {
+  const promise = trendsPrefetch;
+  trendsPrefetch = null;
+  return promise;
 }
 
 export function formatDate(isoDate: string): string {

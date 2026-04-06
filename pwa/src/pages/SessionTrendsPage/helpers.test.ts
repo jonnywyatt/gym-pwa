@@ -1,17 +1,20 @@
 import type { RoutineTrendData } from 'gym-pwa-api/types';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildChartData,
   buildChartOptions,
   buildMetricSubtitle,
   buildSessionPopup,
   buildTrendlineData,
+  clearTrendsCache,
+  fetchSessionTrends,
   formatDate,
   formatMinutes,
   formatWeightKg,
   formatWeightKThousands,
   getMetricLabel,
   getPeriodSince,
+  prefetchSessionTrends,
 } from './helpers';
 
 describe('getPeriodSince', () => {
@@ -19,28 +22,31 @@ describe('getPeriodSince', () => {
     expect(getPeriodSince('all')).toBeNull();
   });
 
-  it('returns a date approximately 3 months ago for 3m', () => {
+  it('returns a date approximately 3 months ago for 3m, truncated to midnight', () => {
     const result = getPeriodSince('3m');
     const expected = new Date();
     expected.setMonth(expected.getMonth() - 3);
+    expected.setHours(0, 0, 0, 0);
     expect(result).not.toBeNull();
-    expect(Math.abs((result as Date).getTime() - expected.getTime())).toBeLessThan(1000);
+    expect((result as Date).getTime()).toBe(expected.getTime());
   });
 
-  it('returns a date approximately 6 months ago for 6m', () => {
+  it('returns a date approximately 6 months ago for 6m, truncated to midnight', () => {
     const result = getPeriodSince('6m');
     const expected = new Date();
     expected.setMonth(expected.getMonth() - 6);
+    expected.setHours(0, 0, 0, 0);
     expect(result).not.toBeNull();
-    expect(Math.abs((result as Date).getTime() - expected.getTime())).toBeLessThan(1000);
+    expect((result as Date).getTime()).toBe(expected.getTime());
   });
 
-  it('returns a date approximately 1 year ago for 1y', () => {
+  it('returns a date approximately 1 year ago for 1y, truncated to midnight', () => {
     const result = getPeriodSince('1y');
     const expected = new Date();
     expected.setFullYear(expected.getFullYear() - 1);
+    expected.setHours(0, 0, 0, 0);
     expect(result).not.toBeNull();
-    expect(Math.abs((result as Date).getTime() - expected.getTime())).toBeLessThan(1000);
+    expect((result as Date).getTime()).toBe(expected.getTime());
   });
 });
 
@@ -343,5 +349,91 @@ describe('buildChartOptions', () => {
     const yScale = options.scales?.y as { grid: { display: boolean; color: string } };
     expect(yScale.grid.display).toBe(true);
     expect(yScale.grid.color).toBe('#2a3a42');
+  });
+});
+
+vi.mock('../../lib/api/client', () => ({
+  authFetchJson: vi.fn(),
+}));
+
+const { authFetchJson } = await import('../../lib/api/client');
+const mockAuthFetchJson = vi.mocked(authFetchJson);
+
+const mockTrendsResponse = [
+  {
+    routineId: 1,
+    routineLabel: 'Push',
+    secondMetric: 'weight' as const,
+    sessions: [baseSession],
+  },
+];
+
+describe('fetchSessionTrends', () => {
+  beforeEach(() => {
+    clearTrendsCache();
+    mockAuthFetchJson.mockReset();
+  });
+
+  it('fetches from API on first call', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    const result = await fetchSessionTrends(1, '3m');
+
+    expect(result).toEqual(mockTrendsResponse);
+    expect(mockAuthFetchJson).toHaveBeenCalledOnce();
+  });
+
+  it('returns cached data on second call for same period', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    await fetchSessionTrends(1, '3m');
+    const result = await fetchSessionTrends(1, '3m');
+
+    expect(result).toEqual(mockTrendsResponse);
+    expect(mockAuthFetchJson).toHaveBeenCalledOnce();
+  });
+
+  it('fetches from API for a different period', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    await fetchSessionTrends(1, '3m');
+    await fetchSessionTrends(1, '6m');
+
+    expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
+  });
+
+  it('clearTrendsCache forces a fresh fetch', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    await fetchSessionTrends(1, '3m');
+    clearTrendsCache();
+    await fetchSessionTrends(1, '3m');
+
+    expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('prefetchSessionTrends', () => {
+  beforeEach(() => {
+    clearTrendsCache();
+    mockAuthFetchJson.mockReset();
+  });
+
+  it('does not fetch when userId is null', () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    prefetchSessionTrends(null);
+
+    expect(mockAuthFetchJson).not.toHaveBeenCalled();
+  });
+
+  it('prefetched data is consumed by fetchSessionTrends', async () => {
+    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
+
+    prefetchSessionTrends(1);
+    const result = await fetchSessionTrends(1, '3m');
+
+    expect(result).toEqual(mockTrendsResponse);
+    expect(mockAuthFetchJson).toHaveBeenCalledOnce();
   });
 });
