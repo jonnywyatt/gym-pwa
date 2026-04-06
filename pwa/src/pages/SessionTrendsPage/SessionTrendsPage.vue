@@ -112,6 +112,11 @@ onMounted(() => {
   <main class="main">
     <h1 class="heading-l heading-l-session marginBottom4">Session trends</h1>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
+      <router-link to="/sessions" class="buttonLink buttonLink--secondary">By month</router-link>
+      <span aria-hidden="true" class="linkDivider">|</span>
+      <router-link to="/session-trends" class="buttonLink buttonLink--secondary buttonLink--active">Trends</router-link>
+    </div>
+    <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <button
         v-for="option in TREND_PERIOD_OPTIONS"
         :key="option.period"

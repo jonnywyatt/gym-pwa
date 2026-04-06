@@ -105,13 +105,24 @@ describe('getRoutineSummaries', () => {
     });
   });
 
-  it('returns at most 3 summaries', () => {
+  it('returns all summaries when no limit is specified', () => {
     const sessions = [1, 2, 3, 4].map((id) =>
       makeWorkout(id, id, `Routine ${id}`, `2024-01-0${id}T10:00:00Z`)
     );
     const colourMap = buildRoutineColourMap(sessions);
 
     const summaries = getRoutineSummaries(sessions, colourMap);
+
+    expect(summaries).toHaveLength(4);
+  });
+
+  it('limits results when limit is specified', () => {
+    const sessions = [1, 2, 3, 4].map((id) =>
+      makeWorkout(id, id, `Routine ${id}`, `2024-01-0${id}T10:00:00Z`)
+    );
+    const colourMap = buildRoutineColourMap(sessions);
+
+    const summaries = getRoutineSummaries(sessions, colourMap, 3);
 
     expect(summaries).toHaveLength(3);
   });

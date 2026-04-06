@@ -1,7 +1,6 @@
-import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@testing-library/vue';
+import { render, screen, waitFor, within } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
 import WorkoutsListPage from './WorkoutsListPage.vue';
 
@@ -24,16 +23,22 @@ const routerLinkStub = {
   props: ['to'],
 };
 
+const sessionCalendarStub = {
+  template: '<div data-testid="session-calendar" />',
+  props: ['startDate', 'endDate', 'sessions'],
+};
+
 describe('WorkoutsListPage', () => {
   const mockApiUrl = 'http://localhost:3000';
 
-  beforeEach(() => {
-    localStorage.setItem('access_token', 'test-token');
-  });
-
   function renderPage() {
     return render(WorkoutsListPage, {
-      global: { stubs: { RouterLink: routerLinkStub } },
+      global: {
+        stubs: {
+          RouterLink: routerLinkStub,
+          SessionCalendar: sessionCalendarStub,
+        },
+      },
     });
   }
 
@@ -50,6 +55,24 @@ describe('WorkoutsListPage', () => {
     expect(link).toHaveAttribute('href', '/sessions/start');
   });
 
+  it('should display navigation links with By month highlighted', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    const byMonthLink = screen.getByRole('link', { name: 'By month' });
+    expect(byMonthLink).toHaveAttribute('href', '/sessions');
+    expect(byMonthLink.className).toContain('buttonLink--active');
+
+    const trendsLink = screen.getByRole('link', { name: 'Trends' });
+    expect(trendsLink).toHaveAttribute('href', '/session-trends');
+    expect(trendsLink.className).not.toContain('buttonLink--active');
+  });
+
   it('should display loading state initially', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, async () => {
@@ -63,7 +86,10 @@ describe('WorkoutsListPage', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('should display message when no workouts exist', async () => {
+  it('should display month headings when data loads', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
+
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, () => {
         return HttpResponse.json([]);
@@ -76,10 +102,17 @@ describe('WorkoutsListPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText('No sessions in this period.')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'April 2026' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'March 2026' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'May 2025' })).toBeInTheDocument();
+
+    vi.useRealTimers();
   });
 
-  it('should display workouts with formatted duration when durationSeconds is available', async () => {
+  it('should show routine summary counts for months with sessions', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
+
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, () => {
         return HttpResponse.json([
@@ -88,84 +121,39 @@ describe('WorkoutsListPage', () => {
             userId: 1,
             routineId: 1,
             routineLabel: 'Strength',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T11:05:30Z',
-            durationSeconds: 3930,
-            exerciseCount: 2,
+            startedAt: '2026-04-01T10:00:00Z',
+            finishedAt: '2026-04-01T11:00:00Z',
+            durationSeconds: 3600,
+            exerciseCount: 3,
             bodyWeightKg: 80,
-            totalWeightKg: 2500,
+            totalWeightKg: 1500,
+            totalReps: 50,
           },
-        ]);
-      })
-    );
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Strength')).toBeInTheDocument();
-    expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
-    expect(screen.getByText('2 exercises')).toBeInTheDocument();
-    expect(screen.getByText('2,500kg total')).toBeInTheDocument();
-  });
-
-  it('should fall back to calculated duration when durationSeconds is not available', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([
-          {
-            id: 1,
-            userId: 1,
-            routineId: 1,
-            routineLabel: 'Cardio',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T10:45:00Z',
-            exerciseCount: 1,
-            bodyWeightKg: 75,
-          },
-        ]);
-      })
-    );
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Cardio')).toBeInTheDocument();
-    expect(screen.getByText('45 minutes')).toBeInTheDocument();
-  });
-
-  it('should display multiple workouts', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([
           {
             id: 2,
             userId: 1,
             routineId: 1,
-            routineLabel: 'Upper Body',
-            startedAt: '2024-01-16T10:00:00Z',
-            finishedAt: '2024-01-16T10:30:00Z',
+            routineLabel: 'Strength',
+            startedAt: '2026-04-03T10:00:00Z',
+            finishedAt: '2026-04-03T11:00:00Z',
+            durationSeconds: 3600,
+            exerciseCount: 3,
+            bodyWeightKg: 80,
+            totalWeightKg: 1600,
+            totalReps: 55,
+          },
+          {
+            id: 3,
+            userId: 1,
+            routineId: 2,
+            routineLabel: 'Cardio',
+            startedAt: '2026-04-02T10:00:00Z',
+            finishedAt: '2026-04-02T10:30:00Z',
             durationSeconds: 1800,
             exerciseCount: 1,
             bodyWeightKg: 80,
-            totalWeightKg: 800,
-          },
-          {
-            id: 1,
-            userId: 1,
-            routineId: 2,
-            routineLabel: 'Lower Body',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T11:00:00Z',
-            durationSeconds: 3600,
-            exerciseCount: 1,
-            bodyWeightKg: 79,
-            totalWeightKg: 1200,
+            totalWeightKg: 0,
+            totalReps: 0,
           },
         ]);
       })
@@ -177,33 +165,24 @@ describe('WorkoutsListPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText('Upper Body')).toBeInTheDocument();
-    expect(screen.getByText('30m')).toBeInTheDocument();
-    expect(screen.getByText('800kg total')).toBeInTheDocument();
-    expect(screen.getByText('Lower Body')).toBeInTheDocument();
-    expect(screen.getByText('1h')).toBeInTheDocument();
-    expect(screen.getByText('1,200kg total')).toBeInTheDocument();
+    const aprilHeading = screen.getByRole('heading', { name: 'April 2026' });
+    const aprilSection = aprilHeading.closest('section');
+    expect(aprilSection).not.toBeNull();
+    if (aprilSection) {
+      const sectionQueries = within(aprilSection);
+      expect(sectionQueries.getByText('Strength')).toBeInTheDocument();
+      expect(sectionQueries.getByText('2')).toBeInTheDocument();
+      expect(sectionQueries.getByText('Cardio')).toBeInTheDocument();
+      expect(sectionQueries.getByText('1')).toBeInTheDocument();
+    }
+
+    vi.useRealTimers();
   });
 
-  it('should display filter buttons', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([]);
-      })
-    );
+  it('should render a session calendar for months with sessions', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
 
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(screen.getByRole('button', { name: '30 days' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '1 year' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
-  });
-
-  it('should display session count', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, () => {
         return HttpResponse.json([
@@ -212,24 +191,13 @@ describe('WorkoutsListPage', () => {
             userId: 1,
             routineId: 1,
             routineLabel: 'Strength',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T11:00:00Z',
+            startedAt: '2026-04-01T10:00:00Z',
+            finishedAt: '2026-04-01T11:00:00Z',
             durationSeconds: 3600,
-            exerciseCount: 0,
+            exerciseCount: 3,
             bodyWeightKg: 80,
-            totalWeightKg: 0,
-          },
-          {
-            id: 2,
-            userId: 1,
-            routineId: 1,
-            routineLabel: 'Cardio',
-            startedAt: '2024-01-16T10:00:00Z',
-            finishedAt: '2024-01-16T11:00:00Z',
-            durationSeconds: 3600,
-            exerciseCount: 0,
-            bodyWeightKg: 80,
-            totalWeightKg: 0,
+            totalWeightKg: 1500,
+            totalReps: 50,
           },
         ]);
       })
@@ -238,11 +206,23 @@ describe('WorkoutsListPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('2 sessions')).toBeInTheDocument();
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
+
+    const aprilHeading = screen.getByRole('heading', { name: 'April 2026' });
+    const aprilSection = aprilHeading.closest('section');
+    expect(aprilSection).not.toBeNull();
+    if (aprilSection) {
+      expect(within(aprilSection).getByTestId('session-calendar')).toBeInTheDocument();
+    }
+
+    vi.useRealTimers();
   });
 
-  it('should display singular session count for one session', async () => {
+  it('should not render a session calendar for empty months', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
+
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, () => {
         return HttpResponse.json([
@@ -251,12 +231,13 @@ describe('WorkoutsListPage', () => {
             userId: 1,
             routineId: 1,
             routineLabel: 'Strength',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T11:00:00Z',
+            startedAt: '2026-04-01T10:00:00Z',
+            finishedAt: '2026-04-01T11:00:00Z',
             durationSeconds: 3600,
-            exerciseCount: 0,
+            exerciseCount: 3,
             bodyWeightKg: 80,
-            totalWeightKg: 0,
+            totalWeightKg: 1500,
+            totalReps: 50,
           },
         ]);
       })
@@ -265,48 +246,17 @@ describe('WorkoutsListPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('1 session')).toBeInTheDocument();
-    });
-  });
-
-  it('should re-fetch with since param when filter is changed', async () => {
-    let capturedUrl = '';
-    server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
-        capturedUrl = request.url;
-        return HttpResponse.json([]);
-      })
-    );
-
-    renderPage();
-
-    await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole('button', { name: 'All' }));
+    const marchHeading = screen.getByRole('heading', { name: 'March 2026' });
+    const marchSection = marchHeading.closest('section');
+    expect(marchSection).not.toBeNull();
+    if (marchSection) {
+      expect(within(marchSection).queryByTestId('session-calendar')).not.toBeInTheDocument();
+    }
 
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(capturedUrl).toBe(`${mockApiUrl}/users/1/workouts`);
-  });
-
-  it('should show "No sessions in this period" when filtered and empty', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([]);
-      })
-    );
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-    });
-
-    expect(screen.getByText('No sessions in this period.')).toBeInTheDocument();
+    vi.useRealTimers();
   });
 
   it('should display error message when fetch fails', async () => {
@@ -325,33 +275,32 @@ describe('WorkoutsListPage', () => {
     expect(screen.getByText(/Error:/)).toBeInTheDocument();
   });
 
-  it('should render workout items as links to workout detail', async () => {
+  it('should fetch workouts with since param for 12 months', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
+
+    let capturedUrl = '';
     server.use(
-      http.get(`${mockApiUrl}/users/1/workouts`, () => {
-        return HttpResponse.json([
-          {
-            id: 42,
-            userId: 1,
-            routineId: 1,
-            routineLabel: 'Strength',
-            startedAt: '2024-01-15T10:00:00Z',
-            finishedAt: '2024-01-15T11:00:00Z',
-            durationSeconds: 3600,
-            exerciseCount: 0,
-            bodyWeightKg: 80,
-            totalWeightKg: 0,
-          },
-        ]);
+      http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
+        capturedUrl = request.url;
+        return HttpResponse.json([]);
       })
     );
 
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Strength')).toBeInTheDocument();
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    const link = screen.getByText('Strength').closest('a');
-    expect(link).toHaveAttribute('href', '/sessions/42');
+    expect(capturedUrl).toContain('since=');
+    const sinceParam = new URL(capturedUrl).searchParams.get('since');
+    expect(sinceParam).not.toBeNull();
+    const sinceDate = new Date(sinceParam as string);
+    expect(sinceDate.getFullYear()).toBe(2025);
+    expect(sinceDate.getMonth()).toBe(4);
+    expect(sinceDate.getDate()).toBe(1);
+
+    vi.useRealTimers();
   });
 });

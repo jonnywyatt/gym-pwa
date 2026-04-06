@@ -2,23 +2,45 @@ import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
 import { formatDateTime as formatDateTimeUtil } from '../../utils/time';
 
-export type FilterPeriod = '30d' | '1y' | 'all';
+export interface MonthGroup {
+  key: string;
+  label: string;
+  startDate: Date;
+  endDate: Date;
+  sessions: UserWorkoutSummary[];
+}
 
-export function getFilterStartDate(period: FilterPeriod): Date | null {
-  if (period === 'all') return null;
-  const now = new Date();
-  switch (period) {
-    case '30d': {
-      const d = new Date(now);
-      d.setDate(d.getDate() - 30);
-      return d;
-    }
-    case '1y': {
-      const d = new Date(now);
-      d.setFullYear(d.getFullYear() - 1);
-      return d;
+export function buildMonthGroups(
+  sessions: UserWorkoutSummary[],
+  monthCount: number,
+  today = new Date()
+): MonthGroup[] {
+  const groups: MonthGroup[] = [];
+
+  for (let i = 0; i < monthCount; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const year = d.getFullYear();
+    const month = d.getMonth();
+
+    const startDate = new Date(year, month, 1);
+    const endDate = i === 0 ? today : new Date(year, month + 1, 0);
+
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`;
+    const label = d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+    groups.push({ key, label, startDate, endDate, sessions: [] });
+  }
+
+  for (const session of sessions) {
+    const date = new Date(session.startedAt);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const group = groups.find((g) => g.key === key);
+    if (group) {
+      group.sessions.push(session);
     }
   }
+
+  return groups;
 }
 
 export async function fetchWorkouts(userId: number, since?: Date): Promise<UserWorkoutSummary[]> {

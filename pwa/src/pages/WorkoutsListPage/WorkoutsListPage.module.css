@@ -4,11 +4,37 @@
   justify-content: space-between;
 }
 
-.workoutLink {
-  display: block;
-  flex: 1;
-  text-decoration: none;
-  color: inherit;
-  min-width: 0;
+.monthSection {
+  margin-bottom: var(--spacing-unit-8);
 }
 
+.habitLayout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-4);
+  margin-bottom: var(--spacing-unit-4);
+}
+
+.summariesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-unit-6);
+}
+
+.summaryItem {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-unit-2);
+}
+
+.summaryCount {
+  font-family: var(--font-stack-heading);
+  font-size: var(--font-size-24);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.summaryLabel {
+  font-size: var(--font-size-16);
+  color: var(--text-primary);
+}

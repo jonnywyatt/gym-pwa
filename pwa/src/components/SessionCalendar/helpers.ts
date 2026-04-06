@@ -57,7 +57,8 @@ export function buildRoutineColourMap(sessions: UserWorkoutSummary[]): Map<numbe
 
 export function getRoutineSummaries(
   sessions: UserWorkoutSummary[],
-  colourMap: Map<number, string>
+  colourMap: Map<number, string>,
+  limit?: number
 ): RoutineSummaryItem[] {
   const dataMap = new Map<number, { label: string; count: number }>();
   for (const session of sessions) {
@@ -69,15 +70,16 @@ export function getRoutineSummaries(
     }
   }
 
-  return [...dataMap.entries()]
+  const sorted = [...dataMap.entries()]
     .map(([routineId, { label, count }]) => ({
       routineId,
       label,
       count,
       colour: colourMap.get(routineId) ?? ROUTINE_COLOURS[0],
     }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 3);
+    .sort((a, b) => b.count - a.count);
+
+  return limit !== undefined ? sorted.slice(0, limit) : sorted;
 }
 
 interface DateSessions {

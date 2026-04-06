@@ -30,7 +30,7 @@ const calendarStart = computed(() => {
 });
 
 const colourMap = computed(() => buildRoutineColourMap(sessionHistory.value));
-const routineSummaries = computed(() => getRoutineSummaries(sessionHistory.value, colourMap.value));
+const routineSummaries = computed(() => getRoutineSummaries(sessionHistory.value, colourMap.value, 3));
 
 async function loadData() {
   const userId = authService.getUserId();
@@ -129,11 +129,11 @@ onUnmounted(() => {
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else-if="sessionHistory.length > 0">
         <div :class="styles.habitLayout">
-          <div class="flexVerticalColumn flexGap3Units">
+          <div :class="styles.summariesRow">
             <div
               v-for="summary in routineSummaries"
               :key="summary.routineId"
-              class="flexVerticalEnd flexGap2Units"
+              :class="styles.summaryItem"
             >
               <span :class="styles.summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
               <span :class="styles.summaryLabel">{{ summary.label }}</span>

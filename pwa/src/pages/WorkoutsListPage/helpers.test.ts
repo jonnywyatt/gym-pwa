@@ -1,14 +1,15 @@
+import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { HttpResponse, http } from 'msw';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
 import {
+  buildMonthGroups,
   calculateDuration,
   deleteWorkoutApi,
   fetchWorkouts,
   formatDateTime,
   formatDuration,
   formatTotalWeight,
-  getFilterStartDate,
 } from './helpers';
 
 vi.mock('../../config', () => ({
@@ -138,28 +139,92 @@ describe('formatDuration', () => {
   });
 });
 
-describe('getFilterStartDate', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-03-07T12:00:00Z'));
+const makeWorkout = (
+  id: number,
+  routineId: number,
+  routineLabel: string,
+  startedAt: string
+): UserWorkoutSummary => ({
+  id,
+  userId: 1,
+  routineId,
+  routineLabel,
+  startedAt,
+  finishedAt: startedAt,
+  durationSeconds: 3600,
+  exerciseCount: 0,
+  bodyWeightKg: 80,
+  totalWeightKg: 0,
+  totalReps: 0,
+});
+
+describe('buildMonthGroups', () => {
+  const today = new Date('2026-04-06T12:00:00');
+
+  it('returns the requested number of months in reverse chronological order', () => {
+    const groups = buildMonthGroups([], 3, today);
+
+    expect(groups).toHaveLength(3);
+    expect(groups[0].key).toBe('2026-04');
+    expect(groups[1].key).toBe('2026-03');
+    expect(groups[2].key).toBe('2026-02');
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
+  it('uses month and year as label', () => {
+    const groups = buildMonthGroups([], 2, today);
+
+    expect(groups[0].label).toBe('April 2026');
+    expect(groups[1].label).toBe('March 2026');
   });
 
-  it('returns null for "all"', () => {
-    expect(getFilterStartDate('all')).toBeNull();
+  it('sets startDate to first of the month', () => {
+    const groups = buildMonthGroups([], 2, today);
+
+    expect(groups[0].startDate).toEqual(new Date(2026, 3, 1));
+    expect(groups[1].startDate).toEqual(new Date(2026, 2, 1));
   });
 
-  it('returns 30 days ago for "30d"', () => {
-    const result = getFilterStartDate('30d');
-    expect(result?.toISOString()).toBe('2026-02-05T12:00:00.000Z');
+  it('sets endDate to today for the current month', () => {
+    const groups = buildMonthGroups([], 1, today);
+
+    expect(groups[0].endDate).toEqual(today);
   });
 
-  it('returns 1 year ago for "1y"', () => {
-    const result = getFilterStartDate('1y');
-    expect(result?.toISOString()).toBe('2025-03-07T12:00:00.000Z');
+  it('sets endDate to last day of month for past months', () => {
+    const groups = buildMonthGroups([], 2, today);
+
+    expect(groups[1].endDate).toEqual(new Date(2026, 2, 31));
+  });
+
+  it('groups sessions into correct months', () => {
+    const sessions = [
+      makeWorkout(1, 1, 'Strength', '2026-04-01T10:00:00Z'),
+      makeWorkout(2, 1, 'Strength', '2026-04-03T10:00:00Z'),
+      makeWorkout(3, 2, 'Cardio', '2026-03-15T10:00:00Z'),
+    ];
+
+    const groups = buildMonthGroups(sessions, 3, today);
+
+    expect(groups[0].sessions).toHaveLength(2);
+    expect(groups[1].sessions).toHaveLength(1);
+    expect(groups[2].sessions).toHaveLength(0);
+  });
+
+  it('ignores sessions outside the month range', () => {
+    const sessions = [makeWorkout(1, 1, 'Strength', '2025-01-01T10:00:00Z')];
+
+    const groups = buildMonthGroups(sessions, 3, today);
+
+    expect(groups.every((g) => g.sessions.length === 0)).toBe(true);
+  });
+
+  it('spans year boundaries correctly', () => {
+    const janToday = new Date('2026-01-15T12:00:00');
+    const groups = buildMonthGroups([], 3, janToday);
+
+    expect(groups[0].key).toBe('2026-01');
+    expect(groups[1].key).toBe('2025-12');
+    expect(groups[2].key).toBe('2025-11');
   });
 });
 

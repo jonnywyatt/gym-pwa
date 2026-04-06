@@ -57,11 +57,36 @@ const noMetricRoutine = {
   ],
 };
 
+const routerLinkStub = {
+  template: '<a :href="to"><slot /></a>',
+  props: ['to'],
+};
+
 function renderPage() {
-  return render(SessionTrendsPage);
+  return render(SessionTrendsPage, {
+    global: { stubs: { RouterLink: routerLinkStub } },
+  });
 }
 
 describe('SessionTrendsPage', () => {
+  it('should display navigation links with Trends highlighted', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1/session-trends`, () => {
+        return HttpResponse.json([]);
+      })
+    );
+
+    renderPage();
+
+    const byMonthLink = screen.getByRole('link', { name: 'By month' });
+    expect(byMonthLink).toHaveAttribute('href', '/sessions');
+    expect(byMonthLink.className).not.toContain('buttonLink--active');
+
+    const trendsLink = screen.getByRole('link', { name: 'Trends' });
+    expect(trendsLink).toHaveAttribute('href', '/session-trends');
+    expect(trendsLink.className).toContain('buttonLink--active');
+  });
+
   it('shows loading state initially', () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/session-trends`, async () => {

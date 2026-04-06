@@ -11,22 +11,23 @@
   margin-bottom: var(--spacing-unit-4);
 }
 
-@media (min-width: 768px) {
-  .habitLayout {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--spacing-unit-6);
-    align-items: start;
-  }
+.summariesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-unit-6);
+}
+
+.summaryItem {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-unit-2);
 }
 
 .summaryCount {
   font-family: var(--font-stack-heading);
   font-size: var(--font-size-24);
   font-weight: 400;
-  min-width: 2ch;
-  text-align: right;
-    line-height: 1;
+  line-height: 1;
 }
 
 .summaryLabel {

@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import type {UserWorkoutSummary} from 'gym-pwa-api/types';
 import styles from './WorkoutsListPage.module.css';
 import {authService} from '../../lib/auth/oauth';
-import {
-  fetchWorkouts,
-  calculateDuration,
-  formatDateTime,
-  formatDuration,
-  formatTotalWeight,
-  getFilterStartDate,
-  type FilterPeriod,
-} from './helpers';
+import {fetchWorkouts, buildMonthGroups} from './helpers';
+import SessionCalendar from '../../components/SessionCalendar/SessionCalendar.vue';
+import {buildRoutineColourMap, getRoutineSummaries} from '../../components/SessionCalendar/helpers';
 
-const FILTER_OPTIONS: Array<{ period: FilterPeriod; label: string }> = [
-  {period: '30d', label: '30 days'},
-  {period: '1y', label: '1 year'},
-  {period: 'all', label: 'All'},
-];
+const MONTH_COUNT = 12;
 
 const workouts = ref<UserWorkoutSummary[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
-const selectedFilter = ref<FilterPeriod>('30d');
+
+const colourMap = computed(() => buildRoutineColourMap(workouts.value));
+
+const monthGroups = computed(() => buildMonthGroups(workouts.value, MONTH_COUNT));
 
 async function loadWorkouts() {
   const userId = authService.getUserId();
@@ -35,8 +28,11 @@ async function loadWorkouts() {
   loading.value = true;
   error.value = null;
   try {
-    const since = getFilterStartDate(selectedFilter.value);
-    workouts.value = await fetchWorkouts(userId, since ?? undefined);
+    const since = new Date();
+    since.setMonth(since.getMonth() - (MONTH_COUNT - 1));
+    since.setDate(1);
+    since.setHours(0, 0, 0, 0);
+    workouts.value = await fetchWorkouts(userId, since);
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to fetch workouts';
   } finally {
@@ -44,9 +40,8 @@ async function loadWorkouts() {
   }
 }
 
-async function selectFilter(period: FilterPeriod) {
-  selectedFilter.value = period;
-  await loadWorkouts();
+function getMonthSummaries(sessions: UserWorkoutSummary[]) {
+  return getRoutineSummaries(sessions, colourMap.value);
 }
 
 onMounted(() => {
@@ -61,48 +56,39 @@ onMounted(() => {
       <router-link to="/sessions/start" class="buttonPrimary">Start session</router-link>
     </header>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
-      <button
-          v-for="option in FILTER_OPTIONS"
-          :key="option.period"
-          type="button"
-          :class="['buttonLink', 'buttonLink--secondary', selectedFilter === option.period ? 'buttonLink--active' : '']"
-          @click="selectFilter(option.period)"
-      >
-        {{ option.label }}
-      </button>
+      <router-link to="/sessions" class="buttonLink buttonLink--secondary buttonLink--active">By month</router-link>
+      <span aria-hidden="true" class="linkDivider">|</span>
+      <router-link to="/session-trends" class="buttonLink buttonLink--secondary">Trends</router-link>
     </div>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else>
-      <p v-if="workouts.length > 0" class="marginBottom4">{{ workouts.length }} {{ workouts.length === 1 ? 'session' : 'sessions' }}</p>
-      <div v-if="workouts.length === 0">
-        <p class="marginBottom4">No sessions in this period.</p>
-      </div>
-      <ul v-else class="list">
-        <li v-for="workout in workouts" :key="workout.id" class="highlightCard highlightCardSecondary">
-          <router-link :to="`/sessions/${workout.id}`" :class="styles.workoutLink">
-            <div class="uppercase uppercase--small marginBottom1">{{ formatDateTime(workout.startedAt) }}</div>
-            <h2 class="heading-m marginBottom2">
-              {{ workout.routineLabel }}
-            </h2>
-            <div class="highlightCardContents">
-              <div class="flexSpaceBetween">
-                <div>
-                  <div v-if="workout.durationSeconds !== undefined">{{
-                      formatDuration(workout.durationSeconds)
-                    }}</div>
-                  <div v-else>{{ calculateDuration(workout.startedAt, workout.finishedAt) }} minutes</div>
-                  <div>{{ workout.exerciseCount }} exercises</div>
-                </div>
-                <span v-if="workout.totalWeightKg" class="accentPrimary">{{
-                    formatTotalWeight(workout.totalWeightKg)
-                  }} total</span>
+      <section
+        v-for="month in monthGroups"
+        :key="month.key"
+        :class="styles.monthSection"
+      >
+        <h2 class="uppercase marginBottom4">{{ month.label }}</h2>
+        <template v-if="month.sessions.length > 0">
+          <div :class="styles.habitLayout">
+            <div :class="styles.summariesRow">
+              <div
+                v-for="summary in getMonthSummaries(month.sessions)"
+                :key="summary.routineId"
+                :class="styles.summaryItem"
+              >
+                <span :class="styles.summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
+                <span :class="styles.summaryLabel">{{ summary.label }}</span>
               </div>
             </div>
-          </router-link>
-        </li>
-      </ul>
+            <SessionCalendar
+              :startDate="month.startDate"
+              :endDate="month.endDate"
+              :sessions="month.sessions"
+            />
+          </div>
+        </template>
+      </section>
     </template>
-
   </main>
 </template>
