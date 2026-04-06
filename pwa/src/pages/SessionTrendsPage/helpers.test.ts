@@ -4,7 +4,6 @@ import {
   buildChartData,
   buildChartOptions,
   buildMetricSubtitle,
-  buildRoutineTrendPlugin,
   buildSessionPopup,
   buildTrendlineData,
   formatDate,
@@ -13,8 +12,6 @@ import {
   formatWeightKThousands,
   getMetricLabel,
   getPeriodSince,
-  getRoutineTrendlineEndValues,
-  getTrendlineEndValues,
 } from './helpers';
 
 describe('getPeriodSince', () => {
@@ -224,71 +221,6 @@ describe('buildTrendlineData', () => {
   });
 });
 
-describe('getTrendlineEndValues', () => {
-  it('returns null for empty array', () => {
-    expect(getTrendlineEndValues([])).toBeNull();
-  });
-
-  it('returns null for single point', () => {
-    expect(getTrendlineEndValues([{ x: 1, y: 5 }])).toBeNull();
-  });
-
-  it('returns start and end y values for two or more points', () => {
-    const result = getTrendlineEndValues([
-      { x: 1, y: 10 },
-      { x: 2, y: 20 },
-      { x: 3, y: 30 },
-    ]);
-    expect(result).not.toBeNull();
-    expect(result?.start).toBe(10);
-    expect(result?.end).toBe(30);
-  });
-});
-
-describe('getRoutineTrendlineEndValues', () => {
-  it('returns null when fewer than 2 sessions', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Push',
-      secondMetric: 'weight',
-      sessions: [baseSession],
-    };
-    expect(getRoutineTrendlineEndValues(routine, '3m')).toBeNull();
-  });
-
-  it('returns end values based on weight when secondMetric is weight', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Push',
-      secondMetric: 'weight',
-      sessions: [
-        { ...baseSession, date: '2026-01-01T00:00:00Z', totalWeightKg: 1000 },
-        { ...baseSession, date: '2026-01-08T00:00:00Z', totalWeightKg: 2000 },
-      ],
-    };
-    const result = getRoutineTrendlineEndValues(routine, '3m');
-    expect(result).not.toBeNull();
-    expect(result?.start).toBeCloseTo(1000);
-    expect(result?.end).toBeCloseTo(2000);
-  });
-
-  it('returns end values based on duration when secondMetric is not weight', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Cardio',
-      secondMetric: 'reps',
-      sessions: [
-        { ...baseSession, date: '2026-01-01T00:00:00Z', durationSeconds: 3600 },
-        { ...baseSession, date: '2026-01-08T00:00:00Z', durationSeconds: 7200 },
-      ],
-    };
-    const result = getRoutineTrendlineEndValues(routine, '3m');
-    expect(result).not.toBeNull();
-    expect(result?.start).toBeCloseTo(3600);
-    expect(result?.end).toBeCloseTo(7200);
-  });
-});
-
 describe('buildChartData', () => {
   it('shows duration series and trendline when secondMetric is null', () => {
     const routine: RoutineTrendData = {
@@ -371,48 +303,6 @@ describe('buildChartData', () => {
   });
 });
 
-describe('buildRoutineTrendPlugin', () => {
-  it('returns null when routine has fewer than 2 sessions', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Push',
-      secondMetric: 'weight',
-      sessions: [baseSession],
-    };
-    expect(buildRoutineTrendPlugin(routine, '3m')).toBeNull();
-  });
-
-  it('returns a plugin with id trendEndLabels for weight routine', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Push',
-      secondMetric: 'weight',
-      sessions: [
-        { ...baseSession, date: '2026-01-01T00:00:00Z' },
-        { ...baseSession, date: '2026-01-08T00:00:00Z' },
-      ],
-    };
-    const plugin = buildRoutineTrendPlugin(routine, '3m');
-    expect(plugin).not.toBeNull();
-    expect(plugin?.id).toBe('trendEndLabels');
-  });
-
-  it('returns a plugin with id trendEndLabels for duration routine', () => {
-    const routine: RoutineTrendData = {
-      routineId: 1,
-      routineLabel: 'Cardio',
-      secondMetric: null,
-      sessions: [
-        { ...baseSession, date: '2026-01-01T00:00:00Z' },
-        { ...baseSession, date: '2026-01-08T00:00:00Z' },
-      ],
-    };
-    const plugin = buildRoutineTrendPlugin(routine, '3m');
-    expect(plugin).not.toBeNull();
-    expect(plugin?.id).toBe('trendEndLabels');
-  });
-});
-
 describe('buildChartOptions', () => {
   it('never includes y1 scale', () => {
     expect(buildChartOptions(null, '6m').scales).not.toHaveProperty('y1');
@@ -448,8 +338,10 @@ describe('buildChartOptions', () => {
     ).toBe(true);
   });
 
-  it('hides y grid lines', () => {
+  it('shows y grid lines in dark grey', () => {
     const options = buildChartOptions(null, '6m');
-    expect((options.scales?.y as { grid: { display: boolean } }).grid.display).toBe(false);
+    const yScale = options.scales?.y as { grid: { display: boolean; color: string } };
+    expect(yScale.grid.display).toBe(true);
+    expect(yScale.grid.color).toBe('#2a3a42');
   });
 });

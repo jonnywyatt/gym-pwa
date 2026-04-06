@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'chartjs-adapter-date-fns';
 import { Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, TimeScale, Title, Tooltip } from 'chart.js';
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { Line } from 'vue-chartjs';
 import type { RoutineTrendData } from 'gym-pwa-api/types';
 import styles from './SessionTrendsPage.module.css';
@@ -13,7 +13,6 @@ import {
   buildChartData,
   buildChartOptions,
   buildMetricSubtitle,
-  buildRoutineTrendPlugin,
   buildSessionPopup,
   fetchSessionTrends,
 } from './helpers';
@@ -23,8 +22,17 @@ ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement,
 const routines = ref<RoutineTrendData[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
-const selectedPeriod = ref<TrendPeriod>('6m');
+const selectedPeriod = ref<TrendPeriod>('3m');
 const sessionPopups = ref<Map<number, SessionPopup | null>>(new Map());
+const popupRefs = ref<Map<number, HTMLElement>>(new Map());
+
+function setPopupRef(routineId: number, el: HTMLElement | null) {
+  if (el !== null) {
+    popupRefs.value.set(routineId, el);
+  } else {
+    popupRefs.value.delete(routineId);
+  }
+}
 
 async function loadTrends() {
   const userId = authService.getUserId();
@@ -78,6 +86,21 @@ function handleChartClick(event: MouseEvent, routine: RoutineTrendData) {
     routine.routineId,
     buildSessionPopup(session, routine.secondMetric, event.clientX - rect.left, event.clientY - rect.top),
   );
+
+  nextTick(() => {
+    const popupEl = popupRefs.value.get(routine.routineId);
+    if (popupEl === undefined) return;
+    const popupRect = popupEl.getBoundingClientRect();
+    const overflow = popupRect.right - (window.innerWidth - 10);
+    if (overflow > 0) {
+      const popup = sessionPopups.value.get(routine.routineId);
+      if (popup === null || popup === undefined) return;
+      sessionPopups.value = new Map(sessionPopups.value).set(routine.routineId, {
+        ...popup,
+        x: popup.x - overflow,
+      });
+    }
+  });
 }
 
 onMounted(() => {
@@ -116,10 +139,10 @@ onMounted(() => {
             <Line
               :data="buildChartData(routine, selectedPeriod)"
               :options="buildChartOptions(routine.secondMetric, selectedPeriod)"
-              :plugins="[buildRoutineTrendPlugin(routine, selectedPeriod)].filter(p => p !== null)"
             />
             <template v-if="sessionPopups.get(routine.routineId) != null">
               <div
+                :ref="(el) => setPopupRef(routine.routineId, el as HTMLElement | null)"
                 :class="styles.sessionPopup"
                 :style="{ left: `${sessionPopups.get(routine.routineId)?.x}px`, top: `${sessionPopups.get(routine.routineId)?.y}px` }"
                 @click.stop

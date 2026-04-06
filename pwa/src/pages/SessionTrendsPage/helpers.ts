@@ -1,11 +1,4 @@
-import type {
-  Chart,
-  ChartData,
-  ChartOptions,
-  ChartTypeRegistry,
-  Plugin,
-  TooltipPositionerFunction,
-} from 'chart.js';
+import type { ChartData, ChartOptions, TooltipPositionerFunction } from 'chart.js';
 import { Tooltip } from 'chart.js';
 import type { RoutineTrendData, SessionTrendsResponse } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
@@ -158,24 +151,12 @@ function loessEval(trainX: number[], trainY: number[], queryX: number, bandwidth
 }
 
 const LOESS_NEIGHBOURS_BY_PERIOD: Record<TrendPeriod, number> = {
-  '3m': 4,
-  '6m': 5,
-  '1y': 6,
-  all: 8,
+  '3m': 12,
+  '6m': 16,
+  '1y': 30,
+  all: 40,
 };
 const LOESS_GRID_SIZE = 100;
-
-export interface TrendlineEndValues {
-  start: number;
-  end: number;
-}
-
-export function getTrendlineEndValues(
-  trendlineData: { x: number; y: number }[]
-): TrendlineEndValues | null {
-  if (trendlineData.length < 2) return null;
-  return { start: trendlineData[0].y, end: trendlineData[trendlineData.length - 1].y };
-}
 
 export function buildTrendlineData(
   dates: string[],
@@ -234,22 +215,10 @@ function makeTrendlineDataset(data: { x: number; y: number }[], yAxisID: string)
     borderWidth: 1,
     borderDash: [4, 4],
     yAxisID,
-    tension: 0,
+    tension: 0.4,
     order: 0,
     ...trendlinePointStyle,
   };
-}
-
-export function getRoutineTrendlineEndValues(
-  routine: RoutineTrendData,
-  period: TrendPeriod
-): TrendlineEndValues | null {
-  const dates = routine.sessions.map((s) => s.date);
-  const values =
-    routine.secondMetric === 'weight'
-      ? routine.sessions.map((s) => s.totalWeightKg)
-      : routine.sessions.map((s) => s.durationSeconds);
-  return getTrendlineEndValues(buildTrendlineData(dates, values, period));
 }
 
 export function buildChartData(routine: RoutineTrendData, period: TrendPeriod): ChartData<'line'> {
@@ -295,7 +264,7 @@ function buildYAxis(
 ): object {
   return {
     position,
-    grid: { display: false },
+    grid: { display: true, color: '#2a3a42' },
     ticks: {
       color: COLOR_TEXT,
       callback: tickCallback,
@@ -362,72 +331,6 @@ function buildXAxis(period: TrendPeriod): ChartOptions<'line'>['scales'] {
       },
     },
   };
-}
-
-const TREND_LABEL_FONT = '12px sans-serif';
-const TREND_LABEL_PADDING = 4;
-const TREND_LABEL_BG = 'rgba(11, 18, 21, 0.85)';
-
-export function buildTrendEndLabelPlugin(
-  endValues: TrendlineEndValues,
-  formatValue: (v: number) => string
-): Plugin<keyof ChartTypeRegistry> {
-  return {
-    id: 'trendEndLabels',
-    afterDraw(chart: Chart) {
-      const trendDataset = chart.data.datasets.find((d: { label?: string }) => d.label === 'Trend');
-      if (trendDataset === undefined) return;
-
-      const trendIndex = chart.data.datasets.indexOf(trendDataset);
-      const meta = chart.getDatasetMeta(trendIndex);
-      if (meta.data.length < 2) return;
-
-      const ctx = chart.ctx;
-      const startPoint = meta.data[0];
-      const endPoint = meta.data[meta.data.length - 1];
-
-      const startLabel = formatValue(endValues.start);
-      const endLabel = formatValue(endValues.end);
-
-      ctx.save();
-      ctx.font = TREND_LABEL_FONT;
-      ctx.textBaseline = 'middle';
-
-      const drawLabel = (text: string, x: number, y: number, align: CanvasTextAlign) => {
-        ctx.textAlign = align;
-        const metrics = ctx.measureText(text);
-        const textWidth = metrics.width;
-        const textHeight = 12;
-        const bgX =
-          align === 'left' ? x - TREND_LABEL_PADDING : x - textWidth - TREND_LABEL_PADDING;
-        const bgY = y - textHeight / 2 - TREND_LABEL_PADDING;
-        const bgW = textWidth + TREND_LABEL_PADDING * 2;
-        const bgH = textHeight + TREND_LABEL_PADDING * 2;
-        ctx.fillStyle = TREND_LABEL_BG;
-        ctx.fillRect(bgX, bgY, bgW, bgH);
-        ctx.fillStyle = COLOR_TRENDLINE;
-        ctx.fillText(text, x, y);
-      };
-
-      drawLabel(startLabel, startPoint.x, startPoint.y, 'left');
-      drawLabel(endLabel, endPoint.x, endPoint.y, 'right');
-
-      ctx.restore();
-    },
-  };
-}
-
-export function buildRoutineTrendPlugin(
-  routine: RoutineTrendData,
-  period: TrendPeriod
-): Plugin<keyof ChartTypeRegistry> | null {
-  const endValues = getRoutineTrendlineEndValues(routine, period);
-  if (endValues === null) return null;
-  const isWeight = routine.secondMetric === 'weight';
-  const formatValue = isWeight
-    ? (v: number) => formatWeightKThousands(v)
-    : (v: number) => formatMinutes(v);
-  return buildTrendEndLabelPlugin(endValues, formatValue);
 }
 
 export function buildChartOptions(
