@@ -82,7 +82,7 @@ describe('AppLayout', () => {
   });
 
   it('should highlight the Workouts link when on a workout detail page', async () => {
-    await renderWithRoute('workout-detail', '/sessions/42');
+    await renderWithRoute('session-summary', '/sessions/42');
 
     expect(screen.getByRole('link', { name: 'Sessions' }).className).toContain('navLinkActive');
     expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');

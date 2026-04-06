@@ -356,7 +356,7 @@ describe('WorkoutPage helpers', () => {
   });
 
   describe('calculateWorkoutTotalWeightKg', () => {
-    it('sums weight of completed exercises calculated from sets', () => {
+    it('sums weight of all exercises calculated from sets', () => {
       const exercises: LocalWorkoutExercise[] = [
         {
           id: 1,
@@ -388,7 +388,7 @@ describe('WorkoutPage helpers', () => {
       expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(1300);
     });
 
-    it('returns 0 when no exercises are completed', () => {
+    it('returns 0 when no exercises have sets', () => {
       const exercises: LocalWorkoutExercise[] = [
         {
           id: 1,
@@ -400,6 +400,24 @@ describe('WorkoutPage helpers', () => {
         },
       ];
       expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(0);
+    });
+
+    it('includes weight from exercises that are not yet completed', () => {
+      const exercises: LocalWorkoutExercise[] = [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          completed: false,
+          sets: [
+            { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
+            { id: 's2', setType: 'Standard', completed: false },
+          ],
+        },
+      ];
+      expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(400);
     });
   });
 

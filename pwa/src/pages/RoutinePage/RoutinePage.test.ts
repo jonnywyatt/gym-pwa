@@ -374,7 +374,7 @@ describe('RoutinePage', () => {
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalled();
       const call = mockRouterPush.mock.calls[0][0];
-      expect(call).toMatch(/^\/sessions\//);
+      expect(call).toMatch(/^\/sessions\/active\//);
     });
 
     // Verify workout was created in IndexedDB with body weight

@@ -20,7 +20,3 @@
   font-size: var(--font-size-18);
     color: var(--accent-primary);
 }
-
-.summaryActions {
-  padding: var(--spacing-unit-5) 0;
-}

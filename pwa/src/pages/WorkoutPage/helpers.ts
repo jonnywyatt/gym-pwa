@@ -152,14 +152,12 @@ export function calculateWorkoutTotalWeightKg(
   exercises: LocalWorkoutExercise[],
   bodyWeightKg: number
 ): number {
-  return exercises
-    .filter((exercise) => exercise.completed)
-    .reduce(
-      (total, exercise) =>
-        total +
-        calculateExerciseTotalWeightKg(exercise.recordSetsType, bodyWeightKg, exercise.sets ?? []),
-      0
-    );
+  return exercises.reduce(
+    (total, exercise) =>
+      total +
+      calculateExerciseTotalWeightKg(exercise.recordSetsType, bodyWeightKg, exercise.sets ?? []),
+    0
+  );
 }
 
 const REPS_RECORD_TYPES: RecordSetsType[] = [

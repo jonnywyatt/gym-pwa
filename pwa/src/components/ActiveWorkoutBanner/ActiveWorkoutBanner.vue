@@ -9,7 +9,7 @@ const route = useRoute();
 const router = useRouter();
 const activeWorkout = ref<LocalWorkout | null>(null);
 
-const hiddenRoutes = ['login', 'auth-callback', 'workout-detail'];
+const hiddenRoutes = ['login', 'auth-callback', 'active-session'];
 const showBanner = computed(
   () => activeWorkout.value !== null && !hiddenRoutes.includes(route.name as string)
 );
@@ -25,7 +25,7 @@ async function checkActiveWorkout() {
 
 async function handleContinue() {
   if (!activeWorkout.value) return;
-  await router.push(`/sessions/${activeWorkout.value.id}`);
+  await router.push(`/sessions/active/${activeWorkout.value.id}`);
 }
 
 watch(() => route.name, checkActiveWorkout, { immediate: true });

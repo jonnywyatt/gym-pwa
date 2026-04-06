@@ -1,48 +1,32 @@
 <script setup lang="ts">
 import {ref, computed, onMounted, onUnmounted, toRaw} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import type {UserWorkout} from 'gym-pwa-api/types';
-import baseStyles from '../../styles/base-classes.module.css';
 import styles from './WorkoutPage.module.css';
-import {authService} from '../../lib/auth/oauth';
 import {db, updateWorkoutExercises, finishWorkout, deleteWorkout, updateWorkoutTimer} from '../../lib/db';
 import type {LocalWorkout, SetType} from '../../lib/db';
+import {authService} from '../../lib/auth/oauth';
 import WorkoutTimer from '../../components/WorkoutTimer/WorkoutTimer.vue';
 import ExerciseSets from '../../components/ExerciseSets/ExerciseSets.vue';
+import WeightKg from '../../components/WeightKg/WeightKg.vue';
 import {
   saveWorkout,
   createWorkoutPayload,
   calculateElapsedSeconds,
   calculateFinalDurationSeconds,
   calculateWorkoutTotalWeightKg,
-  calculateCompletedSetsTotalWeightKg,
   startExercise,
   createNewSet,
   isSetFilledIn,
-  fetchWorkout,
-  formatSetDetails,
 } from './helpers';
-import {
-  deleteWorkoutApi,
-  formatDateTime,
-  formatDuration,
-  formatTotalWeight,
-} from '../WorkoutsListPage/helpers';
-import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
-import WeightKg from '../../components/WeightKg/WeightKg.vue';
 
 const route = useRoute();
 const router = useRouter();
-const mode = ref<'active' | 'summary'>('active');
 const workout = ref<LocalWorkout | null>(null);
-const completedWorkout = ref<UserWorkout | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const finishing = ref(false);
 const elapsedSeconds = ref(0);
 const isPaused = ref(false);
-const showDeleteDialog = ref(false);
-const deleting = ref(false);
 let timerInterval: number | null = null;
 
 const workoutTotalWeightKg = computed(() => {
@@ -82,34 +66,19 @@ async function loadWorkout() {
     const workoutId = String(route.params.workoutId);
     const workoutData = await db.workouts.get(workoutId);
 
-    if (workoutData) {
-      mode.value = 'active';
-      workout.value = workoutData;
-      isPaused.value = Boolean(workoutData.pausedAt);
-
-      if (!isPaused.value) {
-        startTimer();
-      } else {
-        updateElapsedTime();
-      }
-      return;
-    }
-
-    const userId = authService.getUserId();
-    if (!userId) {
-      error.value = 'User not authenticated';
-      return;
-    }
-
-    const numericWorkoutId = parseInt(workoutId, 10);
-    if (Number.isNaN(numericWorkoutId)) {
+    if (!workoutData) {
       error.value = 'Workout not found';
       return;
     }
 
-    const apiWorkout = await fetchWorkout(userId, numericWorkoutId);
-    mode.value = 'summary';
-    completedWorkout.value = apiWorkout;
+    workout.value = workoutData;
+    isPaused.value = Boolean(workoutData.pausedAt);
+
+    if (!isPaused.value) {
+      startTimer();
+    } else {
+      updateElapsedTime();
+    }
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to load workout';
   } finally {
@@ -231,7 +200,6 @@ function handleChangeSetType(exerciseId: number, setId: string, setType: SetType
   updateExercises(updatedExercises);
 }
 
-
 async function handleFinish() {
   if (!workout.value) return;
 
@@ -268,29 +236,6 @@ async function handleFinish() {
   }
 }
 
-async function handleDeleteWorkout() {
-  if (!completedWorkout.value) return;
-
-  const userId = authService.getUserId();
-  if (!userId) {
-    error.value = 'User not authenticated';
-    return;
-  }
-
-  deleting.value = true;
-  error.value = null;
-
-  try {
-    await deleteWorkoutApi(userId, completedWorkout.value.id);
-    await router.push('/sessions');
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to delete workout';
-  } finally {
-    deleting.value = false;
-    showDeleteDialog.value = false;
-  }
-}
-
 onMounted(() => {
   loadWorkout();
 });
@@ -305,8 +250,7 @@ onUnmounted(() => {
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
 
-    <!-- Active workout mode -->
-    <template v-else-if="mode === 'active' && workout">
+    <template v-else-if="workout">
       <nav :class="styles.nav">
         <div :class="styles.navLeft">
           <WorkoutTimer
@@ -341,70 +285,6 @@ onUnmounted(() => {
           />
         </li>
       </ul>
-    </template>
-
-    <!-- Summary mode -->
-    <template v-else-if="mode === 'summary' && completedWorkout">
-      <header class="header marginBottom4">
-        <h1 class="heading-l">{{ completedWorkout.routineLabel }} session</h1>
-      </header>
-
-      <div class="highlightCardContents marginBottom6">
-        <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{
-            formatTotalWeight(completedWorkout.totalWeightKg)
-          }} total</span>
-        <span>{{ formatDateTime(completedWorkout.startedAt) }}</span>
-        <span v-if="completedWorkout.durationSeconds !== undefined">{{
-            formatDuration(completedWorkout.durationSeconds)
-          }}</span>
-        <span v-if="completedWorkout.bodyWeightKg">Body weight: {{
-            formatTotalWeight(completedWorkout.bodyWeightKg)
-          }}</span>
-      </div>
-
-      <ul class="list">
-        <li
-            v-for="exercise in completedWorkout.exercisesCompleted"
-            :key="exercise.id"
-            class="highlightCard"
-        >
-          <h2 class="heading-m marginBottom1">{{ exercise.label }}</h2>
-          <div class="highlightCardContents">
-            <span
-                v-if="calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets) > 0"
-                class="accentPrimary">
-              {{
-                formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets))
-              }}
-            </span>
-            <span
-                v-for="(set, index) in exercise.sets"
-                :key="index"
-            >
-              {{ formatSetDetails(set, exercise.recordSetsType) }}
-            </span>
-          </div>
-        </li>
-      </ul>
-
-      <div :class="styles.summaryActions">
-        <button
-            type="button"
-            class="buttonDelete"
-            :disabled="deleting"
-            @click="showDeleteDialog = true"
-        >
-          Delete session
-        </button>
-      </div>
-
-      <ConfirmDialog
-          :open="showDeleteDialog"
-          title="Delete session?"
-          message="This action cannot be undone."
-          @confirm="handleDeleteWorkout"
-          @cancel="showDeleteDialog = false"
-      />
     </template>
   </main>
 </template>
