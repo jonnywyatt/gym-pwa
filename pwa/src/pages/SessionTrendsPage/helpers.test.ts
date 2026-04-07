@@ -334,6 +334,19 @@ describe('buildSessionsPerWeekData', () => {
     expect(result[1].count).toBe(1);
   });
 
+  it('fills in zero-count weeks between sessions in non-adjacent weeks', () => {
+    const sessions = [
+      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      { date: '2026-01-26T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+    ];
+    const result = buildSessionsPerWeekData(sessions);
+    expect(result).toHaveLength(4);
+    expect(result[0].count).toBe(1);
+    expect(result[1].count).toBe(0);
+    expect(result[2].count).toBe(0);
+    expect(result[3].count).toBe(1);
+  });
+
   it('returns entries sorted by date ascending', () => {
     const sessions = [
       { date: '2026-01-12T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },

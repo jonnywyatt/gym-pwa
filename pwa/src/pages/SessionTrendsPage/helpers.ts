@@ -251,21 +251,36 @@ function makeTrendlineDataset(data: { x: number; y: number }[], yAxisID: string)
   };
 }
 
+function getMondayKey(date: Date): string {
+  const day = date.getUTCDay();
+  const monday = new Date(date);
+  monday.setUTCDate(date.getUTCDate() - ((day + 6) % 7));
+  return monday.toISOString().slice(0, 10);
+}
+
 export function buildSessionsPerWeekData(
   sessions: RoutineTrendData['sessions']
 ): { date: string; count: number }[] {
+  if (sessions.length === 0) return [];
+
   const weekCounts = new Map<string, number>();
   for (const session of sessions) {
-    const d = new Date(session.date);
-    const day = d.getUTCDay();
-    const monday = new Date(d);
-    monday.setUTCDate(d.getUTCDate() - ((day + 6) % 7));
-    const key = monday.toISOString().slice(0, 10);
+    const key = getMondayKey(new Date(session.date));
     weekCounts.set(key, (weekCounts.get(key) ?? 0) + 1);
   }
-  return Array.from(weekCounts.entries())
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([date, count]) => ({ date: `${date}T00:00:00.000Z`, count }));
+
+  const sortedKeys = Array.from(weekCounts.keys()).sort((a, b) => a.localeCompare(b));
+  const firstMonday = new Date(`${sortedKeys[0]}T00:00:00.000Z`);
+  const lastMonday = new Date(`${sortedKeys[sortedKeys.length - 1]}T00:00:00.000Z`);
+
+  const result: { date: string; count: number }[] = [];
+  const cursor = new Date(firstMonday);
+  while (cursor <= lastMonday) {
+    const key = cursor.toISOString().slice(0, 10);
+    result.push({ date: `${key}T00:00:00.000Z`, count: weekCounts.get(key) ?? 0 });
+    cursor.setUTCDate(cursor.getUTCDate() + 7);
+  }
+  return result;
 }
 
 export function buildSessionsPerWeekChartData(
