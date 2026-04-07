@@ -300,7 +300,7 @@ describe('handleNewWorkout', () => {
 
     const result = await handleNewWorkout(1, 1, getActiveWorkout, vi.fn());
 
-    expect(result).toEqual({ type: 'navigate', path: '/sessions/existing-id' });
+    expect(result).toEqual({ type: 'navigate', path: '/sessions/active/existing-id' });
   });
 
   it('should call createWorkout and return navigate path for new workout', async () => {
@@ -319,7 +319,7 @@ describe('handleNewWorkout', () => {
     expect(createdWorkout.routineLabel).toBe('Upper Body');
     expect(result.type).toBe('navigate');
     if (result.type === 'navigate') {
-      expect(result.path).toBe(`/sessions/${createdWorkout.id}`);
+      expect(result.path).toBe(`/sessions/active/${createdWorkout.id}`);
     }
   });
 

@@ -129,7 +129,7 @@ export async function handleNewWorkout(
 
     switch (action.type) {
       case 'navigate-to-existing':
-        return { type: 'navigate', path: `/sessions/${action.workoutId}` };
+        return { type: 'navigate', path: `/sessions/active/${action.workoutId}` };
       case 'navigate-to-user-page':
         return {
           type: 'navigate-with-error',
@@ -138,7 +138,7 @@ export async function handleNewWorkout(
         };
       case 'create-new-workout':
         await createWorkoutFn(action.workout);
-        return { type: 'navigate', path: `/sessions/${action.workout.id}` };
+        return { type: 'navigate', path: `/sessions/active/${action.workout.id}` };
       case 'error':
         return { type: 'error', error: action.error };
     }
