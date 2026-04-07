@@ -34,7 +34,11 @@
   line-height: 1;
 }
 
+.monthHeading {
+  color: var(--text-primary);
+}
+
 .summaryLabel {
   font-size: var(--font-size-16);
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }

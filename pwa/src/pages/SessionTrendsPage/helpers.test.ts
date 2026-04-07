@@ -5,6 +5,9 @@ import {
   buildChartOptions,
   buildMetricSubtitle,
   buildSessionPopup,
+  buildSessionsPerWeekChartData,
+  buildSessionsPerWeekChartOptions,
+  buildSessionsPerWeekData,
   buildTrendlineData,
   clearTrendsCache,
   fetchSessionTrends,
@@ -306,6 +309,99 @@ describe('buildChartData', () => {
     const points = data.datasets[0].data as { x: number; y: number }[];
     expect(points[0].x).toBe(new Date('2026-01-01T10:00:00Z').getTime());
     expect(points[1].x).toBe(new Date('2026-01-08T10:00:00Z').getTime());
+  });
+});
+
+describe('buildSessionsPerWeekData', () => {
+  it('groups sessions in the same ISO week into one entry', () => {
+    const sessions = [
+      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      { date: '2026-01-06T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+    ];
+    const result = buildSessionsPerWeekData(sessions);
+    expect(result).toHaveLength(1);
+    expect(result[0].count).toBe(2);
+  });
+
+  it('produces separate entries for sessions in different weeks', () => {
+    const sessions = [
+      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      { date: '2026-01-12T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+    ];
+    const result = buildSessionsPerWeekData(sessions);
+    expect(result).toHaveLength(2);
+    expect(result[0].count).toBe(1);
+    expect(result[1].count).toBe(1);
+  });
+
+  it('returns entries sorted by date ascending', () => {
+    const sessions = [
+      { date: '2026-01-12T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+    ];
+    const result = buildSessionsPerWeekData(sessions);
+    expect(result[0].date < result[1].date).toBe(true);
+  });
+
+  it('returns empty array for no sessions', () => {
+    expect(buildSessionsPerWeekData([])).toEqual([]);
+  });
+});
+
+describe('buildSessionsPerWeekChartData', () => {
+  const routine: RoutineTrendData = {
+    routineId: 1,
+    routineLabel: 'Push',
+    secondMetric: null,
+    sessions: [
+      { date: '2026-01-05T10:00:00Z', durationSeconds: 3600, totalWeightKg: 0, totalReps: 0 },
+      { date: '2026-01-12T10:00:00Z', durationSeconds: 3600, totalWeightKg: 0, totalReps: 0 },
+    ],
+  };
+
+  it('returns two datasets: sessions per week dots and trendline', () => {
+    const data = buildSessionsPerWeekChartData(routine, '3m');
+    expect(data.datasets).toHaveLength(2);
+    expect(data.datasets[0].label).toBe('Sessions per week');
+    expect(data.datasets[1].label).toBe('Trend');
+  });
+
+  it('dots dataset uses the pink colour', () => {
+    const data = buildSessionsPerWeekChartData(routine, '3m');
+    expect(data.datasets[0].backgroundColor).toBe('#FF00A5');
+  });
+
+  it('dot dataset has no line', () => {
+    const data = buildSessionsPerWeekChartData(routine, '3m');
+    expect((data.datasets[0] as { showLine: boolean }).showLine).toBe(false);
+  });
+
+  it('trendline uses dashed border', () => {
+    const data = buildSessionsPerWeekChartData(routine, '3m');
+    expect(data.datasets[1].borderDash).toEqual([4, 4]);
+  });
+
+  it('data points use timestamps as x values', () => {
+    const data = buildSessionsPerWeekChartData(routine, '3m');
+    const points = data.datasets[0].data as { x: number; y: number }[];
+    expect(points[0].x).toBeGreaterThan(0);
+  });
+});
+
+describe('buildSessionsPerWeekChartOptions', () => {
+  it('uses time scale type', () => {
+    const options = buildSessionsPerWeekChartOptions('3m');
+    expect((options.scales?.x as { type: string }).type).toBe('time');
+  });
+
+  it('hides legend', () => {
+    const options = buildSessionsPerWeekChartOptions('3m');
+    expect(options.plugins?.legend?.display).toBe(false);
+  });
+
+  it('has a y axis', () => {
+    const options = buildSessionsPerWeekChartOptions('3m');
+    expect(options.scales).toHaveProperty('y');
   });
 });
 

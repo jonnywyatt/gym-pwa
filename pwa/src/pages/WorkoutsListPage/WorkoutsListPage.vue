@@ -68,7 +68,7 @@ onMounted(() => {
         :key="month.key"
         :class="styles.monthSection"
       >
-        <h2 class="uppercase marginBottom4">{{ month.label }}</h2>
+        <h2 :class="[styles.monthHeading, 'uppercase', 'marginBottom4']">{{ month.label }}</h2>
         <template v-if="month.sessions.length > 0">
           <div :class="styles.habitLayout">
             <div :class="styles.summariesRow">

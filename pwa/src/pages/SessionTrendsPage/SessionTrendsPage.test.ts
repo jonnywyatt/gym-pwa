@@ -178,7 +178,7 @@ describe('SessionTrendsPage', () => {
     });
   });
 
-  it('renders a chart for each routine with sessions', async () => {
+  it('renders two charts per routine with sessions', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/session-trends`, () =>
         HttpResponse.json([weightRoutine, repsRoutine])
@@ -188,7 +188,7 @@ describe('SessionTrendsPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getAllByTestId('line-chart')).toHaveLength(2);
+      expect(screen.getAllByTestId('line-chart')).toHaveLength(4);
     });
   });
 
@@ -197,7 +197,7 @@ describe('SessionTrendsPage', () => {
 
     renderPage();
 
-    expect(screen.getByRole('heading', { name: 'Session trends', level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Sessions', level: 1 })).toBeInTheDocument();
   });
 
   it('renders all period filter buttons', async () => {

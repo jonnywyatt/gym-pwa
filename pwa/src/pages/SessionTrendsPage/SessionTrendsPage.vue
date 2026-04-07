@@ -11,6 +11,8 @@ import {
   buildChartOptions,
   buildMetricSubtitle,
   buildSessionPopup,
+  buildSessionsPerWeekChartData,
+  buildSessionsPerWeekChartOptions,
   fetchSessionTrends,
 } from './helpers';
 
@@ -108,7 +110,7 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 class="heading-l heading-l-session marginBottom4">Session trends</h1>
+    <h1 class="heading-l heading-l-session marginBottom4">Sessions</h1>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <router-link to="/sessions" class="buttonLink buttonLink--secondary">By month</router-link>
       <span aria-hidden="true" class="linkDivider">|</span>
@@ -166,6 +168,13 @@ onMounted(() => {
                 <p>{{ sessionPopups.get(routine.routineId)?.metric }}</p>
               </div>
             </template>
+          </div>
+          <p :class="styles.metricLabel">Sessions per week</p>
+          <div :class="styles.chartWrapper">
+            <LazyLineChart
+              :data="buildSessionsPerWeekChartData(routine, selectedPeriod)"
+              :options="buildSessionsPerWeekChartOptions(selectedPeriod)"
+            />
           </div>
         </template>
       </section>

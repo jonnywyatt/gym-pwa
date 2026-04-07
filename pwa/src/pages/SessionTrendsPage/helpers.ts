@@ -251,6 +251,92 @@ function makeTrendlineDataset(data: { x: number; y: number }[], yAxisID: string)
   };
 }
 
+export function buildSessionsPerWeekData(
+  sessions: RoutineTrendData['sessions']
+): { date: string; count: number }[] {
+  const weekCounts = new Map<string, number>();
+  for (const session of sessions) {
+    const d = new Date(session.date);
+    const day = d.getUTCDay();
+    const monday = new Date(d);
+    monday.setUTCDate(d.getUTCDate() - ((day + 6) % 7));
+    const key = monday.toISOString().slice(0, 10);
+    weekCounts.set(key, (weekCounts.get(key) ?? 0) + 1);
+  }
+  return Array.from(weekCounts.entries())
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, count]) => ({ date: `${date}T00:00:00.000Z`, count }));
+}
+
+export function buildSessionsPerWeekChartData(
+  routine: RoutineTrendData,
+  period: TrendPeriod
+): ChartData<'line'> {
+  const weeklyData = buildSessionsPerWeekData(routine.sessions);
+  const dates = weeklyData.map((d) => d.date);
+  const counts = weeklyData.map((d) => d.count);
+  const timestamps = dates.map((d) => new Date(d).getTime());
+
+  return {
+    datasets: [
+      {
+        label: 'Sessions per week',
+        data: timestamps.map((x, i) => ({ x, y: counts[i] })),
+        backgroundColor: COLOR_DOT,
+        yAxisID: 'y',
+        order: 1,
+        ...dotStyle,
+      },
+      makeTrendlineDataset(buildTrendlineData(dates, counts, period), 'y'),
+    ],
+  };
+}
+
+export function buildSessionsPerWeekChartOptions(period: TrendPeriod): ChartOptions<'line'> {
+  return {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'nearest',
+      intersect: false,
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        position: 'offsetFromPoint',
+        backgroundColor: COLOR_CHART_BG,
+        borderColor: COLOR_TEXT,
+        borderWidth: 1,
+        titleColor: COLOR_TEXT,
+        bodyColor: COLOR_TEXT,
+        displayColors: false,
+        filter(item) {
+          return item.dataset.label === 'Trend';
+        },
+        callbacks: {
+          title: () => '',
+          label(context) {
+            const raw = context.raw as { y: number };
+            return `Average sessions per week: ${raw.y.toFixed(1)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      ...buildXAxis(period),
+      y: {
+        ...buildYAxis('left', (value) => String(Math.round(Number(value)))),
+        ticks: {
+          color: COLOR_TEXT,
+          stepSize: 1,
+          callback: (value: number | string) => String(Math.round(Number(value))),
+        },
+      },
+    },
+  };
+}
+
 export function buildChartData(routine: RoutineTrendData, period: TrendPeriod): ChartData<'line'> {
   const dates = routine.sessions.map((s) => s.date);
   const timestamps = dates.map((d) => new Date(d).getTime());
