@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import 'chartjs-adapter-date-fns';
-import { Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, TimeScale, Title, Tooltip } from 'chart.js';
-import { nextTick, onMounted, ref } from 'vue';
-import { Line } from 'vue-chartjs';
+import { defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
 import type { RoutineTrendData } from 'gym-pwa-api/types';
 import styles from './SessionTrendsPage.module.css';
 import { authService } from '../../lib/auth/oauth';
@@ -17,7 +14,7 @@ import {
   fetchSessionTrends,
 } from './helpers';
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, TimeScale);
+const LazyLineChart = defineAsyncComponent(() => import('./LazyLineChart.vue'));
 
 const routines = ref<RoutineTrendData[]>([]);
 const loading = ref(true);
@@ -63,14 +60,15 @@ function closeSessionPopup(routineId: number) {
   sessionPopups.value = new Map(sessionPopups.value).set(routineId, null);
 }
 
-function handleChartClick(event: MouseEvent, routine: RoutineTrendData) {
+async function handleChartClick(event: MouseEvent, routine: RoutineTrendData) {
   const canvas = (event.target as HTMLElement).closest('canvas') as HTMLCanvasElement | null;
   if (canvas === null) {
     sessionPopups.value = new Map(sessionPopups.value).set(routine.routineId, null);
     return;
   }
 
-  const chart = ChartJS.getChart(canvas);
+  const { Chart } = await import('chart.js');
+  const chart = Chart.getChart(canvas);
   if (chart === undefined) return;
 
   const elements = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
@@ -141,7 +139,7 @@ onMounted(() => {
         <template v-else>
           <p :class="styles.metricLabel">{{ buildMetricSubtitle(routine) }}</p>
           <div :class="styles.chartWrapper" @click="(e) => handleChartClick(e, routine)">
-            <Line
+            <LazyLineChart
               :data="buildChartData(routine, selectedPeriod)"
               :options="buildChartOptions(routine.secondMetric, selectedPeriod)"
             />

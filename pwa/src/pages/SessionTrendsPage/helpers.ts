@@ -1,5 +1,4 @@
 import type { ChartData, ChartOptions, TooltipPositionerFunction } from 'chart.js';
-import { Tooltip } from 'chart.js';
 import type { RoutineTrendData, SessionTrendsResponse } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 
@@ -8,11 +7,6 @@ declare module 'chart.js' {
     offsetFromPoint: TooltipPositionerFunction<'line'>;
   }
 }
-
-Tooltip.positioners.offsetFromPoint = (_items, eventPos) => {
-  if (eventPos.x === null || eventPos.y === null) return false;
-  return { x: eventPos.x + 10, y: eventPos.y };
-};
 
 const COLOR_CHART_BG = '#0b1215';
 const COLOR_TEXT = '#94a3b8';

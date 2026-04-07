@@ -20,13 +20,11 @@ vi.mock('../../lib/auth/oauth', () => ({
   },
 }));
 
-vi.mock('vue-chartjs', () => ({
-  Line: {
-    name: 'Line',
-    template: '<canvas data-testid="line-chart" />',
-    props: ['data', 'options'],
-  },
-}));
+const LineChartStub = {
+  name: 'LazyLineChart',
+  template: '<canvas data-testid="line-chart" />',
+  props: ['data', 'options'],
+};
 
 const mockApiUrl = 'http://localhost:3000';
 
@@ -65,7 +63,7 @@ const routerLinkStub = {
 
 function renderPage() {
   return render(SessionTrendsPage, {
-    global: { stubs: { RouterLink: routerLinkStub } },
+    global: { stubs: { RouterLink: routerLinkStub, LazyLineChart: LineChartStub } },
   });
 }
 
