@@ -263,21 +263,22 @@ onUnmounted(() => {
       </header>
 
       <nav :class="styles.nav">
-        <div :class="styles.navLeft">
-          <WorkoutTimer
-              :elapsed-seconds="elapsedSeconds"
-              :is-paused="isPaused"
-              @pause="handleTimerPause"
-              @resume="handleTimerResume"
-          />
-          <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight"><WeightKg :kg="workoutTotalWeightKg" /></span>
+        <div :class="styles.navRow">
+          <div :class="styles.navLeft">
+            <WorkoutTimer
+                :elapsed-seconds="elapsedSeconds"
+                :is-paused="isPaused"
+                @pause="handleTimerPause"
+                @resume="handleTimerResume"
+            />
+            <span v-if="workoutTotalWeightKg > 0" :class="styles.workoutTotalWeight"><WeightKg :kg="workoutTotalWeightKg" /></span>
+          </div>
+          <button type="button" :disabled="finishing" @click="handleFinish" class="buttonSecondary">
+            {{ finishing ? 'Saving...' : 'Finish' }}
+          </button>
         </div>
-        <button type="button" :disabled="finishing" @click="handleFinish" class="buttonSecondary">
-          {{ finishing ? 'Saving...' : 'Finish' }}
-        </button>
+        <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" />
       </nav>
-
-      <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" />
 
       <ul class="list">
         <li

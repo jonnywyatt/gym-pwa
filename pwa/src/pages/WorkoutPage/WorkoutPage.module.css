@@ -3,11 +3,16 @@
   top: 0;
   z-index: 10;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   padding: var(--spacing-unit-3) 0;
   background: var(--background-primary);
   border-bottom: 1px solid var(--border-color);
+}
+
+.navRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navLeft {

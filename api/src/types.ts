@@ -15,9 +15,13 @@ import type { BodyAreaDisplayName, MuscleGroupDisplayName } from './utils/displa
 /**
  * Exercise type returned by the API with muscle groups as display name strings
  */
-export type Exercise = Pick<PrismaExercise, 'id' | 'label' | 'recordSetsType'> & {
+export type Exercise = Pick<
+  PrismaExercise,
+  'id' | 'label' | 'recordSetsType' | 'isIsometric' | 'isUnilateral'
+> & {
   primaryMuscleGroups: MuscleGroupDisplayName[];
   secondaryMuscleGroups: MuscleGroupDisplayName[];
+  tertiaryMuscleGroups: MuscleGroupDisplayName[];
 };
 
 /**
@@ -49,7 +53,14 @@ export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
 
 export type WorkoutExercise = Pick<
   Exercise,
-  'id' | 'label' | 'recordSetsType' | 'primaryMuscleGroups' | 'secondaryMuscleGroups'
+  | 'id'
+  | 'label'
+  | 'recordSetsType'
+  | 'isIsometric'
+  | 'isUnilateral'
+  | 'primaryMuscleGroups'
+  | 'secondaryMuscleGroups'
+  | 'tertiaryMuscleGroups'
 >;
 
 export type SetType = 'Warmup' | 'Standard' | 'Failure';

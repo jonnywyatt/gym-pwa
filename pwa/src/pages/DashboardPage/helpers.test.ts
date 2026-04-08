@@ -64,8 +64,11 @@ describe('startWorkoutForRoutine', () => {
         id: 10,
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: ['Triceps'],
+        tertiaryMuscleGroups: [],
       },
     ],
   };
@@ -273,8 +276,11 @@ describe('handleNewWorkout', () => {
         id: 10,
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: ['Triceps'],
+        tertiaryMuscleGroups: [],
       },
     ],
   };

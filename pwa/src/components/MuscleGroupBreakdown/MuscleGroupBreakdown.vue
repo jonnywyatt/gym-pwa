@@ -23,7 +23,7 @@ const isExpanded = ref(false);
 
 <template>
   <section v-if="breakdown.bodyAreas.length > 0" :class="styles.root" aria-label="Muscle group breakdown">
-      <div :class="styles.bar" role="img" aria-label="Body area breakdown bar">
+      <div :class="styles.bar" role="img" aria-label="Body area breakdown bar" class="marginBottom1">
         <div
           v-for="area in breakdown.bodyAreas"
           :key="area.bodyArea"

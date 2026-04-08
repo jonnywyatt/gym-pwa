@@ -53,10 +53,16 @@ async function main() {
   for (const exercise of exercises) {
     const upsertedExercise = await prisma.exercise.upsert({
       where: { label: exercise.label },
-      update: { recordSetsType: exercise.recordSetsType },
+      update: {
+        recordSetsType: exercise.recordSetsType,
+        isIsometric: exercise.isIsometric,
+        isUnilateral: exercise.isUnilateral,
+      },
       create: {
         label: exercise.label,
         recordSetsType: exercise.recordSetsType,
+        isIsometric: exercise.isIsometric,
+        isUnilateral: exercise.isUnilateral,
       },
     });
     exerciseMap.set(upsertedExercise.label, upsertedExercise.id);
@@ -91,6 +97,25 @@ async function main() {
           throw new Error(`Muscle group not found: ${label}`);
         }
         return prisma.exerciseSecondaryMuscleGroup.create({
+          data: {
+            exerciseId: upsertedExercise.id,
+            muscleGroupId,
+          },
+        });
+      })
+    );
+
+    // Replace tertiary muscle group relationships
+    await prisma.exerciseTertiaryMuscleGroup.deleteMany({
+      where: { exerciseId: upsertedExercise.id },
+    });
+    await Promise.all(
+      exercise.tertiaryMuscleGroupLabels.map((label) => {
+        const muscleGroupId = muscleGroupMap.get(label);
+        if (!muscleGroupId) {
+          throw new Error(`Muscle group not found: ${label}`);
+        }
+        return prisma.exerciseTertiaryMuscleGroup.create({
           data: {
             exerciseId: upsertedExercise.id,
             muscleGroupId,

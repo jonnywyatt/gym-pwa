@@ -135,6 +135,8 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   id: 'id',
   label: 'label',
   recordSetsType: 'recordSetsType',
+  isIsometric: 'isIsometric',
+  isUnilateral: 'isUnilateral',
   createdAt: 'createdAt'
 };
 
@@ -156,6 +158,11 @@ exports.Prisma.ExercisePrimaryMuscleGroupScalarFieldEnum = {
 };
 
 exports.Prisma.ExerciseSecondaryMuscleGroupScalarFieldEnum = {
+  exerciseId: 'exerciseId',
+  muscleGroupId: 'muscleGroupId'
+};
+
+exports.Prisma.ExerciseTertiaryMuscleGroupScalarFieldEnum = {
   exerciseId: 'exerciseId',
   muscleGroupId: 'muscleGroupId'
 };
@@ -254,14 +261,16 @@ exports.MuscleGroupLabel = exports.$Enums.MuscleGroupLabel = {
   LATISSIMUS_DORSI: 'LATISSIMUS_DORSI',
   TRAPEZIUS: 'TRAPEZIUS',
   RHOMBOIDS: 'RHOMBOIDS',
-  LOWER_BACK: 'LOWER_BACK',
+  ERECTOR_SPINAE: 'ERECTOR_SPINAE',
   REAR_DELTOIDS: 'REAR_DELTOIDS',
   FRONT_DELTOIDS: 'FRONT_DELTOIDS',
+  MEDIAL_DELTOIDS: 'MEDIAL_DELTOIDS',
   BICEPS: 'BICEPS',
   TRICEPS: 'TRICEPS',
   FOREARMS: 'FOREARMS',
   ABDOMINALS: 'ABDOMINALS',
   OBLIQUES: 'OBLIQUES',
+  HIP_FLEXORS: 'HIP_FLEXORS',
   GLUTES: 'GLUTES',
   HAMSTRINGS: 'HAMSTRINGS',
   QUADRICEPS: 'QUADRICEPS',
@@ -292,6 +301,7 @@ exports.Prisma.ModelName = {
   RoutineExercise: 'RoutineExercise',
   ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
   ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
+  ExerciseTertiaryMuscleGroup: 'ExerciseTertiaryMuscleGroup',
   User: 'User',
   UserBodyWeight: 'UserBodyWeight',
   UserWorkout: 'UserWorkout',

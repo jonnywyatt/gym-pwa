@@ -30,12 +30,12 @@ describe('Exercise Integration Tests', () => {
       pullUp?.primaryMuscleGroups
         .map((pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label])
         .sort()
-    ).toEqual(['Biceps', 'Latissimus Dorsi']);
+    ).toEqual(['Latissimus Dorsi']);
     expect(
       pullUp?.secondaryMuscleGroups
         .map((smg) => muscleGroupDisplayNames[smg.muscleGroup.label])
         .sort()
-    ).toEqual(['Abdominals', 'Forearms', 'Rear Deltoids', 'Rhomboids', 'Trapezius']);
+    ).toEqual(['Biceps', 'Rhomboids']);
 
     const chestPress = exercises.find((e) => e.label === 'Chest press machine');
     expect(chestPress).toBeDefined();
@@ -43,11 +43,11 @@ describe('Exercise Integration Tests', () => {
       chestPress?.primaryMuscleGroups
         .map((pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label])
         .sort()
-    ).toEqual(['Front Deltoids', 'Pectoralis Major', 'Triceps']);
+    ).toEqual(['Pectoralis Major']);
     expect(
       chestPress?.secondaryMuscleGroups
         .map((smg) => muscleGroupDisplayNames[smg.muscleGroup.label])
         .sort()
-    ).toEqual(['Abdominals', 'Pectoralis Minor']);
+    ).toEqual(['Triceps']);
   });
 });

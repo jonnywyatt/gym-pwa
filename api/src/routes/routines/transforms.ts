@@ -16,11 +16,16 @@ export function transformRoutineDetail(routine: RoutineWithExercises): RoutineDe
     id: re.exercise.id,
     label: re.exercise.label,
     recordSetsType: re.exercise.recordSetsType,
+    isIsometric: re.exercise.isIsometric,
+    isUnilateral: re.exercise.isUnilateral,
     primaryMuscleGroups: re.exercise.primaryMuscleGroups.map(
       (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label]
     ),
     secondaryMuscleGroups: re.exercise.secondaryMuscleGroups.map(
       (smg) => muscleGroupDisplayNames[smg.muscleGroup.label]
+    ),
+    tertiaryMuscleGroups: re.exercise.tertiaryMuscleGroups.map(
+      (tmg) => muscleGroupDisplayNames[tmg.muscleGroup.label]
     ),
   }));
 

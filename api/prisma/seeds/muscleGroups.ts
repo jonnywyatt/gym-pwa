@@ -13,10 +13,11 @@ export const muscleGroups: MuscleGroupSeed[] = [
   { label: MuscleGroupLabel.LATISSIMUS_DORSI, bodyAreaLabel: BodyAreaLabel.BACK },
   { label: MuscleGroupLabel.TRAPEZIUS, bodyAreaLabel: BodyAreaLabel.BACK },
   { label: MuscleGroupLabel.RHOMBOIDS, bodyAreaLabel: BodyAreaLabel.BACK },
-  { label: MuscleGroupLabel.LOWER_BACK, bodyAreaLabel: BodyAreaLabel.BACK },
+  { label: MuscleGroupLabel.ERECTOR_SPINAE, bodyAreaLabel: BodyAreaLabel.BACK },
   // Shoulders
   { label: MuscleGroupLabel.REAR_DELTOIDS, bodyAreaLabel: BodyAreaLabel.SHOULDERS },
   { label: MuscleGroupLabel.FRONT_DELTOIDS, bodyAreaLabel: BodyAreaLabel.SHOULDERS },
+  { label: MuscleGroupLabel.MEDIAL_DELTOIDS, bodyAreaLabel: BodyAreaLabel.SHOULDERS },
   // Arms
   { label: MuscleGroupLabel.BICEPS, bodyAreaLabel: BodyAreaLabel.ARMS },
   { label: MuscleGroupLabel.TRICEPS, bodyAreaLabel: BodyAreaLabel.ARMS },
@@ -24,6 +25,7 @@ export const muscleGroups: MuscleGroupSeed[] = [
   // Core
   { label: MuscleGroupLabel.ABDOMINALS, bodyAreaLabel: BodyAreaLabel.CORE },
   { label: MuscleGroupLabel.OBLIQUES, bodyAreaLabel: BodyAreaLabel.CORE },
+  { label: MuscleGroupLabel.HIP_FLEXORS, bodyAreaLabel: BodyAreaLabel.CORE },
   // Legs
   { label: MuscleGroupLabel.GLUTES, bodyAreaLabel: BodyAreaLabel.LEGS },
   { label: MuscleGroupLabel.HAMSTRINGS, bodyAreaLabel: BodyAreaLabel.LEGS },

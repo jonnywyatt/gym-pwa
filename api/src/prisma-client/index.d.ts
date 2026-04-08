@@ -49,6 +49,11 @@ export type ExercisePrimaryMuscleGroup = $Result.DefaultSelection<Prisma.$Exerci
  */
 export type ExerciseSecondaryMuscleGroup = $Result.DefaultSelection<Prisma.$ExerciseSecondaryMuscleGroupPayload>
 /**
+ * Model ExerciseTertiaryMuscleGroup
+ * 
+ */
+export type ExerciseTertiaryMuscleGroup = $Result.DefaultSelection<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+/**
  * Model User
  * 
  */
@@ -122,14 +127,16 @@ export const MuscleGroupLabel: {
   LATISSIMUS_DORSI: 'LATISSIMUS_DORSI',
   TRAPEZIUS: 'TRAPEZIUS',
   RHOMBOIDS: 'RHOMBOIDS',
-  LOWER_BACK: 'LOWER_BACK',
+  ERECTOR_SPINAE: 'ERECTOR_SPINAE',
   REAR_DELTOIDS: 'REAR_DELTOIDS',
   FRONT_DELTOIDS: 'FRONT_DELTOIDS',
+  MEDIAL_DELTOIDS: 'MEDIAL_DELTOIDS',
   BICEPS: 'BICEPS',
   TRICEPS: 'TRICEPS',
   FOREARMS: 'FOREARMS',
   ABDOMINALS: 'ABDOMINALS',
   OBLIQUES: 'OBLIQUES',
+  HIP_FLEXORS: 'HIP_FLEXORS',
   GLUTES: 'GLUTES',
   HAMSTRINGS: 'HAMSTRINGS',
   QUADRICEPS: 'QUADRICEPS',
@@ -343,6 +350,16 @@ export class PrismaClient<
     * ```
     */
   get exerciseSecondaryMuscleGroup(): Prisma.ExerciseSecondaryMuscleGroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.exerciseTertiaryMuscleGroup`: Exposes CRUD operations for the **ExerciseTertiaryMuscleGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExerciseTertiaryMuscleGroups
+    * const exerciseTertiaryMuscleGroups = await prisma.exerciseTertiaryMuscleGroup.findMany()
+    * ```
+    */
+  get exerciseTertiaryMuscleGroup(): Prisma.ExerciseTertiaryMuscleGroupDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -844,6 +861,7 @@ export namespace Prisma {
     RoutineExercise: 'RoutineExercise',
     ExercisePrimaryMuscleGroup: 'ExercisePrimaryMuscleGroup',
     ExerciseSecondaryMuscleGroup: 'ExerciseSecondaryMuscleGroup',
+    ExerciseTertiaryMuscleGroup: 'ExerciseTertiaryMuscleGroup',
     User: 'User',
     UserBodyWeight: 'UserBodyWeight',
     UserWorkout: 'UserWorkout',
@@ -865,7 +883,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "user" | "userBodyWeight" | "userWorkout" | "workoutMuscleGroupStat" | "workoutExercise" | "workoutSet"
+      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "exerciseTertiaryMuscleGroup" | "user" | "userBodyWeight" | "userWorkout" | "workoutMuscleGroupStat" | "workoutExercise" | "workoutSet"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1384,6 +1402,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ExerciseSecondaryMuscleGroupCountArgs<ExtArgs>
             result: $Utils.Optional<ExerciseSecondaryMuscleGroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExerciseTertiaryMuscleGroup: {
+        payload: Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>
+        fields: Prisma.ExerciseTertiaryMuscleGroupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExerciseTertiaryMuscleGroupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExerciseTertiaryMuscleGroupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          findFirst: {
+            args: Prisma.ExerciseTertiaryMuscleGroupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExerciseTertiaryMuscleGroupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          findMany: {
+            args: Prisma.ExerciseTertiaryMuscleGroupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>[]
+          }
+          create: {
+            args: Prisma.ExerciseTertiaryMuscleGroupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          createMany: {
+            args: Prisma.ExerciseTertiaryMuscleGroupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExerciseTertiaryMuscleGroupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>[]
+          }
+          delete: {
+            args: Prisma.ExerciseTertiaryMuscleGroupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          update: {
+            args: Prisma.ExerciseTertiaryMuscleGroupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExerciseTertiaryMuscleGroupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExerciseTertiaryMuscleGroupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExerciseTertiaryMuscleGroupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExerciseTertiaryMuscleGroupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExerciseTertiaryMuscleGroupPayload>
+          }
+          aggregate: {
+            args: Prisma.ExerciseTertiaryMuscleGroupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExerciseTertiaryMuscleGroup>
+          }
+          groupBy: {
+            args: Prisma.ExerciseTertiaryMuscleGroupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExerciseTertiaryMuscleGroupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExerciseTertiaryMuscleGroupCountArgs<ExtArgs>
+            result: $Utils.Optional<ExerciseTertiaryMuscleGroupCountAggregateOutputType> | number
           }
         }
       }
@@ -1946,6 +2038,7 @@ export namespace Prisma {
     routineExercise?: RoutineExerciseOmit
     exercisePrimaryMuscleGroup?: ExercisePrimaryMuscleGroupOmit
     exerciseSecondaryMuscleGroup?: ExerciseSecondaryMuscleGroupOmit
+    exerciseTertiaryMuscleGroup?: ExerciseTertiaryMuscleGroupOmit
     user?: UserOmit
     userBodyWeight?: UserBodyWeightOmit
     userWorkout?: UserWorkoutOmit
@@ -2065,11 +2158,13 @@ export namespace Prisma {
   export type MuscleGroupCountOutputType = {
     primaryExercises: number
     secondaryExercises: number
+    tertiaryExercises: number
   }
 
   export type MuscleGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryExercises?: boolean | MuscleGroupCountOutputTypeCountPrimaryExercisesArgs
     secondaryExercises?: boolean | MuscleGroupCountOutputTypeCountSecondaryExercisesArgs
+    tertiaryExercises?: boolean | MuscleGroupCountOutputTypeCountTertiaryExercisesArgs
   }
 
   // Custom InputTypes
@@ -2097,6 +2192,13 @@ export namespace Prisma {
     where?: ExerciseSecondaryMuscleGroupWhereInput
   }
 
+  /**
+   * MuscleGroupCountOutputType without action
+   */
+  export type MuscleGroupCountOutputTypeCountTertiaryExercisesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+  }
+
 
   /**
    * Count Type ExerciseCountOutputType
@@ -2105,6 +2207,7 @@ export namespace Prisma {
   export type ExerciseCountOutputType = {
     primaryMuscleGroups: number
     secondaryMuscleGroups: number
+    tertiaryMuscleGroups: number
     routineExercises: number
     workoutExercises: number
   }
@@ -2112,6 +2215,7 @@ export namespace Prisma {
   export type ExerciseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryMuscleGroups?: boolean | ExerciseCountOutputTypeCountPrimaryMuscleGroupsArgs
     secondaryMuscleGroups?: boolean | ExerciseCountOutputTypeCountSecondaryMuscleGroupsArgs
+    tertiaryMuscleGroups?: boolean | ExerciseCountOutputTypeCountTertiaryMuscleGroupsArgs
     routineExercises?: boolean | ExerciseCountOutputTypeCountRoutineExercisesArgs
     workoutExercises?: boolean | ExerciseCountOutputTypeCountWorkoutExercisesArgs
   }
@@ -2139,6 +2243,13 @@ export namespace Prisma {
    */
   export type ExerciseCountOutputTypeCountSecondaryMuscleGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExerciseSecondaryMuscleGroupWhereInput
+  }
+
+  /**
+   * ExerciseCountOutputType without action
+   */
+  export type ExerciseCountOutputTypeCountTertiaryMuscleGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExerciseTertiaryMuscleGroupWhereInput
   }
 
   /**
@@ -3565,6 +3676,7 @@ export namespace Prisma {
     bodyArea?: boolean | BodyAreaDefaultArgs<ExtArgs>
     primaryExercises?: boolean | MuscleGroup$primaryExercisesArgs<ExtArgs>
     secondaryExercises?: boolean | MuscleGroup$secondaryExercisesArgs<ExtArgs>
+    tertiaryExercises?: boolean | MuscleGroup$tertiaryExercisesArgs<ExtArgs>
     _count?: boolean | MuscleGroupCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["muscleGroup"]>
 
@@ -3593,6 +3705,7 @@ export namespace Prisma {
     bodyArea?: boolean | BodyAreaDefaultArgs<ExtArgs>
     primaryExercises?: boolean | MuscleGroup$primaryExercisesArgs<ExtArgs>
     secondaryExercises?: boolean | MuscleGroup$secondaryExercisesArgs<ExtArgs>
+    tertiaryExercises?: boolean | MuscleGroup$tertiaryExercisesArgs<ExtArgs>
     _count?: boolean | MuscleGroupCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MuscleGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3608,6 +3721,7 @@ export namespace Prisma {
       bodyArea: Prisma.$BodyAreaPayload<ExtArgs>
       primaryExercises: Prisma.$ExercisePrimaryMuscleGroupPayload<ExtArgs>[]
       secondaryExercises: Prisma.$ExerciseSecondaryMuscleGroupPayload<ExtArgs>[]
+      tertiaryExercises: Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4010,6 +4124,7 @@ export namespace Prisma {
     bodyArea<T extends BodyAreaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BodyAreaDefaultArgs<ExtArgs>>): Prisma__BodyAreaClient<$Result.GetResult<Prisma.$BodyAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     primaryExercises<T extends MuscleGroup$primaryExercisesArgs<ExtArgs> = {}>(args?: Subset<T, MuscleGroup$primaryExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExercisePrimaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     secondaryExercises<T extends MuscleGroup$secondaryExercisesArgs<ExtArgs> = {}>(args?: Subset<T, MuscleGroup$secondaryExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseSecondaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tertiaryExercises<T extends MuscleGroup$tertiaryExercisesArgs<ExtArgs> = {}>(args?: Subset<T, MuscleGroup$tertiaryExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4486,6 +4601,30 @@ export namespace Prisma {
   }
 
   /**
+   * MuscleGroup.tertiaryExercises
+   */
+  export type MuscleGroup$tertiaryExercisesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
+  }
+
+  /**
    * MuscleGroup without action
    */
   export type MuscleGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4528,6 +4667,8 @@ export namespace Prisma {
     id: number | null
     label: string | null
     recordSetsType: $Enums.RecordSetsType | null
+    isIsometric: boolean | null
+    isUnilateral: boolean | null
     createdAt: Date | null
   }
 
@@ -4535,6 +4676,8 @@ export namespace Prisma {
     id: number | null
     label: string | null
     recordSetsType: $Enums.RecordSetsType | null
+    isIsometric: boolean | null
+    isUnilateral: boolean | null
     createdAt: Date | null
   }
 
@@ -4542,6 +4685,8 @@ export namespace Prisma {
     id: number
     label: number
     recordSetsType: number
+    isIsometric: number
+    isUnilateral: number
     createdAt: number
     _all: number
   }
@@ -4559,6 +4704,8 @@ export namespace Prisma {
     id?: true
     label?: true
     recordSetsType?: true
+    isIsometric?: true
+    isUnilateral?: true
     createdAt?: true
   }
 
@@ -4566,6 +4713,8 @@ export namespace Prisma {
     id?: true
     label?: true
     recordSetsType?: true
+    isIsometric?: true
+    isUnilateral?: true
     createdAt?: true
   }
 
@@ -4573,6 +4722,8 @@ export namespace Prisma {
     id?: true
     label?: true
     recordSetsType?: true
+    isIsometric?: true
+    isUnilateral?: true
     createdAt?: true
     _all?: true
   }
@@ -4667,6 +4818,8 @@ export namespace Prisma {
     id: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric: boolean
+    isUnilateral: boolean
     createdAt: Date
     _count: ExerciseCountAggregateOutputType | null
     _avg: ExerciseAvgAggregateOutputType | null
@@ -4693,9 +4846,12 @@ export namespace Prisma {
     id?: boolean
     label?: boolean
     recordSetsType?: boolean
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: boolean
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
     secondaryMuscleGroups?: boolean | Exercise$secondaryMuscleGroupsArgs<ExtArgs>
+    tertiaryMuscleGroups?: boolean | Exercise$tertiaryMuscleGroupsArgs<ExtArgs>
     routineExercises?: boolean | Exercise$routineExercisesArgs<ExtArgs>
     workoutExercises?: boolean | Exercise$workoutExercisesArgs<ExtArgs>
     _count?: boolean | ExerciseCountOutputTypeDefaultArgs<ExtArgs>
@@ -4705,6 +4861,8 @@ export namespace Prisma {
     id?: boolean
     label?: boolean
     recordSetsType?: boolean
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
 
@@ -4712,6 +4870,8 @@ export namespace Prisma {
     id?: boolean
     label?: boolean
     recordSetsType?: boolean
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
 
@@ -4719,13 +4879,16 @@ export namespace Prisma {
     id?: boolean
     label?: boolean
     recordSetsType?: boolean
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "createdAt", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "isIsometric" | "isUnilateral" | "createdAt", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
     secondaryMuscleGroups?: boolean | Exercise$secondaryMuscleGroupsArgs<ExtArgs>
+    tertiaryMuscleGroups?: boolean | Exercise$tertiaryMuscleGroupsArgs<ExtArgs>
     routineExercises?: boolean | Exercise$routineExercisesArgs<ExtArgs>
     workoutExercises?: boolean | Exercise$workoutExercisesArgs<ExtArgs>
     _count?: boolean | ExerciseCountOutputTypeDefaultArgs<ExtArgs>
@@ -4738,6 +4901,7 @@ export namespace Prisma {
     objects: {
       primaryMuscleGroups: Prisma.$ExercisePrimaryMuscleGroupPayload<ExtArgs>[]
       secondaryMuscleGroups: Prisma.$ExerciseSecondaryMuscleGroupPayload<ExtArgs>[]
+      tertiaryMuscleGroups: Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>[]
       routineExercises: Prisma.$RoutineExercisePayload<ExtArgs>[]
       workoutExercises: Prisma.$WorkoutExercisePayload<ExtArgs>[]
     }
@@ -4745,6 +4909,8 @@ export namespace Prisma {
       id: number
       label: string
       recordSetsType: $Enums.RecordSetsType
+      isIsometric: boolean
+      isUnilateral: boolean
       createdAt: Date
     }, ExtArgs["result"]["exercise"]>
     composites: {}
@@ -5142,6 +5308,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     primaryMuscleGroups<T extends Exercise$primaryMuscleGroupsArgs<ExtArgs> = {}>(args?: Subset<T, Exercise$primaryMuscleGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExercisePrimaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     secondaryMuscleGroups<T extends Exercise$secondaryMuscleGroupsArgs<ExtArgs> = {}>(args?: Subset<T, Exercise$secondaryMuscleGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseSecondaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tertiaryMuscleGroups<T extends Exercise$tertiaryMuscleGroupsArgs<ExtArgs> = {}>(args?: Subset<T, Exercise$tertiaryMuscleGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     routineExercises<T extends Exercise$routineExercisesArgs<ExtArgs> = {}>(args?: Subset<T, Exercise$routineExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoutineExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workoutExercises<T extends Exercise$workoutExercisesArgs<ExtArgs> = {}>(args?: Subset<T, Exercise$workoutExercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -5176,6 +5343,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Exercise", 'Int'>
     readonly label: FieldRef<"Exercise", 'String'>
     readonly recordSetsType: FieldRef<"Exercise", 'RecordSetsType'>
+    readonly isIsometric: FieldRef<"Exercise", 'Boolean'>
+    readonly isUnilateral: FieldRef<"Exercise", 'Boolean'>
     readonly createdAt: FieldRef<"Exercise", 'DateTime'>
   }
     
@@ -5610,6 +5779,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExerciseSecondaryMuscleGroupScalarFieldEnum | ExerciseSecondaryMuscleGroupScalarFieldEnum[]
+  }
+
+  /**
+   * Exercise.tertiaryMuscleGroups
+   */
+  export type Exercise$tertiaryMuscleGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
   }
 
   /**
@@ -10007,6 +10200,1071 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ExerciseSecondaryMuscleGroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExerciseTertiaryMuscleGroup
+   */
+
+  export type AggregateExerciseTertiaryMuscleGroup = {
+    _count: ExerciseTertiaryMuscleGroupCountAggregateOutputType | null
+    _avg: ExerciseTertiaryMuscleGroupAvgAggregateOutputType | null
+    _sum: ExerciseTertiaryMuscleGroupSumAggregateOutputType | null
+    _min: ExerciseTertiaryMuscleGroupMinAggregateOutputType | null
+    _max: ExerciseTertiaryMuscleGroupMaxAggregateOutputType | null
+  }
+
+  export type ExerciseTertiaryMuscleGroupAvgAggregateOutputType = {
+    exerciseId: number | null
+    muscleGroupId: number | null
+  }
+
+  export type ExerciseTertiaryMuscleGroupSumAggregateOutputType = {
+    exerciseId: number | null
+    muscleGroupId: number | null
+  }
+
+  export type ExerciseTertiaryMuscleGroupMinAggregateOutputType = {
+    exerciseId: number | null
+    muscleGroupId: number | null
+  }
+
+  export type ExerciseTertiaryMuscleGroupMaxAggregateOutputType = {
+    exerciseId: number | null
+    muscleGroupId: number | null
+  }
+
+  export type ExerciseTertiaryMuscleGroupCountAggregateOutputType = {
+    exerciseId: number
+    muscleGroupId: number
+    _all: number
+  }
+
+
+  export type ExerciseTertiaryMuscleGroupAvgAggregateInputType = {
+    exerciseId?: true
+    muscleGroupId?: true
+  }
+
+  export type ExerciseTertiaryMuscleGroupSumAggregateInputType = {
+    exerciseId?: true
+    muscleGroupId?: true
+  }
+
+  export type ExerciseTertiaryMuscleGroupMinAggregateInputType = {
+    exerciseId?: true
+    muscleGroupId?: true
+  }
+
+  export type ExerciseTertiaryMuscleGroupMaxAggregateInputType = {
+    exerciseId?: true
+    muscleGroupId?: true
+  }
+
+  export type ExerciseTertiaryMuscleGroupCountAggregateInputType = {
+    exerciseId?: true
+    muscleGroupId?: true
+    _all?: true
+  }
+
+  export type ExerciseTertiaryMuscleGroupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExerciseTertiaryMuscleGroup to aggregate.
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExerciseTertiaryMuscleGroups to fetch.
+     */
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExerciseTertiaryMuscleGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExerciseTertiaryMuscleGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExerciseTertiaryMuscleGroups
+    **/
+    _count?: true | ExerciseTertiaryMuscleGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExerciseTertiaryMuscleGroupAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExerciseTertiaryMuscleGroupSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExerciseTertiaryMuscleGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExerciseTertiaryMuscleGroupMaxAggregateInputType
+  }
+
+  export type GetExerciseTertiaryMuscleGroupAggregateType<T extends ExerciseTertiaryMuscleGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateExerciseTertiaryMuscleGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExerciseTertiaryMuscleGroup[P]>
+      : GetScalarType<T[P], AggregateExerciseTertiaryMuscleGroup[P]>
+  }
+
+
+
+
+  export type ExerciseTertiaryMuscleGroupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithAggregationInput | ExerciseTertiaryMuscleGroupOrderByWithAggregationInput[]
+    by: ExerciseTertiaryMuscleGroupScalarFieldEnum[] | ExerciseTertiaryMuscleGroupScalarFieldEnum
+    having?: ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExerciseTertiaryMuscleGroupCountAggregateInputType | true
+    _avg?: ExerciseTertiaryMuscleGroupAvgAggregateInputType
+    _sum?: ExerciseTertiaryMuscleGroupSumAggregateInputType
+    _min?: ExerciseTertiaryMuscleGroupMinAggregateInputType
+    _max?: ExerciseTertiaryMuscleGroupMaxAggregateInputType
+  }
+
+  export type ExerciseTertiaryMuscleGroupGroupByOutputType = {
+    exerciseId: number
+    muscleGroupId: number
+    _count: ExerciseTertiaryMuscleGroupCountAggregateOutputType | null
+    _avg: ExerciseTertiaryMuscleGroupAvgAggregateOutputType | null
+    _sum: ExerciseTertiaryMuscleGroupSumAggregateOutputType | null
+    _min: ExerciseTertiaryMuscleGroupMinAggregateOutputType | null
+    _max: ExerciseTertiaryMuscleGroupMaxAggregateOutputType | null
+  }
+
+  type GetExerciseTertiaryMuscleGroupGroupByPayload<T extends ExerciseTertiaryMuscleGroupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExerciseTertiaryMuscleGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExerciseTertiaryMuscleGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExerciseTertiaryMuscleGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], ExerciseTertiaryMuscleGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExerciseTertiaryMuscleGroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    exerciseId?: boolean
+    muscleGroupId?: boolean
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exerciseTertiaryMuscleGroup"]>
+
+  export type ExerciseTertiaryMuscleGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    exerciseId?: boolean
+    muscleGroupId?: boolean
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exerciseTertiaryMuscleGroup"]>
+
+  export type ExerciseTertiaryMuscleGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    exerciseId?: boolean
+    muscleGroupId?: boolean
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exerciseTertiaryMuscleGroup"]>
+
+  export type ExerciseTertiaryMuscleGroupSelectScalar = {
+    exerciseId?: boolean
+    muscleGroupId?: boolean
+  }
+
+  export type ExerciseTertiaryMuscleGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"exerciseId" | "muscleGroupId", ExtArgs["result"]["exerciseTertiaryMuscleGroup"]>
+  export type ExerciseTertiaryMuscleGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }
+  export type ExerciseTertiaryMuscleGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }
+  export type ExerciseTertiaryMuscleGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    exercise?: boolean | ExerciseDefaultArgs<ExtArgs>
+    muscleGroup?: boolean | MuscleGroupDefaultArgs<ExtArgs>
+  }
+
+  export type $ExerciseTertiaryMuscleGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExerciseTertiaryMuscleGroup"
+    objects: {
+      exercise: Prisma.$ExercisePayload<ExtArgs>
+      muscleGroup: Prisma.$MuscleGroupPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      exerciseId: number
+      muscleGroupId: number
+    }, ExtArgs["result"]["exerciseTertiaryMuscleGroup"]>
+    composites: {}
+  }
+
+  type ExerciseTertiaryMuscleGroupGetPayload<S extends boolean | null | undefined | ExerciseTertiaryMuscleGroupDefaultArgs> = $Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload, S>
+
+  type ExerciseTertiaryMuscleGroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExerciseTertiaryMuscleGroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExerciseTertiaryMuscleGroupCountAggregateInputType | true
+    }
+
+  export interface ExerciseTertiaryMuscleGroupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExerciseTertiaryMuscleGroup'], meta: { name: 'ExerciseTertiaryMuscleGroup' } }
+    /**
+     * Find zero or one ExerciseTertiaryMuscleGroup that matches the filter.
+     * @param {ExerciseTertiaryMuscleGroupFindUniqueArgs} args - Arguments to find a ExerciseTertiaryMuscleGroup
+     * @example
+     * // Get one ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExerciseTertiaryMuscleGroupFindUniqueArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupFindUniqueArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExerciseTertiaryMuscleGroup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExerciseTertiaryMuscleGroupFindUniqueOrThrowArgs} args - Arguments to find a ExerciseTertiaryMuscleGroup
+     * @example
+     * // Get one ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExerciseTertiaryMuscleGroupFindUniqueOrThrowArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExerciseTertiaryMuscleGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupFindFirstArgs} args - Arguments to find a ExerciseTertiaryMuscleGroup
+     * @example
+     * // Get one ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExerciseTertiaryMuscleGroupFindFirstArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupFindFirstArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExerciseTertiaryMuscleGroup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupFindFirstOrThrowArgs} args - Arguments to find a ExerciseTertiaryMuscleGroup
+     * @example
+     * // Get one ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExerciseTertiaryMuscleGroupFindFirstOrThrowArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExerciseTertiaryMuscleGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroups = await prisma.exerciseTertiaryMuscleGroup.findMany()
+     * 
+     * // Get first 10 ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroups = await prisma.exerciseTertiaryMuscleGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `exerciseId`
+     * const exerciseTertiaryMuscleGroupWithExerciseIdOnly = await prisma.exerciseTertiaryMuscleGroup.findMany({ select: { exerciseId: true } })
+     * 
+     */
+    findMany<T extends ExerciseTertiaryMuscleGroupFindManyArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExerciseTertiaryMuscleGroup.
+     * @param {ExerciseTertiaryMuscleGroupCreateArgs} args - Arguments to create a ExerciseTertiaryMuscleGroup.
+     * @example
+     * // Create one ExerciseTertiaryMuscleGroup
+     * const ExerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.create({
+     *   data: {
+     *     // ... data to create a ExerciseTertiaryMuscleGroup
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExerciseTertiaryMuscleGroupCreateArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupCreateArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExerciseTertiaryMuscleGroups.
+     * @param {ExerciseTertiaryMuscleGroupCreateManyArgs} args - Arguments to create many ExerciseTertiaryMuscleGroups.
+     * @example
+     * // Create many ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExerciseTertiaryMuscleGroupCreateManyArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExerciseTertiaryMuscleGroups and returns the data saved in the database.
+     * @param {ExerciseTertiaryMuscleGroupCreateManyAndReturnArgs} args - Arguments to create many ExerciseTertiaryMuscleGroups.
+     * @example
+     * // Create many ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExerciseTertiaryMuscleGroups and only return the `exerciseId`
+     * const exerciseTertiaryMuscleGroupWithExerciseIdOnly = await prisma.exerciseTertiaryMuscleGroup.createManyAndReturn({
+     *   select: { exerciseId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExerciseTertiaryMuscleGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExerciseTertiaryMuscleGroup.
+     * @param {ExerciseTertiaryMuscleGroupDeleteArgs} args - Arguments to delete one ExerciseTertiaryMuscleGroup.
+     * @example
+     * // Delete one ExerciseTertiaryMuscleGroup
+     * const ExerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.delete({
+     *   where: {
+     *     // ... filter to delete one ExerciseTertiaryMuscleGroup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExerciseTertiaryMuscleGroupDeleteArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupDeleteArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExerciseTertiaryMuscleGroup.
+     * @param {ExerciseTertiaryMuscleGroupUpdateArgs} args - Arguments to update one ExerciseTertiaryMuscleGroup.
+     * @example
+     * // Update one ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExerciseTertiaryMuscleGroupUpdateArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupUpdateArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExerciseTertiaryMuscleGroups.
+     * @param {ExerciseTertiaryMuscleGroupDeleteManyArgs} args - Arguments to filter ExerciseTertiaryMuscleGroups to delete.
+     * @example
+     * // Delete a few ExerciseTertiaryMuscleGroups
+     * const { count } = await prisma.exerciseTertiaryMuscleGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExerciseTertiaryMuscleGroupDeleteManyArgs>(args?: SelectSubset<T, ExerciseTertiaryMuscleGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExerciseTertiaryMuscleGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExerciseTertiaryMuscleGroupUpdateManyArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExerciseTertiaryMuscleGroups and returns the data updated in the database.
+     * @param {ExerciseTertiaryMuscleGroupUpdateManyAndReturnArgs} args - Arguments to update many ExerciseTertiaryMuscleGroups.
+     * @example
+     * // Update many ExerciseTertiaryMuscleGroups
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExerciseTertiaryMuscleGroups and only return the `exerciseId`
+     * const exerciseTertiaryMuscleGroupWithExerciseIdOnly = await prisma.exerciseTertiaryMuscleGroup.updateManyAndReturn({
+     *   select: { exerciseId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExerciseTertiaryMuscleGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExerciseTertiaryMuscleGroup.
+     * @param {ExerciseTertiaryMuscleGroupUpsertArgs} args - Arguments to update or create a ExerciseTertiaryMuscleGroup.
+     * @example
+     * // Update or create a ExerciseTertiaryMuscleGroup
+     * const exerciseTertiaryMuscleGroup = await prisma.exerciseTertiaryMuscleGroup.upsert({
+     *   create: {
+     *     // ... data to create a ExerciseTertiaryMuscleGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExerciseTertiaryMuscleGroup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExerciseTertiaryMuscleGroupUpsertArgs>(args: SelectSubset<T, ExerciseTertiaryMuscleGroupUpsertArgs<ExtArgs>>): Prisma__ExerciseTertiaryMuscleGroupClient<$Result.GetResult<Prisma.$ExerciseTertiaryMuscleGroupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExerciseTertiaryMuscleGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupCountArgs} args - Arguments to filter ExerciseTertiaryMuscleGroups to count.
+     * @example
+     * // Count the number of ExerciseTertiaryMuscleGroups
+     * const count = await prisma.exerciseTertiaryMuscleGroup.count({
+     *   where: {
+     *     // ... the filter for the ExerciseTertiaryMuscleGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExerciseTertiaryMuscleGroupCountArgs>(
+      args?: Subset<T, ExerciseTertiaryMuscleGroupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExerciseTertiaryMuscleGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExerciseTertiaryMuscleGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExerciseTertiaryMuscleGroupAggregateArgs>(args: Subset<T, ExerciseTertiaryMuscleGroupAggregateArgs>): Prisma.PrismaPromise<GetExerciseTertiaryMuscleGroupAggregateType<T>>
+
+    /**
+     * Group by ExerciseTertiaryMuscleGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExerciseTertiaryMuscleGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExerciseTertiaryMuscleGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExerciseTertiaryMuscleGroupGroupByArgs['orderBy'] }
+        : { orderBy?: ExerciseTertiaryMuscleGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExerciseTertiaryMuscleGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExerciseTertiaryMuscleGroupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExerciseTertiaryMuscleGroup model
+   */
+  readonly fields: ExerciseTertiaryMuscleGroupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExerciseTertiaryMuscleGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExerciseTertiaryMuscleGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    exercise<T extends ExerciseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExerciseDefaultArgs<ExtArgs>>): Prisma__ExerciseClient<$Result.GetResult<Prisma.$ExercisePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    muscleGroup<T extends MuscleGroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MuscleGroupDefaultArgs<ExtArgs>>): Prisma__MuscleGroupClient<$Result.GetResult<Prisma.$MuscleGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExerciseTertiaryMuscleGroup model
+   */
+  interface ExerciseTertiaryMuscleGroupFieldRefs {
+    readonly exerciseId: FieldRef<"ExerciseTertiaryMuscleGroup", 'Int'>
+    readonly muscleGroupId: FieldRef<"ExerciseTertiaryMuscleGroup", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExerciseTertiaryMuscleGroup findUnique
+   */
+  export type ExerciseTertiaryMuscleGroupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which ExerciseTertiaryMuscleGroup to fetch.
+     */
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup findUniqueOrThrow
+   */
+  export type ExerciseTertiaryMuscleGroupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which ExerciseTertiaryMuscleGroup to fetch.
+     */
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup findFirst
+   */
+  export type ExerciseTertiaryMuscleGroupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which ExerciseTertiaryMuscleGroup to fetch.
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExerciseTertiaryMuscleGroups to fetch.
+     */
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExerciseTertiaryMuscleGroups.
+     */
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExerciseTertiaryMuscleGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExerciseTertiaryMuscleGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExerciseTertiaryMuscleGroups.
+     */
+    distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup findFirstOrThrow
+   */
+  export type ExerciseTertiaryMuscleGroupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which ExerciseTertiaryMuscleGroup to fetch.
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExerciseTertiaryMuscleGroups to fetch.
+     */
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExerciseTertiaryMuscleGroups.
+     */
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExerciseTertiaryMuscleGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExerciseTertiaryMuscleGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExerciseTertiaryMuscleGroups.
+     */
+    distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup findMany
+   */
+  export type ExerciseTertiaryMuscleGroupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which ExerciseTertiaryMuscleGroups to fetch.
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExerciseTertiaryMuscleGroups to fetch.
+     */
+    orderBy?: ExerciseTertiaryMuscleGroupOrderByWithRelationInput | ExerciseTertiaryMuscleGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExerciseTertiaryMuscleGroups.
+     */
+    cursor?: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExerciseTertiaryMuscleGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExerciseTertiaryMuscleGroups.
+     */
+    skip?: number
+    distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup create
+   */
+  export type ExerciseTertiaryMuscleGroupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExerciseTertiaryMuscleGroup.
+     */
+    data: XOR<ExerciseTertiaryMuscleGroupCreateInput, ExerciseTertiaryMuscleGroupUncheckedCreateInput>
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup createMany
+   */
+  export type ExerciseTertiaryMuscleGroupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExerciseTertiaryMuscleGroups.
+     */
+    data: ExerciseTertiaryMuscleGroupCreateManyInput | ExerciseTertiaryMuscleGroupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup createManyAndReturn
+   */
+  export type ExerciseTertiaryMuscleGroupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExerciseTertiaryMuscleGroups.
+     */
+    data: ExerciseTertiaryMuscleGroupCreateManyInput | ExerciseTertiaryMuscleGroupCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup update
+   */
+  export type ExerciseTertiaryMuscleGroupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExerciseTertiaryMuscleGroup.
+     */
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateInput, ExerciseTertiaryMuscleGroupUncheckedUpdateInput>
+    /**
+     * Choose, which ExerciseTertiaryMuscleGroup to update.
+     */
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup updateMany
+   */
+  export type ExerciseTertiaryMuscleGroupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExerciseTertiaryMuscleGroups.
+     */
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateManyMutationInput, ExerciseTertiaryMuscleGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which ExerciseTertiaryMuscleGroups to update
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * Limit how many ExerciseTertiaryMuscleGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup updateManyAndReturn
+   */
+  export type ExerciseTertiaryMuscleGroupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * The data used to update ExerciseTertiaryMuscleGroups.
+     */
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateManyMutationInput, ExerciseTertiaryMuscleGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which ExerciseTertiaryMuscleGroups to update
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * Limit how many ExerciseTertiaryMuscleGroups to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup upsert
+   */
+  export type ExerciseTertiaryMuscleGroupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExerciseTertiaryMuscleGroup to update in case it exists.
+     */
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    /**
+     * In case the ExerciseTertiaryMuscleGroup found by the `where` argument doesn't exist, create a new ExerciseTertiaryMuscleGroup with this data.
+     */
+    create: XOR<ExerciseTertiaryMuscleGroupCreateInput, ExerciseTertiaryMuscleGroupUncheckedCreateInput>
+    /**
+     * In case the ExerciseTertiaryMuscleGroup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExerciseTertiaryMuscleGroupUpdateInput, ExerciseTertiaryMuscleGroupUncheckedUpdateInput>
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup delete
+   */
+  export type ExerciseTertiaryMuscleGroupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
+    /**
+     * Filter which ExerciseTertiaryMuscleGroup to delete.
+     */
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup deleteMany
+   */
+  export type ExerciseTertiaryMuscleGroupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExerciseTertiaryMuscleGroups to delete
+     */
+    where?: ExerciseTertiaryMuscleGroupWhereInput
+    /**
+     * Limit how many ExerciseTertiaryMuscleGroups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExerciseTertiaryMuscleGroup without action
+   */
+  export type ExerciseTertiaryMuscleGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExerciseTertiaryMuscleGroup
+     */
+    select?: ExerciseTertiaryMuscleGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExerciseTertiaryMuscleGroup
+     */
+    omit?: ExerciseTertiaryMuscleGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExerciseTertiaryMuscleGroupInclude<ExtArgs> | null
   }
 
 
@@ -16907,6 +18165,8 @@ export namespace Prisma {
     id: 'id',
     label: 'label',
     recordSetsType: 'recordSetsType',
+    isIsometric: 'isIsometric',
+    isUnilateral: 'isUnilateral',
     createdAt: 'createdAt'
   };
 
@@ -16945,6 +18205,14 @@ export namespace Prisma {
   };
 
   export type ExerciseSecondaryMuscleGroupScalarFieldEnum = (typeof ExerciseSecondaryMuscleGroupScalarFieldEnum)[keyof typeof ExerciseSecondaryMuscleGroupScalarFieldEnum]
+
+
+  export const ExerciseTertiaryMuscleGroupScalarFieldEnum: {
+    exerciseId: 'exerciseId',
+    muscleGroupId: 'muscleGroupId'
+  };
+
+  export type ExerciseTertiaryMuscleGroupScalarFieldEnum = (typeof ExerciseTertiaryMuscleGroupScalarFieldEnum)[keyof typeof ExerciseTertiaryMuscleGroupScalarFieldEnum]
 
 
   export const UserScalarFieldEnum: {
@@ -17136,6 +18404,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -17260,6 +18535,7 @@ export namespace Prisma {
     bodyArea?: XOR<BodyAreaScalarRelationFilter, BodyAreaWhereInput>
     primaryExercises?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryExercises?: ExerciseSecondaryMuscleGroupListRelationFilter
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupListRelationFilter
   }
 
   export type MuscleGroupOrderByWithRelationInput = {
@@ -17269,6 +18545,7 @@ export namespace Prisma {
     bodyArea?: BodyAreaOrderByWithRelationInput
     primaryExercises?: ExercisePrimaryMuscleGroupOrderByRelationAggregateInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupOrderByRelationAggregateInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupOrderByRelationAggregateInput
   }
 
   export type MuscleGroupWhereUniqueInput = Prisma.AtLeast<{
@@ -17281,6 +18558,7 @@ export namespace Prisma {
     bodyArea?: XOR<BodyAreaScalarRelationFilter, BodyAreaWhereInput>
     primaryExercises?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryExercises?: ExerciseSecondaryMuscleGroupListRelationFilter
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupListRelationFilter
   }, "id" | "label">
 
   export type MuscleGroupOrderByWithAggregationInput = {
@@ -17310,9 +18588,12 @@ export namespace Prisma {
     id?: IntFilter<"Exercise"> | number
     label?: StringFilter<"Exercise"> | string
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
+    isIsometric?: BoolFilter<"Exercise"> | boolean
+    isUnilateral?: BoolFilter<"Exercise"> | boolean
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupListRelationFilter
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupListRelationFilter
     routineExercises?: RoutineExerciseListRelationFilter
     workoutExercises?: WorkoutExerciseListRelationFilter
   }
@@ -17321,9 +18602,12 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     recordSetsType?: SortOrder
+    isIsometric?: SortOrder
+    isUnilateral?: SortOrder
     createdAt?: SortOrder
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupOrderByRelationAggregateInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupOrderByRelationAggregateInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupOrderByRelationAggregateInput
     routineExercises?: RoutineExerciseOrderByRelationAggregateInput
     workoutExercises?: WorkoutExerciseOrderByRelationAggregateInput
   }
@@ -17335,9 +18619,12 @@ export namespace Prisma {
     OR?: ExerciseWhereInput[]
     NOT?: ExerciseWhereInput | ExerciseWhereInput[]
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
+    isIsometric?: BoolFilter<"Exercise"> | boolean
+    isUnilateral?: BoolFilter<"Exercise"> | boolean
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupListRelationFilter
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupListRelationFilter
     routineExercises?: RoutineExerciseListRelationFilter
     workoutExercises?: WorkoutExerciseListRelationFilter
   }, "id" | "label">
@@ -17346,6 +18633,8 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     recordSetsType?: SortOrder
+    isIsometric?: SortOrder
+    isUnilateral?: SortOrder
     createdAt?: SortOrder
     _count?: ExerciseCountOrderByAggregateInput
     _avg?: ExerciseAvgOrderByAggregateInput
@@ -17361,6 +18650,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Exercise"> | number
     label?: StringWithAggregatesFilter<"Exercise"> | string
     recordSetsType?: EnumRecordSetsTypeWithAggregatesFilter<"Exercise"> | $Enums.RecordSetsType
+    isIsometric?: BoolWithAggregatesFilter<"Exercise"> | boolean
+    isUnilateral?: BoolWithAggregatesFilter<"Exercise"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Exercise"> | Date | string
   }
 
@@ -17557,6 +18848,52 @@ export namespace Prisma {
     NOT?: ExerciseSecondaryMuscleGroupScalarWhereWithAggregatesInput | ExerciseSecondaryMuscleGroupScalarWhereWithAggregatesInput[]
     exerciseId?: IntWithAggregatesFilter<"ExerciseSecondaryMuscleGroup"> | number
     muscleGroupId?: IntWithAggregatesFilter<"ExerciseSecondaryMuscleGroup"> | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupWhereInput = {
+    AND?: ExerciseTertiaryMuscleGroupWhereInput | ExerciseTertiaryMuscleGroupWhereInput[]
+    OR?: ExerciseTertiaryMuscleGroupWhereInput[]
+    NOT?: ExerciseTertiaryMuscleGroupWhereInput | ExerciseTertiaryMuscleGroupWhereInput[]
+    exerciseId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+    muscleGroupId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+    exercise?: XOR<ExerciseScalarRelationFilter, ExerciseWhereInput>
+    muscleGroup?: XOR<MuscleGroupScalarRelationFilter, MuscleGroupWhereInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupOrderByWithRelationInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+    exercise?: ExerciseOrderByWithRelationInput
+    muscleGroup?: MuscleGroupOrderByWithRelationInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupWhereUniqueInput = Prisma.AtLeast<{
+    exerciseId_muscleGroupId?: ExerciseTertiaryMuscleGroupExerciseIdMuscleGroupIdCompoundUniqueInput
+    AND?: ExerciseTertiaryMuscleGroupWhereInput | ExerciseTertiaryMuscleGroupWhereInput[]
+    OR?: ExerciseTertiaryMuscleGroupWhereInput[]
+    NOT?: ExerciseTertiaryMuscleGroupWhereInput | ExerciseTertiaryMuscleGroupWhereInput[]
+    exerciseId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+    muscleGroupId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+    exercise?: XOR<ExerciseScalarRelationFilter, ExerciseWhereInput>
+    muscleGroup?: XOR<MuscleGroupScalarRelationFilter, MuscleGroupWhereInput>
+  }, "exerciseId_muscleGroupId">
+
+  export type ExerciseTertiaryMuscleGroupOrderByWithAggregationInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+    _count?: ExerciseTertiaryMuscleGroupCountOrderByAggregateInput
+    _avg?: ExerciseTertiaryMuscleGroupAvgOrderByAggregateInput
+    _max?: ExerciseTertiaryMuscleGroupMaxOrderByAggregateInput
+    _min?: ExerciseTertiaryMuscleGroupMinOrderByAggregateInput
+    _sum?: ExerciseTertiaryMuscleGroupSumOrderByAggregateInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput = {
+    AND?: ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput | ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput[]
+    OR?: ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput[]
+    NOT?: ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput | ExerciseTertiaryMuscleGroupScalarWhereWithAggregatesInput[]
+    exerciseId?: IntWithAggregatesFilter<"ExerciseTertiaryMuscleGroup"> | number
+    muscleGroupId?: IntWithAggregatesFilter<"ExerciseTertiaryMuscleGroup"> | number
   }
 
   export type UserWhereInput = {
@@ -17990,6 +19327,7 @@ export namespace Prisma {
     bodyArea: BodyAreaCreateNestedOneWithoutMuscleGroupsInput
     primaryExercises?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupUncheckedCreateInput = {
@@ -17998,6 +19336,7 @@ export namespace Prisma {
     bodyAreaId: number
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupUpdateInput = {
@@ -18005,6 +19344,7 @@ export namespace Prisma {
     bodyArea?: BodyAreaUpdateOneRequiredWithoutMuscleGroupsNestedInput
     primaryExercises?: ExercisePrimaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupUncheckedUpdateInput = {
@@ -18013,6 +19353,7 @@ export namespace Prisma {
     bodyAreaId?: IntFieldUpdateOperationsInput | number
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupCreateManyInput = {
@@ -18034,9 +19375,12 @@ export namespace Prisma {
   export type ExerciseCreateInput = {
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
   }
@@ -18045,9 +19389,12 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -18055,9 +19402,12 @@ export namespace Prisma {
   export type ExerciseUpdateInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
   }
@@ -18066,9 +19416,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -18077,12 +19430,16 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
   }
 
   export type ExerciseUpdateManyMutationInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -18090,6 +19447,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -18239,6 +19598,40 @@ export namespace Prisma {
   }
 
   export type ExerciseSecondaryMuscleGroupUncheckedUpdateManyInput = {
+    exerciseId?: IntFieldUpdateOperationsInput | number
+    muscleGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateInput = {
+    exercise: ExerciseCreateNestedOneWithoutTertiaryMuscleGroupsInput
+    muscleGroup: MuscleGroupCreateNestedOneWithoutTertiaryExercisesInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedCreateInput = {
+    exerciseId: number
+    muscleGroupId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateInput = {
+    exercise?: ExerciseUpdateOneRequiredWithoutTertiaryMuscleGroupsNestedInput
+    muscleGroup?: MuscleGroupUpdateOneRequiredWithoutTertiaryExercisesNestedInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateInput = {
+    exerciseId?: IntFieldUpdateOperationsInput | number
+    muscleGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateManyInput = {
+    exerciseId: number
+    muscleGroupId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateManyMutationInput = {
+
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateManyInput = {
     exerciseId?: IntFieldUpdateOperationsInput | number
     muscleGroupId?: IntFieldUpdateOperationsInput | number
   }
@@ -18722,11 +20115,21 @@ export namespace Prisma {
     none?: ExerciseSecondaryMuscleGroupWhereInput
   }
 
+  export type ExerciseTertiaryMuscleGroupListRelationFilter = {
+    every?: ExerciseTertiaryMuscleGroupWhereInput
+    some?: ExerciseTertiaryMuscleGroupWhereInput
+    none?: ExerciseTertiaryMuscleGroupWhereInput
+  }
+
   export type ExercisePrimaryMuscleGroupOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ExerciseSecondaryMuscleGroupOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18790,6 +20193,11 @@ export namespace Prisma {
     not?: NestedEnumRecordSetsTypeFilter<$PrismaModel> | $Enums.RecordSetsType
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -18825,6 +20233,8 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     recordSetsType?: SortOrder
+    isIsometric?: SortOrder
+    isUnilateral?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -18836,6 +20246,8 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     recordSetsType?: SortOrder
+    isIsometric?: SortOrder
+    isUnilateral?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -18843,6 +20255,8 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     recordSetsType?: SortOrder
+    isIsometric?: SortOrder
+    isUnilateral?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -18876,6 +20290,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRecordSetsTypeFilter<$PrismaModel>
     _max?: NestedEnumRecordSetsTypeFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -19106,6 +20528,36 @@ export namespace Prisma {
   }
 
   export type ExerciseSecondaryMuscleGroupSumOrderByAggregateInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupExerciseIdMuscleGroupIdCompoundUniqueInput = {
+    exerciseId: number
+    muscleGroupId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCountOrderByAggregateInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupAvgOrderByAggregateInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupMaxOrderByAggregateInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupMinOrderByAggregateInput = {
+    exerciseId?: SortOrder
+    muscleGroupId?: SortOrder
+  }
+
+  export type ExerciseTertiaryMuscleGroupSumOrderByAggregateInput = {
     exerciseId?: SortOrder
     muscleGroupId?: SortOrder
   }
@@ -19613,6 +21065,13 @@ export namespace Prisma {
     connect?: ExerciseSecondaryMuscleGroupWhereUniqueInput | ExerciseSecondaryMuscleGroupWhereUniqueInput[]
   }
 
+  export type ExerciseTertiaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInputEnvelope
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+  }
+
   export type ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput = {
     create?: XOR<ExercisePrimaryMuscleGroupCreateWithoutMuscleGroupInput, ExercisePrimaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExercisePrimaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExercisePrimaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
     connectOrCreate?: ExercisePrimaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExercisePrimaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
@@ -19625,6 +21084,13 @@ export namespace Prisma {
     connectOrCreate?: ExerciseSecondaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExerciseSecondaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
     createMany?: ExerciseSecondaryMuscleGroupCreateManyMuscleGroupInputEnvelope
     connect?: ExerciseSecondaryMuscleGroupWhereUniqueInput | ExerciseSecondaryMuscleGroupWhereUniqueInput[]
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInputEnvelope
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
   }
 
   export type EnumMuscleGroupLabelFieldUpdateOperationsInput = {
@@ -19667,6 +21133,20 @@ export namespace Prisma {
     deleteMany?: ExerciseSecondaryMuscleGroupScalarWhereInput | ExerciseSecondaryMuscleGroupScalarWhereInput[]
   }
 
+  export type ExerciseTertiaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
+    upsert?: ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutMuscleGroupInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInputEnvelope
+    set?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    disconnect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    delete?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    update?: ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutMuscleGroupInput[]
+    updateMany?: ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutMuscleGroupInput[]
+    deleteMany?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
+  }
+
   export type ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput = {
     create?: XOR<ExercisePrimaryMuscleGroupCreateWithoutMuscleGroupInput, ExercisePrimaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExercisePrimaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExercisePrimaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
     connectOrCreate?: ExercisePrimaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExercisePrimaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
@@ -19695,6 +21175,20 @@ export namespace Prisma {
     deleteMany?: ExerciseSecondaryMuscleGroupScalarWhereInput | ExerciseSecondaryMuscleGroupScalarWhereInput[]
   }
 
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput> | ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput[]
+    upsert?: ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutMuscleGroupInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInputEnvelope
+    set?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    disconnect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    delete?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    update?: ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutMuscleGroupInput[]
+    updateMany?: ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutMuscleGroupInput | ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutMuscleGroupInput[]
+    deleteMany?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
+  }
+
   export type ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput = {
     create?: XOR<ExercisePrimaryMuscleGroupCreateWithoutExerciseInput, ExercisePrimaryMuscleGroupUncheckedCreateWithoutExerciseInput> | ExercisePrimaryMuscleGroupCreateWithoutExerciseInput[] | ExercisePrimaryMuscleGroupUncheckedCreateWithoutExerciseInput[]
     connectOrCreate?: ExercisePrimaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExercisePrimaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
@@ -19707,6 +21201,13 @@ export namespace Prisma {
     connectOrCreate?: ExerciseSecondaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExerciseSecondaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
     createMany?: ExerciseSecondaryMuscleGroupCreateManyExerciseInputEnvelope
     connect?: ExerciseSecondaryMuscleGroupWhereUniqueInput | ExerciseSecondaryMuscleGroupWhereUniqueInput[]
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput> | ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyExerciseInputEnvelope
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
   }
 
   export type RoutineExerciseCreateNestedManyWithoutExerciseInput = {
@@ -19737,6 +21238,13 @@ export namespace Prisma {
     connect?: ExerciseSecondaryMuscleGroupWhereUniqueInput | ExerciseSecondaryMuscleGroupWhereUniqueInput[]
   }
 
+  export type ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput> | ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyExerciseInputEnvelope
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+  }
+
   export type RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput = {
     create?: XOR<RoutineExerciseCreateWithoutExerciseInput, RoutineExerciseUncheckedCreateWithoutExerciseInput> | RoutineExerciseCreateWithoutExerciseInput[] | RoutineExerciseUncheckedCreateWithoutExerciseInput[]
     connectOrCreate?: RoutineExerciseCreateOrConnectWithoutExerciseInput | RoutineExerciseCreateOrConnectWithoutExerciseInput[]
@@ -19757,6 +21265,10 @@ export namespace Prisma {
 
   export type EnumRecordSetsTypeFieldUpdateOperationsInput = {
     set?: $Enums.RecordSetsType
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -19789,6 +21301,20 @@ export namespace Prisma {
     update?: ExerciseSecondaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput | ExerciseSecondaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput[]
     updateMany?: ExerciseSecondaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput | ExerciseSecondaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput[]
     deleteMany?: ExerciseSecondaryMuscleGroupScalarWhereInput | ExerciseSecondaryMuscleGroupScalarWhereInput[]
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput> | ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
+    upsert?: ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutExerciseInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyExerciseInputEnvelope
+    set?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    disconnect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    delete?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    update?: ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput[]
+    updateMany?: ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput[]
+    deleteMany?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
   }
 
   export type RoutineExerciseUpdateManyWithoutExerciseNestedInput = {
@@ -19845,6 +21371,20 @@ export namespace Prisma {
     update?: ExerciseSecondaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput | ExerciseSecondaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput[]
     updateMany?: ExerciseSecondaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput | ExerciseSecondaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput[]
     deleteMany?: ExerciseSecondaryMuscleGroupScalarWhereInput | ExerciseSecondaryMuscleGroupScalarWhereInput[]
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput = {
+    create?: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput> | ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput[] | ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput[]
+    connectOrCreate?: ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput | ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput[]
+    upsert?: ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutExerciseInput[]
+    createMany?: ExerciseTertiaryMuscleGroupCreateManyExerciseInputEnvelope
+    set?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    disconnect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    delete?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    connect?: ExerciseTertiaryMuscleGroupWhereUniqueInput | ExerciseTertiaryMuscleGroupWhereUniqueInput[]
+    update?: ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput[]
+    updateMany?: ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput | ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput[]
+    deleteMany?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
   }
 
   export type RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput = {
@@ -20027,6 +21567,34 @@ export namespace Prisma {
     upsert?: MuscleGroupUpsertWithoutSecondaryExercisesInput
     connect?: MuscleGroupWhereUniqueInput
     update?: XOR<XOR<MuscleGroupUpdateToOneWithWhereWithoutSecondaryExercisesInput, MuscleGroupUpdateWithoutSecondaryExercisesInput>, MuscleGroupUncheckedUpdateWithoutSecondaryExercisesInput>
+  }
+
+  export type ExerciseCreateNestedOneWithoutTertiaryMuscleGroupsInput = {
+    create?: XOR<ExerciseCreateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedCreateWithoutTertiaryMuscleGroupsInput>
+    connectOrCreate?: ExerciseCreateOrConnectWithoutTertiaryMuscleGroupsInput
+    connect?: ExerciseWhereUniqueInput
+  }
+
+  export type MuscleGroupCreateNestedOneWithoutTertiaryExercisesInput = {
+    create?: XOR<MuscleGroupCreateWithoutTertiaryExercisesInput, MuscleGroupUncheckedCreateWithoutTertiaryExercisesInput>
+    connectOrCreate?: MuscleGroupCreateOrConnectWithoutTertiaryExercisesInput
+    connect?: MuscleGroupWhereUniqueInput
+  }
+
+  export type ExerciseUpdateOneRequiredWithoutTertiaryMuscleGroupsNestedInput = {
+    create?: XOR<ExerciseCreateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedCreateWithoutTertiaryMuscleGroupsInput>
+    connectOrCreate?: ExerciseCreateOrConnectWithoutTertiaryMuscleGroupsInput
+    upsert?: ExerciseUpsertWithoutTertiaryMuscleGroupsInput
+    connect?: ExerciseWhereUniqueInput
+    update?: XOR<XOR<ExerciseUpdateToOneWithWhereWithoutTertiaryMuscleGroupsInput, ExerciseUpdateWithoutTertiaryMuscleGroupsInput>, ExerciseUncheckedUpdateWithoutTertiaryMuscleGroupsInput>
+  }
+
+  export type MuscleGroupUpdateOneRequiredWithoutTertiaryExercisesNestedInput = {
+    create?: XOR<MuscleGroupCreateWithoutTertiaryExercisesInput, MuscleGroupUncheckedCreateWithoutTertiaryExercisesInput>
+    connectOrCreate?: MuscleGroupCreateOrConnectWithoutTertiaryExercisesInput
+    upsert?: MuscleGroupUpsertWithoutTertiaryExercisesInput
+    connect?: MuscleGroupWhereUniqueInput
+    update?: XOR<XOR<MuscleGroupUpdateToOneWithWhereWithoutTertiaryExercisesInput, MuscleGroupUpdateWithoutTertiaryExercisesInput>, MuscleGroupUncheckedUpdateWithoutTertiaryExercisesInput>
   }
 
   export type UserBodyWeightCreateNestedManyWithoutUserInput = {
@@ -20478,6 +22046,11 @@ export namespace Prisma {
     not?: NestedEnumRecordSetsTypeFilter<$PrismaModel> | $Enums.RecordSetsType
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -20514,6 +22087,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRecordSetsTypeFilter<$PrismaModel>
     _max?: NestedEnumRecordSetsTypeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -20697,6 +22278,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     primaryExercises?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupUncheckedCreateWithoutBodyAreaInput = {
@@ -20704,6 +22286,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupCreateOrConnectWithoutBodyAreaInput = {
@@ -20791,6 +22374,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput = {
+    exercise: ExerciseCreateNestedOneWithoutTertiaryMuscleGroupsInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput = {
+    exerciseId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateOrConnectWithoutMuscleGroupInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    create: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInputEnvelope = {
+    data: ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInput | ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BodyAreaUpsertWithoutMuscleGroupsInput = {
     update: XOR<BodyAreaUpdateWithoutMuscleGroupsInput, BodyAreaUncheckedUpdateWithoutMuscleGroupsInput>
     create: XOR<BodyAreaCreateWithoutMuscleGroupsInput, BodyAreaUncheckedCreateWithoutMuscleGroupsInput>
@@ -20859,6 +22460,30 @@ export namespace Prisma {
     muscleGroupId?: IntFilter<"ExerciseSecondaryMuscleGroup"> | number
   }
 
+  export type ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutMuscleGroupInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    update: XOR<ExerciseTertiaryMuscleGroupUpdateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutMuscleGroupInput>
+    create: XOR<ExerciseTertiaryMuscleGroupCreateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutMuscleGroupInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutMuscleGroupInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateWithoutMuscleGroupInput, ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutMuscleGroupInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutMuscleGroupInput = {
+    where: ExerciseTertiaryMuscleGroupScalarWhereInput
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateManyMutationInput, ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupScalarWhereInput = {
+    AND?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
+    OR?: ExerciseTertiaryMuscleGroupScalarWhereInput[]
+    NOT?: ExerciseTertiaryMuscleGroupScalarWhereInput | ExerciseTertiaryMuscleGroupScalarWhereInput[]
+    exerciseId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+    muscleGroupId?: IntFilter<"ExerciseTertiaryMuscleGroup"> | number
+  }
+
   export type ExercisePrimaryMuscleGroupCreateWithoutExerciseInput = {
     muscleGroup: MuscleGroupCreateNestedOneWithoutPrimaryExercisesInput
   }
@@ -20892,6 +22517,24 @@ export namespace Prisma {
 
   export type ExerciseSecondaryMuscleGroupCreateManyExerciseInputEnvelope = {
     data: ExerciseSecondaryMuscleGroupCreateManyExerciseInput | ExerciseSecondaryMuscleGroupCreateManyExerciseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput = {
+    muscleGroup: MuscleGroupCreateNestedOneWithoutTertiaryExercisesInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput = {
+    muscleGroupId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateOrConnectWithoutExerciseInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    create: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateManyExerciseInputEnvelope = {
+    data: ExerciseTertiaryMuscleGroupCreateManyExerciseInput | ExerciseTertiaryMuscleGroupCreateManyExerciseInput[]
     skipDuplicates?: boolean
   }
 
@@ -20968,6 +22611,22 @@ export namespace Prisma {
   export type ExerciseSecondaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput = {
     where: ExerciseSecondaryMuscleGroupScalarWhereInput
     data: XOR<ExerciseSecondaryMuscleGroupUpdateManyMutationInput, ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpsertWithWhereUniqueWithoutExerciseInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    update: XOR<ExerciseTertiaryMuscleGroupUpdateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutExerciseInput>
+    create: XOR<ExerciseTertiaryMuscleGroupCreateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedCreateWithoutExerciseInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateWithWhereUniqueWithoutExerciseInput = {
+    where: ExerciseTertiaryMuscleGroupWhereUniqueInput
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateWithoutExerciseInput, ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutExerciseInput>
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateManyWithWhereWithoutExerciseInput = {
+    where: ExerciseTertiaryMuscleGroupScalarWhereInput
+    data: XOR<ExerciseTertiaryMuscleGroupUpdateManyMutationInput, ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseInput>
   }
 
   export type RoutineExerciseUpsertWithWhereUniqueWithoutExerciseInput = {
@@ -21134,9 +22793,12 @@ export namespace Prisma {
   export type ExerciseCreateWithoutRoutineExercisesInput = {
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
   }
 
@@ -21144,9 +22806,12 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -21191,9 +22856,12 @@ export namespace Prisma {
   export type ExerciseUpdateWithoutRoutineExercisesInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
   }
 
@@ -21201,17 +22869,23 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
   export type ExerciseCreateWithoutPrimaryMuscleGroupsInput = {
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
   }
@@ -21220,8 +22894,11 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -21235,6 +22912,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     bodyArea: BodyAreaCreateNestedOneWithoutMuscleGroupsInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupUncheckedCreateWithoutPrimaryExercisesInput = {
@@ -21242,6 +22920,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     bodyAreaId: number
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupCreateOrConnectWithoutPrimaryExercisesInput = {
@@ -21263,8 +22942,11 @@ export namespace Prisma {
   export type ExerciseUpdateWithoutPrimaryMuscleGroupsInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
   }
@@ -21273,8 +22955,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -21294,6 +22979,7 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     bodyArea?: BodyAreaUpdateOneRequiredWithoutMuscleGroupsNestedInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupUncheckedUpdateWithoutPrimaryExercisesInput = {
@@ -21301,13 +22987,17 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     bodyAreaId?: IntFieldUpdateOperationsInput | number
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type ExerciseCreateWithoutSecondaryMuscleGroupsInput = {
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
   }
@@ -21316,8 +23006,11 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutExercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -21331,6 +23024,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     bodyArea: BodyAreaCreateNestedOneWithoutMuscleGroupsInput
     primaryExercises?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupUncheckedCreateWithoutSecondaryExercisesInput = {
@@ -21338,6 +23032,7 @@ export namespace Prisma {
     label: $Enums.MuscleGroupLabel
     bodyAreaId: number
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
   }
 
   export type MuscleGroupCreateOrConnectWithoutSecondaryExercisesInput = {
@@ -21359,8 +23054,11 @@ export namespace Prisma {
   export type ExerciseUpdateWithoutSecondaryMuscleGroupsInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
   }
@@ -21369,8 +23067,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutExercises?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -21390,6 +23091,7 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     bodyArea?: BodyAreaUpdateOneRequiredWithoutMuscleGroupsNestedInput
     primaryExercises?: ExercisePrimaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupUncheckedUpdateWithoutSecondaryExercisesInput = {
@@ -21397,6 +23099,119 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     bodyAreaId?: IntFieldUpdateOperationsInput | number
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+  }
+
+  export type ExerciseCreateWithoutTertiaryMuscleGroupsInput = {
+    label: string
+    recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
+    createdAt?: Date | string
+    primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    routineExercises?: RoutineExerciseCreateNestedManyWithoutExerciseInput
+    workoutExercises?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
+  }
+
+  export type ExerciseUncheckedCreateWithoutTertiaryMuscleGroupsInput = {
+    id?: number
+    label: string
+    recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
+    createdAt?: Date | string
+    primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput
+    workoutExercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
+  }
+
+  export type ExerciseCreateOrConnectWithoutTertiaryMuscleGroupsInput = {
+    where: ExerciseWhereUniqueInput
+    create: XOR<ExerciseCreateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedCreateWithoutTertiaryMuscleGroupsInput>
+  }
+
+  export type MuscleGroupCreateWithoutTertiaryExercisesInput = {
+    label: $Enums.MuscleGroupLabel
+    bodyArea: BodyAreaCreateNestedOneWithoutMuscleGroupsInput
+    primaryExercises?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+    secondaryExercises?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutMuscleGroupInput
+  }
+
+  export type MuscleGroupUncheckedCreateWithoutTertiaryExercisesInput = {
+    id?: number
+    label: $Enums.MuscleGroupLabel
+    bodyAreaId: number
+    primaryExercises?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+    secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutMuscleGroupInput
+  }
+
+  export type MuscleGroupCreateOrConnectWithoutTertiaryExercisesInput = {
+    where: MuscleGroupWhereUniqueInput
+    create: XOR<MuscleGroupCreateWithoutTertiaryExercisesInput, MuscleGroupUncheckedCreateWithoutTertiaryExercisesInput>
+  }
+
+  export type ExerciseUpsertWithoutTertiaryMuscleGroupsInput = {
+    update: XOR<ExerciseUpdateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedUpdateWithoutTertiaryMuscleGroupsInput>
+    create: XOR<ExerciseCreateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedCreateWithoutTertiaryMuscleGroupsInput>
+    where?: ExerciseWhereInput
+  }
+
+  export type ExerciseUpdateToOneWithWhereWithoutTertiaryMuscleGroupsInput = {
+    where?: ExerciseWhereInput
+    data: XOR<ExerciseUpdateWithoutTertiaryMuscleGroupsInput, ExerciseUncheckedUpdateWithoutTertiaryMuscleGroupsInput>
+  }
+
+  export type ExerciseUpdateWithoutTertiaryMuscleGroupsInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    routineExercises?: RoutineExerciseUpdateManyWithoutExerciseNestedInput
+    workoutExercises?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
+  }
+
+  export type ExerciseUncheckedUpdateWithoutTertiaryMuscleGroupsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput
+    workoutExercises?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
+  }
+
+  export type MuscleGroupUpsertWithoutTertiaryExercisesInput = {
+    update: XOR<MuscleGroupUpdateWithoutTertiaryExercisesInput, MuscleGroupUncheckedUpdateWithoutTertiaryExercisesInput>
+    create: XOR<MuscleGroupCreateWithoutTertiaryExercisesInput, MuscleGroupUncheckedCreateWithoutTertiaryExercisesInput>
+    where?: MuscleGroupWhereInput
+  }
+
+  export type MuscleGroupUpdateToOneWithWhereWithoutTertiaryExercisesInput = {
+    where?: MuscleGroupWhereInput
+    data: XOR<MuscleGroupUpdateWithoutTertiaryExercisesInput, MuscleGroupUncheckedUpdateWithoutTertiaryExercisesInput>
+  }
+
+  export type MuscleGroupUpdateWithoutTertiaryExercisesInput = {
+    label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: BodyAreaUpdateOneRequiredWithoutMuscleGroupsNestedInput
+    primaryExercises?: ExercisePrimaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+    secondaryExercises?: ExerciseSecondaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+  }
+
+  export type MuscleGroupUncheckedUpdateWithoutTertiaryExercisesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyAreaId?: IntFieldUpdateOperationsInput | number
+    primaryExercises?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+    secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type UserBodyWeightCreateWithoutUserInput = {
@@ -21871,9 +23686,12 @@ export namespace Prisma {
   export type ExerciseCreateWithoutWorkoutExercisesInput = {
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseCreateNestedManyWithoutExerciseInput
   }
 
@@ -21881,9 +23699,12 @@ export namespace Prisma {
     id?: number
     label: string
     recordSetsType: $Enums.RecordSetsType
+    isIsometric?: boolean
+    isUnilateral?: boolean
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     routineExercises?: RoutineExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -21971,9 +23792,12 @@ export namespace Prisma {
   export type ExerciseUpdateWithoutWorkoutExercisesInput = {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUpdateManyWithoutExerciseNestedInput
   }
 
@@ -21981,9 +23805,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
+    isIsometric?: BoolFieldUpdateOperationsInput | boolean
+    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
+    tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     routineExercises?: RoutineExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
@@ -22067,6 +23894,7 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     primaryExercises?: ExercisePrimaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupUncheckedUpdateWithoutBodyAreaInput = {
@@ -22074,6 +23902,7 @@ export namespace Prisma {
     label?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
     primaryExercises?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
     secondaryExercises?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
+    tertiaryExercises?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupNestedInput
   }
 
   export type MuscleGroupUncheckedUpdateManyWithoutBodyAreaInput = {
@@ -22086,6 +23915,10 @@ export namespace Prisma {
   }
 
   export type ExerciseSecondaryMuscleGroupCreateManyMuscleGroupInput = {
+    exerciseId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateManyMuscleGroupInput = {
     exerciseId: number
   }
 
@@ -22113,11 +23946,27 @@ export namespace Prisma {
     exerciseId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ExerciseTertiaryMuscleGroupUpdateWithoutMuscleGroupInput = {
+    exercise?: ExerciseUpdateOneRequiredWithoutTertiaryMuscleGroupsNestedInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutMuscleGroupInput = {
+    exerciseId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutMuscleGroupInput = {
+    exerciseId?: IntFieldUpdateOperationsInput | number
+  }
+
   export type ExercisePrimaryMuscleGroupCreateManyExerciseInput = {
     muscleGroupId: number
   }
 
   export type ExerciseSecondaryMuscleGroupCreateManyExerciseInput = {
+    muscleGroupId: number
+  }
+
+  export type ExerciseTertiaryMuscleGroupCreateManyExerciseInput = {
     muscleGroupId: number
   }
 
@@ -22153,6 +24002,18 @@ export namespace Prisma {
   }
 
   export type ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseInput = {
+    muscleGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupUpdateWithoutExerciseInput = {
+    muscleGroup?: MuscleGroupUpdateOneRequiredWithoutTertiaryExercisesNestedInput
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateWithoutExerciseInput = {
+    muscleGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseInput = {
     muscleGroupId?: IntFieldUpdateOperationsInput | number
   }
 

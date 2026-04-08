@@ -25,6 +25,7 @@ const workoutInclude = {
         include: {
           primaryMuscleGroups: muscleGroupInclude,
           secondaryMuscleGroups: muscleGroupInclude,
+          tertiaryMuscleGroups: muscleGroupInclude,
         },
       },
       sets: { orderBy: { position: 'asc' as const } },
@@ -41,39 +42,36 @@ type MuscleGroupStat = {
   percentage: number;
 };
 
+const ISOMETRIC_SECONDS_PER_EFFECTIVE_SET = 45;
+
 function calculateMuscleGroupStats(workout: UserWorkoutFromDB): MuscleGroupStat[] {
   const scores = new Map<MuscleGroupLabel, { bodyArea: BodyAreaLabel; score: number }>();
 
   for (const workoutExercise of workout.exercises) {
     const { exercise, sets } = workoutExercise;
-    const { recordSetsType } = exercise;
+    const { isIsometric, isUnilateral } = exercise;
 
-    const volume = sets.reduce((total, set) => {
-      switch (recordSetsType) {
-        case 'WEIGHT':
-        case 'BODYWEIGHT_PLUS_WEIGHT':
-        case 'BODYWEIGHT_MINUS_OFFSET':
-          return total + Number(set.weightKg ?? 0) * (set.reps ?? 0);
-        case 'REPS':
-          return total + (set.reps ?? 0);
-        case 'TIME':
-          return total + (set.timeSeconds ?? 0);
-        case 'WEIGHT_AND_TIME':
-          return total + Number(set.weightKg ?? 0) * (set.timeSeconds ?? 0);
-        default:
-          return total;
-      }
+    const effectiveSets = sets.reduce((total, set) => {
+      const qualityMultiplier = set.setType === SetType.WARMUP ? 0.5 : 1.0;
+      const rawValue = isIsometric
+        ? (set.timeSeconds ?? 0) / ISOMETRIC_SECONDS_PER_EFFECTIVE_SET
+        : 1;
+      return total + rawValue * qualityMultiplier;
     }, 0);
 
-    if (volume === 0) continue;
+    const setCount = isUnilateral ? effectiveSets * 2 : effectiveSets;
+
+    if (setCount === 0) continue;
 
     const primaryGroups = exercise.primaryMuscleGroups;
     const secondaryGroups = exercise.secondaryMuscleGroups;
+    const tertiaryGroups = exercise.tertiaryMuscleGroups;
     const effectivePrimary = primaryGroups.length > 0 ? primaryGroups : secondaryGroups;
     const effectiveSecondary = primaryGroups.length > 0 ? secondaryGroups : [];
+    const effectiveTertiary = primaryGroups.length > 0 ? tertiaryGroups : [];
 
     if (effectivePrimary.length > 0) {
-      const sharePerPrimary = volume / effectivePrimary.length;
+      const sharePerPrimary = (setCount * 1.0) / effectivePrimary.length;
       for (const { muscleGroup } of effectivePrimary) {
         const existing = scores.get(muscleGroup.label);
         scores.set(muscleGroup.label, {
@@ -84,12 +82,23 @@ function calculateMuscleGroupStats(workout: UserWorkoutFromDB): MuscleGroupStat[
     }
 
     if (effectiveSecondary.length > 0) {
-      const sharePerSecondary = (volume * 0.5) / effectiveSecondary.length;
+      const sharePerSecondary = (setCount * 0.5) / effectiveSecondary.length;
       for (const { muscleGroup } of effectiveSecondary) {
         const existing = scores.get(muscleGroup.label);
         scores.set(muscleGroup.label, {
           bodyArea: muscleGroup.bodyArea.label,
           score: (existing?.score ?? 0) + sharePerSecondary,
+        });
+      }
+    }
+
+    if (effectiveTertiary.length > 0) {
+      const sharePerTertiary = (setCount * 0.2) / effectiveTertiary.length;
+      for (const { muscleGroup } of effectiveTertiary) {
+        const existing = scores.get(muscleGroup.label);
+        scores.set(muscleGroup.label, {
+          bodyArea: muscleGroup.bodyArea.label,
+          score: (existing?.score ?? 0) + sharePerTertiary,
         });
       }
     }

@@ -40,8 +40,11 @@ export function mapExercisesToWorkoutExercises(routine: RoutineDetail): LocalWor
       id: rawEx.id,
       label: rawEx.label,
       recordSetsType: rawEx.recordSetsType,
+      isIsometric: rawEx.isIsometric,
+      isUnilateral: rawEx.isUnilateral,
       primaryMuscleGroups: [...rawEx.primaryMuscleGroups],
       secondaryMuscleGroups: [...rawEx.secondaryMuscleGroups],
+      tertiaryMuscleGroups: [...rawEx.tertiaryMuscleGroups],
       completed: false,
     };
   });

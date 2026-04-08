@@ -7,11 +7,16 @@ export function transformExercises(exercises: ExerciseWithMuscleGroups[]): Exerc
     id: exercise.id,
     label: exercise.label,
     recordSetsType: exercise.recordSetsType,
+    isIsometric: exercise.isIsometric,
+    isUnilateral: exercise.isUnilateral,
     primaryMuscleGroups: exercise.primaryMuscleGroups.map(
       (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label]
     ),
     secondaryMuscleGroups: exercise.secondaryMuscleGroups.map(
       (smg) => muscleGroupDisplayNames[smg.muscleGroup.label]
+    ),
+    tertiaryMuscleGroups: exercise.tertiaryMuscleGroups.map(
+      (tmg) => muscleGroupDisplayNames[tmg.muscleGroup.label]
     ),
   }));
 }

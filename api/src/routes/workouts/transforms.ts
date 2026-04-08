@@ -25,11 +25,16 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
       id: we.exercise.id,
       label: we.exercise.label,
       recordSetsType: we.exercise.recordSetsType,
+      isIsometric: we.exercise.isIsometric,
+      isUnilateral: we.exercise.isUnilateral,
       primaryMuscleGroups: we.exercise.primaryMuscleGroups.map(
         (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label as MuscleGroupLabel]
       ),
       secondaryMuscleGroups: we.exercise.secondaryMuscleGroups.map(
         (smg) => muscleGroupDisplayNames[smg.muscleGroup.label as MuscleGroupLabel]
+      ),
+      tertiaryMuscleGroups: we.exercise.tertiaryMuscleGroups.map(
+        (tmg) => muscleGroupDisplayNames[tmg.muscleGroup.label as MuscleGroupLabel]
       ),
       sets: we.sets.map((set) => ({
         setType: setTypeToApi[set.setType],

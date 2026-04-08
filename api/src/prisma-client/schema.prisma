@@ -37,14 +37,16 @@ enum MuscleGroupLabel {
   LATISSIMUS_DORSI
   TRAPEZIUS
   RHOMBOIDS
-  LOWER_BACK
+  ERECTOR_SPINAE
   REAR_DELTOIDS
   FRONT_DELTOIDS
+  MEDIAL_DELTOIDS
   BICEPS
   TRICEPS
   FOREARMS
   ABDOMINALS
   OBLIQUES
+  HIP_FLEXORS
   GLUTES
   HAMSTRINGS
   QUADRICEPS
@@ -68,6 +70,7 @@ model MuscleGroup {
 
   primaryExercises   ExercisePrimaryMuscleGroup[]
   secondaryExercises ExerciseSecondaryMuscleGroup[]
+  tertiaryExercises  ExerciseTertiaryMuscleGroup[]
 
   @@map("muscle_groups")
 }
@@ -76,10 +79,13 @@ model Exercise {
   id             Int            @id @default(autoincrement())
   label          String         @unique
   recordSetsType RecordSetsType @map("record_sets_type")
+  isIsometric    Boolean        @default(false) @map("is_isometric")
+  isUnilateral   Boolean        @default(false) @map("is_unilateral")
   createdAt      DateTime       @default(now()) @map("created_at")
 
   primaryMuscleGroups   ExercisePrimaryMuscleGroup[]
   secondaryMuscleGroups ExerciseSecondaryMuscleGroup[]
+  tertiaryMuscleGroups  ExerciseTertiaryMuscleGroup[]
   routineExercises      RoutineExercise[]
   workoutExercises      WorkoutExercise[]
 
@@ -128,6 +134,16 @@ model ExerciseSecondaryMuscleGroup {
 
   @@id([exerciseId, muscleGroupId])
   @@map("exercise_secondary_muscle_groups")
+}
+
+model ExerciseTertiaryMuscleGroup {
+  exerciseId    Int         @map("exercise_id")
+  muscleGroupId Int         @map("muscle_group_id")
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, muscleGroupId])
+  @@map("exercise_tertiary_muscle_groups")
 }
 
 model User {

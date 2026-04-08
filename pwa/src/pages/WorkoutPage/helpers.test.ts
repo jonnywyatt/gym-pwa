@@ -363,8 +363,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: true,
           sets: [{ id: 's1', setType: 'Standard', weightKg: 50, reps: 10, completed: true }],
         },
@@ -372,8 +375,11 @@ describe('WorkoutPage helpers', () => {
           id: 2,
           label: 'Squats',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: true,
           sets: [{ id: 's2', setType: 'Standard', weightKg: 80, reps: 10, completed: true }],
         },
@@ -381,8 +387,11 @@ describe('WorkoutPage helpers', () => {
           id: 3,
           label: 'Curls',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: false,
         },
       ];
@@ -395,8 +404,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: false,
         },
       ];
@@ -409,8 +421,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: false,
           sets: [
             { id: 's1', setType: 'Warmup', weightKg: 40, reps: 10, completed: true },
@@ -447,8 +462,11 @@ describe('WorkoutPage helpers', () => {
         id: 1,
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         completed: false,
       };
       const result = startExercise(exercise);
@@ -465,8 +483,11 @@ describe('WorkoutPage helpers', () => {
         id: 1,
         label: 'Sit Ups',
         recordSetsType: 'REPS',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         completed: false,
       };
       const result = startExercise(exercise);
@@ -481,8 +502,11 @@ describe('WorkoutPage helpers', () => {
         id: 1,
         label: 'Plank Hold',
         recordSetsType: 'WEIGHT_AND_TIME',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         completed: false,
       };
       const result = startExercise(exercise);
@@ -496,8 +520,11 @@ describe('WorkoutPage helpers', () => {
         id: 1,
         label: 'Plank',
         recordSetsType: 'TIME',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         completed: false,
       };
       const result = startExercise(exercise);
@@ -511,8 +538,11 @@ describe('WorkoutPage helpers', () => {
         id: 1,
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
+        isIsometric: false,
+        isUnilateral: false,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         completed: false,
       };
       startExercise(exercise);
@@ -528,8 +558,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: ['Pectoralis Major'],
           secondaryMuscleGroups: ['Triceps'],
+          tertiaryMuscleGroups: [],
           completed: true,
           startedAt: '2025-01-15T14:00:00.000Z',
           sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
@@ -538,8 +571,11 @@ describe('WorkoutPage helpers', () => {
           id: 2,
           label: 'Squats',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: ['Quadriceps'],
           secondaryMuscleGroups: ['Glutes'],
+          tertiaryMuscleGroups: [],
           completed: false,
         },
       ];
@@ -557,8 +593,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: true,
           startedAt: '2025-01-15T14:00:00.000Z',
           sets: [
@@ -577,8 +616,11 @@ describe('WorkoutPage helpers', () => {
           id: 1,
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
           completed: false,
         },
       ];
@@ -602,6 +644,9 @@ describe('WorkoutPage helpers', () => {
             recordSetsType: 'WEIGHT',
             primaryMuscleGroups: ['Pectoralis Major'],
             secondaryMuscleGroups: ['Triceps'],
+            tertiaryMuscleGroups: [],
+            isIsometric: false,
+            isUnilateral: false,
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
           },
@@ -611,6 +656,9 @@ describe('WorkoutPage helpers', () => {
             recordSetsType: 'WEIGHT',
             primaryMuscleGroups: ['Quadriceps'],
             secondaryMuscleGroups: ['Glutes'],
+            tertiaryMuscleGroups: [],
+            isIsometric: false,
+            isUnilateral: false,
             completed: false,
           },
         ],
@@ -855,6 +903,8 @@ describe('WorkoutPage helpers', () => {
       id: 1,
       label: 'Bench Press',
       recordSetsType: 'WEIGHT' as const,
+      isIsometric: false,
+      isUnilateral: false,
       completed: true,
     };
 
@@ -863,12 +913,28 @@ describe('WorkoutPage helpers', () => {
       expect(result).toEqual({ muscleGroups: [], bodyAreas: [] });
     });
 
-    it('returns empty arrays when all exercises have zero volume', () => {
+    it('returns empty arrays when all exercises have no sets', () => {
       const exercise: LocalWorkoutExercise = {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: [],
-        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 0, reps: 0 }],
+        tertiaryMuscleGroups: [],
+        sets: [],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result).toEqual({ muscleGroups: [], bodyAreas: [] });
+    });
+
+    it('returns empty arrays when sets exist but none have data filled in', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [
+          { id: 'a', setType: 'Warmup', completed: false },
+          { id: 'b', setType: 'Standard', completed: false },
+        ],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
       expect(result).toEqual({ muscleGroups: [], bodyAreas: [] });
@@ -879,6 +945,7 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
@@ -891,23 +958,37 @@ describe('WorkoutPage helpers', () => {
       expect(result.bodyAreas[0].percentage).toBe(100);
     });
 
-    it('includes warmup sets in the live volume calculation', () => {
+    it('counts warmup sets at 0.5x effective sets', () => {
       const exerciseWithWarmup: LocalWorkoutExercise = {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'w', setType: 'Warmup', completed: true, weightKg: 40, reps: 10 }],
       };
-      const result = calculateMuscleGroupBreakdown([exerciseWithWarmup]);
-      expect(result.muscleGroups).toHaveLength(1);
-      expect(result.muscleGroups[0].percentage).toBe(100);
+      const exerciseWorking: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Squat',
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 's', setType: 'Standard', completed: true, weightKg: 80, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exerciseWithWarmup, exerciseWorking]);
+      const chest = result.muscleGroups.find((mg) => mg.muscleGroup === 'Pectoralis Major');
+      const legs = result.muscleGroups.find((mg) => mg.muscleGroup === 'Quadriceps');
+      if (!chest || !legs) throw new Error('Expected both muscle groups');
+      // warmup = 0.5 effective sets, working = 1.0 → ratio 1:2
+      expect(legs.percentage / chest.percentage).toBeCloseTo(2, 1);
     });
 
-    it('splits volume equally across multiple primary muscle groups', () => {
+    it('splits score equally across multiple primary muscle groups', () => {
       const exercise: LocalWorkoutExercise = {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major', 'Pectoralis Minor'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
@@ -921,14 +1002,31 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: ['Triceps'],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
       const chest = result.muscleGroups.find((mg) => mg.muscleGroup === 'Pectoralis Major');
       const triceps = result.muscleGroups.find((mg) => mg.muscleGroup === 'Triceps');
       if (!chest || !triceps) throw new Error('Expected both muscle groups to be present');
-      // primary gets volume * 1.0, secondary gets volume * 0.5 → ratio 2:1
-      expect(Math.round((chest.percentage / triceps.percentage) * 10) / 10).toBeCloseTo(2, 0);
+      // primary 1.0, secondary 0.5 → ratio 2:1
+      expect(chest.percentage / triceps.percentage).toBeCloseTo(2, 1);
+    });
+
+    it('weights tertiary muscle groups at 0.2x primary', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: ['Front Deltoids'],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      const chest = result.muscleGroups.find((mg) => mg.muscleGroup === 'Pectoralis Major');
+      const delts = result.muscleGroups.find((mg) => mg.muscleGroup === 'Front Deltoids');
+      if (!chest || !delts) throw new Error('Expected both muscle groups to be present');
+      // primary 1.0, tertiary 0.2 → ratio 5:1
+      expect(chest.percentage / delts.percentage).toBeCloseTo(5, 1);
     });
 
     it('treats secondary groups as primary when exercise has no primary groups', () => {
@@ -936,6 +1034,7 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: ['Biceps'],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
@@ -949,6 +1048,7 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const exerciseWithMuscles: LocalWorkoutExercise = {
@@ -956,6 +1056,7 @@ describe('WorkoutPage helpers', () => {
         id: 2,
         primaryMuscleGroups: ['Quadriceps'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exerciseNoMuscles, exerciseWithMuscles]);
@@ -968,6 +1069,7 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: ['Quadriceps'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const exercise2: LocalWorkoutExercise = {
@@ -976,6 +1078,7 @@ describe('WorkoutPage helpers', () => {
         label: 'Leg Press',
         primaryMuscleGroups: ['Quadriceps'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
@@ -989,6 +1092,7 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const exercise2: LocalWorkoutExercise = {
@@ -998,6 +1102,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'WEIGHT' as const,
         primaryMuscleGroups: ['Quadriceps'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
@@ -1012,7 +1117,8 @@ describe('WorkoutPage helpers', () => {
         ...baseExercise,
         primaryMuscleGroups: ['Pectoralis Major'],
         secondaryMuscleGroups: [],
-        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 40, reps: 10 }],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
       };
       const exercise2: LocalWorkoutExercise = {
         ...baseExercise,
@@ -1021,36 +1127,83 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'WEIGHT' as const,
         primaryMuscleGroups: ['Quadriceps'],
         secondaryMuscleGroups: [],
-        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 80, reps: 10 }],
+        tertiaryMuscleGroups: [],
+        sets: [
+          { id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 },
+          { id: 'c', setType: 'Standard', completed: true, weightKg: 60, reps: 10 },
+        ],
       };
       const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
       expect(result.muscleGroups[0].muscleGroup).toBe('Quadriceps');
       expect(result.bodyAreas[0].bodyArea).toBe('Legs');
     });
 
-    it('calculates correct volume for REPS type exercises', () => {
+    it('normalises isometric time: 45s = 1 effective set', () => {
+      const isometricExercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        recordSetsType: 'TIME' as const,
+        isIsometric: true,
+        primaryMuscleGroups: ['Abdominals'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, timeSeconds: 90 }],
+      };
+      const regularExercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Crunch',
+        recordSetsType: 'REPS' as const,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([isometricExercise, regularExercise]);
+      const abs = result.muscleGroups.find((mg) => mg.muscleGroup === 'Abdominals');
+      const quads = result.muscleGroups.find((mg) => mg.muscleGroup === 'Quadriceps');
+      if (!abs || !quads) throw new Error('Expected both muscle groups');
+      // isometric: 90s / 45 = 2 effective sets; regular: 1 set → ratio 2:1
+      expect(abs.percentage / quads.percentage).toBeCloseTo(2, 1);
+    });
+
+    it('doubles set count for unilateral exercises', () => {
+      const unilateralExercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        isUnilateral: true,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
+      };
+      const bilateralExercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Leg Press',
+        primaryMuscleGroups: ['Glutes'],
+        secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([unilateralExercise, bilateralExercise]);
+      const quads = result.muscleGroups.find((mg) => mg.muscleGroup === 'Quadriceps');
+      const glutes = result.muscleGroups.find((mg) => mg.muscleGroup === 'Glutes');
+      if (!quads || !glutes) throw new Error('Expected both muscle groups');
+      // unilateral: 2 effective sets; bilateral: 1 set → ratio 2:1
+      expect(quads.percentage / glutes.percentage).toBeCloseTo(2, 1);
+    });
+
+    it('calculates correct score for REPS type exercises', () => {
       const exercise: LocalWorkoutExercise = {
         ...baseExercise,
         recordSetsType: 'REPS' as const,
         primaryMuscleGroups: ['Abdominals'],
         secondaryMuscleGroups: [],
+        tertiaryMuscleGroups: [],
         sets: [{ id: 'a', setType: 'Standard', completed: true, reps: 20 }],
       };
       const result = calculateMuscleGroupBreakdown([exercise]);
       expect(result.muscleGroups[0].percentage).toBe(100);
       expect(result.muscleGroups[0].bodyArea).toBe('Core');
-    });
-
-    it('calculates correct volume for TIME type exercises', () => {
-      const exercise: LocalWorkoutExercise = {
-        ...baseExercise,
-        recordSetsType: 'TIME' as const,
-        primaryMuscleGroups: ['Abdominals'],
-        secondaryMuscleGroups: [],
-        sets: [{ id: 'a', setType: 'Standard', completed: true, timeSeconds: 60 }],
-      };
-      const result = calculateMuscleGroupBreakdown([exercise]);
-      expect(result.muscleGroups[0].percentage).toBe(100);
     });
   });
 });

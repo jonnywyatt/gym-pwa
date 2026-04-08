@@ -2,6 +2,7 @@ import type {
   Exercise,
   ExercisePrimaryMuscleGroup,
   ExerciseSecondaryMuscleGroup,
+  ExerciseTertiaryMuscleGroup,
   MuscleGroup,
   Routine,
   RoutineExercise,
@@ -17,6 +18,7 @@ export type RoutineWithExercises = Routine & {
     exercise: Exercise & {
       primaryMuscleGroups: (ExercisePrimaryMuscleGroup & { muscleGroup: MuscleGroup })[];
       secondaryMuscleGroups: (ExerciseSecondaryMuscleGroup & { muscleGroup: MuscleGroup })[];
+      tertiaryMuscleGroups: (ExerciseTertiaryMuscleGroup & { muscleGroup: MuscleGroup })[];
     };
   })[];
 };
@@ -52,6 +54,9 @@ export async function getRoutineWithExercises(
                 include: { muscleGroup: true },
               },
               secondaryMuscleGroups: {
+                include: { muscleGroup: true },
+              },
+              tertiaryMuscleGroups: {
                 include: { muscleGroup: true },
               },
             },

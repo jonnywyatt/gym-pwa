@@ -274,14 +274,16 @@ const muscleGroupToBodyArea: Record<MuscleGroupDisplayName, BodyAreaDisplayName>
   'Latissimus Dorsi': 'Back',
   Trapezius: 'Back',
   Rhomboids: 'Back',
-  'Lower Back': 'Back',
+  'Erector Spinae': 'Back',
   'Rear Deltoids': 'Shoulders',
   'Front Deltoids': 'Shoulders',
+  'Medial Deltoids': 'Shoulders',
   Biceps: 'Arms',
   Triceps: 'Arms',
   Forearms: 'Arms',
   Abdominals: 'Core',
   Obliques: 'Core',
+  'Hip Flexors': 'Core',
   Glutes: 'Legs',
   Hamstrings: 'Legs',
   Quadriceps: 'Legs',
@@ -289,26 +291,19 @@ const muscleGroupToBodyArea: Record<MuscleGroupDisplayName, BodyAreaDisplayName>
   Calves: 'Legs',
 };
 
-function calculateSetVolume(recordSetsType: RecordSetsType, set: WorkoutSet): number {
-  switch (recordSetsType) {
-    case 'WEIGHT':
-    case 'BODYWEIGHT_PLUS_WEIGHT':
-    case 'BODYWEIGHT_MINUS_OFFSET':
-      return (set.weightKg ?? 0) * (set.reps ?? 0);
-    case 'REPS':
-      return set.reps ?? 0;
-    case 'TIME':
-      return set.timeSeconds ?? 0;
-    case 'WEIGHT_AND_TIME':
-      return (set.weightKg ?? 0) * (set.timeSeconds ?? 0);
-  }
-}
+const ISOMETRIC_SECONDS_PER_EFFECTIVE_SET = 45;
 
-function calculateExerciseVolume(exercise: LocalWorkoutExercise): number {
-  return (exercise.sets ?? []).reduce(
-    (total, set) => total + calculateSetVolume(exercise.recordSetsType, set),
-    0
-  );
+function calculateEffectiveSetCount(exercise: LocalWorkoutExercise): number {
+  const sets = exercise.sets ?? [];
+  const effectiveSets = sets.reduce((total, set) => {
+    if (!isSetFilledIn(set, exercise.recordSetsType)) return total;
+    const qualityMultiplier = set.setType === 'Warmup' ? 0.5 : 1.0;
+    const rawValue = exercise.isIsometric
+      ? (set.timeSeconds ?? 0) / ISOMETRIC_SECONDS_PER_EFFECTIVE_SET
+      : 1;
+    return total + rawValue * qualityMultiplier;
+  }, 0);
+  return exercise.isUnilateral ? effectiveSets * 2 : effectiveSets;
 }
 
 export function calculateMuscleGroupBreakdown(
@@ -317,26 +312,35 @@ export function calculateMuscleGroupBreakdown(
   const scores = new Map<MuscleGroupDisplayName, number>();
 
   for (const exercise of exercises) {
-    const volume = calculateExerciseVolume(exercise);
-    if (volume === 0) continue;
+    const setCount = calculateEffectiveSetCount(exercise);
+    if (setCount === 0) continue;
 
     const primaryGroups = exercise.primaryMuscleGroups;
     const secondaryGroups = exercise.secondaryMuscleGroups;
+    const tertiaryGroups = exercise.tertiaryMuscleGroups;
 
     const effectivePrimary = primaryGroups.length > 0 ? primaryGroups : secondaryGroups;
     const effectiveSecondary = primaryGroups.length > 0 ? secondaryGroups : [];
+    const effectiveTertiary = primaryGroups.length > 0 ? tertiaryGroups : [];
 
     if (effectivePrimary.length > 0) {
-      const sharePerPrimary = volume / effectivePrimary.length;
+      const sharePerPrimary = (setCount * 1.0) / effectivePrimary.length;
       for (const mg of effectivePrimary) {
         scores.set(mg, (scores.get(mg) ?? 0) + sharePerPrimary);
       }
     }
 
     if (effectiveSecondary.length > 0) {
-      const sharePerSecondary = (volume * 0.5) / effectiveSecondary.length;
+      const sharePerSecondary = (setCount * 0.5) / effectiveSecondary.length;
       for (const mg of effectiveSecondary) {
         scores.set(mg, (scores.get(mg) ?? 0) + sharePerSecondary);
+      }
+    }
+
+    if (effectiveTertiary.length > 0) {
+      const sharePerTertiary = (setCount * 0.2) / effectiveTertiary.length;
+      for (const mg of effectiveTertiary) {
+        scores.set(mg, (scores.get(mg) ?? 0) + sharePerTertiary);
       }
     }
   }
