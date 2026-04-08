@@ -7,6 +7,7 @@ import type {LocalWorkout, SetType} from '../../lib/db';
 import {authService} from '../../lib/auth/oauth';
 import WorkoutTimer from '../../components/WorkoutTimer/WorkoutTimer.vue';
 import ExerciseSets from '../../components/ExerciseSets/ExerciseSets.vue';
+import MuscleGroupBreakdown from '../../components/MuscleGroupBreakdown/MuscleGroupBreakdown.vue';
 import WeightKg from '../../components/WeightKg/WeightKg.vue';
 import {
   saveWorkout,
@@ -14,6 +15,7 @@ import {
   calculateElapsedSeconds,
   calculateFinalDurationSeconds,
   calculateWorkoutTotalWeightKg,
+  calculateMuscleGroupBreakdown,
   startExercise,
   createNewSet,
   isSetFilledIn,
@@ -32,6 +34,11 @@ let timerInterval: number | null = null;
 const workoutTotalWeightKg = computed(() => {
   if (!workout.value) return 0;
   return calculateWorkoutTotalWeightKg(workout.value.exercisesCompleted, workout.value.bodyWeightKg);
+});
+
+const muscleGroupBreakdown = computed(() => {
+  if (!workout.value) return { muscleGroups: [], bodyAreas: [] };
+  return calculateMuscleGroupBreakdown(workout.value.exercisesCompleted);
 });
 
 function updateElapsedTime() {
@@ -251,6 +258,10 @@ onUnmounted(() => {
     <p v-else-if="error" class="error">Error: {{ error }}</p>
 
     <template v-else-if="workout">
+      <header class="marginTop4 marginBottom4">
+        <h1 class="heading-l">{{ workout.routineLabel }} session</h1>
+      </header>
+
       <nav :class="styles.nav">
         <div :class="styles.navLeft">
           <WorkoutTimer
@@ -266,9 +277,7 @@ onUnmounted(() => {
         </button>
       </nav>
 
-      <header class="marginTop4 marginBottom4">
-        <h1 class="heading-l">{{ workout.routineLabel }} session</h1>
-      </header>
+      <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" />
 
       <ul class="list">
         <li

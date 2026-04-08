@@ -3,13 +3,14 @@
  */
 
 export type { RecordSetsType, User } from './prisma-client/index.js';
+export type { BodyAreaDisplayName, MuscleGroupDisplayName } from './utils/display-names.js';
 
 import type {
   Exercise as PrismaExercise,
   Routine as PrismaRoutine,
   User as PrismaUser,
 } from './prisma-client/index.js';
-import type { MuscleGroupDisplayName } from './utils/display-names';
+import type { BodyAreaDisplayName, MuscleGroupDisplayName } from './utils/display-names.js';
 
 /**
  * Exercise type returned by the API with muscle groups as display name strings
@@ -76,12 +77,19 @@ export type CreateWorkoutRequest = {
   totalReps: number;
 };
 
+export type WorkoutMuscleGroupStat = {
+  muscleGroup: MuscleGroupDisplayName;
+  bodyArea: BodyAreaDisplayName;
+  percentage: number;
+};
+
 export type UserWorkout = CreateWorkoutRequest & {
   id: number;
   userId: number;
+  muscleGroupStats: WorkoutMuscleGroupStat[];
 };
 
-export type UserWorkoutSummary = Omit<UserWorkout, 'exercisesCompleted'> & {
+export type UserWorkoutSummary = Omit<UserWorkout, 'exercisesCompleted' | 'muscleGroupStats'> & {
   exerciseCount: number;
 };
 

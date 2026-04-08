@@ -551,3 +551,43 @@ it('should not display delete button', async () => {
 
   expect(screen.queryByRole('button', { name: 'Delete session' })).not.toBeInTheDocument();
 });
+
+it('should not show the muscle group breakdown section when no sets are completed', async () => {
+  await db.workouts.add(createTestWorkout());
+
+  render(WorkoutPage);
+
+  await waitFor(() => {
+    expect(screen.getByText('Test Routine session')).toBeInTheDocument();
+  });
+
+  expect(screen.queryByRole('region', { name: 'Muscle group breakdown' })).not.toBeInTheDocument();
+});
+
+it('should show body area breakdown after a set is completed', async () => {
+  const user = userEvent.setup();
+  await db.workouts.add(createTestWorkout());
+
+  render(WorkoutPage);
+
+  await waitFor(() => {
+    expect(screen.getByText('Bench Press')).toBeInTheDocument();
+  });
+
+  await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+  const weightInputs = screen.getAllByRole('spinbutton', { name: /kg/i });
+  const repsInputs = screen.getAllByRole('spinbutton', { name: /reps/i });
+  await user.type(weightInputs[1], '60');
+  await user.type(repsInputs[1], '10');
+
+  await waitFor(() => {
+    expect(screen.getByRole('img', { name: 'Body area breakdown bar' })).toBeInTheDocument();
+  });
+
+  expect(screen.getByRole('list', { name: 'Body areas' })).toBeInTheDocument();
+
+  await user.click(screen.getByRole('button', { name: /expand muscle detail/i }));
+
+  expect(screen.getByRole('list', { name: 'Muscle groups' })).toBeInTheDocument();
+});

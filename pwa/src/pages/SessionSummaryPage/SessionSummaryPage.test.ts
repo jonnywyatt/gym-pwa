@@ -77,6 +77,7 @@ describe('SessionSummaryPage', () => {
           ],
           totalWeightKg: 1000,
           bodyWeightKg: 75.5,
+          muscleGroupStats: [],
         });
       })
     );
@@ -88,38 +89,10 @@ describe('SessionSummaryPage', () => {
     });
 
     expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
-    expect(screen.getByText('1,000kg total')).toBeInTheDocument();
+    expect(screen.getAllByText('1,000kg')).toHaveLength(2);
     expect(screen.getByText('Bench Press')).toBeInTheDocument();
-    expect(screen.getByText('1,000kg')).toBeInTheDocument();
     expect(screen.getByText('Warmup · 40kg · 10 reps')).toBeInTheDocument();
     expect(screen.getByText('Standard · 60kg · 10 reps')).toBeInTheDocument();
-  });
-
-  it('should display bodyweight in summary', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
-        return HttpResponse.json({
-          id: 42,
-          userId: 123,
-          routineId: 1,
-          routineLabel: 'Test Workout',
-          startedAt: '2025-01-15T14:00:00.000Z',
-          finishedAt: '2025-01-15T15:00:00.000Z',
-          durationSeconds: 3600,
-          exercisesCompleted: [],
-          totalWeightKg: 0,
-          bodyWeightKg: 80,
-        });
-      })
-    );
-
-    render(SessionSummaryPage);
-
-    await waitFor(() => {
-      expect(screen.getByText('Test Workout session')).toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Body weight: 80kg')).toBeInTheDocument();
   });
 
   it('should display exercises with different record set types', async () => {
@@ -153,6 +126,7 @@ describe('SessionSummaryPage', () => {
           ],
           totalWeightKg: 480,
           bodyWeightKg: 80,
+          muscleGroupStats: [],
         });
       })
     );
@@ -195,6 +169,7 @@ describe('SessionSummaryPage', () => {
           exercisesCompleted: [],
           totalWeightKg: 0,
           bodyWeightKg: 75,
+          muscleGroupStats: [],
         });
       })
     );
@@ -224,6 +199,7 @@ describe('SessionSummaryPage', () => {
           exercisesCompleted: [],
           totalWeightKg: 0,
           bodyWeightKg: 75,
+          muscleGroupStats: [],
         });
       })
     );
@@ -253,6 +229,7 @@ describe('SessionSummaryPage', () => {
           exercisesCompleted: [],
           totalWeightKg: 0,
           bodyWeightKg: 75,
+          muscleGroupStats: [],
         });
       }),
       http.delete(`${mockApiUrl}/users/123/workouts/42`, () => {
@@ -295,6 +272,7 @@ describe('SessionSummaryPage', () => {
           exercisesCompleted: [],
           totalWeightKg: 0,
           bodyWeightKg: 75,
+          muscleGroupStats: [],
         });
       }),
       http.delete(`${mockApiUrl}/users/123/workouts/42`, () => {
@@ -314,5 +292,66 @@ describe('SessionSummaryPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
     });
+  });
+
+  it('should not show the muscle group breakdown section when there are no stats', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+        return HttpResponse.json({
+          id: 42,
+          userId: 123,
+          routineId: 1,
+          routineLabel: 'Test Workout',
+          startedAt: '2025-01-15T14:00:00.000Z',
+          finishedAt: '2025-01-15T15:00:00.000Z',
+          durationSeconds: 3600,
+          exercisesCompleted: [],
+          totalWeightKg: 0,
+          bodyWeightKg: 75,
+          muscleGroupStats: [],
+        });
+      })
+    );
+
+    render(SessionSummaryPage);
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Workout session')).toBeInTheDocument();
+    });
+
+    expect(
+      screen.queryByRole('region', { name: 'Muscle group breakdown' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should show body area bar when muscle group stats are present', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/123/workouts/42`, () => {
+        return HttpResponse.json({
+          id: 42,
+          userId: 123,
+          routineId: 1,
+          routineLabel: 'Test Workout',
+          startedAt: '2025-01-15T14:00:00.000Z',
+          finishedAt: '2025-01-15T15:00:00.000Z',
+          durationSeconds: 3600,
+          exercisesCompleted: [],
+          totalWeightKg: 0,
+          bodyWeightKg: 75,
+          muscleGroupStats: [
+            { muscleGroup: 'Pectoralis Major', bodyArea: 'Chest', percentage: 70 },
+            { muscleGroup: 'Triceps', bodyArea: 'Arms', percentage: 30 },
+          ],
+        });
+      })
+    );
+
+    render(SessionSummaryPage);
+
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Body area breakdown bar' })).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('list', { name: 'Body areas' })).toBeInTheDocument();
   });
 });

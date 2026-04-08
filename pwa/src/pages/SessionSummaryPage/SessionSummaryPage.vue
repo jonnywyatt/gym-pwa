@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {UserWorkout} from 'gym-pwa-api/types';
 import styles from './SessionSummaryPage.module.css';
@@ -15,11 +15,17 @@ import {
   formatDuration,
   formatTotalWeight,
 } from '../WorkoutsListPage/helpers';
+import { toMuscleGroupBreakdown } from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
+import MuscleGroupBreakdown from '../../components/MuscleGroupBreakdown/MuscleGroupBreakdown.vue';
 
 const route = useRoute();
 const router = useRouter();
 const completedWorkout = ref<UserWorkout | null>(null);
+
+const muscleGroupBreakdown = computed(() =>
+  completedWorkout.value ? toMuscleGroupBreakdown(completedWorkout.value.muscleGroupStats) : { muscleGroups: [], bodyAreas: [] }
+);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const showDeleteDialog = ref(false);
@@ -86,17 +92,13 @@ onMounted(() => {
         <h1 class="heading-l">{{ completedWorkout.routineLabel }} session</h1>
       </header>
 
-      <div class="highlightCardContents marginBottom6">
-        <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{
-            formatTotalWeight(completedWorkout.totalWeightKg)
-          }} total</span>
-        <span v-if="completedWorkout.durationSeconds !== undefined">{{
-            formatDuration(completedWorkout.durationSeconds)
-          }}</span>
-        <span v-if="completedWorkout.bodyWeightKg">Body weight: {{
-            formatTotalWeight(completedWorkout.bodyWeightKg)
-          }}</span>
+      <div :class="styles.metaRow" class="marginBottom1">
+        <span class="accentPrimary" v-if="completedWorkout.totalWeightKg">{{ formatTotalWeight(completedWorkout.totalWeightKg) }}</span>
+        <span v-if="completedWorkout.totalWeightKg && completedWorkout.durationSeconds !== undefined" :class="styles.metaRowDivider">|</span>
+        <span v-if="completedWorkout.durationSeconds !== undefined">{{ formatDuration(completedWorkout.durationSeconds) }}</span>
       </div>
+
+      <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" class="marginBottom3" />
 
       <ul class="list">
         <li

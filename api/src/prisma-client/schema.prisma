@@ -156,20 +156,33 @@ model UserBodyWeight {
 }
 
 model UserWorkout {
-  id              Int               @id @default(autoincrement())
-  userId          Int               @map("user_id")
-  routineId       Int               @map("routine_id")
-  routineLabel    String            @map("routine_label")
-  startedAt       DateTime          @map("started_at")
-  finishedAt      DateTime          @map("finished_at")
-  durationSeconds Int?              @map("duration_seconds")
-  totalWeightKg   Int?              @map("total_weight_kg")
-  totalReps       Int?              @map("total_reps")
-  bodyWeightKg    Decimal           @map("body_weight_kg") @db.Decimal(5, 2)
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercises       WorkoutExercise[]
+  id               Int                      @id @default(autoincrement())
+  userId           Int                      @map("user_id")
+  routineId        Int                      @map("routine_id")
+  routineLabel     String                   @map("routine_label")
+  startedAt        DateTime                 @map("started_at")
+  finishedAt       DateTime                 @map("finished_at")
+  durationSeconds  Int?                     @map("duration_seconds")
+  totalWeightKg    Int?                     @map("total_weight_kg")
+  totalReps        Int?                     @map("total_reps")
+  bodyWeightKg     Decimal                  @map("body_weight_kg") @db.Decimal(5, 2)
+  user             User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises        WorkoutExercise[]
+  muscleGroupStats WorkoutMuscleGroupStat[]
 
   @@map("user_workouts")
+}
+
+model WorkoutMuscleGroupStat {
+  id          Int              @id @default(autoincrement())
+  workoutId   Int              @map("workout_id")
+  muscleGroup MuscleGroupLabel @map("muscle_group")
+  bodyArea    BodyAreaLabel    @map("body_area")
+  percentage  Decimal          @db.Decimal(5, 2)
+  workout     UserWorkout      @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@index([muscleGroup])
+  @@map("workout_muscle_group_stats")
 }
 
 model WorkoutExercise {

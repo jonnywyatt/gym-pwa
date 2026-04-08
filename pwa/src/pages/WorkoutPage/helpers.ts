@@ -1,7 +1,9 @@
 import type {
+  BodyAreaDisplayName,
   CompletedSet,
   CompletedWorkoutExercise,
   CreateWorkoutRequest,
+  MuscleGroupDisplayName,
   RecordSetsType,
   UserWorkout,
 } from 'gym-pwa-api/types';
@@ -248,6 +250,124 @@ export function calculateFinalDurationSeconds(
 
 export async function fetchWorkout(userId: number, workoutId: number): Promise<UserWorkout> {
   return await authFetchJson<UserWorkout>(`/users/${userId}/workouts/${workoutId}`);
+}
+
+export type MuscleGroupScore = {
+  muscleGroup: MuscleGroupDisplayName;
+  bodyArea: BodyAreaDisplayName;
+  percentage: number;
+};
+
+export type BodyAreaScore = {
+  bodyArea: BodyAreaDisplayName;
+  percentage: number;
+};
+
+export type MuscleGroupBreakdown = {
+  muscleGroups: MuscleGroupScore[];
+  bodyAreas: BodyAreaScore[];
+};
+
+const muscleGroupToBodyArea: Record<MuscleGroupDisplayName, BodyAreaDisplayName> = {
+  'Pectoralis Major': 'Chest',
+  'Pectoralis Minor': 'Chest',
+  'Latissimus Dorsi': 'Back',
+  Trapezius: 'Back',
+  Rhomboids: 'Back',
+  'Lower Back': 'Back',
+  'Rear Deltoids': 'Shoulders',
+  'Front Deltoids': 'Shoulders',
+  Biceps: 'Arms',
+  Triceps: 'Arms',
+  Forearms: 'Arms',
+  Abdominals: 'Core',
+  Obliques: 'Core',
+  Glutes: 'Legs',
+  Hamstrings: 'Legs',
+  Quadriceps: 'Legs',
+  Adductors: 'Legs',
+  Calves: 'Legs',
+};
+
+function calculateSetVolume(recordSetsType: RecordSetsType, set: WorkoutSet): number {
+  switch (recordSetsType) {
+    case 'WEIGHT':
+    case 'BODYWEIGHT_PLUS_WEIGHT':
+    case 'BODYWEIGHT_MINUS_OFFSET':
+      return (set.weightKg ?? 0) * (set.reps ?? 0);
+    case 'REPS':
+      return set.reps ?? 0;
+    case 'TIME':
+      return set.timeSeconds ?? 0;
+    case 'WEIGHT_AND_TIME':
+      return (set.weightKg ?? 0) * (set.timeSeconds ?? 0);
+  }
+}
+
+function calculateExerciseVolume(exercise: LocalWorkoutExercise): number {
+  return (exercise.sets ?? []).reduce(
+    (total, set) => total + calculateSetVolume(exercise.recordSetsType, set),
+    0
+  );
+}
+
+export function calculateMuscleGroupBreakdown(
+  exercises: LocalWorkoutExercise[]
+): MuscleGroupBreakdown {
+  const scores = new Map<MuscleGroupDisplayName, number>();
+
+  for (const exercise of exercises) {
+    const volume = calculateExerciseVolume(exercise);
+    if (volume === 0) continue;
+
+    const primaryGroups = exercise.primaryMuscleGroups;
+    const secondaryGroups = exercise.secondaryMuscleGroups;
+
+    const effectivePrimary = primaryGroups.length > 0 ? primaryGroups : secondaryGroups;
+    const effectiveSecondary = primaryGroups.length > 0 ? secondaryGroups : [];
+
+    if (effectivePrimary.length > 0) {
+      const sharePerPrimary = volume / effectivePrimary.length;
+      for (const mg of effectivePrimary) {
+        scores.set(mg, (scores.get(mg) ?? 0) + sharePerPrimary);
+      }
+    }
+
+    if (effectiveSecondary.length > 0) {
+      const sharePerSecondary = (volume * 0.5) / effectiveSecondary.length;
+      for (const mg of effectiveSecondary) {
+        scores.set(mg, (scores.get(mg) ?? 0) + sharePerSecondary);
+      }
+    }
+  }
+
+  const totalScore = Array.from(scores.values()).reduce((sum, v) => sum + v, 0);
+
+  if (totalScore === 0) {
+    return { muscleGroups: [], bodyAreas: [] };
+  }
+
+  const muscleGroups: MuscleGroupScore[] = Array.from(scores.entries())
+    .map(([muscleGroup, score]) => ({
+      muscleGroup,
+      bodyArea: muscleGroupToBodyArea[muscleGroup],
+      percentage: Math.round((score / totalScore) * 1000) / 10,
+    }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  const bodyAreaTotals = new Map<BodyAreaDisplayName, number>();
+  for (const { bodyArea, percentage } of muscleGroups) {
+    bodyAreaTotals.set(bodyArea, (bodyAreaTotals.get(bodyArea) ?? 0) + percentage);
+  }
+
+  const bodyAreas: BodyAreaScore[] = Array.from(bodyAreaTotals.entries())
+    .map(([bodyArea, percentage]) => ({
+      bodyArea,
+      percentage: Math.round(percentage * 10) / 10,
+    }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  return { muscleGroups, bodyAreas };
 }
 
 function formatTimeSeconds(seconds: number): string {

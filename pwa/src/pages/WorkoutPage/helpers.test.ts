@@ -8,6 +8,7 @@ import {
   calculateElapsedSeconds,
   calculateExerciseTotalWeightKg,
   calculateFinalDurationSeconds,
+  calculateMuscleGroupBreakdown,
   calculateSetWeightKg,
   calculateWorkoutTotalWeightKg,
   createDefaultSets,
@@ -846,6 +847,210 @@ describe('WorkoutPage helpers', () => {
       );
 
       await expect(fetchWorkout(123, 999)).rejects.toThrow();
+    });
+  });
+
+  describe('calculateMuscleGroupBreakdown', () => {
+    const baseExercise = {
+      id: 1,
+      label: 'Bench Press',
+      recordSetsType: 'WEIGHT' as const,
+      completed: true,
+    };
+
+    it('returns empty arrays when there are no exercises', () => {
+      const result = calculateMuscleGroupBreakdown([]);
+      expect(result).toEqual({ muscleGroups: [], bodyAreas: [] });
+    });
+
+    it('returns empty arrays when all exercises have zero volume', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 0, reps: 0 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result).toEqual({ muscleGroups: [], bodyAreas: [] });
+    });
+
+    it('returns 100% for the only muscle group when a single exercise has one primary muscle', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result.muscleGroups).toHaveLength(1);
+      expect(result.muscleGroups[0].muscleGroup).toBe('Pectoralis Major');
+      expect(result.muscleGroups[0].percentage).toBe(100);
+      expect(result.muscleGroups[0].bodyArea).toBe('Chest');
+      expect(result.bodyAreas).toHaveLength(1);
+      expect(result.bodyAreas[0].bodyArea).toBe('Chest');
+      expect(result.bodyAreas[0].percentage).toBe(100);
+    });
+
+    it('includes warmup sets in the live volume calculation', () => {
+      const exerciseWithWarmup: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'w', setType: 'Warmup', completed: true, weightKg: 40, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exerciseWithWarmup]);
+      expect(result.muscleGroups).toHaveLength(1);
+      expect(result.muscleGroups[0].percentage).toBe(100);
+    });
+
+    it('splits volume equally across multiple primary muscle groups', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major', 'Pectoralis Minor'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result.muscleGroups).toHaveLength(2);
+      expect(result.muscleGroups[0].percentage).toBe(50);
+      expect(result.muscleGroups[1].percentage).toBe(50);
+    });
+
+    it('weights secondary muscle groups at 0.5x primary', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: ['Triceps'],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      const chest = result.muscleGroups.find((mg) => mg.muscleGroup === 'Pectoralis Major');
+      const triceps = result.muscleGroups.find((mg) => mg.muscleGroup === 'Triceps');
+      if (!chest || !triceps) throw new Error('Expected both muscle groups to be present');
+      // primary gets volume * 1.0, secondary gets volume * 0.5 → ratio 2:1
+      expect(Math.round((chest.percentage / triceps.percentage) * 10) / 10).toBeCloseTo(2, 0);
+    });
+
+    it('treats secondary groups as primary when exercise has no primary groups', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: ['Biceps'],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result.muscleGroups).toHaveLength(1);
+      expect(result.muscleGroups[0].muscleGroup).toBe('Biceps');
+      expect(result.muscleGroups[0].percentage).toBe(100);
+    });
+
+    it('skips exercises with no muscle groups', () => {
+      const exerciseNoMuscles: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: [],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const exerciseWithMuscles: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exerciseNoMuscles, exerciseWithMuscles]);
+      expect(result.muscleGroups).toHaveLength(1);
+      expect(result.muscleGroups[0].muscleGroup).toBe('Quadriceps');
+    });
+
+    it('aggregates the same muscle group across multiple exercises', () => {
+      const exercise1: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const exercise2: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Leg Press',
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
+      expect(result.muscleGroups).toHaveLength(1);
+      expect(result.muscleGroups[0].muscleGroup).toBe('Quadriceps');
+      expect(result.muscleGroups[0].percentage).toBe(100);
+    });
+
+    it('rolls up muscle group percentages into body areas', () => {
+      const exercise1: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const exercise2: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Squat',
+        recordSetsType: 'WEIGHT' as const,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 60, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
+      const chestArea = result.bodyAreas.find((a) => a.bodyArea === 'Chest');
+      const legsArea = result.bodyAreas.find((a) => a.bodyArea === 'Legs');
+      expect(chestArea?.percentage).toBe(50);
+      expect(legsArea?.percentage).toBe(50);
+    });
+
+    it('sorts muscle groups and body areas by percentage descending', () => {
+      const exercise1: LocalWorkoutExercise = {
+        ...baseExercise,
+        primaryMuscleGroups: ['Pectoralis Major'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 40, reps: 10 }],
+      };
+      const exercise2: LocalWorkoutExercise = {
+        ...baseExercise,
+        id: 2,
+        label: 'Squat',
+        recordSetsType: 'WEIGHT' as const,
+        primaryMuscleGroups: ['Quadriceps'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 80, reps: 10 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise1, exercise2]);
+      expect(result.muscleGroups[0].muscleGroup).toBe('Quadriceps');
+      expect(result.bodyAreas[0].bodyArea).toBe('Legs');
+    });
+
+    it('calculates correct volume for REPS type exercises', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        recordSetsType: 'REPS' as const,
+        primaryMuscleGroups: ['Abdominals'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, reps: 20 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result.muscleGroups[0].percentage).toBe(100);
+      expect(result.muscleGroups[0].bodyArea).toBe('Core');
+    });
+
+    it('calculates correct volume for TIME type exercises', () => {
+      const exercise: LocalWorkoutExercise = {
+        ...baseExercise,
+        recordSetsType: 'TIME' as const,
+        primaryMuscleGroups: ['Abdominals'],
+        secondaryMuscleGroups: [],
+        sets: [{ id: 'a', setType: 'Standard', completed: true, timeSeconds: 60 }],
+      };
+      const result = calculateMuscleGroupBreakdown([exercise]);
+      expect(result.muscleGroups[0].percentage).toBe(100);
     });
   });
 });

@@ -189,6 +189,14 @@ exports.Prisma.UserWorkoutScalarFieldEnum = {
   bodyWeightKg: 'bodyWeightKg'
 };
 
+exports.Prisma.WorkoutMuscleGroupStatScalarFieldEnum = {
+  id: 'id',
+  workoutId: 'workoutId',
+  muscleGroup: 'muscleGroup',
+  bodyArea: 'bodyArea',
+  percentage: 'percentage'
+};
+
 exports.Prisma.WorkoutExerciseScalarFieldEnum = {
   id: 'id',
   workoutId: 'workoutId',
@@ -287,6 +295,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   UserBodyWeight: 'UserBodyWeight',
   UserWorkout: 'UserWorkout',
+  WorkoutMuscleGroupStat: 'WorkoutMuscleGroupStat',
   WorkoutExercise: 'WorkoutExercise',
   WorkoutSet: 'WorkoutSet'
 };

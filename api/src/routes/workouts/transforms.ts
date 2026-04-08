@@ -1,6 +1,6 @@
-import { type MuscleGroupLabel, SetType } from '../../prisma-client';
+import { type BodyAreaLabel, type MuscleGroupLabel, SetType } from '../../prisma-client';
 import type { SetType as ApiSetType, UserWorkout, UserWorkoutSummary } from '../../types';
-import { muscleGroupDisplayNames } from '../../utils/display-names';
+import { bodyAreaDisplayNames, muscleGroupDisplayNames } from '../../utils/display-names';
 import type { UserWorkoutFromDB, UserWorkoutSummaryFromDB } from './queries';
 
 const setTypeToApi: Record<SetType, ApiSetType> = {
@@ -37,6 +37,11 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
         reps: set.reps ?? undefined,
         timeSeconds: set.timeSeconds ?? undefined,
       })),
+    })),
+    muscleGroupStats: workout.muscleGroupStats.map((stat) => ({
+      muscleGroup: muscleGroupDisplayNames[stat.muscleGroup as MuscleGroupLabel],
+      bodyArea: bodyAreaDisplayNames[stat.bodyArea as BodyAreaLabel],
+      percentage: Number(stat.percentage),
     })),
   };
 }

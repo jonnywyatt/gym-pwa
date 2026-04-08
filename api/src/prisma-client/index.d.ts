@@ -64,6 +64,11 @@ export type UserBodyWeight = $Result.DefaultSelection<Prisma.$UserBodyWeightPayl
  */
 export type UserWorkout = $Result.DefaultSelection<Prisma.$UserWorkoutPayload>
 /**
+ * Model WorkoutMuscleGroupStat
+ * 
+ */
+export type WorkoutMuscleGroupStat = $Result.DefaultSelection<Prisma.$WorkoutMuscleGroupStatPayload>
+/**
  * Model WorkoutExercise
  * 
  */
@@ -368,6 +373,16 @@ export class PrismaClient<
     * ```
     */
   get userWorkout(): Prisma.UserWorkoutDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.workoutMuscleGroupStat`: Exposes CRUD operations for the **WorkoutMuscleGroupStat** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkoutMuscleGroupStats
+    * const workoutMuscleGroupStats = await prisma.workoutMuscleGroupStat.findMany()
+    * ```
+    */
+  get workoutMuscleGroupStat(): Prisma.WorkoutMuscleGroupStatDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.workoutExercise`: Exposes CRUD operations for the **WorkoutExercise** model.
@@ -832,6 +847,7 @@ export namespace Prisma {
     User: 'User',
     UserBodyWeight: 'UserBodyWeight',
     UserWorkout: 'UserWorkout',
+    WorkoutMuscleGroupStat: 'WorkoutMuscleGroupStat',
     WorkoutExercise: 'WorkoutExercise',
     WorkoutSet: 'WorkoutSet'
   };
@@ -849,7 +865,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "user" | "userBodyWeight" | "userWorkout" | "workoutExercise" | "workoutSet"
+      modelProps: "bodyArea" | "muscleGroup" | "exercise" | "routine" | "routineExercise" | "exercisePrimaryMuscleGroup" | "exerciseSecondaryMuscleGroup" | "user" | "userBodyWeight" | "userWorkout" | "workoutMuscleGroupStat" | "workoutExercise" | "workoutSet"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1593,6 +1609,80 @@ export namespace Prisma {
           }
         }
       }
+      WorkoutMuscleGroupStat: {
+        payload: Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>
+        fields: Prisma.WorkoutMuscleGroupStatFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkoutMuscleGroupStatFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkoutMuscleGroupStatFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          findFirst: {
+            args: Prisma.WorkoutMuscleGroupStatFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkoutMuscleGroupStatFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          findMany: {
+            args: Prisma.WorkoutMuscleGroupStatFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>[]
+          }
+          create: {
+            args: Prisma.WorkoutMuscleGroupStatCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          createMany: {
+            args: Prisma.WorkoutMuscleGroupStatCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkoutMuscleGroupStatCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>[]
+          }
+          delete: {
+            args: Prisma.WorkoutMuscleGroupStatDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          update: {
+            args: Prisma.WorkoutMuscleGroupStatUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkoutMuscleGroupStatDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkoutMuscleGroupStatUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WorkoutMuscleGroupStatUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>[]
+          }
+          upsert: {
+            args: Prisma.WorkoutMuscleGroupStatUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkoutMuscleGroupStatPayload>
+          }
+          aggregate: {
+            args: Prisma.WorkoutMuscleGroupStatAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkoutMuscleGroupStat>
+          }
+          groupBy: {
+            args: Prisma.WorkoutMuscleGroupStatGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkoutMuscleGroupStatGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkoutMuscleGroupStatCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkoutMuscleGroupStatCountAggregateOutputType> | number
+          }
+        }
+      }
       WorkoutExercise: {
         payload: Prisma.$WorkoutExercisePayload<ExtArgs>
         fields: Prisma.WorkoutExerciseFieldRefs
@@ -1859,6 +1949,7 @@ export namespace Prisma {
     user?: UserOmit
     userBodyWeight?: UserBodyWeightOmit
     userWorkout?: UserWorkoutOmit
+    workoutMuscleGroupStat?: WorkoutMuscleGroupStatOmit
     workoutExercise?: WorkoutExerciseOmit
     workoutSet?: WorkoutSetOmit
   }
@@ -2151,10 +2242,12 @@ export namespace Prisma {
 
   export type UserWorkoutCountOutputType = {
     exercises: number
+    muscleGroupStats: number
   }
 
   export type UserWorkoutCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     exercises?: boolean | UserWorkoutCountOutputTypeCountExercisesArgs
+    muscleGroupStats?: boolean | UserWorkoutCountOutputTypeCountMuscleGroupStatsArgs
   }
 
   // Custom InputTypes
@@ -2173,6 +2266,13 @@ export namespace Prisma {
    */
   export type UserWorkoutCountOutputTypeCountExercisesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkoutExerciseWhereInput
+  }
+
+  /**
+   * UserWorkoutCountOutputType without action
+   */
+  export type UserWorkoutCountOutputTypeCountMuscleGroupStatsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkoutMuscleGroupStatWhereInput
   }
 
 
@@ -12430,6 +12530,7 @@ export namespace Prisma {
     bodyWeightKg?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     exercises?: boolean | UserWorkout$exercisesArgs<ExtArgs>
+    muscleGroupStats?: boolean | UserWorkout$muscleGroupStatsArgs<ExtArgs>
     _count?: boolean | UserWorkoutCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userWorkout"]>
 
@@ -12478,6 +12579,7 @@ export namespace Prisma {
   export type UserWorkoutInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     exercises?: boolean | UserWorkout$exercisesArgs<ExtArgs>
+    muscleGroupStats?: boolean | UserWorkout$muscleGroupStatsArgs<ExtArgs>
     _count?: boolean | UserWorkoutCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserWorkoutIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12492,6 +12594,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       exercises: Prisma.$WorkoutExercisePayload<ExtArgs>[]
+      muscleGroupStats: Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12900,6 +13003,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     exercises<T extends UserWorkout$exercisesArgs<ExtArgs> = {}>(args?: Subset<T, UserWorkout$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    muscleGroupStats<T extends UserWorkout$muscleGroupStatsArgs<ExtArgs> = {}>(args?: Subset<T, UserWorkout$muscleGroupStatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13359,6 +13463,30 @@ export namespace Prisma {
   }
 
   /**
+   * UserWorkout.muscleGroupStats
+   */
+  export type UserWorkout$muscleGroupStatsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    where?: WorkoutMuscleGroupStatWhereInput
+    orderBy?: WorkoutMuscleGroupStatOrderByWithRelationInput | WorkoutMuscleGroupStatOrderByWithRelationInput[]
+    cursor?: WorkoutMuscleGroupStatWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkoutMuscleGroupStatScalarFieldEnum | WorkoutMuscleGroupStatScalarFieldEnum[]
+  }
+
+  /**
    * UserWorkout without action
    */
   export type UserWorkoutDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13374,6 +13502,1106 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserWorkoutInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkoutMuscleGroupStat
+   */
+
+  export type AggregateWorkoutMuscleGroupStat = {
+    _count: WorkoutMuscleGroupStatCountAggregateOutputType | null
+    _avg: WorkoutMuscleGroupStatAvgAggregateOutputType | null
+    _sum: WorkoutMuscleGroupStatSumAggregateOutputType | null
+    _min: WorkoutMuscleGroupStatMinAggregateOutputType | null
+    _max: WorkoutMuscleGroupStatMaxAggregateOutputType | null
+  }
+
+  export type WorkoutMuscleGroupStatAvgAggregateOutputType = {
+    id: number | null
+    workoutId: number | null
+    percentage: Decimal | null
+  }
+
+  export type WorkoutMuscleGroupStatSumAggregateOutputType = {
+    id: number | null
+    workoutId: number | null
+    percentage: Decimal | null
+  }
+
+  export type WorkoutMuscleGroupStatMinAggregateOutputType = {
+    id: number | null
+    workoutId: number | null
+    muscleGroup: $Enums.MuscleGroupLabel | null
+    bodyArea: $Enums.BodyAreaLabel | null
+    percentage: Decimal | null
+  }
+
+  export type WorkoutMuscleGroupStatMaxAggregateOutputType = {
+    id: number | null
+    workoutId: number | null
+    muscleGroup: $Enums.MuscleGroupLabel | null
+    bodyArea: $Enums.BodyAreaLabel | null
+    percentage: Decimal | null
+  }
+
+  export type WorkoutMuscleGroupStatCountAggregateOutputType = {
+    id: number
+    workoutId: number
+    muscleGroup: number
+    bodyArea: number
+    percentage: number
+    _all: number
+  }
+
+
+  export type WorkoutMuscleGroupStatAvgAggregateInputType = {
+    id?: true
+    workoutId?: true
+    percentage?: true
+  }
+
+  export type WorkoutMuscleGroupStatSumAggregateInputType = {
+    id?: true
+    workoutId?: true
+    percentage?: true
+  }
+
+  export type WorkoutMuscleGroupStatMinAggregateInputType = {
+    id?: true
+    workoutId?: true
+    muscleGroup?: true
+    bodyArea?: true
+    percentage?: true
+  }
+
+  export type WorkoutMuscleGroupStatMaxAggregateInputType = {
+    id?: true
+    workoutId?: true
+    muscleGroup?: true
+    bodyArea?: true
+    percentage?: true
+  }
+
+  export type WorkoutMuscleGroupStatCountAggregateInputType = {
+    id?: true
+    workoutId?: true
+    muscleGroup?: true
+    bodyArea?: true
+    percentage?: true
+    _all?: true
+  }
+
+  export type WorkoutMuscleGroupStatAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkoutMuscleGroupStat to aggregate.
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkoutMuscleGroupStats to fetch.
+     */
+    orderBy?: WorkoutMuscleGroupStatOrderByWithRelationInput | WorkoutMuscleGroupStatOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkoutMuscleGroupStatWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkoutMuscleGroupStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkoutMuscleGroupStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkoutMuscleGroupStats
+    **/
+    _count?: true | WorkoutMuscleGroupStatCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WorkoutMuscleGroupStatAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WorkoutMuscleGroupStatSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkoutMuscleGroupStatMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkoutMuscleGroupStatMaxAggregateInputType
+  }
+
+  export type GetWorkoutMuscleGroupStatAggregateType<T extends WorkoutMuscleGroupStatAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkoutMuscleGroupStat]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkoutMuscleGroupStat[P]>
+      : GetScalarType<T[P], AggregateWorkoutMuscleGroupStat[P]>
+  }
+
+
+
+
+  export type WorkoutMuscleGroupStatGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkoutMuscleGroupStatWhereInput
+    orderBy?: WorkoutMuscleGroupStatOrderByWithAggregationInput | WorkoutMuscleGroupStatOrderByWithAggregationInput[]
+    by: WorkoutMuscleGroupStatScalarFieldEnum[] | WorkoutMuscleGroupStatScalarFieldEnum
+    having?: WorkoutMuscleGroupStatScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkoutMuscleGroupStatCountAggregateInputType | true
+    _avg?: WorkoutMuscleGroupStatAvgAggregateInputType
+    _sum?: WorkoutMuscleGroupStatSumAggregateInputType
+    _min?: WorkoutMuscleGroupStatMinAggregateInputType
+    _max?: WorkoutMuscleGroupStatMaxAggregateInputType
+  }
+
+  export type WorkoutMuscleGroupStatGroupByOutputType = {
+    id: number
+    workoutId: number
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal
+    _count: WorkoutMuscleGroupStatCountAggregateOutputType | null
+    _avg: WorkoutMuscleGroupStatAvgAggregateOutputType | null
+    _sum: WorkoutMuscleGroupStatSumAggregateOutputType | null
+    _min: WorkoutMuscleGroupStatMinAggregateOutputType | null
+    _max: WorkoutMuscleGroupStatMaxAggregateOutputType | null
+  }
+
+  type GetWorkoutMuscleGroupStatGroupByPayload<T extends WorkoutMuscleGroupStatGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkoutMuscleGroupStatGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkoutMuscleGroupStatGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkoutMuscleGroupStatGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkoutMuscleGroupStatGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkoutMuscleGroupStatSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workoutId?: boolean
+    muscleGroup?: boolean
+    bodyArea?: boolean
+    percentage?: boolean
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workoutMuscleGroupStat"]>
+
+  export type WorkoutMuscleGroupStatSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workoutId?: boolean
+    muscleGroup?: boolean
+    bodyArea?: boolean
+    percentage?: boolean
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workoutMuscleGroupStat"]>
+
+  export type WorkoutMuscleGroupStatSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workoutId?: boolean
+    muscleGroup?: boolean
+    bodyArea?: boolean
+    percentage?: boolean
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workoutMuscleGroupStat"]>
+
+  export type WorkoutMuscleGroupStatSelectScalar = {
+    id?: boolean
+    workoutId?: boolean
+    muscleGroup?: boolean
+    bodyArea?: boolean
+    percentage?: boolean
+  }
+
+  export type WorkoutMuscleGroupStatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workoutId" | "muscleGroup" | "bodyArea" | "percentage", ExtArgs["result"]["workoutMuscleGroupStat"]>
+  export type WorkoutMuscleGroupStatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }
+  export type WorkoutMuscleGroupStatIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }
+  export type WorkoutMuscleGroupStatIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workout?: boolean | UserWorkoutDefaultArgs<ExtArgs>
+  }
+
+  export type $WorkoutMuscleGroupStatPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkoutMuscleGroupStat"
+    objects: {
+      workout: Prisma.$UserWorkoutPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      workoutId: number
+      muscleGroup: $Enums.MuscleGroupLabel
+      bodyArea: $Enums.BodyAreaLabel
+      percentage: Prisma.Decimal
+    }, ExtArgs["result"]["workoutMuscleGroupStat"]>
+    composites: {}
+  }
+
+  type WorkoutMuscleGroupStatGetPayload<S extends boolean | null | undefined | WorkoutMuscleGroupStatDefaultArgs> = $Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload, S>
+
+  type WorkoutMuscleGroupStatCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WorkoutMuscleGroupStatFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WorkoutMuscleGroupStatCountAggregateInputType | true
+    }
+
+  export interface WorkoutMuscleGroupStatDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkoutMuscleGroupStat'], meta: { name: 'WorkoutMuscleGroupStat' } }
+    /**
+     * Find zero or one WorkoutMuscleGroupStat that matches the filter.
+     * @param {WorkoutMuscleGroupStatFindUniqueArgs} args - Arguments to find a WorkoutMuscleGroupStat
+     * @example
+     * // Get one WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkoutMuscleGroupStatFindUniqueArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatFindUniqueArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WorkoutMuscleGroupStat that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WorkoutMuscleGroupStatFindUniqueOrThrowArgs} args - Arguments to find a WorkoutMuscleGroupStat
+     * @example
+     * // Get one WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkoutMuscleGroupStatFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkoutMuscleGroupStat that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatFindFirstArgs} args - Arguments to find a WorkoutMuscleGroupStat
+     * @example
+     * // Get one WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkoutMuscleGroupStatFindFirstArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatFindFirstArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkoutMuscleGroupStat that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatFindFirstOrThrowArgs} args - Arguments to find a WorkoutMuscleGroupStat
+     * @example
+     * // Get one WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkoutMuscleGroupStatFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WorkoutMuscleGroupStats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStats = await prisma.workoutMuscleGroupStat.findMany()
+     * 
+     * // Get first 10 WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStats = await prisma.workoutMuscleGroupStat.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workoutMuscleGroupStatWithIdOnly = await prisma.workoutMuscleGroupStat.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkoutMuscleGroupStatFindManyArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WorkoutMuscleGroupStat.
+     * @param {WorkoutMuscleGroupStatCreateArgs} args - Arguments to create a WorkoutMuscleGroupStat.
+     * @example
+     * // Create one WorkoutMuscleGroupStat
+     * const WorkoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.create({
+     *   data: {
+     *     // ... data to create a WorkoutMuscleGroupStat
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkoutMuscleGroupStatCreateArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatCreateArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WorkoutMuscleGroupStats.
+     * @param {WorkoutMuscleGroupStatCreateManyArgs} args - Arguments to create many WorkoutMuscleGroupStats.
+     * @example
+     * // Create many WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkoutMuscleGroupStatCreateManyArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkoutMuscleGroupStats and returns the data saved in the database.
+     * @param {WorkoutMuscleGroupStatCreateManyAndReturnArgs} args - Arguments to create many WorkoutMuscleGroupStats.
+     * @example
+     * // Create many WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkoutMuscleGroupStats and only return the `id`
+     * const workoutMuscleGroupStatWithIdOnly = await prisma.workoutMuscleGroupStat.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkoutMuscleGroupStatCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WorkoutMuscleGroupStat.
+     * @param {WorkoutMuscleGroupStatDeleteArgs} args - Arguments to delete one WorkoutMuscleGroupStat.
+     * @example
+     * // Delete one WorkoutMuscleGroupStat
+     * const WorkoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.delete({
+     *   where: {
+     *     // ... filter to delete one WorkoutMuscleGroupStat
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkoutMuscleGroupStatDeleteArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatDeleteArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WorkoutMuscleGroupStat.
+     * @param {WorkoutMuscleGroupStatUpdateArgs} args - Arguments to update one WorkoutMuscleGroupStat.
+     * @example
+     * // Update one WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkoutMuscleGroupStatUpdateArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatUpdateArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WorkoutMuscleGroupStats.
+     * @param {WorkoutMuscleGroupStatDeleteManyArgs} args - Arguments to filter WorkoutMuscleGroupStats to delete.
+     * @example
+     * // Delete a few WorkoutMuscleGroupStats
+     * const { count } = await prisma.workoutMuscleGroupStat.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkoutMuscleGroupStatDeleteManyArgs>(args?: SelectSubset<T, WorkoutMuscleGroupStatDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkoutMuscleGroupStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkoutMuscleGroupStatUpdateManyArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkoutMuscleGroupStats and returns the data updated in the database.
+     * @param {WorkoutMuscleGroupStatUpdateManyAndReturnArgs} args - Arguments to update many WorkoutMuscleGroupStats.
+     * @example
+     * // Update many WorkoutMuscleGroupStats
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WorkoutMuscleGroupStats and only return the `id`
+     * const workoutMuscleGroupStatWithIdOnly = await prisma.workoutMuscleGroupStat.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WorkoutMuscleGroupStatUpdateManyAndReturnArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WorkoutMuscleGroupStat.
+     * @param {WorkoutMuscleGroupStatUpsertArgs} args - Arguments to update or create a WorkoutMuscleGroupStat.
+     * @example
+     * // Update or create a WorkoutMuscleGroupStat
+     * const workoutMuscleGroupStat = await prisma.workoutMuscleGroupStat.upsert({
+     *   create: {
+     *     // ... data to create a WorkoutMuscleGroupStat
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkoutMuscleGroupStat we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkoutMuscleGroupStatUpsertArgs>(args: SelectSubset<T, WorkoutMuscleGroupStatUpsertArgs<ExtArgs>>): Prisma__WorkoutMuscleGroupStatClient<$Result.GetResult<Prisma.$WorkoutMuscleGroupStatPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WorkoutMuscleGroupStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatCountArgs} args - Arguments to filter WorkoutMuscleGroupStats to count.
+     * @example
+     * // Count the number of WorkoutMuscleGroupStats
+     * const count = await prisma.workoutMuscleGroupStat.count({
+     *   where: {
+     *     // ... the filter for the WorkoutMuscleGroupStats we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkoutMuscleGroupStatCountArgs>(
+      args?: Subset<T, WorkoutMuscleGroupStatCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkoutMuscleGroupStatCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkoutMuscleGroupStat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkoutMuscleGroupStatAggregateArgs>(args: Subset<T, WorkoutMuscleGroupStatAggregateArgs>): Prisma.PrismaPromise<GetWorkoutMuscleGroupStatAggregateType<T>>
+
+    /**
+     * Group by WorkoutMuscleGroupStat.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkoutMuscleGroupStatGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkoutMuscleGroupStatGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkoutMuscleGroupStatGroupByArgs['orderBy'] }
+        : { orderBy?: WorkoutMuscleGroupStatGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkoutMuscleGroupStatGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkoutMuscleGroupStatGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkoutMuscleGroupStat model
+   */
+  readonly fields: WorkoutMuscleGroupStatFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkoutMuscleGroupStat.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkoutMuscleGroupStatClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workout<T extends UserWorkoutDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserWorkoutDefaultArgs<ExtArgs>>): Prisma__UserWorkoutClient<$Result.GetResult<Prisma.$UserWorkoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkoutMuscleGroupStat model
+   */
+  interface WorkoutMuscleGroupStatFieldRefs {
+    readonly id: FieldRef<"WorkoutMuscleGroupStat", 'Int'>
+    readonly workoutId: FieldRef<"WorkoutMuscleGroupStat", 'Int'>
+    readonly muscleGroup: FieldRef<"WorkoutMuscleGroupStat", 'MuscleGroupLabel'>
+    readonly bodyArea: FieldRef<"WorkoutMuscleGroupStat", 'BodyAreaLabel'>
+    readonly percentage: FieldRef<"WorkoutMuscleGroupStat", 'Decimal'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkoutMuscleGroupStat findUnique
+   */
+  export type WorkoutMuscleGroupStatFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkoutMuscleGroupStat to fetch.
+     */
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+  }
+
+  /**
+   * WorkoutMuscleGroupStat findUniqueOrThrow
+   */
+  export type WorkoutMuscleGroupStatFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkoutMuscleGroupStat to fetch.
+     */
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+  }
+
+  /**
+   * WorkoutMuscleGroupStat findFirst
+   */
+  export type WorkoutMuscleGroupStatFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkoutMuscleGroupStat to fetch.
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkoutMuscleGroupStats to fetch.
+     */
+    orderBy?: WorkoutMuscleGroupStatOrderByWithRelationInput | WorkoutMuscleGroupStatOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkoutMuscleGroupStats.
+     */
+    cursor?: WorkoutMuscleGroupStatWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkoutMuscleGroupStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkoutMuscleGroupStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkoutMuscleGroupStats.
+     */
+    distinct?: WorkoutMuscleGroupStatScalarFieldEnum | WorkoutMuscleGroupStatScalarFieldEnum[]
+  }
+
+  /**
+   * WorkoutMuscleGroupStat findFirstOrThrow
+   */
+  export type WorkoutMuscleGroupStatFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkoutMuscleGroupStat to fetch.
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkoutMuscleGroupStats to fetch.
+     */
+    orderBy?: WorkoutMuscleGroupStatOrderByWithRelationInput | WorkoutMuscleGroupStatOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkoutMuscleGroupStats.
+     */
+    cursor?: WorkoutMuscleGroupStatWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkoutMuscleGroupStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkoutMuscleGroupStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkoutMuscleGroupStats.
+     */
+    distinct?: WorkoutMuscleGroupStatScalarFieldEnum | WorkoutMuscleGroupStatScalarFieldEnum[]
+  }
+
+  /**
+   * WorkoutMuscleGroupStat findMany
+   */
+  export type WorkoutMuscleGroupStatFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkoutMuscleGroupStats to fetch.
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkoutMuscleGroupStats to fetch.
+     */
+    orderBy?: WorkoutMuscleGroupStatOrderByWithRelationInput | WorkoutMuscleGroupStatOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkoutMuscleGroupStats.
+     */
+    cursor?: WorkoutMuscleGroupStatWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkoutMuscleGroupStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkoutMuscleGroupStats.
+     */
+    skip?: number
+    distinct?: WorkoutMuscleGroupStatScalarFieldEnum | WorkoutMuscleGroupStatScalarFieldEnum[]
+  }
+
+  /**
+   * WorkoutMuscleGroupStat create
+   */
+  export type WorkoutMuscleGroupStatCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkoutMuscleGroupStat.
+     */
+    data: XOR<WorkoutMuscleGroupStatCreateInput, WorkoutMuscleGroupStatUncheckedCreateInput>
+  }
+
+  /**
+   * WorkoutMuscleGroupStat createMany
+   */
+  export type WorkoutMuscleGroupStatCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkoutMuscleGroupStats.
+     */
+    data: WorkoutMuscleGroupStatCreateManyInput | WorkoutMuscleGroupStatCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkoutMuscleGroupStat createManyAndReturn
+   */
+  export type WorkoutMuscleGroupStatCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * The data used to create many WorkoutMuscleGroupStats.
+     */
+    data: WorkoutMuscleGroupStatCreateManyInput | WorkoutMuscleGroupStatCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkoutMuscleGroupStat update
+   */
+  export type WorkoutMuscleGroupStatUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkoutMuscleGroupStat.
+     */
+    data: XOR<WorkoutMuscleGroupStatUpdateInput, WorkoutMuscleGroupStatUncheckedUpdateInput>
+    /**
+     * Choose, which WorkoutMuscleGroupStat to update.
+     */
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+  }
+
+  /**
+   * WorkoutMuscleGroupStat updateMany
+   */
+  export type WorkoutMuscleGroupStatUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkoutMuscleGroupStats.
+     */
+    data: XOR<WorkoutMuscleGroupStatUpdateManyMutationInput, WorkoutMuscleGroupStatUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkoutMuscleGroupStats to update
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * Limit how many WorkoutMuscleGroupStats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkoutMuscleGroupStat updateManyAndReturn
+   */
+  export type WorkoutMuscleGroupStatUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * The data used to update WorkoutMuscleGroupStats.
+     */
+    data: XOR<WorkoutMuscleGroupStatUpdateManyMutationInput, WorkoutMuscleGroupStatUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkoutMuscleGroupStats to update
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * Limit how many WorkoutMuscleGroupStats to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkoutMuscleGroupStat upsert
+   */
+  export type WorkoutMuscleGroupStatUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkoutMuscleGroupStat to update in case it exists.
+     */
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+    /**
+     * In case the WorkoutMuscleGroupStat found by the `where` argument doesn't exist, create a new WorkoutMuscleGroupStat with this data.
+     */
+    create: XOR<WorkoutMuscleGroupStatCreateInput, WorkoutMuscleGroupStatUncheckedCreateInput>
+    /**
+     * In case the WorkoutMuscleGroupStat was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkoutMuscleGroupStatUpdateInput, WorkoutMuscleGroupStatUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkoutMuscleGroupStat delete
+   */
+  export type WorkoutMuscleGroupStatDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
+    /**
+     * Filter which WorkoutMuscleGroupStat to delete.
+     */
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+  }
+
+  /**
+   * WorkoutMuscleGroupStat deleteMany
+   */
+  export type WorkoutMuscleGroupStatDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkoutMuscleGroupStats to delete
+     */
+    where?: WorkoutMuscleGroupStatWhereInput
+    /**
+     * Limit how many WorkoutMuscleGroupStats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkoutMuscleGroupStat without action
+   */
+  export type WorkoutMuscleGroupStatDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkoutMuscleGroupStat
+     */
+    select?: WorkoutMuscleGroupStatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkoutMuscleGroupStat
+     */
+    omit?: WorkoutMuscleGroupStatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkoutMuscleGroupStatInclude<ExtArgs> | null
   }
 
 
@@ -15757,6 +16985,17 @@ export namespace Prisma {
   export type UserWorkoutScalarFieldEnum = (typeof UserWorkoutScalarFieldEnum)[keyof typeof UserWorkoutScalarFieldEnum]
 
 
+  export const WorkoutMuscleGroupStatScalarFieldEnum: {
+    id: 'id',
+    workoutId: 'workoutId',
+    muscleGroup: 'muscleGroup',
+    bodyArea: 'bodyArea',
+    percentage: 'percentage'
+  };
+
+  export type WorkoutMuscleGroupStatScalarFieldEnum = (typeof WorkoutMuscleGroupStatScalarFieldEnum)[keyof typeof WorkoutMuscleGroupStatScalarFieldEnum]
+
+
   export const WorkoutExerciseScalarFieldEnum: {
     id: 'id',
     workoutId: 'workoutId',
@@ -16456,6 +17695,7 @@ export namespace Prisma {
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     exercises?: WorkoutExerciseListRelationFilter
+    muscleGroupStats?: WorkoutMuscleGroupStatListRelationFilter
   }
 
   export type UserWorkoutOrderByWithRelationInput = {
@@ -16471,6 +17711,7 @@ export namespace Prisma {
     bodyWeightKg?: SortOrder
     user?: UserOrderByWithRelationInput
     exercises?: WorkoutExerciseOrderByRelationAggregateInput
+    muscleGroupStats?: WorkoutMuscleGroupStatOrderByRelationAggregateInput
   }
 
   export type UserWorkoutWhereUniqueInput = Prisma.AtLeast<{
@@ -16489,6 +17730,7 @@ export namespace Prisma {
     bodyWeightKg?: DecimalFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     exercises?: WorkoutExerciseListRelationFilter
+    muscleGroupStats?: WorkoutMuscleGroupStatListRelationFilter
   }, "id">
 
   export type UserWorkoutOrderByWithAggregationInput = {
@@ -16523,6 +17765,63 @@ export namespace Prisma {
     totalWeightKg?: IntNullableWithAggregatesFilter<"UserWorkout"> | number | null
     totalReps?: IntNullableWithAggregatesFilter<"UserWorkout"> | number | null
     bodyWeightKg?: DecimalWithAggregatesFilter<"UserWorkout"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatWhereInput = {
+    AND?: WorkoutMuscleGroupStatWhereInput | WorkoutMuscleGroupStatWhereInput[]
+    OR?: WorkoutMuscleGroupStatWhereInput[]
+    NOT?: WorkoutMuscleGroupStatWhereInput | WorkoutMuscleGroupStatWhereInput[]
+    id?: IntFilter<"WorkoutMuscleGroupStat"> | number
+    workoutId?: IntFilter<"WorkoutMuscleGroupStat"> | number
+    muscleGroup?: EnumMuscleGroupLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.BodyAreaLabel
+    percentage?: DecimalFilter<"WorkoutMuscleGroupStat"> | Decimal | DecimalJsLike | number | string
+    workout?: XOR<UserWorkoutScalarRelationFilter, UserWorkoutWhereInput>
+  }
+
+  export type WorkoutMuscleGroupStatOrderByWithRelationInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    muscleGroup?: SortOrder
+    bodyArea?: SortOrder
+    percentage?: SortOrder
+    workout?: UserWorkoutOrderByWithRelationInput
+  }
+
+  export type WorkoutMuscleGroupStatWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: WorkoutMuscleGroupStatWhereInput | WorkoutMuscleGroupStatWhereInput[]
+    OR?: WorkoutMuscleGroupStatWhereInput[]
+    NOT?: WorkoutMuscleGroupStatWhereInput | WorkoutMuscleGroupStatWhereInput[]
+    workoutId?: IntFilter<"WorkoutMuscleGroupStat"> | number
+    muscleGroup?: EnumMuscleGroupLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.BodyAreaLabel
+    percentage?: DecimalFilter<"WorkoutMuscleGroupStat"> | Decimal | DecimalJsLike | number | string
+    workout?: XOR<UserWorkoutScalarRelationFilter, UserWorkoutWhereInput>
+  }, "id">
+
+  export type WorkoutMuscleGroupStatOrderByWithAggregationInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    muscleGroup?: SortOrder
+    bodyArea?: SortOrder
+    percentage?: SortOrder
+    _count?: WorkoutMuscleGroupStatCountOrderByAggregateInput
+    _avg?: WorkoutMuscleGroupStatAvgOrderByAggregateInput
+    _max?: WorkoutMuscleGroupStatMaxOrderByAggregateInput
+    _min?: WorkoutMuscleGroupStatMinOrderByAggregateInput
+    _sum?: WorkoutMuscleGroupStatSumOrderByAggregateInput
+  }
+
+  export type WorkoutMuscleGroupStatScalarWhereWithAggregatesInput = {
+    AND?: WorkoutMuscleGroupStatScalarWhereWithAggregatesInput | WorkoutMuscleGroupStatScalarWhereWithAggregatesInput[]
+    OR?: WorkoutMuscleGroupStatScalarWhereWithAggregatesInput[]
+    NOT?: WorkoutMuscleGroupStatScalarWhereWithAggregatesInput | WorkoutMuscleGroupStatScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"WorkoutMuscleGroupStat"> | number
+    workoutId?: IntWithAggregatesFilter<"WorkoutMuscleGroupStat"> | number
+    muscleGroup?: EnumMuscleGroupLabelWithAggregatesFilter<"WorkoutMuscleGroupStat"> | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelWithAggregatesFilter<"WorkoutMuscleGroupStat"> | $Enums.BodyAreaLabel
+    percentage?: DecimalWithAggregatesFilter<"WorkoutMuscleGroupStat"> | Decimal | DecimalJsLike | number | string
   }
 
   export type WorkoutExerciseWhereInput = {
@@ -17072,6 +18371,7 @@ export namespace Prisma {
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     user: UserCreateNestedOneWithoutWorkoutsInput
     exercises?: WorkoutExerciseCreateNestedManyWithoutWorkoutInput
+    muscleGroupStats?: WorkoutMuscleGroupStatCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutUncheckedCreateInput = {
@@ -17086,6 +18386,7 @@ export namespace Prisma {
     totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutUpdateInput = {
@@ -17099,6 +18400,7 @@ export namespace Prisma {
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
     exercises?: WorkoutExerciseUpdateManyWithoutWorkoutNestedInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUpdateManyWithoutWorkoutNestedInput
   }
 
   export type UserWorkoutUncheckedUpdateInput = {
@@ -17113,6 +18415,7 @@ export namespace Prisma {
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutNestedInput
   }
 
   export type UserWorkoutCreateManyInput = {
@@ -17150,6 +18453,58 @@ export namespace Prisma {
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatCreateInput = {
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+    workout: UserWorkoutCreateNestedOneWithoutMuscleGroupStatsInput
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedCreateInput = {
+    id?: number
+    workoutId: number
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUpdateInput = {
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    workout?: UserWorkoutUpdateOneRequiredWithoutMuscleGroupStatsNestedInput
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    workoutId?: IntFieldUpdateOperationsInput | number
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatCreateManyInput = {
+    id?: number
+    workoutId: number
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUpdateManyMutationInput = {
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    workoutId?: IntFieldUpdateOperationsInput | number
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type WorkoutExerciseCreateInput = {
@@ -17932,6 +19287,16 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type WorkoutMuscleGroupStatListRelationFilter = {
+    every?: WorkoutMuscleGroupStatWhereInput
+    some?: WorkoutMuscleGroupStatWhereInput
+    none?: WorkoutMuscleGroupStatWhereInput
+  }
+
+  export type WorkoutMuscleGroupStatOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserWorkoutCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -17994,6 +19359,42 @@ export namespace Prisma {
   export type UserWorkoutScalarRelationFilter = {
     is?: UserWorkoutWhereInput
     isNot?: UserWorkoutWhereInput
+  }
+
+  export type WorkoutMuscleGroupStatCountOrderByAggregateInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    muscleGroup?: SortOrder
+    bodyArea?: SortOrder
+    percentage?: SortOrder
+  }
+
+  export type WorkoutMuscleGroupStatAvgOrderByAggregateInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    percentage?: SortOrder
+  }
+
+  export type WorkoutMuscleGroupStatMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    muscleGroup?: SortOrder
+    bodyArea?: SortOrder
+    percentage?: SortOrder
+  }
+
+  export type WorkoutMuscleGroupStatMinOrderByAggregateInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    muscleGroup?: SortOrder
+    bodyArea?: SortOrder
+    percentage?: SortOrder
+  }
+
+  export type WorkoutMuscleGroupStatSumOrderByAggregateInput = {
+    id?: SortOrder
+    workoutId?: SortOrder
+    percentage?: SortOrder
   }
 
   export type WorkoutSetListRelationFilter = {
@@ -18789,11 +20190,25 @@ export namespace Prisma {
     connect?: WorkoutExerciseWhereUniqueInput | WorkoutExerciseWhereUniqueInput[]
   }
 
+  export type WorkoutMuscleGroupStatCreateNestedManyWithoutWorkoutInput = {
+    create?: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput> | WorkoutMuscleGroupStatCreateWithoutWorkoutInput[] | WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput[]
+    connectOrCreate?: WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput | WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput[]
+    createMany?: WorkoutMuscleGroupStatCreateManyWorkoutInputEnvelope
+    connect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+  }
+
   export type WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput = {
     create?: XOR<WorkoutExerciseCreateWithoutWorkoutInput, WorkoutExerciseUncheckedCreateWithoutWorkoutInput> | WorkoutExerciseCreateWithoutWorkoutInput[] | WorkoutExerciseUncheckedCreateWithoutWorkoutInput[]
     connectOrCreate?: WorkoutExerciseCreateOrConnectWithoutWorkoutInput | WorkoutExerciseCreateOrConnectWithoutWorkoutInput[]
     createMany?: WorkoutExerciseCreateManyWorkoutInputEnvelope
     connect?: WorkoutExerciseWhereUniqueInput | WorkoutExerciseWhereUniqueInput[]
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedCreateNestedManyWithoutWorkoutInput = {
+    create?: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput> | WorkoutMuscleGroupStatCreateWithoutWorkoutInput[] | WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput[]
+    connectOrCreate?: WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput | WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput[]
+    createMany?: WorkoutMuscleGroupStatCreateManyWorkoutInputEnvelope
+    connect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutWorkoutsNestedInput = {
@@ -18818,6 +20233,20 @@ export namespace Prisma {
     deleteMany?: WorkoutExerciseScalarWhereInput | WorkoutExerciseScalarWhereInput[]
   }
 
+  export type WorkoutMuscleGroupStatUpdateManyWithoutWorkoutNestedInput = {
+    create?: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput> | WorkoutMuscleGroupStatCreateWithoutWorkoutInput[] | WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput[]
+    connectOrCreate?: WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput | WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput[]
+    upsert?: WorkoutMuscleGroupStatUpsertWithWhereUniqueWithoutWorkoutInput | WorkoutMuscleGroupStatUpsertWithWhereUniqueWithoutWorkoutInput[]
+    createMany?: WorkoutMuscleGroupStatCreateManyWorkoutInputEnvelope
+    set?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    disconnect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    delete?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    connect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    update?: WorkoutMuscleGroupStatUpdateWithWhereUniqueWithoutWorkoutInput | WorkoutMuscleGroupStatUpdateWithWhereUniqueWithoutWorkoutInput[]
+    updateMany?: WorkoutMuscleGroupStatUpdateManyWithWhereWithoutWorkoutInput | WorkoutMuscleGroupStatUpdateManyWithWhereWithoutWorkoutInput[]
+    deleteMany?: WorkoutMuscleGroupStatScalarWhereInput | WorkoutMuscleGroupStatScalarWhereInput[]
+  }
+
   export type WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput = {
     create?: XOR<WorkoutExerciseCreateWithoutWorkoutInput, WorkoutExerciseUncheckedCreateWithoutWorkoutInput> | WorkoutExerciseCreateWithoutWorkoutInput[] | WorkoutExerciseUncheckedCreateWithoutWorkoutInput[]
     connectOrCreate?: WorkoutExerciseCreateOrConnectWithoutWorkoutInput | WorkoutExerciseCreateOrConnectWithoutWorkoutInput[]
@@ -18830,6 +20259,34 @@ export namespace Prisma {
     update?: WorkoutExerciseUpdateWithWhereUniqueWithoutWorkoutInput | WorkoutExerciseUpdateWithWhereUniqueWithoutWorkoutInput[]
     updateMany?: WorkoutExerciseUpdateManyWithWhereWithoutWorkoutInput | WorkoutExerciseUpdateManyWithWhereWithoutWorkoutInput[]
     deleteMany?: WorkoutExerciseScalarWhereInput | WorkoutExerciseScalarWhereInput[]
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutNestedInput = {
+    create?: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput> | WorkoutMuscleGroupStatCreateWithoutWorkoutInput[] | WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput[]
+    connectOrCreate?: WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput | WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput[]
+    upsert?: WorkoutMuscleGroupStatUpsertWithWhereUniqueWithoutWorkoutInput | WorkoutMuscleGroupStatUpsertWithWhereUniqueWithoutWorkoutInput[]
+    createMany?: WorkoutMuscleGroupStatCreateManyWorkoutInputEnvelope
+    set?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    disconnect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    delete?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    connect?: WorkoutMuscleGroupStatWhereUniqueInput | WorkoutMuscleGroupStatWhereUniqueInput[]
+    update?: WorkoutMuscleGroupStatUpdateWithWhereUniqueWithoutWorkoutInput | WorkoutMuscleGroupStatUpdateWithWhereUniqueWithoutWorkoutInput[]
+    updateMany?: WorkoutMuscleGroupStatUpdateManyWithWhereWithoutWorkoutInput | WorkoutMuscleGroupStatUpdateManyWithWhereWithoutWorkoutInput[]
+    deleteMany?: WorkoutMuscleGroupStatScalarWhereInput | WorkoutMuscleGroupStatScalarWhereInput[]
+  }
+
+  export type UserWorkoutCreateNestedOneWithoutMuscleGroupStatsInput = {
+    create?: XOR<UserWorkoutCreateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedCreateWithoutMuscleGroupStatsInput>
+    connectOrCreate?: UserWorkoutCreateOrConnectWithoutMuscleGroupStatsInput
+    connect?: UserWorkoutWhereUniqueInput
+  }
+
+  export type UserWorkoutUpdateOneRequiredWithoutMuscleGroupStatsNestedInput = {
+    create?: XOR<UserWorkoutCreateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedCreateWithoutMuscleGroupStatsInput>
+    connectOrCreate?: UserWorkoutCreateOrConnectWithoutMuscleGroupStatsInput
+    upsert?: UserWorkoutUpsertWithoutMuscleGroupStatsInput
+    connect?: UserWorkoutWhereUniqueInput
+    update?: XOR<XOR<UserWorkoutUpdateToOneWithWhereWithoutMuscleGroupStatsInput, UserWorkoutUpdateWithoutMuscleGroupStatsInput>, UserWorkoutUncheckedUpdateWithoutMuscleGroupStatsInput>
   }
 
   export type UserWorkoutCreateNestedOneWithoutExercisesInput = {
@@ -19973,6 +21430,7 @@ export namespace Prisma {
     totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseCreateNestedManyWithoutWorkoutInput
+    muscleGroupStats?: WorkoutMuscleGroupStatCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutUncheckedCreateWithoutUserInput = {
@@ -19986,6 +21444,7 @@ export namespace Prisma {
     totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutCreateOrConnectWithoutUserInput = {
@@ -20209,6 +21668,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WorkoutMuscleGroupStatCreateWithoutWorkoutInput = {
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput = {
+    id?: number
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatCreateOrConnectWithoutWorkoutInput = {
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+    create: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput>
+  }
+
+  export type WorkoutMuscleGroupStatCreateManyWorkoutInputEnvelope = {
+    data: WorkoutMuscleGroupStatCreateManyWorkoutInput | WorkoutMuscleGroupStatCreateManyWorkoutInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutWorkoutsInput = {
     update: XOR<UserUpdateWithoutWorkoutsInput, UserUncheckedUpdateWithoutWorkoutsInput>
     create: XOR<UserCreateWithoutWorkoutsInput, UserUncheckedCreateWithoutWorkoutsInput>
@@ -20257,6 +21739,103 @@ export namespace Prisma {
     data: XOR<WorkoutExerciseUpdateManyMutationInput, WorkoutExerciseUncheckedUpdateManyWithoutWorkoutInput>
   }
 
+  export type WorkoutMuscleGroupStatUpsertWithWhereUniqueWithoutWorkoutInput = {
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+    update: XOR<WorkoutMuscleGroupStatUpdateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedUpdateWithoutWorkoutInput>
+    create: XOR<WorkoutMuscleGroupStatCreateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedCreateWithoutWorkoutInput>
+  }
+
+  export type WorkoutMuscleGroupStatUpdateWithWhereUniqueWithoutWorkoutInput = {
+    where: WorkoutMuscleGroupStatWhereUniqueInput
+    data: XOR<WorkoutMuscleGroupStatUpdateWithoutWorkoutInput, WorkoutMuscleGroupStatUncheckedUpdateWithoutWorkoutInput>
+  }
+
+  export type WorkoutMuscleGroupStatUpdateManyWithWhereWithoutWorkoutInput = {
+    where: WorkoutMuscleGroupStatScalarWhereInput
+    data: XOR<WorkoutMuscleGroupStatUpdateManyMutationInput, WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutInput>
+  }
+
+  export type WorkoutMuscleGroupStatScalarWhereInput = {
+    AND?: WorkoutMuscleGroupStatScalarWhereInput | WorkoutMuscleGroupStatScalarWhereInput[]
+    OR?: WorkoutMuscleGroupStatScalarWhereInput[]
+    NOT?: WorkoutMuscleGroupStatScalarWhereInput | WorkoutMuscleGroupStatScalarWhereInput[]
+    id?: IntFilter<"WorkoutMuscleGroupStat"> | number
+    workoutId?: IntFilter<"WorkoutMuscleGroupStat"> | number
+    muscleGroup?: EnumMuscleGroupLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFilter<"WorkoutMuscleGroupStat"> | $Enums.BodyAreaLabel
+    percentage?: DecimalFilter<"WorkoutMuscleGroupStat"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserWorkoutCreateWithoutMuscleGroupStatsInput = {
+    routineId: number
+    routineLabel: string
+    startedAt: Date | string
+    finishedAt: Date | string
+    durationSeconds?: number | null
+    totalWeightKg?: number | null
+    totalReps?: number | null
+    bodyWeightKg: Decimal | DecimalJsLike | number | string
+    user: UserCreateNestedOneWithoutWorkoutsInput
+    exercises?: WorkoutExerciseCreateNestedManyWithoutWorkoutInput
+  }
+
+  export type UserWorkoutUncheckedCreateWithoutMuscleGroupStatsInput = {
+    id?: number
+    userId: number
+    routineId: number
+    routineLabel: string
+    startedAt: Date | string
+    finishedAt: Date | string
+    durationSeconds?: number | null
+    totalWeightKg?: number | null
+    totalReps?: number | null
+    bodyWeightKg: Decimal | DecimalJsLike | number | string
+    exercises?: WorkoutExerciseUncheckedCreateNestedManyWithoutWorkoutInput
+  }
+
+  export type UserWorkoutCreateOrConnectWithoutMuscleGroupStatsInput = {
+    where: UserWorkoutWhereUniqueInput
+    create: XOR<UserWorkoutCreateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedCreateWithoutMuscleGroupStatsInput>
+  }
+
+  export type UserWorkoutUpsertWithoutMuscleGroupStatsInput = {
+    update: XOR<UserWorkoutUpdateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedUpdateWithoutMuscleGroupStatsInput>
+    create: XOR<UserWorkoutCreateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedCreateWithoutMuscleGroupStatsInput>
+    where?: UserWorkoutWhereInput
+  }
+
+  export type UserWorkoutUpdateToOneWithWhereWithoutMuscleGroupStatsInput = {
+    where?: UserWorkoutWhereInput
+    data: XOR<UserWorkoutUpdateWithoutMuscleGroupStatsInput, UserWorkoutUncheckedUpdateWithoutMuscleGroupStatsInput>
+  }
+
+  export type UserWorkoutUpdateWithoutMuscleGroupStatsInput = {
+    routineId?: IntFieldUpdateOperationsInput | number
+    routineLabel?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
+    bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
+    exercises?: WorkoutExerciseUpdateManyWithoutWorkoutNestedInput
+  }
+
+  export type UserWorkoutUncheckedUpdateWithoutMuscleGroupStatsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    routineId?: IntFieldUpdateOperationsInput | number
+    routineLabel?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
+    totalReps?: NullableIntFieldUpdateOperationsInput | number | null
+    bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exercises?: WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput
+  }
+
   export type UserWorkoutCreateWithoutExercisesInput = {
     routineId: number
     routineLabel: string
@@ -20267,6 +21846,7 @@ export namespace Prisma {
     totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
     user: UserCreateNestedOneWithoutWorkoutsInput
+    muscleGroupStats?: WorkoutMuscleGroupStatCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutUncheckedCreateWithoutExercisesInput = {
@@ -20280,6 +21860,7 @@ export namespace Prisma {
     totalWeightKg?: number | null
     totalReps?: number | null
     bodyWeightKg: Decimal | DecimalJsLike | number | string
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedCreateNestedManyWithoutWorkoutInput
   }
 
   export type UserWorkoutCreateOrConnectWithoutExercisesInput = {
@@ -20359,6 +21940,7 @@ export namespace Prisma {
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     user?: UserUpdateOneRequiredWithoutWorkoutsNestedInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUpdateManyWithoutWorkoutNestedInput
   }
 
   export type UserWorkoutUncheckedUpdateWithoutExercisesInput = {
@@ -20372,6 +21954,7 @@ export namespace Prisma {
     totalWeightKg?: NullableIntFieldUpdateOperationsInput | number | null
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutNestedInput
   }
 
   export type ExerciseUpsertWithoutWorkoutExercisesInput = {
@@ -20677,6 +22260,7 @@ export namespace Prisma {
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUpdateManyWithoutWorkoutNestedInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUpdateManyWithoutWorkoutNestedInput
   }
 
   export type UserWorkoutUncheckedUpdateWithoutUserInput = {
@@ -20690,6 +22274,7 @@ export namespace Prisma {
     totalReps?: NullableIntFieldUpdateOperationsInput | number | null
     bodyWeightKg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exercises?: WorkoutExerciseUncheckedUpdateManyWithoutWorkoutNestedInput
+    muscleGroupStats?: WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutNestedInput
   }
 
   export type UserWorkoutUncheckedUpdateManyWithoutUserInput = {
@@ -20726,6 +22311,13 @@ export namespace Prisma {
     position: number
   }
 
+  export type WorkoutMuscleGroupStatCreateManyWorkoutInput = {
+    id?: number
+    muscleGroup: $Enums.MuscleGroupLabel
+    bodyArea: $Enums.BodyAreaLabel
+    percentage: Decimal | DecimalJsLike | number | string
+  }
+
   export type WorkoutExerciseUpdateWithoutWorkoutInput = {
     position?: IntFieldUpdateOperationsInput | number
     exercise?: ExerciseUpdateOneRequiredWithoutWorkoutExercisesNestedInput
@@ -20743,6 +22335,26 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     exerciseId?: IntFieldUpdateOperationsInput | number
     position?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WorkoutMuscleGroupStatUpdateWithoutWorkoutInput = {
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedUpdateWithoutWorkoutInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WorkoutMuscleGroupStatUncheckedUpdateManyWithoutWorkoutInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    muscleGroup?: EnumMuscleGroupLabelFieldUpdateOperationsInput | $Enums.MuscleGroupLabel
+    bodyArea?: EnumBodyAreaLabelFieldUpdateOperationsInput | $Enums.BodyAreaLabel
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type WorkoutSetCreateManyWorkoutExerciseInput = {

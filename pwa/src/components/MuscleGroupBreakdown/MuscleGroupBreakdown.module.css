@@ -1,0 +1,103 @@
+.root {
+  padding: var(--spacing-unit-3) 0;
+}
+
+
+.bar {
+  display: flex;
+  height: 10px;
+  overflow: hidden;
+  gap: 2px;
+
+}
+
+.barSegment {
+  transition: width 0.3s ease;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--spacing-unit-1) 0;
+  cursor: pointer;
+  gap: var(--spacing-unit-2);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-unit-1) var(--spacing-unit-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  color: var(--em-text-secondary);
+}
+
+.legendPct {
+  font-size: var(--font-size-10);
+  color: var(--em-text-tertiary);
+}
+
+.musclePanel {
+  padding-top: var(--spacing-unit-3);
+}
+
+.muscleList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
+}
+
+.muscleItem {
+  display: grid;
+  grid-template-columns: 140px 1fr 36px;
+  align-items: center;
+  gap: var(--spacing-unit-2);
+}
+
+.muscleName {
+  font-size: var(--font-size-12);
+  color: var(--em-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.muscleBarTrack {
+  height: 5px;
+  background: var(--background-surface);
+  overflow: hidden;
+}
+
+.muscleBarFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.musclePct {
+  font-size: var(--font-size-10);
+  color: var(--em-text-tertiary);
+  text-align: right;
+}
