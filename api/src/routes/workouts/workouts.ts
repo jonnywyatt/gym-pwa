@@ -27,9 +27,6 @@ router.post('/users/:userId/workouts', authenticate, async (req, res) => {
 
     const workout = req.body as CreateWorkoutRequest;
 
-    console.log('Received workout data:', workout);
-    console.log('routineId:', workout.routineId, 'type:', typeof workout.routineId);
-
     if (!workout.routineId || typeof workout.routineId !== 'number') {
       res.status(400).json({ error: 'routineId is required and must be a number' });
       return;
@@ -60,9 +57,8 @@ router.post('/users/:userId/workouts', authenticate, async (req, res) => {
       return;
     }
 
-    const createdWorkout = await createUserWorkout(userId, workout);
-    const transformed = transformUserWorkout(createdWorkout);
-    res.status(201).json(transformed);
+    const workoutId = await createUserWorkout(userId, workout);
+    res.status(201).json({ id: workoutId });
   } catch (error) {
     console.error('Error creating workout:', error);
     res.status(500).json({ error: 'Failed to create workout' });
