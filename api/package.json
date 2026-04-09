@@ -14,7 +14,7 @@
   "scripts": {
     "predev": "npm run docker:start",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
     "db:setup": "docker exec gym-postgres psql -U postgres -c 'DROP DATABASE IF EXISTS gym_dev' && docker exec gym-postgres psql -U postgres -c 'CREATE DATABASE gym_dev' && prisma migrate deploy && prisma db seed",
