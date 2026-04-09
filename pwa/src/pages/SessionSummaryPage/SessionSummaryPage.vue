@@ -100,7 +100,7 @@ onMounted(() => {
 
       <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" class="marginBottom3" />
 
-      <ul class="list">
+      <ul class="list marginTop2">
         <li
             v-for="exercise in completedWorkout.exercisesCompleted"
             :key="exercise.id"

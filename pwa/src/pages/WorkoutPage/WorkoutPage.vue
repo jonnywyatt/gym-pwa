@@ -280,7 +280,7 @@ onUnmounted(() => {
         <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" />
       </nav>
 
-      <ul class="list">
+      <ul class="list marginTop2">
         <li
             v-for="exercise in workout.exercisesCompleted"
             :key="exercise.id"
