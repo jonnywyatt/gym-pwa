@@ -43,26 +43,28 @@ const dashboardRoute = new Route(
     const cache = await caches.open(DASHBOARD_CACHE);
     const cachedResponse = await cache.match(DASHBOARD_CACHE_KEY, { ignoreVary: true });
 
-    const fetchAndCache = fetch(request).then(async (networkResponse) => {
-      if (networkResponse.ok) {
-        const headers = new Headers(networkResponse.headers);
-        headers.set('x-cached-at', new Date().toISOString());
-        const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
-          status: networkResponse.status,
-          statusText: networkResponse.statusText,
-          headers,
-        });
-        await cache.put(DASHBOARD_CACHE_KEY, responseToCache);
+    const fetchAndCache = fetch(new Request(request, { cache: 'no-cache' })).then(
+      async (networkResponse) => {
+        if (networkResponse.ok) {
+          const headers = new Headers(networkResponse.headers);
+          headers.set('x-cached-at', new Date().toISOString());
+          const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
+            status: networkResponse.status,
+            statusText: networkResponse.statusText,
+            headers,
+          });
+          await cache.put(DASHBOARD_CACHE_KEY, responseToCache);
 
-        if (cachedResponse) {
-          const clients = await self.clients.matchAll();
-          for (const client of clients) {
-            client.postMessage({ type: 'DASHBOARD_UPDATED' });
+          if (cachedResponse) {
+            const clients = await self.clients.matchAll();
+            for (const client of clients) {
+              client.postMessage({ type: 'DASHBOARD_UPDATED' });
+            }
           }
         }
+        return networkResponse;
       }
-      return networkResponse;
-    });
+    );
 
     if (cachedResponse && isCachedResponseFresh(cachedResponse)) {
       fetchAndCache.catch(() => {});
