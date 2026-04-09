@@ -45,11 +45,11 @@ describe('fetchDashboard', () => {
 
   it('should call the dashboard endpoint with the since param', async () => {
     mockAuthFetchJson.mockResolvedValue(mockResponse);
-    const since = new Date('2024-01-01T00:00:00.000Z');
+    const since = new Date(2024, 0, 1);
 
     const result = await fetchDashboard(since);
 
-    expect(mockAuthFetchJson).toHaveBeenCalledWith(`/dashboard?since=${since.toISOString()}`);
+    expect(mockAuthFetchJson).toHaveBeenCalledWith('/dashboard?since=2024-01-01');
     expect(result).toEqual(mockResponse);
   });
 });

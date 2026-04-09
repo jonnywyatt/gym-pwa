@@ -1,7 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { formatDateTime, formatDurationSeconds, formatTimeMinSec, parseTimeMinSec } from './time';
+import {
+  formatDateTime,
+  formatDurationSeconds,
+  formatTimeMinSec,
+  parseTimeMinSec,
+  toLocalDateString,
+} from './time';
 
 describe('time utils', () => {
+  describe('toLocalDateString', () => {
+    it('formats a date using local year, month, and day', () => {
+      expect(toLocalDateString(new Date(2025, 4, 1))).toBe('2025-05-01');
+    });
+
+    it('pads single-digit month and day with zero', () => {
+      expect(toLocalDateString(new Date(2026, 0, 9))).toBe('2026-01-09');
+    });
+  });
+
   describe('formatDateTime', () => {
     beforeEach(() => {
       vi.useFakeTimers();

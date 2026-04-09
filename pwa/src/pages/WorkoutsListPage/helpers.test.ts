@@ -254,11 +254,10 @@ describe('fetchWorkouts', () => {
       })
     );
 
-    const since = new Date('2026-02-05T12:00:00.000Z');
+    const since = new Date(2026, 1, 5);
     await fetchWorkouts(1, since);
 
-    expect(capturedUrl).toContain(`${mockApiUrl}/users/1/workouts?since=`);
-    expect(capturedUrl).toContain('2026-02-05T12');
+    expect(capturedUrl).toContain(`${mockApiUrl}/users/1/workouts?since=2026-02-05`);
   });
 });
 

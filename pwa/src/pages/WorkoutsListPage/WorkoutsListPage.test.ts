@@ -293,13 +293,8 @@ describe('WorkoutsListPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    expect(capturedUrl).toContain('since=');
     const sinceParam = new URL(capturedUrl).searchParams.get('since');
-    expect(sinceParam).not.toBeNull();
-    const sinceDate = new Date(sinceParam as string);
-    expect(sinceDate.getFullYear()).toBe(2025);
-    expect(sinceDate.getMonth()).toBe(4);
-    expect(sinceDate.getDate()).toBe(1);
+    expect(sinceParam).toBe('2025-05-01');
 
     vi.useRealTimers();
   });

@@ -1,6 +1,7 @@
 import type { ChartData, ChartOptions, TooltipPositionerFunction } from 'chart.js';
 import type { RoutineTrendData, SessionTrendsResponse } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
+import { toLocalDateString } from '../../utils/time';
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
@@ -40,7 +41,7 @@ export function clearTrendsCache(): void {
 
 function fetchFromApi(userId: number, period: TrendPeriod): Promise<SessionTrendsResponse> {
   const since = getPeriodSince(period);
-  const query = since ? `?since=${since.toISOString()}` : '';
+  const query = since ? `?since=${toLocalDateString(since)}` : '';
   return authFetchJson<SessionTrendsResponse>(`/users/${userId}/session-trends${query}`);
 }
 

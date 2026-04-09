@@ -14,12 +14,17 @@ vi.mock('./components/AppLayout/AppLayout.vue', () => ({
 }));
 
 const mockPrefetchDashboardData = vi.hoisted(() => vi.fn());
+const mockPrefetchSessionTrends = vi.hoisted(() => vi.fn());
 const mockIsAuthenticated = vi.hoisted(() => vi.fn());
 const mockGetUserId = vi.hoisted(() => vi.fn());
 
 vi.mock('./pages/DashboardPage/helpers', () => ({
   prefetchDashboardData: mockPrefetchDashboardData,
   consumeDashboardPrefetch: vi.fn().mockReturnValue(null),
+}));
+
+vi.mock('./pages/SessionTrendsPage/helpers', () => ({
+  prefetchSessionTrends: mockPrefetchSessionTrends,
 }));
 
 vi.mock('./lib/auth/oauth', () => ({

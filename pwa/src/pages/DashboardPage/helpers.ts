@@ -1,6 +1,7 @@
 import type { DashboardResponse, RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
+import { toLocalDateString } from '../../utils/time';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
 let dashboardPrefetch: Promise<DashboardData> | null = null;
@@ -29,7 +30,7 @@ export type NewWorkoutResult =
   | { type: 'error'; error: string };
 
 export async function fetchDashboard(since: Date): Promise<DashboardResponse> {
-  return authFetchJson<DashboardResponse>(`/dashboard?since=${since.toISOString()}`);
+  return authFetchJson<DashboardResponse>(`/dashboard?since=${toLocalDateString(since)}`);
 }
 
 export async function fetchRoutines(): Promise<RoutineSummary[]> {

@@ -1,6 +1,6 @@
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
-import { formatDateTime as formatDateTimeUtil } from '../../utils/time';
+import { formatDateTime as formatDateTimeUtil, toLocalDateString } from '../../utils/time';
 
 export interface MonthGroup {
   key: string;
@@ -45,7 +45,7 @@ export function buildMonthGroups(
 
 export async function fetchWorkouts(userId: number, since?: Date): Promise<UserWorkoutSummary[]> {
   const url = since
-    ? `/users/${userId}/workouts?since=${since.toISOString()}`
+    ? `/users/${userId}/workouts?since=${toLocalDateString(since)}`
     : `/users/${userId}/workouts`;
   return await authFetchJson<UserWorkoutSummary[]>(url);
 }
