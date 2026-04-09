@@ -118,51 +118,49 @@ export async function createUserWorkout(
   userId: number,
   workout: CreateWorkoutRequest
 ): Promise<UserWorkoutFromDB> {
-  return await prisma.$transaction(async (tx) => {
-    const created = await tx.userWorkout.create({
-      data: {
-        userId,
-        routineId: workout.routineId,
-        routineLabel: workout.routineLabel,
-        startedAt: new Date(workout.startedAt),
-        finishedAt: new Date(workout.finishedAt),
-        durationSeconds: workout.durationSeconds,
-        totalWeightKg: workout.totalWeightKg,
-        totalReps: workout.totalReps,
-        bodyWeightKg: workout.bodyWeightKg,
-        exercises: {
-          create: workout.exercisesCompleted.map((exercise, position) => ({
-            exerciseId: exercise.id,
-            position,
-            sets: {
-              create: exercise.sets.map((set, setPosition) => ({
-                position: setPosition,
-                setType: setTypeToDb[set.setType],
-                weightKg: set.weightKg,
-                reps: set.reps,
-                timeSeconds: set.timeSeconds,
-              })),
-            },
-          })),
-        },
-      },
-      include: workoutInclude,
-    });
-
-    const stats = calculateMuscleGroupStats(created);
-    if (stats.length > 0) {
-      await tx.workoutMuscleGroupStat.createMany({
-        data: stats.map(({ muscleGroup, bodyArea, percentage }) => ({
-          workoutId: created.id,
-          muscleGroup,
-          bodyArea,
-          percentage,
+  const created = await prisma.userWorkout.create({
+    data: {
+      userId,
+      routineId: workout.routineId,
+      routineLabel: workout.routineLabel,
+      startedAt: new Date(workout.startedAt),
+      finishedAt: new Date(workout.finishedAt),
+      durationSeconds: workout.durationSeconds,
+      totalWeightKg: workout.totalWeightKg,
+      totalReps: workout.totalReps,
+      bodyWeightKg: workout.bodyWeightKg,
+      exercises: {
+        create: workout.exercisesCompleted.map((exercise, position) => ({
+          exerciseId: exercise.id,
+          position,
+          sets: {
+            create: exercise.sets.map((set, setPosition) => ({
+              position: setPosition,
+              setType: setTypeToDb[set.setType],
+              weightKg: set.weightKg,
+              reps: set.reps,
+              timeSeconds: set.timeSeconds,
+            })),
+          },
         })),
-      });
-    }
-
-    return created;
+      },
+    },
+    include: workoutInclude,
   });
+
+  const stats = calculateMuscleGroupStats(created);
+  if (stats.length > 0) {
+    await prisma.workoutMuscleGroupStat.createMany({
+      data: stats.map(({ muscleGroup, bodyArea, percentage }) => ({
+        workoutId: created.id,
+        muscleGroup,
+        bodyArea,
+        percentage,
+      })),
+    });
+  }
+
+  return created;
 }
 
 export async function getUserWorkouts(userId: number, since?: Date): Promise<UserWorkoutFromDB[]> {
