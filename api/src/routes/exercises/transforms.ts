@@ -9,6 +9,7 @@ export function transformExercises(exercises: ExerciseWithMuscleGroups[]): Exerc
     recordSetsType: exercise.recordSetsType,
     isIsometric: exercise.isIsometric,
     isUnilateral: exercise.isUnilateral,
+    bwFactor: exercise.bwFactor !== null ? Number(exercise.bwFactor) : null,
     primaryMuscleGroups: exercise.primaryMuscleGroups.map(
       (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label]
     ),

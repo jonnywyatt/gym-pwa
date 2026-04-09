@@ -18,6 +18,7 @@ export function transformRoutineDetail(routine: RoutineWithExercises): RoutineDe
     recordSetsType: re.exercise.recordSetsType,
     isIsometric: re.exercise.isIsometric,
     isUnilateral: re.exercise.isUnilateral,
+    bwFactor: re.exercise.bwFactor !== null ? Number(re.exercise.bwFactor) : null,
     primaryMuscleGroups: re.exercise.primaryMuscleGroups.map(
       (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label]
     ),

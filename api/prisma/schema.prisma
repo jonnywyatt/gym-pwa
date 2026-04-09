@@ -81,6 +81,7 @@ model Exercise {
   recordSetsType RecordSetsType @map("record_sets_type")
   isIsometric    Boolean        @default(false) @map("is_isometric")
   isUnilateral   Boolean        @default(false) @map("is_unilateral")
+  bwFactor       Decimal?       @db.Decimal(5, 2) @map("bw_factor")
   createdAt      DateTime       @default(now()) @map("created_at")
 
   primaryMuscleGroups   ExercisePrimaryMuscleGroup[]

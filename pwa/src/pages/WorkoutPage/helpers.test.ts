@@ -279,6 +279,41 @@ describe('WorkoutPage helpers', () => {
       const set: WorkoutSet = { id: '1', setType: 'Standard', completed: true };
       expect(calculateSetWeightKg('WEIGHT', 80, set)).toBe(0);
     });
+
+    it('adds bwFactor contribution to WEIGHT type: (weight + bw * factor) * reps', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Standard',
+        weightKg: 20,
+        reps: 10,
+        completed: true,
+      };
+      // 80kg BW * 1.0 factor = 80kg extra; (20 + 80) * 10 = 1000
+      expect(calculateSetWeightKg('WEIGHT', 80, set, 1.0)).toBe(1000);
+    });
+
+    it('adds partial bwFactor contribution to WEIGHT type', () => {
+      const set: WorkoutSet = {
+        id: '1',
+        setType: 'Standard',
+        weightKg: 0,
+        reps: 10,
+        completed: true,
+      };
+      // 80kg BW * 0.5 factor = 40kg; (0 + 40) * 10 = 400
+      expect(calculateSetWeightKg('WEIGHT', 80, set, 0.5)).toBe(400);
+    });
+
+    it('uses bwFactor contribution for REPS type', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', reps: 10, completed: true };
+      // 80kg BW * 1.0 factor = 80kg; 80 * 10 = 800
+      expect(calculateSetWeightKg('REPS', 80, set, 1.0)).toBe(800);
+    });
+
+    it('returns 0 for REPS type without bwFactor', () => {
+      const set: WorkoutSet = { id: '1', setType: 'Standard', reps: 15, completed: true };
+      expect(calculateSetWeightKg('REPS', 80, set)).toBe(0);
+    });
   });
 
   describe('isSetFilledIn', () => {
@@ -365,6 +400,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -377,6 +413,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -389,6 +426,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -406,6 +444,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -423,6 +462,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -434,6 +474,26 @@ describe('WorkoutPage helpers', () => {
         },
       ];
       expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(400);
+    });
+
+    it('includes bwFactor contribution for WEIGHT type exercises', () => {
+      const exercises: LocalWorkoutExercise[] = [
+        {
+          id: 1,
+          label: 'Lunge',
+          recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: true,
+          bwFactor: 1.0,
+          primaryMuscleGroups: [],
+          secondaryMuscleGroups: [],
+          tertiaryMuscleGroups: [],
+          completed: true,
+          // 75kg BW * 1.0 = 75kg; no extra weight entered; 75 * 10 = 750
+          sets: [{ id: 's1', setType: 'Standard', weightKg: 0, reps: 10, completed: true }],
+        },
+      ];
+      expect(calculateWorkoutTotalWeightKg(exercises, 75)).toBe(750);
     });
   });
 
@@ -464,6 +524,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'WEIGHT',
         isIsometric: false,
         isUnilateral: false,
+        bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
         tertiaryMuscleGroups: [],
@@ -485,6 +546,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'REPS',
         isIsometric: false,
         isUnilateral: false,
+        bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
         tertiaryMuscleGroups: [],
@@ -504,6 +566,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'WEIGHT_AND_TIME',
         isIsometric: false,
         isUnilateral: false,
+        bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
         tertiaryMuscleGroups: [],
@@ -522,6 +585,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'TIME',
         isIsometric: false,
         isUnilateral: false,
+        bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
         tertiaryMuscleGroups: [],
@@ -540,6 +604,7 @@ describe('WorkoutPage helpers', () => {
         recordSetsType: 'WEIGHT',
         isIsometric: false,
         isUnilateral: false,
+        bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
         tertiaryMuscleGroups: [],
@@ -560,6 +625,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: ['Pectoralis Major'],
           secondaryMuscleGroups: ['Triceps'],
           tertiaryMuscleGroups: [],
@@ -573,6 +639,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: ['Quadriceps'],
           secondaryMuscleGroups: ['Glutes'],
           tertiaryMuscleGroups: [],
@@ -595,6 +662,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -618,6 +686,7 @@ describe('WorkoutPage helpers', () => {
           recordSetsType: 'WEIGHT',
           isIsometric: false,
           isUnilateral: false,
+          bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
           tertiaryMuscleGroups: [],
@@ -647,6 +716,7 @@ describe('WorkoutPage helpers', () => {
             tertiaryMuscleGroups: [],
             isIsometric: false,
             isUnilateral: false,
+            bwFactor: null,
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
           },
@@ -659,6 +729,7 @@ describe('WorkoutPage helpers', () => {
             tertiaryMuscleGroups: [],
             isIsometric: false,
             isUnilateral: false,
+            bwFactor: null,
             completed: false,
           },
         ],
@@ -905,6 +976,7 @@ describe('WorkoutPage helpers', () => {
       recordSetsType: 'WEIGHT' as const,
       isIsometric: false,
       isUnilateral: false,
+      bwFactor: null,
       completed: true,
     };
 

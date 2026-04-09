@@ -99,14 +99,16 @@ export function getSetInputFields(recordSetsType: RecordSetsType): {
 export function calculateSetWeightKg(
   recordSetsType: RecordSetsType,
   bodyWeightKg: number,
-  set: CompletedSet
+  set: CompletedSet,
+  bwFactor: number | null = null
 ): number {
   const weightKg = set.weightKg ?? 0;
   const reps = set.reps ?? 0;
+  const bwContribution = bwFactor !== null ? bodyWeightKg * bwFactor : 0;
 
   switch (recordSetsType) {
     case 'WEIGHT':
-      return weightKg * reps;
+      return (weightKg + bwContribution) * reps;
     case 'BODYWEIGHT_PLUS_WEIGHT':
       return (bodyWeightKg + weightKg) * reps;
     case 'BODYWEIGHT_MINUS_OFFSET':
@@ -116,7 +118,7 @@ export function calculateSetWeightKg(
     case 'TIME':
       return 0;
     case 'REPS':
-      return 0;
+      return bwContribution * reps;
   }
 }
 
@@ -131,10 +133,11 @@ export function isSetFilledIn(set: WorkoutSet, recordSetsType: RecordSetsType): 
 export function calculateExerciseTotalWeightKg(
   recordSetsType: RecordSetsType,
   bodyWeightKg: number,
-  sets: WorkoutSet[]
+  sets: WorkoutSet[],
+  bwFactor: number | null = null
 ): number {
   return sets.reduce(
-    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set),
+    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set, bwFactor),
     0
   );
 }
@@ -142,10 +145,11 @@ export function calculateExerciseTotalWeightKg(
 export function calculateCompletedSetsTotalWeightKg(
   recordSetsType: RecordSetsType,
   bodyWeightKg: number,
-  sets: CompletedSet[]
+  sets: CompletedSet[],
+  bwFactor: number | null = null
 ): number {
   return sets.reduce(
-    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set),
+    (total, set) => total + calculateSetWeightKg(recordSetsType, bodyWeightKg, set, bwFactor),
     0
   );
 }
@@ -157,7 +161,12 @@ export function calculateWorkoutTotalWeightKg(
   return exercises.reduce(
     (total, exercise) =>
       total +
-      calculateExerciseTotalWeightKg(exercise.recordSetsType, bodyWeightKg, exercise.sets ?? []),
+      calculateExerciseTotalWeightKg(
+        exercise.recordSetsType,
+        bodyWeightKg,
+        exercise.sets ?? [],
+        exercise.bwFactor
+      ),
     0
   );
 }

@@ -4657,10 +4657,12 @@ export namespace Prisma {
 
   export type ExerciseAvgAggregateOutputType = {
     id: number | null
+    bwFactor: Decimal | null
   }
 
   export type ExerciseSumAggregateOutputType = {
     id: number | null
+    bwFactor: Decimal | null
   }
 
   export type ExerciseMinAggregateOutputType = {
@@ -4669,6 +4671,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType | null
     isIsometric: boolean | null
     isUnilateral: boolean | null
+    bwFactor: Decimal | null
     createdAt: Date | null
   }
 
@@ -4678,6 +4681,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType | null
     isIsometric: boolean | null
     isUnilateral: boolean | null
+    bwFactor: Decimal | null
     createdAt: Date | null
   }
 
@@ -4687,6 +4691,7 @@ export namespace Prisma {
     recordSetsType: number
     isIsometric: number
     isUnilateral: number
+    bwFactor: number
     createdAt: number
     _all: number
   }
@@ -4694,10 +4699,12 @@ export namespace Prisma {
 
   export type ExerciseAvgAggregateInputType = {
     id?: true
+    bwFactor?: true
   }
 
   export type ExerciseSumAggregateInputType = {
     id?: true
+    bwFactor?: true
   }
 
   export type ExerciseMinAggregateInputType = {
@@ -4706,6 +4713,7 @@ export namespace Prisma {
     recordSetsType?: true
     isIsometric?: true
     isUnilateral?: true
+    bwFactor?: true
     createdAt?: true
   }
 
@@ -4715,6 +4723,7 @@ export namespace Prisma {
     recordSetsType?: true
     isIsometric?: true
     isUnilateral?: true
+    bwFactor?: true
     createdAt?: true
   }
 
@@ -4724,6 +4733,7 @@ export namespace Prisma {
     recordSetsType?: true
     isIsometric?: true
     isUnilateral?: true
+    bwFactor?: true
     createdAt?: true
     _all?: true
   }
@@ -4820,6 +4830,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric: boolean
     isUnilateral: boolean
+    bwFactor: Decimal | null
     createdAt: Date
     _count: ExerciseCountAggregateOutputType | null
     _avg: ExerciseAvgAggregateOutputType | null
@@ -4848,6 +4859,7 @@ export namespace Prisma {
     recordSetsType?: boolean
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: boolean
     createdAt?: boolean
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
     secondaryMuscleGroups?: boolean | Exercise$secondaryMuscleGroupsArgs<ExtArgs>
@@ -4863,6 +4875,7 @@ export namespace Prisma {
     recordSetsType?: boolean
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
 
@@ -4872,6 +4885,7 @@ export namespace Prisma {
     recordSetsType?: boolean
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
 
@@ -4881,10 +4895,11 @@ export namespace Prisma {
     recordSetsType?: boolean
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: boolean
     createdAt?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "isIsometric" | "isUnilateral" | "createdAt", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "isIsometric" | "isUnilateral" | "bwFactor" | "createdAt", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
     secondaryMuscleGroups?: boolean | Exercise$secondaryMuscleGroupsArgs<ExtArgs>
@@ -4911,6 +4926,7 @@ export namespace Prisma {
       recordSetsType: $Enums.RecordSetsType
       isIsometric: boolean
       isUnilateral: boolean
+      bwFactor: Prisma.Decimal | null
       createdAt: Date
     }, ExtArgs["result"]["exercise"]>
     composites: {}
@@ -5345,6 +5361,7 @@ export namespace Prisma {
     readonly recordSetsType: FieldRef<"Exercise", 'RecordSetsType'>
     readonly isIsometric: FieldRef<"Exercise", 'Boolean'>
     readonly isUnilateral: FieldRef<"Exercise", 'Boolean'>
+    readonly bwFactor: FieldRef<"Exercise", 'Decimal'>
     readonly createdAt: FieldRef<"Exercise", 'DateTime'>
   }
     
@@ -18167,6 +18184,7 @@ export namespace Prisma {
     recordSetsType: 'recordSetsType',
     isIsometric: 'isIsometric',
     isUnilateral: 'isUnilateral',
+    bwFactor: 'bwFactor',
     createdAt: 'createdAt'
   };
 
@@ -18411,6 +18429,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -18435,20 +18467,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal[]'
-   */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -18590,6 +18608,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolFilter<"Exercise"> | boolean
     isUnilateral?: BoolFilter<"Exercise"> | boolean
+    bwFactor?: DecimalNullableFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupListRelationFilter
@@ -18604,6 +18623,7 @@ export namespace Prisma {
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
     isUnilateral?: SortOrder
+    bwFactor?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupOrderByRelationAggregateInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupOrderByRelationAggregateInput
@@ -18621,6 +18641,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolFilter<"Exercise"> | boolean
     isUnilateral?: BoolFilter<"Exercise"> | boolean
+    bwFactor?: DecimalNullableFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupListRelationFilter
@@ -18635,6 +18656,7 @@ export namespace Prisma {
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
     isUnilateral?: SortOrder
+    bwFactor?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ExerciseCountOrderByAggregateInput
     _avg?: ExerciseAvgOrderByAggregateInput
@@ -18652,6 +18674,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeWithAggregatesFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolWithAggregatesFilter<"Exercise"> | boolean
     isUnilateral?: BoolWithAggregatesFilter<"Exercise"> | boolean
+    bwFactor?: DecimalNullableWithAggregatesFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Exercise"> | Date | string
   }
 
@@ -19377,6 +19400,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -19391,6 +19415,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -19404,6 +19429,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -19418,6 +19444,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -19432,6 +19459,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
   }
 
@@ -19440,6 +19468,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19449,6 +19478,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20198,6 +20228,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -20221,6 +20262,11 @@ export namespace Prisma {
     none?: WorkoutExerciseWhereInput
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type RoutineExerciseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -20235,11 +20281,13 @@ export namespace Prisma {
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
     isUnilateral?: SortOrder
+    bwFactor?: SortOrder
     createdAt?: SortOrder
   }
 
   export type ExerciseAvgOrderByAggregateInput = {
     id?: SortOrder
+    bwFactor?: SortOrder
   }
 
   export type ExerciseMaxOrderByAggregateInput = {
@@ -20248,6 +20296,7 @@ export namespace Prisma {
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
     isUnilateral?: SortOrder
+    bwFactor?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -20257,11 +20306,13 @@ export namespace Prisma {
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
     isUnilateral?: SortOrder
+    bwFactor?: SortOrder
     createdAt?: SortOrder
   }
 
   export type ExerciseSumOrderByAggregateInput = {
     id?: SortOrder
+    bwFactor?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -20298,6 +20349,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -20343,11 +20410,6 @@ export namespace Prisma {
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type RoutineLabelUserIdCompoundUniqueInput = {
@@ -20901,17 +20963,6 @@ export namespace Prisma {
     not?: NestedEnumSetTypeFilter<$PrismaModel> | $Enums.SetType
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type WorkoutExerciseScalarRelationFilter = {
     is?: WorkoutExerciseWhereInput
     isNot?: WorkoutExerciseWhereInput
@@ -20973,22 +21024,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSetTypeFilter<$PrismaModel>
     _max?: NestedEnumSetTypeFilter<$PrismaModel>
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateNestedManyWithoutBodyAreaInput = {
@@ -21269,6 +21304,14 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -21937,14 +21980,6 @@ export namespace Prisma {
     set?: $Enums.SetType
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type WorkoutExerciseUpdateOneRequiredWithoutSetsNestedInput = {
     create?: XOR<WorkoutExerciseCreateWithoutSetsInput, WorkoutExerciseUncheckedCreateWithoutSetsInput>
     connectOrCreate?: WorkoutExerciseCreateOrConnectWithoutSetsInput
@@ -22051,6 +22086,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -22097,6 +22143,33 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -22123,17 +22196,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -22237,17 +22299,6 @@ export namespace Prisma {
     not?: NestedEnumSetTypeFilter<$PrismaModel> | $Enums.SetType
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedEnumSetTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.SetType | EnumSetTypeFieldRefInput<$PrismaModel>
     in?: $Enums.SetType[] | ListEnumSetTypeFieldRefInput<$PrismaModel>
@@ -22256,22 +22307,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSetTypeFilter<$PrismaModel>
     _max?: NestedEnumSetTypeFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type MuscleGroupCreateWithoutBodyAreaInput = {
@@ -22795,6 +22830,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -22808,6 +22844,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -22858,6 +22895,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -22871,6 +22909,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -22883,6 +22922,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -22896,6 +22936,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -22944,6 +22985,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -22957,6 +22999,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -22995,6 +23038,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23008,6 +23052,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23056,6 +23101,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23069,6 +23115,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     tertiaryMuscleGroups?: ExerciseTertiaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23107,6 +23154,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23120,6 +23168,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23168,6 +23217,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23181,6 +23231,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23688,6 +23739,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23701,6 +23753,7 @@ export namespace Prisma {
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
     isUnilateral?: boolean
+    bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23794,6 +23847,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23807,6 +23861,7 @@ export namespace Prisma {
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
     isUnilateral?: BoolFieldUpdateOperationsInput | boolean
+    bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput

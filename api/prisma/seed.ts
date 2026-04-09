@@ -57,12 +57,14 @@ async function main() {
         recordSetsType: exercise.recordSetsType,
         isIsometric: exercise.isIsometric,
         isUnilateral: exercise.isUnilateral,
+        bwFactor: exercise.bwFactor,
       },
       create: {
         label: exercise.label,
         recordSetsType: exercise.recordSetsType,
         isIsometric: exercise.isIsometric,
         isUnilateral: exercise.isUnilateral,
+        bwFactor: exercise.bwFactor,
       },
     });
     exerciseMap.set(upsertedExercise.label, upsertedExercise.id);

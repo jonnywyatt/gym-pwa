@@ -137,6 +137,7 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   recordSetsType: 'recordSetsType',
   isIsometric: 'isIsometric',
   isUnilateral: 'isUnilateral',
+  bwFactor: 'bwFactor',
   createdAt: 'createdAt'
 };
 
