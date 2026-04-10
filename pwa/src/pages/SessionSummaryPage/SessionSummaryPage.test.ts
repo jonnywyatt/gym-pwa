@@ -90,7 +90,12 @@ describe('SessionSummaryPage', () => {
 
     expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
     expect(screen.getAllByText('1,000kg')).toHaveLength(2);
-    expect(screen.getByText('Bench Press')).toBeInTheDocument();
+
+    const exerciseButton = screen.getByRole('button', { name: /Bench Press/ });
+    expect(exerciseButton).toBeInTheDocument();
+
+    await userEvent.click(exerciseButton);
+
     expect(screen.getByText('Warmup · 40kg · 10 reps')).toBeInTheDocument();
     expect(screen.getByText('Standard · 60kg · 10 reps')).toBeInTheDocument();
   });
@@ -137,7 +142,10 @@ describe('SessionSummaryPage', () => {
       expect(screen.getByText('Mixed Workout session')).toBeInTheDocument();
     });
 
+    await userEvent.click(screen.getByRole('button', { name: /Plank/ }));
     expect(screen.getByText('Standard · 1m')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /Assisted Pull-up/ }));
     expect(screen.getByText('Standard · 20kg offset · 8 reps')).toBeInTheDocument();
   });
 

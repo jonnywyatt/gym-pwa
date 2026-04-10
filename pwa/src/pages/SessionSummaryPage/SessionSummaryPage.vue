@@ -4,11 +4,7 @@ import {useRoute, useRouter} from 'vue-router';
 import type {UserWorkout} from 'gym-pwa-api/types';
 import styles from './SessionSummaryPage.module.css';
 import {authService} from '../../lib/auth/oauth';
-import {
-  calculateCompletedSetsTotalWeightKg,
-  fetchWorkout,
-  formatSetDetails,
-} from '../WorkoutPage/helpers';
+import { fetchWorkout } from '../WorkoutPage/helpers';
 import {
   deleteWorkoutApi,
   formatDateTime,
@@ -18,6 +14,7 @@ import {
 import { toMuscleGroupBreakdown } from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
 import MuscleGroupBreakdown from '../../components/MuscleGroupBreakdown/MuscleGroupBreakdown.vue';
+import ExerciseSummary from '../../components/ExerciseSummary/ExerciseSummary.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -100,30 +97,14 @@ onMounted(() => {
 
       <MuscleGroupBreakdown :breakdown="muscleGroupBreakdown" class="marginBottom3" />
 
-      <ul class="list marginTop2">
-        <li
+      <div class="marginTop2">
+        <ExerciseSummary
             v-for="exercise in completedWorkout.exercisesCompleted"
             :key="exercise.id"
-            class="highlightCard"
-        >
-          <h2 class="heading-m marginBottom1">{{ exercise.label }}</h2>
-          <div class="highlightCardContents">
-            <span
-                v-if="calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets) > 0"
-                class="accentPrimary">
-              {{
-                formatTotalWeight(calculateCompletedSetsTotalWeightKg(exercise.recordSetsType, completedWorkout.bodyWeightKg, exercise.sets))
-              }}
-            </span>
-            <span
-                v-for="(set, index) in exercise.sets"
-                :key="index"
-            >
-              {{ formatSetDetails(set, exercise.recordSetsType) }}
-            </span>
-          </div>
-        </li>
-      </ul>
+            :exercise="exercise"
+            :body-weight-kg="completedWorkout.bodyWeightKg"
+        />
+      </div>
 
       <div :class="styles.summaryActions">
         <button

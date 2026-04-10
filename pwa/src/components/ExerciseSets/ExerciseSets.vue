@@ -44,7 +44,8 @@ const exerciseTotalWeightKg = computed(() => {
   return calculateExerciseTotalWeightKg(
     props.exercise.recordSetsType,
     props.bodyWeightKg,
-    props.exercise.sets
+    props.exercise.sets,
+    props.exercise.bwFactor
   );
 });
 

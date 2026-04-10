@@ -199,6 +199,25 @@ describe('ExerciseSets', () => {
       expect(emitted().changeSetType[0]).toEqual([1, 's2', 'Failure']);
     });
 
+    it('includes bwFactor contribution in header total weight', () => {
+      const reverseLunge: LocalWorkoutExercise = {
+        ...baseExercise,
+        label: 'Reverse Lunge',
+        bwFactor: 0.5,
+        startedAt: '2025-01-15T14:00:00.000Z',
+        sets: [{ id: 's1', setType: 'Standard', weightKg: 10, reps: 10, completed: false }],
+      };
+
+      render(ExerciseSets, {
+        props: { exercise: reverseLunge, bodyWeightKg: 80 },
+      });
+
+      // (10kg added + 80 * 0.5 bw contribution) * 10 reps = (10 + 40) * 10 = 500kg
+      expect(
+        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '500kg')
+      ).toBeInTheDocument();
+    });
+
     it('shows total weight based on entered values, not completion status', () => {
       const exerciseWithValues: LocalWorkoutExercise = {
         ...baseExercise,

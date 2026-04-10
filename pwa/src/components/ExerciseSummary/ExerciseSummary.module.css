@@ -1,0 +1,37 @@
+.exercise {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.exerciseHeader {
+  display: flex;
+  font-size: var(--font-size-16);
+  justify-content: space-between;
+  padding: var(--spacing-unit-5) 0;
+  align-items: center;
+  width: 100%;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit-3);
+}
+
+.totalWeight {
+  font-size: var(--font-size-14);
+  color: var(--accent-primary);
+}
+
+.setContent {
+  padding-bottom: var(--spacing-unit-4);
+}
+
+.setsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-3);
+  margin-top: var(--spacing-unit-3);
+  font-family: var(--font-stack-mono);
+  font-size: var(--font-size-14);
+  color: var(--text-secondary);
+}
