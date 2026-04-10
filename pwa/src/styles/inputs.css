@@ -3,6 +3,7 @@
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  font-family: var(--font-stack-mono);
 }
 
 .inputSearch {
@@ -42,4 +43,9 @@
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+}
+
+.inputSelect {
+    font-size: var(--font-size-16);
+    padding: var(--spacing-unit-2);
 }

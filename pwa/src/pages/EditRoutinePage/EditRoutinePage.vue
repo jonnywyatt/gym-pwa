@@ -165,9 +165,10 @@ onMounted(() => {
         </ul>
       </div>
 
-      <p v-if="exercises.length === 0" class="highlightCardContents">
-        No exercises yet. Search above to add exercises to this routine.
-      </p>
+      <div v-if="exercises.length === 0" >
+        <p class="marginBottom2">No exercises yet.</p>
+        <p>Search above to add exercises to this routine.</p>
+      </div>
       <ul v-else class="list">
         <li
             v-for="exercise in exercises"

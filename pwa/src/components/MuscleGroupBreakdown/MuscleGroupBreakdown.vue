@@ -46,7 +46,7 @@ const isExpanded = ref(false);
               :class="styles.legendDot"
               :style="{ background: bodyAreaColours[area.bodyArea] ?? 'var(--accent-primary)' }"
             />
-            <span :class="['uppercase', 'uppercase--small', styles.legendLabel]">{{ area.bodyArea }}</span>
+            <span :class="[styles.legendLabel]">{{ area.bodyArea }}</span>
             <span :class="styles.legendPct">{{ area.percentage }}%</span>
           </li>
         </ul>

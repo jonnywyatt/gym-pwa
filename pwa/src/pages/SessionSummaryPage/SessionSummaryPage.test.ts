@@ -89,7 +89,7 @@ describe('SessionSummaryPage', () => {
     });
 
     expect(screen.getByText('1h 5m 30s')).toBeInTheDocument();
-    expect(screen.getAllByText('1,000kg')).toHaveLength(2);
+    expect(screen.getByText('1,000kg')).toBeInTheDocument();
 
     const exerciseButton = screen.getByRole('button', { name: /Bench Press/ });
     expect(exerciseButton).toBeInTheDocument();

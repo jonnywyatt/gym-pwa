@@ -4,7 +4,8 @@
 
 .exerciseHeader {
   display: flex;
-  font-size: var(--font-size-16);
+    font-family: var(--font-stack-heading);
+  font-size: var(--font-size-15);
   justify-content: space-between;
   padding: var(--spacing-unit-5) 0;
   align-items: center;
@@ -15,11 +16,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-unit-3);
-}
-
-.totalWeight {
   font-size: var(--font-size-14);
-  color: var(--accent-primary);
 }
 
 .setContent {

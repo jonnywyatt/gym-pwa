@@ -1,4 +1,9 @@
+.weight {
+  font-family: var(--font-stack-mono);
+  color: var(--accent-primary);
+}
+
 .weightUnitKg {
-    font-size: 0.8em;
-    padding-left: 2px;
+  font-size: 0.8em;
+  padding-left: 2px;
 }

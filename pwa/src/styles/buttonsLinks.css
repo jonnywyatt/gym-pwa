@@ -73,7 +73,8 @@
 }
 
 .buttonDelete {
-    font-size: var(--font-size-12);
+    font-size: var(--font-size-13);
+    font-family: var(--font-stack-heading);
     color: var(--em-error);
     background: none;
     cursor: pointer;

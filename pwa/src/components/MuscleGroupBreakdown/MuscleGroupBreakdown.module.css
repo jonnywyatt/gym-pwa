@@ -40,6 +40,8 @@
   display: flex;
   align-items: center;
   gap: 7px;
+    font-family: var(--font-stack-heading);
+    font-size: var(--font-size-12);
 }
 
 .legendDot {
@@ -53,7 +55,6 @@
 }
 
 .legendPct {
-  font-size: var(--font-size-10);
   color: var(--em-text-tertiary);
 }
 
@@ -75,10 +76,11 @@
   grid-template-columns: 140px 1fr 36px;
   align-items: center;
   gap: var(--spacing-unit-2);
+    font-family: var(--font-stack-heading);
+    font-size: var(--font-size-13);
 }
 
 .muscleName {
-  font-size: var(--font-size-12);
   color: var(--em-text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -97,7 +99,6 @@
 }
 
 .musclePct {
-  font-size: var(--font-size-10);
   color: var(--em-text-tertiary);
   text-align: right;
 }

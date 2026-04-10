@@ -35,7 +35,14 @@ describe('ExerciseSummary', () => {
     });
 
     // 40*10 + 60*8 = 400 + 480 = 880kg
-    expect(screen.getByText('880kg')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === 'SPAN' &&
+          el?.childNodes[0]?.nodeValue === '880' &&
+          el?.childNodes[1]?.textContent === 'kg'
+      )
+    ).toBeInTheDocument();
   });
 
   it('does not show set details when collapsed', () => {
@@ -86,7 +93,14 @@ describe('ExerciseSummary', () => {
     });
 
     // (10kg added + 80 * 0.5 bw contribution) * 10 reps = (10 + 40) * 10 = 500kg
-    expect(screen.getByText('500kg')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === 'SPAN' &&
+          el?.childNodes[0]?.nodeValue === '500' &&
+          el?.childNodes[1]?.textContent === 'kg'
+      )
+    ).toBeInTheDocument();
   });
 
   it('does not show total weight when there is none', () => {

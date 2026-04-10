@@ -5,8 +5,8 @@ import {
   calculateCompletedSetsTotalWeightKg,
   formatSetDetails,
 } from '../../pages/WorkoutPage/helpers';
-import { formatTotalWeight } from '../../pages/WorkoutsListPage/helpers';
 import styles from './ExerciseSummary.module.css';
+import WeightKg from '../WeightKg/WeightKg.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
 
@@ -39,7 +39,7 @@ const totalWeightKg = computed(() =>
     >
       <span>{{ exercise.label }}</span>
       <div :class="styles.headerRight">
-        <span v-if="totalWeightKg > 0" :class="styles.totalWeight">{{ formatTotalWeight(totalWeightKg) }}</span>
+        <span v-if="totalWeightKg > 0"><WeightKg :kg="totalWeightKg" /></span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
     </button>

@@ -187,7 +187,7 @@ function handleTimerFinish(timeSeconds: number) {
           </template>
 
           <select
-            :class="['inputBordered', styles.setTypeSelect]"
+            :class="['inputBordered', 'inputSelect']"
             :value="set.setType"
             :aria-label="`Set type for set ${index + 1}`"
             @change="(e) => emit('changeSetType', exercise.id, set.id, (e.target as HTMLSelectElement).value as SetType)"

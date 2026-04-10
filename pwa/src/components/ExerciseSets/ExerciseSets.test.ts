@@ -214,7 +214,12 @@ describe('ExerciseSets', () => {
 
       // (10kg added + 80 * 0.5 bw contribution) * 10 reps = (10 + 40) * 10 = 500kg
       expect(
-        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '500kg')
+        screen.getByText(
+          (_, el) =>
+            el?.tagName === 'SPAN' &&
+            el?.childNodes[0]?.nodeValue === '500' &&
+            el?.childNodes[1]?.textContent === 'kg'
+        )
       ).toBeInTheDocument();
     });
 
@@ -234,7 +239,12 @@ describe('ExerciseSets', () => {
       });
 
       expect(
-        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '1200kg')
+        screen.getByText(
+          (_, el) =>
+            el?.tagName === 'SPAN' &&
+            el?.childNodes[0]?.nodeValue === '1200' &&
+            el?.childNodes[1]?.textContent === 'kg'
+        )
       ).toBeInTheDocument();
     });
 
@@ -412,7 +422,12 @@ describe('ExerciseSets', () => {
       render(ExerciseSets, { props: { exercise: completedFarmersCarry, bodyWeightKg: 80 } });
 
       expect(
-        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '20kg')
+        screen.getByText(
+          (_, el) =>
+            el?.tagName === 'SPAN' &&
+            el?.childNodes[0]?.nodeValue === '20' &&
+            el?.childNodes[1]?.textContent === 'kg'
+        )
       ).toBeInTheDocument();
       expect(screen.getByText('1m 30s')).toBeInTheDocument();
     });
@@ -429,7 +444,12 @@ describe('ExerciseSets', () => {
 
       expect(screen.queryByText(/\dm/)).not.toBeInTheDocument();
       expect(
-        screen.getByText((_, el) => el?.tagName === 'SPAN' && el?.textContent === '600kg')
+        screen.getByText(
+          (_, el) =>
+            el?.tagName === 'SPAN' &&
+            el?.childNodes[0]?.nodeValue === '600' &&
+            el?.childNodes[1]?.textContent === 'kg'
+        )
       ).toBeInTheDocument();
     });
   });
