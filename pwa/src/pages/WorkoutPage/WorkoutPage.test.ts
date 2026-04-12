@@ -413,7 +413,7 @@ it('should remove workout from IndexedDB after successful save', async () => {
   await user.click(screen.getByText('Finish'));
 
   await waitFor(() => {
-    expect(mockRouterPush).toHaveBeenCalledWith('/sessions');
+    expect(mockRouterPush).toHaveBeenCalledWith('/sessions/1');
   });
 
   const workoutAfter = await db.workouts.get('test-workout-id');

@@ -232,10 +232,10 @@ async function handleFinish() {
     await finishWorkout(workout.value.id, finishedAt);
 
     const workoutPayload = createWorkoutPayload(workout.value, finishedAt, durationSeconds);
-    await saveWorkout(userId, workoutPayload);
+    const savedWorkout = await saveWorkout(userId, workoutPayload);
 
     await deleteWorkout(workout.value.id);
-    await router.push('/sessions');
+    await router.push(`/sessions/${savedWorkout.id}`);
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to finish workout';
   } finally {
