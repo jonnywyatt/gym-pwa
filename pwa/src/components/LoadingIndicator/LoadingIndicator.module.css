@@ -1,0 +1,22 @@
+@keyframes barPulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+.bar1 {
+  fill: #00F3FF;
+  animation: barPulse 1.2s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.bar2 {
+  fill: #FF00A5;
+  animation: barPulse 1.2s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+.bar3 {
+  fill: #8239AA;
+  animation: barPulse 1.2s ease-in-out infinite;
+  animation-delay: 0.4s;
+}

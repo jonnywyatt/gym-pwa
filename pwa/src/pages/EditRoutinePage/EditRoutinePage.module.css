@@ -47,3 +47,14 @@
 .searchResultButton:hover .heading-s {
   color: var(--accent-secondary);
 }
+
+.searchLoadingOverlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--spacing-unit-6);
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+}

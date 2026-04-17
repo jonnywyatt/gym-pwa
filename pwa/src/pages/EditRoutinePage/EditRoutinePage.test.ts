@@ -394,6 +394,100 @@ describe('EditRoutinePage', () => {
     expect(inRoutineCount).toBe(1);
   });
 
+  it('does not trigger a search until 2 characters have been typed', async () => {
+    const user = userEvent.setup();
+    let searchCallCount = 0;
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => {
+        searchCallCount += 1;
+        return HttpResponse.json(mockSearchResults);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    const searchInput = screen.getByPlaceholderText('Search exercises to add...');
+    await user.type(searchInput, 's');
+
+    expect(searchCallCount).toBe(0);
+    expect(screen.queryByText('No exercises found')).not.toBeInTheDocument();
+
+    await user.type(searchInput, 'i');
+
+    await waitFor(() => {
+      expect(screen.getByText('Side plank')).toBeInTheDocument();
+    });
+    expect(searchCallCount).toBe(1);
+  });
+
+  it('throttles search calls when typing quickly, firing only once after the user stops', async () => {
+    const user = userEvent.setup();
+    let searchCallCount = 0;
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => {
+        searchCallCount += 1;
+        return HttpResponse.json(mockSearchResults);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side plank');
+
+    await waitFor(() => {
+      expect(screen.getByText('Side plank')).toBeInTheDocument();
+    });
+
+    expect(searchCallCount).toBe(1);
+  });
+
+  it('shows loading indicator while search is in progress', async () => {
+    const user = userEvent.setup();
+    let resolveSearch: (() => void) | undefined;
+    const searchPending = new Promise<void>((resolve) => {
+      resolveSearch = resolve;
+    });
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, async () => {
+        await searchPending;
+        return HttpResponse.json(mockSearchResults);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
+
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Loading' })).toBeInTheDocument();
+    });
+
+    if (!resolveSearch) throw new Error('resolveSearch not assigned');
+    resolveSearch();
+
+    await waitFor(() => {
+      expect(screen.queryByRole('img', { name: 'Loading' })).not.toBeInTheDocument();
+    });
+  });
+
   it('displays error message when routine fails to load', async () => {
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () =>

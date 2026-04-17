@@ -10,7 +10,9 @@ import {
   addExercise,
   removeExercise,
 } from './helpers';
+import {debounce} from '../../utils/debounce';
 import DeleteIconButton from '../../components/DeleteIconButton/DeleteIconButton.vue';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -23,8 +25,11 @@ const exercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
 const searchResults = ref<Exercise[]>([]);
 const loading = ref(true);
+const searchLoading = ref(false);
 const error = ref<string | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
+const MIN_SEARCH_LENGTH = 2;
+const canSearch = computed(() => searchQuery.value.trim().length >= MIN_SEARCH_LENGTH);
 
 async function loadRoutine() {
   try {
@@ -48,12 +53,7 @@ async function onNameBlur() {
   }
 }
 
-async function onSearchInput() {
-  const query = searchQuery.value.trim();
-  if (!query) {
-    searchResults.value = [];
-    return;
-  }
+const runSearch = debounce(async (query: string) => {
   try {
     const results = await searchExercises(query);
     searchResults.value = results.filter(
@@ -61,7 +61,20 @@ async function onSearchInput() {
     );
   } catch {
     searchResults.value = [];
+  } finally {
+    searchLoading.value = false;
   }
+}, 300);
+
+function onSearchInput() {
+  const query = searchQuery.value.trim();
+  if (query.length < MIN_SEARCH_LENGTH) {
+    searchResults.value = [];
+    searchLoading.value = false;
+    return;
+  }
+  searchLoading.value = true;
+  runSearch(query);
 }
 
 async function onAddExercise(exercise: Exercise) {
@@ -138,8 +151,11 @@ onMounted(() => {
             data-testid="search-backdrop"
             @click="clearSearch"
         />
+        <div v-if="searchLoading" :class="styles.searchLoadingOverlay">
+          <LoadingIndicator :size="64" />
+        </div>
         <ul
-            v-if="searchActive"
+            v-if="canSearch && !searchLoading"
             :class="['list', 'flexVerticalColumn', styles.searchResultsPanel]"
         >
           <li v-if="searchResults.length === 0" class="highlightCard highlightCardContents">
