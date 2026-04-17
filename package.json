@@ -18,7 +18,9 @@
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
-    "check": "biome check --write ."
+    "check": "biome check --write .",
+    "postinstall": "npm audit --audit-level=critical",
+    "audit:fix": "npm audit fix -w api && npm audit fix -w pwa"
   },
   "workspaces": [
     "api",

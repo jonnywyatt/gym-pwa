@@ -1,5 +1,8 @@
 pre-commit:
   commands:
+    audit:
+      run: npm audit --audit-level=critical
+      fail_text: "npm audit found critical vulnerabilities. Run 'npm audit' for details."
     format:
       glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
