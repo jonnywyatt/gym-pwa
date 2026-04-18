@@ -25,6 +25,7 @@ const exercises = ref<Exercise[]>([]);
 const allExercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
 const loading = ref(true);
+const exercisesLoading = ref(true);
 const error = ref<string | null>(null);
 const addingExercise = ref<Exercise | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
@@ -40,19 +41,23 @@ const searchResults = computed(() =>
 
 async function loadRoutine() {
   try {
-    const [routine, all] = await Promise.all([
-      fetchRoutineDetail(routineId),
-      fetchAllExercises(),
-    ]);
+    const routine = await fetchRoutineDetail(routineId);
     routineName.value = routine.label ?? '';
     exercises.value = routine.exercises;
-    allExercises.value = all;
   } catch {
     error.value = 'Exercises didn\'t load - please refresh the page';
   } finally {
     loading.value = false;
     await nextTick();
     nameInput.value?.focus();
+  }
+
+  try {
+    allExercises.value = await fetchAllExercises();
+  } catch {
+    error.value = 'Exercises didn\'t load - please refresh the page';
+  } finally {
+    exercisesLoading.value = false;
   }
 }
 
@@ -139,8 +144,16 @@ onMounted(() => {
             data-testid="search-backdrop"
             @click="clearSearch"
         />
+        <div
+            v-if="canSearch && exercisesLoading"
+            :class="styles.searchLoadingOverlay"
+            data-testid="search-loading-overlay"
+        >
+          <LoadingIndicator :size="20" />
+          <span>Searching</span>
+        </div>
         <ul
-            v-if="canSearch"
+            v-if="canSearch && !exercisesLoading"
             :class="['list', 'flexVerticalColumn', styles.searchResultsPanel]"
         >
           <li v-if="searchResults.length === 0" class="highlightCard highlightCardContents">

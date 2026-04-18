@@ -94,6 +94,40 @@ describe('EditRoutinePage', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
+  it('shows "Searching" overlay when user types before exercises have loaded', async () => {
+    const user = userEvent.setup();
+    let resolveExercises: ((value: Response) => void) | undefined;
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () =>
+        new Promise<Response>((resolve) => {
+          resolveExercises = resolve;
+        })
+      )
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'pl');
+
+    expect(screen.getByTestId('search-loading-overlay')).toBeInTheDocument();
+    expect(screen.getByText('Searching')).toBeInTheDocument();
+
+    if (!resolveExercises) throw new Error('resolveExercises not assigned');
+    resolveExercises(HttpResponse.json(mockAllExercises) as unknown as Response);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('search-loading-overlay')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Plank')).toBeInTheDocument();
+  });
+
   it('displays the routine name in the input', async () => {
     setupDefaultHandlers();
 
@@ -502,6 +536,12 @@ describe('EditRoutinePage', () => {
     );
 
     renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Plank')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
