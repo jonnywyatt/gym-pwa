@@ -315,6 +315,31 @@ describe('EditRoutinePage', () => {
     });
   });
 
+  it('clears search results when the native search clear fires the search event', async () => {
+    const user = userEvent.setup();
+    setupDefaultHandlers();
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    const searchInput = screen.getByPlaceholderText('Search exercises to add...');
+    await user.type(searchInput, 'side');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('search-backdrop')).toBeInTheDocument();
+    });
+
+    (searchInput as HTMLInputElement).value = '';
+    searchInput.dispatchEvent(new Event('search', { bubbles: true }));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('search-backdrop')).not.toBeInTheDocument();
+    });
+  });
+
   it('closes search results when clicking the overlay backdrop', async () => {
     const user = userEvent.setup();
     setupDefaultHandlers();
