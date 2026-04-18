@@ -69,10 +69,6 @@
     font-size: var(--font-size-22);
 }
 
-.heading-l-session {
-    border-bottom-color: var(--accent-quaternary);
-}
-
 .heading-m {
     font-family: var(--font-stack-heading);
     font-weight: 400;

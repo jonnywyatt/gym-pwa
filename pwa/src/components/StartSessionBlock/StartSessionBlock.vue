@@ -7,6 +7,7 @@ const props = defineProps<{
   loading: boolean;
   error: string | null;
   startingRoutineId: number | null;
+  vertical?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -17,7 +18,7 @@ const emit = defineEmits<{
 <template>
   <p v-if="props.loading" :class="styles.loading">Loading...</p>
   <p v-else-if="props.error" :class="styles.error">Error: {{ props.error }}</p>
-  <div v-else :class="styles.routineList">
+  <div v-else :class="[styles.routineList, props.vertical && styles.routineListVertical]">
     <button
       v-for="routine in props.routines"
       :key="routine.id"

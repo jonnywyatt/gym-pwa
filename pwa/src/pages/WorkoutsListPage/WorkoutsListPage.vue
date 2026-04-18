@@ -52,7 +52,7 @@ onMounted(() => {
 <template>
   <main class="main">
     <header :class="[styles.header, 'marginBottom4']">
-      <h1 class="heading-l heading-l-session">Sessions</h1>
+      <h1 class="heading-l">Sessions</h1>
       <router-link to="/sessions/start" class="buttonPrimary">Start session</router-link>
     </header>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">

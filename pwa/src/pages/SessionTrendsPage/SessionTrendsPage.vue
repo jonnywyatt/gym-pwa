@@ -110,7 +110,7 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <h1 class="heading-l heading-l-session marginBottom4">Sessions</h1>
+    <h1 class="heading-l marginBottom4">Sessions</h1>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <router-link to="/sessions" class="buttonLink buttonLink--secondary">By month</router-link>
       <span aria-hidden="true" class="linkDivider">|</span>

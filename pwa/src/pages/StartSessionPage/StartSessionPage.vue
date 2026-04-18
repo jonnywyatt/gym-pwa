@@ -61,6 +61,7 @@ onMounted(() => {
       :loading="loading"
       :error="error"
       :startingRoutineId="startingRoutineId"
+      :vertical="true"
       @startSession="onStartSession"
     />
   </main>

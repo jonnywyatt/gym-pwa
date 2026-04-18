@@ -8,6 +8,14 @@
   }
 }
 
+.routineListVertical {
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
+  > * {
+    flex: none;
+  }
+}
+
 @keyframes sweepRight {
   from { background-size: 0% 100%; }
   to { background-size: 100% 100%; }
