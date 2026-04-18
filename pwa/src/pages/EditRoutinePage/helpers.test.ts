@@ -1,12 +1,14 @@
+import type { Exercise } from 'gym-pwa-api/types';
 import { HttpResponse, http } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
 import {
   addExercise,
+  fetchAllExercises,
   fetchRoutineDetail,
+  filterExercises,
   removeExercise,
   saveRoutineLabel,
-  searchExercises,
 } from './helpers';
 
 vi.mock('../../config', () => ({
@@ -35,31 +37,66 @@ describe('fetchRoutineDetail', () => {
   });
 });
 
-describe('searchExercises', () => {
-  it('returns matching exercises', async () => {
-    const exercises = [
-      {
-        id: 1,
-        label: 'Plank',
-        recordSetsType: 'TIME',
-        primaryMuscleGroups: ['Abdominals'],
-        secondaryMuscleGroups: [],
-      },
-    ];
-    server.use(http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(exercises)));
+const mockExercises: Exercise[] = [
+  {
+    id: 1,
+    label: 'Plank',
+    recordSetsType: 'TIME' as const,
+    isIsometric: true,
+    isUnilateral: false,
+    bwFactor: null,
+    primaryMuscleGroups: ['Abdominals'],
+    secondaryMuscleGroups: [],
+    tertiaryMuscleGroups: [],
+  },
+  {
+    id: 2,
+    label: 'Side Plank',
+    recordSetsType: 'TIME' as const,
+    isIsometric: true,
+    isUnilateral: true,
+    bwFactor: null,
+    primaryMuscleGroups: ['Obliques'],
+    secondaryMuscleGroups: ['Abdominals'],
+    tertiaryMuscleGroups: [],
+  },
+  {
+    id: 3,
+    label: 'Squat',
+    recordSetsType: 'REPS' as const,
+    isIsometric: false,
+    isUnilateral: false,
+    bwFactor: null,
+    primaryMuscleGroups: ['Quads'],
+    secondaryMuscleGroups: [],
+    tertiaryMuscleGroups: [],
+  },
+];
 
-    const result = await searchExercises('plank');
-    expect(result).toEqual(exercises);
+describe('fetchAllExercises', () => {
+  it('returns all exercises', async () => {
+    server.use(http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockExercises)));
+
+    const result = await fetchAllExercises();
+    expect(result).toEqual(mockExercises);
+  });
+});
+
+describe('filterExercises', () => {
+  it('returns exercises matching the query case-insensitively', () => {
+    expect(filterExercises(mockExercises, 'plank')).toEqual([mockExercises[0], mockExercises[1]]);
   });
 
-  it('returns empty array for empty search', async () => {
-    const result = await searchExercises('');
-    expect(result).toEqual([]);
+  it('returns empty array for empty query', () => {
+    expect(filterExercises(mockExercises, '')).toEqual([]);
   });
 
-  it('returns empty array for whitespace-only search', async () => {
-    const result = await searchExercises('   ');
-    expect(result).toEqual([]);
+  it('returns empty array for whitespace-only query', () => {
+    expect(filterExercises(mockExercises, '   ')).toEqual([]);
+  });
+
+  it('returns empty array when no exercises match', () => {
+    expect(filterExercises(mockExercises, 'deadlift')).toEqual([]);
   });
 });
 

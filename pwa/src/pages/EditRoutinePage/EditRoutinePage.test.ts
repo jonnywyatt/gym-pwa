@@ -51,7 +51,14 @@ const mockRoutine = {
   ],
 };
 
-const mockSearchResults = [
+const mockAllExercises = [
+  {
+    id: 1,
+    label: 'Plank',
+    recordSetsType: 'TIME',
+    primaryMuscleGroups: ['Abdominals'],
+    secondaryMuscleGroups: [],
+  },
   {
     id: 2,
     label: 'Side plank',
@@ -60,6 +67,13 @@ const mockSearchResults = [
     secondaryMuscleGroups: ['Abdominals'],
   },
 ];
+
+function setupDefaultHandlers() {
+  server.use(
+    http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+    http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockAllExercises))
+  );
+}
 
 function renderPage() {
   return render(EditRoutinePage);
@@ -71,7 +85,8 @@ describe('EditRoutinePage', () => {
       http.get(`${mockApiUrl}/routines/5`, async () => {
         await new Promise(() => {});
         return HttpResponse.json(mockRoutine);
-      })
+      }),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
     );
 
     renderPage();
@@ -80,7 +95,7 @@ describe('EditRoutinePage', () => {
   });
 
   it('displays the routine name in the input', async () => {
-    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -93,7 +108,7 @@ describe('EditRoutinePage', () => {
   });
 
   it('focuses the routine name input after loading', async () => {
-    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -103,7 +118,7 @@ describe('EditRoutinePage', () => {
   });
 
   it('displays existing exercises in the routine', async () => {
-    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -115,7 +130,7 @@ describe('EditRoutinePage', () => {
   });
 
   it('shows Finish button when routine has a name and at least one exercise', async () => {
-    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -128,7 +143,8 @@ describe('EditRoutinePage', () => {
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () =>
         HttpResponse.json({ id: 5, label: 'My Routine', exercises: [] })
-      )
+      ),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
     );
 
     renderPage();
@@ -144,7 +160,8 @@ describe('EditRoutinePage', () => {
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () =>
         HttpResponse.json({ id: 5, label: '', exercises: mockRoutine.exercises })
-      )
+      ),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
     );
 
     renderPage();
@@ -158,7 +175,7 @@ describe('EditRoutinePage', () => {
 
   it('navigates to the routine page when Finish is clicked', async () => {
     const user = userEvent.setup();
-    server.use(http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)));
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -177,6 +194,7 @@ describe('EditRoutinePage', () => {
 
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([])),
       http.patch(`${mockApiUrl}/routines/5/label`, async ({ request }) => {
         const body = (await request.json()) as { label: string };
         patchedLabel = body.label;
@@ -201,10 +219,7 @@ describe('EditRoutinePage', () => {
   });
 
   it('shows search results as exercise cards when typing', async () => {
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockSearchResults))
-    );
+    setupDefaultHandlers();
 
     const user = userEvent.setup();
     renderPage();
@@ -223,13 +238,9 @@ describe('EditRoutinePage', () => {
     expect(screen.getByText('Secondary muscle groups: Abdominals')).toBeInTheDocument();
   });
 
-  it('shows "No exercises found" when search returns no matches', async () => {
+  it('shows "No exercises found" when search matches nothing', async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
-    );
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -248,11 +259,7 @@ describe('EditRoutinePage', () => {
 
   it('hides the results panel when the search input is cleared', async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
-    );
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -276,11 +283,7 @@ describe('EditRoutinePage', () => {
 
   it('closes search results when clicking the overlay backdrop', async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockSearchResults))
-    );
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -308,7 +311,7 @@ describe('EditRoutinePage', () => {
       http.get(`${mockApiUrl}/routines/5`, () =>
         HttpResponse.json({ id: 5, label: 'My Routine', exercises: [] })
       ),
-      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockSearchResults)),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockAllExercises)),
       http.post(`${mockApiUrl}/routines/5/exercises`, () => new HttpResponse(null, { status: 204 }))
     );
 
@@ -336,6 +339,7 @@ describe('EditRoutinePage', () => {
 
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([])),
       http.delete(
         `${mockApiUrl}/routines/5/exercises/1`,
         () => new HttpResponse(null, { status: 204 })
@@ -358,22 +362,7 @@ describe('EditRoutinePage', () => {
 
   it('does not show already-added exercises in search results', async () => {
     const user = userEvent.setup();
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () =>
-        HttpResponse.json([
-          {
-            id: 1,
-            label: 'Plank',
-            recordSetsType: 'TIME',
-            primaryMuscleGroups: ['Abdominals'],
-            secondaryMuscleGroups: [],
-          },
-          ...mockSearchResults,
-        ])
-      )
-    );
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -394,17 +383,9 @@ describe('EditRoutinePage', () => {
     expect(inRoutineCount).toBe(1);
   });
 
-  it('does not trigger a search until 2 characters have been typed', async () => {
+  it('does not show results until 2 characters have been typed', async () => {
     const user = userEvent.setup();
-    let searchCallCount = 0;
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () => {
-        searchCallCount += 1;
-        return HttpResponse.json(mockSearchResults);
-      })
-    );
+    setupDefaultHandlers();
 
     renderPage();
 
@@ -415,26 +396,25 @@ describe('EditRoutinePage', () => {
     const searchInput = screen.getByPlaceholderText('Search exercises to add...');
     await user.type(searchInput, 's');
 
-    expect(searchCallCount).toBe(0);
     expect(screen.queryByText('No exercises found')).not.toBeInTheDocument();
+    expect(screen.queryByText('Side plank')).not.toBeInTheDocument();
 
     await user.type(searchInput, 'i');
 
     await waitFor(() => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
     });
-    expect(searchCallCount).toBe(1);
   });
 
-  it('throttles search calls when typing quickly, firing only once after the user stops', async () => {
+  it('fetches all exercises once on load and filters client-side without additional API calls', async () => {
     const user = userEvent.setup();
-    let searchCallCount = 0;
+    let exercisesCallCount = 0;
 
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
       http.get(`${mockApiUrl}/exercises`, () => {
-        searchCallCount += 1;
-        return HttpResponse.json(mockSearchResults);
+        exercisesCallCount += 1;
+        return HttpResponse.json(mockAllExercises);
       })
     );
 
@@ -450,55 +430,40 @@ describe('EditRoutinePage', () => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
     });
 
-    expect(searchCallCount).toBe(1);
-  });
-
-  it('shows loading indicator while search is in progress', async () => {
-    const user = userEvent.setup();
-    let resolveSearch: (() => void) | undefined;
-    const searchPending = new Promise<void>((resolve) => {
-      resolveSearch = resolve;
-    });
-
-    server.use(
-      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, async () => {
-        await searchPending;
-        return HttpResponse.json(mockSearchResults);
-      })
-    );
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
-    });
-
-    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
-
-    await waitFor(() => {
-      expect(screen.getByRole('img', { name: 'Loading' })).toBeInTheDocument();
-    });
-
-    if (!resolveSearch) throw new Error('resolveSearch not assigned');
-    resolveSearch();
-
-    await waitFor(() => {
-      expect(screen.queryByRole('img', { name: 'Loading' })).not.toBeInTheDocument();
-    });
+    expect(exercisesCallCount).toBe(1);
   });
 
   it('displays error message when routine fails to load', async () => {
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () =>
         HttpResponse.json({ error: 'Not found' }, { status: 404 })
+      ),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Exercises didn't load - please refresh the page")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('displays error message when exercises fail to load', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
+      http.get(`${mockApiUrl}/exercises`, () =>
+        HttpResponse.json({ error: 'Server error' }, { status: 500 })
       )
     );
 
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText(/Error:/)).toBeInTheDocument();
+      expect(
+        screen.getByText("Exercises didn't load - please refresh the page")
+      ).toBeInTheDocument();
     });
   });
 
@@ -506,7 +471,8 @@ describe('EditRoutinePage', () => {
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () =>
         HttpResponse.json({ id: 5, label: 'Empty Routine', exercises: [] })
-      )
+      ),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json([]))
     );
 
     renderPage();

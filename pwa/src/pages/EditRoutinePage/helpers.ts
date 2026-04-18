@@ -5,9 +5,14 @@ export async function fetchRoutineDetail(routineId: string | string[]): Promise<
   return await authFetchJson<RoutineDetail>(`/routines/${routineId}`);
 }
 
-export async function searchExercises(search: string): Promise<Exercise[]> {
-  if (!search.trim()) return [];
-  return await authFetchJson<Exercise[]>(`/exercises?search=${encodeURIComponent(search)}`);
+export async function fetchAllExercises(): Promise<Exercise[]> {
+  return await authFetchJson<Exercise[]>('/exercises');
+}
+
+export function filterExercises(exercises: Exercise[], search: string): Exercise[] {
+  const query = search.trim().toLowerCase();
+  if (!query) return [];
+  return exercises.filter((e) => e.label.toLowerCase().includes(query));
 }
 
 export async function saveRoutineLabel(routineId: string | string[], label: string): Promise<void> {

@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import {ref, computed, onMounted, nextTick} from 'vue';
+import {ref, computed, watch, onMounted, nextTick} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {Exercise} from 'gym-pwa-api/types';
 import styles from './EditRoutinePage.module.css';
 import {
   fetchRoutineDetail,
-  searchExercises,
+  fetchAllExercises,
+  filterExercises,
   saveRoutineLabel,
   addExercise,
   removeExercise,
 } from './helpers';
-import {debounce} from '../../utils/debounce';
 import DeleteIconButton from '../../components/DeleteIconButton/DeleteIconButton.vue';
-import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -22,10 +21,10 @@ const routineId = route.params.routineId;
 const routineName = ref('');
 const nameInput = ref<HTMLInputElement | null>(null);
 const exercises = ref<Exercise[]>([]);
+const allExercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
 const searchResults = ref<Exercise[]>([]);
 const loading = ref(true);
-const searchLoading = ref(false);
 const error = ref<string | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
 const MIN_SEARCH_LENGTH = 2;
@@ -33,11 +32,15 @@ const canSearch = computed(() => searchQuery.value.trim().length >= MIN_SEARCH_L
 
 async function loadRoutine() {
   try {
-    const routine = await fetchRoutineDetail(routineId);
+    const [routine, all] = await Promise.all([
+      fetchRoutineDetail(routineId),
+      fetchAllExercises(),
+    ]);
     routineName.value = routine.label ?? '';
     exercises.value = routine.exercises;
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to load routine';
+    allExercises.value = all;
+  } catch {
+    error.value = 'Exercises didn\'t load - please refresh the page';
   } finally {
     loading.value = false;
     await nextTick();
@@ -53,29 +56,15 @@ async function onNameBlur() {
   }
 }
 
-const runSearch = debounce(async (query: string) => {
-  try {
-    const results = await searchExercises(query);
-    searchResults.value = results.filter(
-      (r) => !exercises.value.some((e) => e.id === r.id)
-    );
-  } catch {
+watch(searchQuery, (query) => {
+  if (query.trim().length < MIN_SEARCH_LENGTH) {
     searchResults.value = [];
-  } finally {
-    searchLoading.value = false;
-  }
-}, 300);
-
-function onSearchInput() {
-  const query = searchQuery.value.trim();
-  if (query.length < MIN_SEARCH_LENGTH) {
-    searchResults.value = [];
-    searchLoading.value = false;
     return;
   }
-  searchLoading.value = true;
-  runSearch(query);
-}
+  searchResults.value = filterExercises(allExercises.value, query).filter(
+    (r) => !exercises.value.some((e) => e.id === r.id)
+  );
+});
 
 async function onAddExercise(exercise: Exercise) {
   try {
@@ -135,7 +124,7 @@ onMounted(() => {
     </header>
 
     <p v-if="loading">Loading...</p>
-    <p v-else-if="error" class="error">Error: {{ error }}</p>
+    <p v-else-if="error" class="error">{{ error }}</p>
     <template v-else>
       <div :class="['marginBottom6', styles.searchWrapper]">
         <input
@@ -143,7 +132,6 @@ onMounted(() => {
             type="search"
             placeholder="Search exercises to add..."
             class="inputSearch"
-            @input="onSearchInput"
         />
         <div
             v-if="searchActive"
@@ -151,11 +139,8 @@ onMounted(() => {
             data-testid="search-backdrop"
             @click="clearSearch"
         />
-        <div v-if="searchLoading" :class="styles.searchLoadingOverlay">
-          <LoadingIndicator :size="64" />
-        </div>
         <ul
-            v-if="canSearch && !searchLoading"
+            v-if="canSearch"
             :class="['list', 'flexVerticalColumn', styles.searchResultsPanel]"
         >
           <li v-if="searchResults.length === 0" class="highlightCard highlightCardContents">

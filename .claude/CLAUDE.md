@@ -17,6 +17,7 @@
 - any new functionality must be covered by unit tests
 - do not use `any` in typescript
 - Run the `lint` and `type-check` NPM tasks after completing code changes
+- Always run tests using a subagent (Agent tool) rather than running them directly with Bash
 
 ### API
 - after any changes to the Prisma schema, regenerate the Prisma Client
