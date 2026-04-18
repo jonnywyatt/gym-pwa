@@ -48,6 +48,19 @@
   color: var(--accent-secondary);
 }
 
+.addingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(11, 18, 21, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-unit-3);
+  color: var(--text-primary);
+  font-size: var(--font-size-16);
+}
+
 .searchLoadingOverlay {
   position: absolute;
   top: 100%;

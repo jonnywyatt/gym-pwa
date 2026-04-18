@@ -334,6 +334,49 @@ describe('EditRoutinePage', () => {
     });
   });
 
+  it('shows adding overlay while the add request is in flight', async () => {
+    const user = userEvent.setup();
+    let resolveAdd: (() => void) | undefined;
+
+    server.use(
+      http.get(`${mockApiUrl}/routines/5`, () =>
+        HttpResponse.json({ id: 5, label: 'My Routine', exercises: [] })
+      ),
+      http.get(`${mockApiUrl}/exercises`, () => HttpResponse.json(mockAllExercises)),
+      http.post(`${mockApiUrl}/routines/5/exercises`, async () => {
+        await new Promise<void>((resolve) => {
+          resolveAdd = resolve;
+        });
+        return new HttpResponse(null, { status: 204 });
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search exercises to add...')).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText('Search exercises to add...'), 'side');
+
+    await waitFor(() => {
+      expect(screen.getByText('Side plank')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Side plank'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Adding Side plank')).toBeInTheDocument();
+    });
+
+    if (!resolveAdd) throw new Error('resolveAdd not assigned');
+    resolveAdd();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Adding Side plank')).not.toBeInTheDocument();
+    });
+  });
+
   it('removes an exercise when Remove is clicked and confirmed', async () => {
     const user = userEvent.setup();
 

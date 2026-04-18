@@ -12,6 +12,7 @@ import {
   removeExercise,
 } from './helpers';
 import DeleteIconButton from '../../components/DeleteIconButton/DeleteIconButton.vue';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -25,6 +26,7 @@ const allExercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
 const loading = ref(true);
 const error = ref<string | null>(null);
+const addingExercise = ref<Exercise | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
 const MIN_SEARCH_LENGTH = 2;
 const canSearch = computed(() => searchQuery.value.trim().length >= MIN_SEARCH_LENGTH);
@@ -64,12 +66,15 @@ async function onNameBlur() {
 
 
 async function onAddExercise(exercise: Exercise) {
+  addingExercise.value = exercise;
   try {
     await addExercise(routineId, exercise.id);
     exercises.value = [...exercises.value, exercise];
     searchQuery.value = '';
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to add exercise';
+  } finally {
+    addingExercise.value = null;
   }
 }
 
@@ -187,5 +192,9 @@ onMounted(() => {
         </li>
       </ul>
     </template>
+    <div v-if="addingExercise" :class="styles.addingOverlay">
+      <LoadingIndicator :size="32" />
+      <span>Adding {{ addingExercise.label }}</span>
+    </div>
   </main>
 </template>
