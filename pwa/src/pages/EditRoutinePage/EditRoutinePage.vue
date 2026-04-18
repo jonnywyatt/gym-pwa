@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, watch, onMounted, nextTick} from 'vue';
+import {ref, computed, onMounted, nextTick} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {Exercise} from 'gym-pwa-api/types';
 import styles from './EditRoutinePage.module.css';
@@ -23,12 +23,18 @@ const nameInput = ref<HTMLInputElement | null>(null);
 const exercises = ref<Exercise[]>([]);
 const allExercises = ref<Exercise[]>([]);
 const searchQuery = ref('');
-const searchResults = ref<Exercise[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
 const MIN_SEARCH_LENGTH = 2;
 const canSearch = computed(() => searchQuery.value.trim().length >= MIN_SEARCH_LENGTH);
+const searchResults = computed(() =>
+  canSearch.value
+    ? filterExercises(allExercises.value, searchQuery.value).filter(
+        (r) => !exercises.value.some((e) => e.id === r.id)
+      )
+    : []
+);
 
 async function loadRoutine() {
   try {
@@ -56,23 +62,12 @@ async function onNameBlur() {
   }
 }
 
-watch(searchQuery, (query) => {
-  if (query.trim().length < MIN_SEARCH_LENGTH) {
-    searchResults.value = [];
-    return;
-  }
-  searchResults.value = filterExercises(allExercises.value, query).filter(
-    (r) => !exercises.value.some((e) => e.id === r.id)
-  );
-});
 
 async function onAddExercise(exercise: Exercise) {
   try {
     await addExercise(routineId, exercise.id);
     exercises.value = [...exercises.value, exercise];
-    searchResults.value = searchResults.value.filter((r) => r.id !== exercise.id);
     searchQuery.value = '';
-    searchResults.value = [];
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to add exercise';
   }
@@ -80,7 +75,6 @@ async function onAddExercise(exercise: Exercise) {
 
 function clearSearch() {
   searchQuery.value = '';
-  searchResults.value = [];
 }
 
 async function onRemoveExercise(exerciseId: number) {
