@@ -123,7 +123,7 @@ onMounted(() => {
       <div :class="['marginBottom6', styles.searchWrapper]">
         <input
             v-model="searchQuery"
-            type="search"
+            type="text"
             placeholder="Search exercises to add..."
             class="inputSearch"
         />
