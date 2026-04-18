@@ -122,10 +122,11 @@ onMounted(() => {
     <template v-else>
       <div :class="['marginBottom6', styles.searchWrapper]">
         <input
-            v-model="searchQuery"
+            :value="searchQuery"
             type="text"
             placeholder="Search exercises to add..."
             class="inputSearch"
+            @input="searchQuery = ($event.target as HTMLInputElement).value"
         />
         <div
             v-if="searchActive"
