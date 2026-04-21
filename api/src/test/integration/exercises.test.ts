@@ -22,7 +22,7 @@ describe('Exercise Integration Tests', () => {
       },
     });
 
-    expect(exercises).toHaveLength(38);
+    expect(exercises).toHaveLength(39);
 
     const pullUp = exercises.find((e) => e.label === 'Pull up (assisted)');
     expect(pullUp).toBeDefined();

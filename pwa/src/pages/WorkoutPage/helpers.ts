@@ -337,19 +337,17 @@ export function calculateMuscleGroupBreakdown(
       for (const mg of effectivePrimary) {
         scores.set(mg, (scores.get(mg) ?? 0) + sharePerPrimary);
       }
-    }
 
-    if (effectiveSecondary.length > 0) {
-      const sharePerSecondary = (setCount * 0.5) / effectiveSecondary.length;
-      for (const mg of effectiveSecondary) {
-        scores.set(mg, (scores.get(mg) ?? 0) + sharePerSecondary);
+      if (effectiveSecondary.length > 0) {
+        for (const mg of effectiveSecondary) {
+          scores.set(mg, (scores.get(mg) ?? 0) + sharePerPrimary * 0.5);
+        }
       }
-    }
 
-    if (effectiveTertiary.length > 0) {
-      const sharePerTertiary = (setCount * 0.2) / effectiveTertiary.length;
-      for (const mg of effectiveTertiary) {
-        scores.set(mg, (scores.get(mg) ?? 0) + sharePerTertiary);
+      if (effectiveTertiary.length > 0) {
+        for (const mg of effectiveTertiary) {
+          scores.set(mg, (scores.get(mg) ?? 0) + sharePerPrimary * 0.2);
+        }
       }
     }
   }

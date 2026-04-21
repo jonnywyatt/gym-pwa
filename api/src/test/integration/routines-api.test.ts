@@ -47,7 +47,7 @@ describe('Routines API Routes', () => {
       expect(response.status).toBe(200);
       const labels = response.body.map((r: { label: string }) => r.label);
       expect(labels).toContain('Strength');
-      expect(labels).toContain('Abs');
+      expect(labels).toContain('Core');
       expect(labels).toContain('My Test Routine');
     });
 

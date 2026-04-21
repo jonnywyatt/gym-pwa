@@ -17,11 +17,11 @@ describe('Routine Integration Tests', () => {
 
     const strengthRoutine = routines.find((r) => r.label === 'Strength');
     expect(strengthRoutine).toBeDefined();
-    expect(strengthRoutine?._count.routineExercises).toBe(12);
+    expect(strengthRoutine?._count.routineExercises).toBe(13);
 
-    const absRoutine = routines.find((r) => r.label === 'Abs');
-    expect(absRoutine).toBeDefined();
-    expect(absRoutine?._count.routineExercises).toBe(4);
+    const coreRoutine = routines.find((r) => r.label === 'Core');
+    expect(coreRoutine).toBeDefined();
+    expect(coreRoutine?._count.routineExercises).toBe(4);
   });
 
   it('should retrieve a routine with ordered exercises', async () => {
@@ -40,7 +40,7 @@ describe('Routine Integration Tests', () => {
     });
 
     expect(routine).toBeDefined();
-    expect(routine?.routineExercises).toHaveLength(12);
+    expect(routine?.routineExercises).toHaveLength(13);
 
     // Verify exercises are in the correct order (matching seed data order)
     const exerciseLabels = routine?.routineExercises.map((re) => re.exercise.label);
@@ -57,6 +57,7 @@ describe('Routine Integration Tests', () => {
       'Single leg sit-to-stand',
       'Bulgarian split squat',
       'Reverse lunge',
+      'Single leg box jump',
     ]);
   });
 
@@ -84,7 +85,7 @@ describe('Routine Integration Tests', () => {
     });
 
     const initialCount = await prisma.routineExercise.count();
-    expect(initialCount).toBe(17);
+    expect(initialCount).toBe(18);
 
     // Delete the temporary exercise
     await prisma.exercise.delete({
@@ -93,6 +94,6 @@ describe('Routine Integration Tests', () => {
 
     // Verify routine exercise was also deleted
     const afterDeleteCount = await prisma.routineExercise.count();
-    expect(afterDeleteCount).toBe(16);
+    expect(afterDeleteCount).toBe(17);
   });
 });

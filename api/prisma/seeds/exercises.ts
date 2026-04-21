@@ -382,6 +382,21 @@ export const exercises: ExerciseSeed[] = [
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.HIP_FLEXORS],
   },
   {
+    label: 'Single leg box jump',
+    recordSetsType: RecordSetsType.REPS,
+    isIsometric: false,
+    isUnilateral: true,
+    bwFactor: 1.0,
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.QUADRICEPS,
+      MuscleGroupLabel.GLUTES,
+      MuscleGroupLabel.HAMSTRINGS,
+      MuscleGroupLabel.CALVES,
+    ],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.HIP_FLEXORS],
+    tertiaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+  },
+  {
     label: 'Seated squat',
     recordSetsType: RecordSetsType.WEIGHT,
     isIsometric: false,

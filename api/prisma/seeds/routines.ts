@@ -20,10 +20,11 @@ export const routines: RoutineSeed[] = [
       'Single leg sit-to-stand',
       'Bulgarian split squat',
       'Reverse lunge',
+      'Single leg box jump',
     ],
   },
   {
-    label: 'Abs',
+    label: 'Core',
     exerciseLabels: ['Plank', 'Side plank', 'Reverse crunch', 'Superman'],
   },
 ];
