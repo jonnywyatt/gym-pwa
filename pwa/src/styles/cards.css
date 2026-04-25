@@ -5,6 +5,7 @@
     gap: var(--spacing-unit-2);
     padding: var(--spacing-unit-3);
     background: var(--background-surface);
+    color: var(--text-primary);
     border-radius: var(--border-radius-lg);
     border-left: 3px solid var(--accent-secondary);
     margin-bottom: var(--spacing-unit-3);
