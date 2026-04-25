@@ -4,7 +4,9 @@ import type { CompletedWorkoutExercise } from 'gym-pwa-api/types';
 import {
   calculateCompletedSetsTotalWeightKg,
   formatSetDetails,
+  getSetInputFields,
 } from '../../pages/WorkoutPage/helpers';
+import { formatTotalTime } from '../ExerciseSets/helpers';
 import styles from './ExerciseSummary.module.css';
 import WeightKg from '../WeightKg/WeightKg.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
@@ -27,6 +29,12 @@ const totalWeightKg = computed(() =>
     props.exercise.bwFactor
   )
 );
+
+const totalTimeSummary = computed((): string | null => {
+  if (!getSetInputFields(props.exercise.recordSetsType).showTime) return null;
+  const total = props.exercise.sets.reduce((sum, set) => sum + (set.timeSeconds ?? 0), 0);
+  return total > 0 ? formatTotalTime(total) : null;
+});
 </script>
 
 <template>
@@ -40,6 +48,7 @@ const totalWeightKg = computed(() =>
       <span>{{ exercise.label }}</span>
       <div :class="styles.headerRight">
         <span v-if="totalWeightKg > 0"><WeightKg :kg="totalWeightKg" /></span>
+        <span v-if="totalTimeSummary">{{ totalTimeSummary }}</span>
         <img :src="isOpen ? chevronUpSvg : chevronDownSvg" :alt="isOpen ? 'Collapse' : 'Expand'" width="27" height="11" />
       </div>
     </button>

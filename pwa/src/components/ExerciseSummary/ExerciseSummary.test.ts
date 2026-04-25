@@ -117,4 +117,57 @@ describe('ExerciseSummary', () => {
 
     expect(screen.queryByText(/kg/)).not.toBeInTheDocument();
   });
+
+  it('shows total time in the header for TIME exercises', () => {
+    const deadHang: CompletedWorkoutExercise = {
+      ...baseExercise,
+      label: 'Dead Hang',
+      recordSetsType: 'TIME',
+      sets: [
+        { setType: 'Standard', timeSeconds: 60 },
+        { setType: 'Standard', timeSeconds: 30 },
+      ],
+    };
+
+    render(ExerciseSummary, {
+      props: { exercise: deadHang, bodyWeightKg: 75 },
+    });
+
+    expect(screen.getByText('1m 30s')).toBeInTheDocument();
+  });
+
+  it('shows total time alongside weight for WEIGHT_AND_TIME exercises', () => {
+    const farmersCarry: CompletedWorkoutExercise = {
+      ...baseExercise,
+      label: "Farmer's Carry",
+      recordSetsType: 'WEIGHT_AND_TIME',
+      sets: [
+        { setType: 'Standard', weightKg: 20, timeSeconds: 45 },
+        { setType: 'Standard', weightKg: 20, timeSeconds: 45 },
+      ],
+    };
+
+    render(ExerciseSummary, {
+      props: { exercise: farmersCarry, bodyWeightKg: 75 },
+    });
+
+    expect(screen.getByText('1m 30s')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === 'SPAN' &&
+          el?.childNodes[0]?.nodeValue === '40' &&
+          el?.childNodes[1]?.textContent === 'kg'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('does not show time when no sets have time recorded', () => {
+    render(ExerciseSummary, {
+      props: { exercise: baseExercise, bodyWeightKg: 75 },
+    });
+
+    expect(screen.queryByText(/\d+s/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\d+m/)).not.toBeInTheDocument();
+  });
 });
