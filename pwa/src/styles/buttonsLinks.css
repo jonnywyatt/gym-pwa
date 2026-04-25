@@ -22,8 +22,8 @@
   padding: var(--spacing-unit-1) var(--spacing-unit-2);
   font-size: var(--font-size-14);
   background: var(--background-surface);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  color: var(--em-accent-teal);
+  border: 1px solid var(--em-accent-teal);
   border-radius: var(--border-radius);
   cursor: pointer;
 }
