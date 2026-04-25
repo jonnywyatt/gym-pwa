@@ -14,4 +14,14 @@ describe('WeightKg', () => {
     const unitSpan = container.querySelector('span');
     expect(unitSpan).toHaveTextContent('kg');
   });
+
+  it('rounds the kg value to 1 decimal place', () => {
+    render(WeightKg, { props: { kg: 120.456 } });
+    expect(screen.getByText(/120\.5/)).toBeInTheDocument();
+  });
+
+  it('does not show trailing zero for whole numbers', () => {
+    const { container } = render(WeightKg, { props: { kg: 120 } });
+    expect(container.textContent).toBe('120kg');
+  });
 });
