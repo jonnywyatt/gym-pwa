@@ -4,6 +4,12 @@
   padding: var(--spacing-unit-3) var(--spacing-unit-4);
 }
 
+@media all and (display-mode: standalone), all and (display-mode: fullscreen), all and (display-mode: minimal-ui) {
+  .container {
+    display: none;
+  }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
