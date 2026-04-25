@@ -39,13 +39,25 @@
   padding: var(--spacing-unit-2);
   font-size: var(--font-size-16);
   font-family: var(--font-stack-mono);
+  line-height: 1.25;
   background: var(--background-surface);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .inputSelect {
-    font-size: var(--font-size-16);
-    padding: var(--spacing-unit-2);
+  font-size: var(--font-size-16);
+  padding: var(--spacing-unit-2);
+  padding-right: var(--spacing-unit-6);
+  line-height: 1.25;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-unit-2) center;
 }
