@@ -11,10 +11,6 @@
     margin-bottom: var(--spacing-unit-3);
 }
 
-.highlightCard button {
-    color: var(--text-primary);
-}
-
 .highlightCardSecondary {
     composes: highlightCard;
     border-left-color: var(--accent-quaternary);
