@@ -170,7 +170,9 @@ export const MuscleGroupLabel: typeof $Enums.MuscleGroupLabel
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more BodyAreas
  * const bodyAreas = await prisma.bodyArea.findMany()
  * ```
@@ -191,7 +193,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more BodyAreas
    * const bodyAreas = await prisma.bodyArea.findMany()
    * ```
@@ -271,9 +275,9 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
-  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => $Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<R>
 
@@ -470,8 +474,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.4.0
-   * Query Engine version: ab56fe763f921d033a6c195e7ddeb3e255bdbb57
+   * Prisma Client JS version: 7.8.0
+   * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
    */
   export type PrismaVersion = {
     client: string
@@ -3253,6 +3257,11 @@ export namespace Prisma {
      * Skip the first `n` BodyAreas.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BodyAreas.
+     */
     distinct?: BodyAreaScalarFieldEnum | BodyAreaScalarFieldEnum[]
   }
 
@@ -4353,6 +4362,11 @@ export namespace Prisma {
      * Skip the first `n` MuscleGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MuscleGroups.
+     */
     distinct?: MuscleGroupScalarFieldEnum | MuscleGroupScalarFieldEnum[]
   }
 
@@ -5559,6 +5573,11 @@ export namespace Prisma {
      * Skip the first `n` Exercises.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Exercises.
+     */
     distinct?: ExerciseScalarFieldEnum | ExerciseScalarFieldEnum[]
   }
 
@@ -6747,6 +6766,11 @@ export namespace Prisma {
      * Skip the first `n` Routines.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Routines.
+     */
     distinct?: RoutineScalarFieldEnum | RoutineScalarFieldEnum[]
   }
 
@@ -7872,6 +7896,11 @@ export namespace Prisma {
      * Skip the first `n` RoutineExercises.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoutineExercises.
+     */
     distinct?: RoutineExerciseScalarFieldEnum | RoutineExerciseScalarFieldEnum[]
   }
 
@@ -8937,6 +8966,11 @@ export namespace Prisma {
      * Skip the first `n` ExercisePrimaryMuscleGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExercisePrimaryMuscleGroups.
+     */
     distinct?: ExercisePrimaryMuscleGroupScalarFieldEnum | ExercisePrimaryMuscleGroupScalarFieldEnum[]
   }
 
@@ -10002,6 +10036,11 @@ export namespace Prisma {
      * Skip the first `n` ExerciseSecondaryMuscleGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExerciseSecondaryMuscleGroups.
+     */
     distinct?: ExerciseSecondaryMuscleGroupScalarFieldEnum | ExerciseSecondaryMuscleGroupScalarFieldEnum[]
   }
 
@@ -11067,6 +11106,11 @@ export namespace Prisma {
      * Skip the first `n` ExerciseTertiaryMuscleGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExerciseTertiaryMuscleGroups.
+     */
     distinct?: ExerciseTertiaryMuscleGroupScalarFieldEnum | ExerciseTertiaryMuscleGroupScalarFieldEnum[]
   }
 
@@ -12172,6 +12216,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -13323,6 +13372,11 @@ export namespace Prisma {
      * Skip the first `n` UserBodyWeights.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBodyWeights.
+     */
     distinct?: UserBodyWeightScalarFieldEnum | UserBodyWeightScalarFieldEnum[]
   }
 
@@ -14514,6 +14568,11 @@ export namespace Prisma {
      * Skip the first `n` UserWorkouts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserWorkouts.
+     */
     distinct?: UserWorkoutScalarFieldEnum | UserWorkoutScalarFieldEnum[]
   }
 
@@ -15662,6 +15721,11 @@ export namespace Prisma {
      * Skip the first `n` WorkoutMuscleGroupStats.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkoutMuscleGroupStats.
+     */
     distinct?: WorkoutMuscleGroupStatScalarFieldEnum | WorkoutMuscleGroupStatScalarFieldEnum[]
   }
 
@@ -16767,6 +16831,11 @@ export namespace Prisma {
      * Skip the first `n` WorkoutExercises.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkoutExercises.
+     */
     distinct?: WorkoutExerciseScalarFieldEnum | WorkoutExerciseScalarFieldEnum[]
   }
 
@@ -17929,6 +17998,11 @@ export namespace Prisma {
      * Skip the first `n` WorkoutSets.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkoutSets.
+     */
     distinct?: WorkoutSetScalarFieldEnum | WorkoutSetScalarFieldEnum[]
   }
 
