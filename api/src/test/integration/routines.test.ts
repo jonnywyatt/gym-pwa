@@ -51,12 +51,12 @@ describe('Routine Integration Tests', () => {
       "Farmer's carry",
       'Butterfly machine',
       'Lat pulldown',
-      'Leg press horizontal',
       'Seated row',
       'Shoulder press (dumbell)',
       'Single leg sit-to-stand',
       'Bulgarian split squat',
       'Reverse lunge',
+      'Box jump',
       'Single leg box jump',
     ]);
   });
