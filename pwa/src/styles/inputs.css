@@ -49,6 +49,16 @@
   appearance: none;
 }
 
+.inputCompact::-webkit-outer-spin-button,
+.inputCompact::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputCompact[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .inputSelect {
   font-size: var(--font-size-16);
   padding: var(--spacing-unit-2);
