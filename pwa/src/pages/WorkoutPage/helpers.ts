@@ -9,6 +9,7 @@ import type {
 } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout, LocalWorkoutExercise, WorkoutSet } from '../../lib/db';
+import { muscleGroupToBodyArea } from '../../utils/muscleGroups';
 
 export async function saveWorkout(
   userId: number,
@@ -275,29 +276,6 @@ export type BodyAreaScore = {
 export type MuscleGroupBreakdown = {
   muscleGroups: MuscleGroupScore[];
   bodyAreas: BodyAreaScore[];
-};
-
-const muscleGroupToBodyArea: Record<MuscleGroupDisplayName, BodyAreaDisplayName> = {
-  'Pectoralis Major': 'Chest',
-  'Pectoralis Minor': 'Chest',
-  'Latissimus Dorsi': 'Back',
-  Trapezius: 'Back',
-  Rhomboids: 'Back',
-  'Erector Spinae': 'Back',
-  'Rear Deltoids': 'Shoulders',
-  'Front Deltoids': 'Shoulders',
-  'Medial Deltoids': 'Shoulders',
-  Biceps: 'Arms',
-  Triceps: 'Arms',
-  Forearms: 'Arms',
-  Abdominals: 'Core',
-  Obliques: 'Core',
-  'Hip Flexors': 'Core',
-  Glutes: 'Legs',
-  Hamstrings: 'Legs',
-  Quadriceps: 'Legs',
-  Adductors: 'Legs',
-  Calves: 'Legs',
 };
 
 const ISOMETRIC_SECONDS_PER_EFFECTIVE_SET = 45;

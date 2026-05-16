@@ -13,14 +13,6 @@ vi.mock('../../config', () => ({
   },
 }));
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 const mockRouterPush = vi.fn();
 
 vi.mock('vue-router', () => ({
@@ -673,5 +665,75 @@ describe('RoutinePage', () => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
     });
     expect(mockRouterPush).not.toHaveBeenCalled();
+  });
+
+  it('should show body areas on exercise cards', async () => {
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      userId: 123,
+      exercises: [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
+          primaryMuscleGroups: ['Pectoralis Major'],
+          secondaryMuscleGroups: ['Triceps'],
+          tertiaryMuscleGroups: ['Abdominals'],
+        },
+      ],
+    };
+
+    server.use(http.get(`${mockApiUrl}/routines/1`, () => HttpResponse.json(mockRoutine)));
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Chest/, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(/Arms/, { exact: false })).toBeInTheDocument();
+      expect(screen.getByText(/Core/, { exact: false })).toBeInTheDocument();
+    });
+  });
+
+  it('should open muscle group modal when exercise card is clicked', async () => {
+    const user = userEvent.setup();
+    const mockRoutine = {
+      id: 1,
+      label: 'Test Routine',
+      userId: 123,
+      exercises: [
+        {
+          id: 1,
+          label: 'Bench Press',
+          recordSetsType: 'WEIGHT',
+          isIsometric: false,
+          isUnilateral: false,
+          primaryMuscleGroups: ['Pectoralis Major'],
+          secondaryMuscleGroups: ['Triceps'],
+          tertiaryMuscleGroups: [],
+        },
+      ],
+    };
+
+    server.use(http.get(`${mockApiUrl}/routines/1`, () => HttpResponse.json(mockRoutine)));
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Bench Press')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Main muscles worked', hidden: true })
+      ).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Pectoralis Major')).toBeInTheDocument();
+    expect(screen.getByText('Triceps')).toBeInTheDocument();
   });
 });

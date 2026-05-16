@@ -87,3 +87,16 @@
     color: var(--accent-primary);
     font-size: var(--font-size-12);
 }
+
+.pipeSeparator {
+    color: var(--em-text-tertiary);
+    padding: 0 var(--spacing-unit-2);
+}
+
+.bodyAreaList {
+    font-family: var(--font-stack-heading);
+    font-size: var(--font-size-14);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+}

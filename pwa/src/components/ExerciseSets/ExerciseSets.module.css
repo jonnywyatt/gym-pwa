@@ -87,3 +87,16 @@
 .addSetButton:hover {
   color: var(--text-primary);
 }
+
+.muscleGroupsButton {
+  font-size: var(--font-size-14);
+  color: var(--accent-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.muscleGroupsButton:hover {
+  color: var(--text-primary);
+}

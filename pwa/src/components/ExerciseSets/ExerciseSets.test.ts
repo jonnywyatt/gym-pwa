@@ -563,6 +563,50 @@ describe('ExerciseSets', () => {
     });
   });
 
+  describe('muscle groups button and modal', () => {
+    it('shows Muscle groups button when panel is open', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+
+      expect(screen.getByRole('button', { name: 'Muscle groups' })).toBeInTheDocument();
+    });
+
+    it('opens muscle group modal when Muscle groups button is clicked', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+      await user.click(screen.getByRole('button', { name: 'Muscle groups' }));
+
+      expect(
+        screen.getByRole('heading', { name: 'Main muscles worked', hidden: true })
+      ).toBeInTheDocument();
+      expect(screen.getByText('Pectoralis Major')).toBeInTheDocument();
+      expect(screen.getByText('Triceps')).toBeInTheDocument();
+    });
+
+    it('closes muscle group modal when Close button is clicked', async () => {
+      const user = userEvent.setup();
+      render(ExerciseSets, {
+        props: { exercise: exerciseWithSets, bodyWeightKg: 80 },
+      });
+
+      await user.click(screen.getByRole('button', { name: /bench press/i }));
+      await user.click(screen.getByRole('button', { name: 'Muscle groups' }));
+      await user.click(screen.getByRole('button', { name: 'Close', hidden: true }));
+
+      expect(
+        screen.queryByRole('heading', { name: 'Main muscles worked', hidden: true })
+      ).not.toBeInTheDocument();
+    });
+  });
+
   describe('stopwatch button and exercise timer', () => {
     const timeExerciseWithSets: LocalWorkoutExercise = {
       id: 2,

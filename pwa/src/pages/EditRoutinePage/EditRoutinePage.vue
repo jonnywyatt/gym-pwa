@@ -13,6 +13,8 @@ import {
 } from './helpers';
 import DeleteIconButton from '../../components/DeleteIconButton/DeleteIconButton.vue';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator.vue';
+import MuscleGroupModal from '../../components/MuscleGroupModal/MuscleGroupModal.vue';
+import {getBodyAreasForExercise} from '../../utils/muscleGroups';
 
 const route = useRoute();
 const router = useRouter();
@@ -28,6 +30,8 @@ const loading = ref(true);
 const exercisesLoading = ref(true);
 const error = ref<string | null>(null);
 const addingExercise = ref<Exercise | null>(null);
+const showMuscleGroupModal = ref(false);
+const selectedExercise = ref<Exercise | null>(null);
 const searchActive = computed(() => searchQuery.value.trim().length > 0);
 const MIN_SEARCH_LENGTH = 2;
 const canSearch = computed(() => searchQuery.value.trim().length >= MIN_SEARCH_LENGTH);
@@ -94,6 +98,15 @@ async function onRemoveExercise(exerciseId: number) {
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to remove exercise';
   }
+}
+
+function openMuscleGroupModal(exercise: Exercise) {
+  selectedExercise.value = exercise;
+  showMuscleGroupModal.value = true;
+}
+
+function closeMuscleGroupModal() {
+  showMuscleGroupModal.value = false;
 }
 
 async function onFinish() {
@@ -171,10 +184,11 @@ onMounted(() => {
                 @click="onAddExercise(result)"
             >
               <div class="heading-s">{{ result.label }}</div>
-              <div class="highlightCardContents">
-                <div>{{ result.primaryMuscleGroups.join(', ') }}</div>
-                <div v-if="result.secondaryMuscleGroups.length > 0">Secondary muscle groups: {{ result.secondaryMuscleGroups.join(', ') }}</div>
-              </div>
+              <p class="bodyAreaList">
+                <template v-for="(area, i) in getBodyAreasForExercise(result.primaryMuscleGroups, result.secondaryMuscleGroups, result.tertiaryMuscleGroups)" :key="area">
+                  <span v-if="i > 0" class="pipeSeparator">|</span>{{ area }}
+                </template>
+              </p>
             </button>
           </li>
         </ul>
@@ -190,13 +204,18 @@ onMounted(() => {
             :key="exercise.id"
             class="flexSpaceBetween flexGap2Units"
         >
-          <div :class="['highlightCard', 'marginBottom2', styles.exerciseCard]">
+          <button
+              type="button"
+              :class="['highlightCard', 'highlightCardButton', 'marginBottom2', styles.exerciseCard]"
+              @click="openMuscleGroupModal(exercise)"
+          >
             <div class="heading-s">{{ exercise.label }}</div>
-            <div class="highlightCardContents">
-              <div>Primary groups: {{ exercise.primaryMuscleGroups.join(', ') }}</div>
-              <div v-if="exercise.secondaryMuscleGroups.length > 0">Secondary groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
-            </div>
-          </div>
+            <p class="bodyAreaList">
+              <template v-for="(area, i) in getBodyAreasForExercise(exercise.primaryMuscleGroups, exercise.secondaryMuscleGroups, exercise.tertiaryMuscleGroups)" :key="area">
+                <span v-if="i > 0" class="pipeSeparator">|</span>{{ area }}
+              </template>
+            </p>
+          </button>
           <DeleteIconButton
               :label="`Remove ${exercise.label}`"
               confirm-title="Remove exercise?"
@@ -210,5 +229,15 @@ onMounted(() => {
       <LoadingIndicator :size="32" />
       <span>Adding {{ addingExercise.label }}</span>
     </div>
+
+    <MuscleGroupModal
+        v-if="selectedExercise"
+        :open="showMuscleGroupModal"
+        :exercise-label="selectedExercise.label"
+        :primary-muscle-groups="selectedExercise.primaryMuscleGroups"
+        :secondary-muscle-groups="selectedExercise.secondaryMuscleGroups"
+        :tertiary-muscle-groups="selectedExercise.tertiaryMuscleGroups"
+        @close="closeMuscleGroupModal"
+    />
   </main>
 </template>

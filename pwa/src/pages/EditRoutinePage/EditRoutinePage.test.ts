@@ -22,14 +22,6 @@ vi.mock('../../lib/auth/oauth', () => ({
 const mockRouter = { push: vi.fn() };
 const mockRouteParams = { routineId: '5' };
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 vi.mock('vue-router', () => ({
   useRouter: () => mockRouter,
   useRoute: () => ({ params: mockRouteParams }),
@@ -47,6 +39,7 @@ const mockRoutine = {
       recordSetsType: 'TIME',
       primaryMuscleGroups: ['Abdominals'],
       secondaryMuscleGroups: [],
+      tertiaryMuscleGroups: [],
     },
   ],
 };
@@ -58,6 +51,7 @@ const mockAllExercises = [
     recordSetsType: 'TIME',
     primaryMuscleGroups: ['Abdominals'],
     secondaryMuscleGroups: [],
+    tertiaryMuscleGroups: [],
   },
   {
     id: 2,
@@ -65,6 +59,7 @@ const mockAllExercises = [
     recordSetsType: 'TIME',
     primaryMuscleGroups: ['Obliques'],
     secondaryMuscleGroups: ['Abdominals'],
+    tertiaryMuscleGroups: [],
   },
 ];
 
@@ -100,10 +95,12 @@ describe('EditRoutinePage', () => {
 
     server.use(
       http.get(`${mockApiUrl}/routines/5`, () => HttpResponse.json(mockRoutine)),
-      http.get(`${mockApiUrl}/exercises`, () =>
-        new Promise<Response>((resolve) => {
-          resolveExercises = resolve;
-        })
+      http.get(
+        `${mockApiUrl}/exercises`,
+        () =>
+          new Promise<Response>((resolve) => {
+            resolveExercises = resolve;
+          })
       )
     );
 
@@ -160,7 +157,7 @@ describe('EditRoutinePage', () => {
       expect(screen.getByText('Plank')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Primary groups: Abdominals')).toBeInTheDocument();
+    expect(screen.getByText('Core')).toBeInTheDocument();
   });
 
   it('shows Finish button when routine has a name and at least one exercise', async () => {
@@ -268,8 +265,7 @@ describe('EditRoutinePage', () => {
       expect(screen.getByText('Side plank')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Obliques')).toBeInTheDocument();
-    expect(screen.getByText('Secondary muscle groups: Abdominals')).toBeInTheDocument();
+    expect(screen.getAllByText('Core').length).toBeGreaterThanOrEqual(1);
   });
 
   it('shows "No exercises found" when search matches nothing', async () => {
@@ -588,5 +584,26 @@ describe('EditRoutinePage', () => {
     await waitFor(() => {
       expect(screen.getByText(/No exercises yet/)).toBeInTheDocument();
     });
+  });
+
+  it('opens muscle group modal when exercise card is clicked', async () => {
+    const user = userEvent.setup();
+    setupDefaultHandlers();
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Plank')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /^plank core$/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Main muscles worked', hidden: true })
+      ).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Abdominals')).toBeInTheDocument();
   });
 });

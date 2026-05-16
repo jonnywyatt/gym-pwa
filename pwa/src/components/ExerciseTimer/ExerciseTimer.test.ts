@@ -4,13 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import ExerciseTimer from './ExerciseTimer.vue';
 
-HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
-  this.open = true;
-});
-HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
-  this.open = false;
-});
-
 describe('ExerciseTimer', () => {
   beforeEach(() => {
     vi.useFakeTimers();

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import type {RoutineDetail} from 'gym-pwa-api/types';
+import type {Exercise, RoutineDetail} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
 import {createWorkout, getActiveWorkout, type LocalWorkout} from '../../lib/db';
 import {fetchRoutine, prepareWorkoutStart, deleteRoutine, copyRoutine} from './helpers';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog.vue';
+import MuscleGroupModal from '../../components/MuscleGroupModal/MuscleGroupModal.vue';
+import {getBodyAreasForExercise} from '../../utils/muscleGroups';
 
 const route = useRoute();
 const router = useRouter();
@@ -17,6 +19,17 @@ const activeWorkout = ref<LocalWorkout | null>(null);
 const deleting = ref(false);
 const showDeleteDialog = ref(false);
 const copying = ref(false);
+const showMuscleGroupModal = ref(false);
+const selectedExercise = ref<Exercise | null>(null);
+
+function openMuscleGroupModal(exercise: Exercise) {
+  selectedExercise.value = exercise;
+  showMuscleGroupModal.value = true;
+}
+
+function closeMuscleGroupModal() {
+  showMuscleGroupModal.value = false;
+}
 
 async function loadRoutine() {
   try {
@@ -166,12 +179,19 @@ onMounted(() => {
     <template v-else-if="routine">
       <p v-if="routine.exercises.length === 0">No exercises in this routine.</p>
       <ul v-else class="list">
-        <li v-for="exercise in routine.exercises" :key="exercise.id" class="highlightCard">
-          <h2 class="heading-m">{{ exercise.label }}</h2>
-          <div class="highlightCardContents">
-            <div>{{ exercise.primaryMuscleGroups.join(', ') }}</div>
-            <div>Secondary muscle groups: {{ exercise.secondaryMuscleGroups.join(', ') }}</div>
-          </div>
+        <li v-for="exercise in routine.exercises" :key="exercise.id">
+          <button
+              type="button"
+              class="highlightCard highlightCardButton"
+              @click="openMuscleGroupModal(exercise)"
+          >
+            <h2 class="heading-m">{{ exercise.label }}</h2>
+            <p class="bodyAreaList">
+              <template v-for="(area, i) in getBodyAreasForExercise(exercise.primaryMuscleGroups, exercise.secondaryMuscleGroups, exercise.tertiaryMuscleGroups)" :key="area">
+                <span v-if="i > 0" class="pipeSeparator">|</span>{{ area }}
+              </template>
+            </p>
+          </button>
         </li>
       </ul>
     </template>
@@ -182,6 +202,16 @@ onMounted(() => {
         message="This action cannot be undone."
         @confirm="confirmDelete"
         @cancel="cancelDelete"
+    />
+
+    <MuscleGroupModal
+        v-if="selectedExercise"
+        :open="showMuscleGroupModal"
+        :exercise-label="selectedExercise.label"
+        :primary-muscle-groups="selectedExercise.primaryMuscleGroups"
+        :secondary-muscle-groups="selectedExercise.secondaryMuscleGroups"
+        :tertiary-muscle-groups="selectedExercise.tertiaryMuscleGroups"
+        @close="closeMuscleGroupModal"
     />
   </main>
 </template>

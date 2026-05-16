@@ -17,6 +17,7 @@ import {
 import styles from './ExerciseSets.module.css';
 import WeightKg from '../WeightKg/WeightKg.vue';
 import ExerciseTimer from '../ExerciseTimer/ExerciseTimer.vue';
+import MuscleGroupModal from '../MuscleGroupModal/MuscleGroupModal.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
 import stopwatchSvg from '../../assets/stopwatch.svg';
@@ -94,6 +95,16 @@ function handleTimerFinish(timeSeconds: number) {
     emit('updateSet', props.exercise.id, timerOpenForSetId.value, { timeSeconds });
   }
   timerOpenForSetId.value = null;
+}
+
+const showMuscleGroupModal = ref(false);
+
+function openMuscleGroupModal() {
+  showMuscleGroupModal.value = true;
+}
+
+function closeMuscleGroupModal() {
+  showMuscleGroupModal.value = false;
 }
 
 </script>
@@ -204,6 +215,9 @@ function handleTimerFinish(timeSeconds: number) {
         <button type="button" :class="styles.addSetButton" @click="emit('addSet', exercise.id)">
           Add Set
         </button>
+        <button type="button" :class="styles.muscleGroupsButton" @click="openMuscleGroupModal">
+          Muscle groups
+        </button>
       </div>
     </div>
 
@@ -212,6 +226,16 @@ function handleTimerFinish(timeSeconds: number) {
       :open="timerOpenForSetId !== null"
       :exercise-label="exercise.label"
       @finish="handleTimerFinish"
+    />
+
+    <MuscleGroupModal
+      v-if="showMuscleGroupModal"
+      :open="showMuscleGroupModal"
+      :exercise-label="exercise.label"
+      :primary-muscle-groups="exercise.primaryMuscleGroups"
+      :secondary-muscle-groups="exercise.secondaryMuscleGroups"
+      :tertiary-muscle-groups="exercise.tertiaryMuscleGroups"
+      @close="closeMuscleGroupModal"
     />
   </div>
 </template>
