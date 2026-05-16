@@ -27,9 +27,13 @@ export const exercises: ExerciseSeed[] = [
     isIsometric: false,
     isUnilateral: false,
     bwFactor: null,
-    primaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MAJOR],
-    secondaryMuscleGroupLabels: [MuscleGroupLabel.TRICEPS],
-    tertiaryMuscleGroupLabels: [MuscleGroupLabel.FRONT_DELTOIDS],
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+      MuscleGroupLabel.FRONT_DELTOIDS,
+      MuscleGroupLabel.TRICEPS,
+    ],
+    secondaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MINOR],
+    tertiaryMuscleGroupLabels: [],
   },
   {
     label: 'Dead hang',
@@ -38,8 +42,12 @@ export const exercises: ExerciseSeed[] = [
     isUnilateral: false,
     bwFactor: 1.0,
     primaryMuscleGroupLabels: [MuscleGroupLabel.FOREARMS],
-    secondaryMuscleGroupLabels: [MuscleGroupLabel.LATISSIMUS_DORSI],
-    tertiaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.TRAPEZIUS],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.LATISSIMUS_DORSI,
+      MuscleGroupLabel.TRAPEZIUS,
+      MuscleGroupLabel.REAR_DELTOIDS,
+    ],
+    tertiaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.BICEPS],
   },
   {
     label: "Farmer's carry",
@@ -57,9 +65,12 @@ export const exercises: ExerciseSeed[] = [
     isIsometric: false,
     isUnilateral: false,
     bwFactor: null,
-    primaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MAJOR],
+    primaryMuscleGroupLabels: [
+      MuscleGroupLabel.PECTORALIS_MAJOR,
+      MuscleGroupLabel.PECTORALIS_MINOR,
+    ],
     secondaryMuscleGroupLabels: [MuscleGroupLabel.FRONT_DELTOIDS],
-    tertiaryMuscleGroupLabels: [],
+    tertiaryMuscleGroupLabels: [MuscleGroupLabel.BICEPS],
   },
   {
     label: 'Lat pulldown',
