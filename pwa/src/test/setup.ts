@@ -4,7 +4,14 @@ import 'vitest-dom/extend-expect';
 import './msw';
 import 'fake-indexeddb/auto';
 
-// Cleanup after each test
+HTMLDialogElement.prototype.showModal = function () {
+  this.setAttribute('open', '');
+};
+
+HTMLDialogElement.prototype.close = function () {
+  this.removeAttribute('open');
+};
+
 afterEach(() => {
   cleanup();
 });

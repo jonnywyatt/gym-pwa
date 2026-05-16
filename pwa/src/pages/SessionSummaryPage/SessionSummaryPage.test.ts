@@ -5,14 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
 import SessionSummaryPage from './SessionSummaryPage.vue';
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 vi.mock('../../config', () => ({
   config: {
     apiUrl: 'http://localhost:3000',

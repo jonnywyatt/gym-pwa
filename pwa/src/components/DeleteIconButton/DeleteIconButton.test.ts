@@ -3,14 +3,6 @@ import { render, screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vitest';
 import DeleteIconButton from './DeleteIconButton.vue';
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 function renderComponent(
   overrides: Partial<{ label: string; confirmTitle: string; confirmMessage: string }> = {}
 ) {

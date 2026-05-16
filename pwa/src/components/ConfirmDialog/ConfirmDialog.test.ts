@@ -3,14 +3,6 @@ import { render, screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vitest';
 import ConfirmDialog from './ConfirmDialog.vue';
 
-HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute('open', '');
-};
-
-HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute('open');
-};
-
 describe('ConfirmDialog', () => {
   function renderDialog(props = {}) {
     return render(ConfirmDialog, {

@@ -1,0 +1,43 @@
+.title {
+  font-family: var(--font-stack-heading);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--em-accent-teal);
+  margin: 0 0 var(--spacing-unit-4) 0;
+}
+
+.section {
+  margin-bottom: var(--spacing-unit-3);
+}
+
+.sectionHeading {
+  font-size: var(--font-size-13);
+  font-weight: normal;
+  color: var(--text-secondary);
+  margin: 0;
+  letter-spacing: 0.05em;
+  padding-bottom: var(--spacing-unit-1);
+}
+
+.muscleList {
+  font-size: var(--font-size-14);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.closeButton {
+  padding: var(--spacing-unit-2) var(--spacing-unit-4);
+  font-size: var(--font-size-14);
+  background: var(--background-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background: var(--background-surface-hover);
+}

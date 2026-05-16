@@ -4,13 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { LocalWorkoutExercise } from '../../lib/db';
 import ExerciseSets from './ExerciseSets.vue';
 
-HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
-  this.open = true;
-});
-HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
-  this.open = false;
-});
-
 describe('ExerciseSets', () => {
   const baseExercise: LocalWorkoutExercise = {
     id: 1,
