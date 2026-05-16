@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, nextTick, onMounted, ref } from 'vue';
 import type { RoutineTrendData } from 'gym-pwa-api/types';
 import styles from './SessionTrendsPage.module.css';
 import { authService } from '../../lib/auth/oauth';
@@ -7,6 +7,8 @@ import {
   TREND_PERIOD_OPTIONS,
   type SessionPopup,
   type TrendPeriod,
+  buildBodyAreaTrendChartData,
+  buildBodyAreaTrendChartOptions,
   buildChartData,
   buildChartOptions,
   buildMetricSubtitle,
@@ -18,7 +20,22 @@ import {
 
 const LazyLineChart = defineAsyncComponent(() => import('./LazyLineChart.vue'));
 
+type TrendTab = 'routines' | 'bodyAreas';
+
 const routines = ref<RoutineTrendData[]>([]);
+const selectedTab = ref<TrendTab>('routines');
+
+const allSessionsCombined = computed((): RoutineTrendData => {
+  const allSessions = routines.value
+    .flatMap((r) => r.sessions)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  return { routineId: 0, routineLabel: '', secondMetric: null, sessions: allSessions };
+});
+
+const bodyAreaChartData = computed(() =>
+  buildBodyAreaTrendChartData(allSessionsCombined.value, selectedPeriod.value)
+);
+
 const loading = ref(true);
 const error = ref<string | null>(null);
 const selectedPeriod = ref<TrendPeriod>('3m');
@@ -118,6 +135,22 @@ onMounted(() => {
     </div>
     <div class="flexVerticalCenter flexGap3Units marginBottom4">
       <button
+        type="button"
+        :class="['buttonLink', 'buttonLink--secondary', selectedTab === 'routines' ? 'buttonLink--active' : '']"
+        @click="selectedTab = 'routines'"
+      >
+        Routines
+      </button>
+      <button
+        type="button"
+        :class="['buttonLink', 'buttonLink--secondary', selectedTab === 'bodyAreas' ? 'buttonLink--active' : '']"
+        @click="selectedTab = 'bodyAreas'"
+      >
+        Body areas
+      </button>
+    </div>
+    <div class="flexVerticalCenter flexGap3Units marginBottom4">
+      <button
         v-for="option in TREND_PERIOD_OPTIONS"
         :key="option.period"
         type="button"
@@ -130,7 +163,7 @@ onMounted(() => {
     <p v-if="loading" :class="styles.loading">Loading...</p>
     <p v-else-if="error" :class="styles.error">Error: {{ error }}</p>
     <p v-else-if="routines.length === 0" class="textSecondary textSecondary--small">No session data in this period.</p>
-    <template v-else>
+    <template v-else-if="selectedTab === 'routines'">
       <section
         v-for="routine in routines"
         :key="routine.routineId"
@@ -179,5 +212,24 @@ onMounted(() => {
         </template>
       </section>
     </template>
+    <template v-else-if="selectedTab === 'bodyAreas' && bodyAreaChartData.datasets.length > 0">
+      <ul :class="styles.bodyAreaLegend">
+        <li
+          v-for="dataset in bodyAreaChartData.datasets"
+          :key="dataset.label"
+          :class="styles.bodyAreaLegendItem"
+        >
+          <span :class="styles.bodyAreaLegendSwatch" :style="{ background: String(dataset.borderColor) }" />
+          {{ dataset.label }}
+        </li>
+      </ul>
+      <div :class="styles.chartWrapper">
+        <LazyLineChart
+          :data="bodyAreaChartData"
+          :options="buildBodyAreaTrendChartOptions(selectedPeriod, allSessionsCombined.sessions, bodyAreaChartData.yMax)"
+        />
+      </div>
+    </template>
+    <p v-else-if="selectedTab === 'bodyAreas'" class="textSecondary textSecondary--small">Not enough session data for body area trends.</p>
   </main>
 </template>

@@ -41,3 +41,28 @@
 .closeButton {
   composes: popupCloseButton from '../../styles/popup.css';
 }
+
+.bodyAreaLegend {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-unit-3) 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-unit-1) var(--spacing-unit-3);
+}
+
+.bodyAreaLegendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-unit-1);
+  font-size: var(--font-size-13);
+  color: var(--text-secondary);
+}
+
+.bodyAreaLegendSwatch {
+  display: inline-block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}

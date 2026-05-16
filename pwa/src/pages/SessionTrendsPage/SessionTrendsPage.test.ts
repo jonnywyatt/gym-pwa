@@ -33,8 +33,20 @@ const weightRoutine = {
   routineLabel: 'Push Day',
   secondMetric: 'weight',
   sessions: [
-    { date: '2026-01-01T10:00:00Z', durationSeconds: 3600, totalWeightKg: 1000, totalReps: 0 },
-    { date: '2026-01-08T10:00:00Z', durationSeconds: 4200, totalWeightKg: 1100, totalReps: 0 },
+    {
+      date: '2026-01-01T10:00:00Z',
+      durationSeconds: 3600,
+      totalWeightKg: 1000,
+      totalReps: 0,
+      bodyAreaPercentages: {},
+    },
+    {
+      date: '2026-01-08T10:00:00Z',
+      durationSeconds: 4200,
+      totalWeightKg: 1100,
+      totalReps: 0,
+      bodyAreaPercentages: {},
+    },
   ],
 };
 
@@ -43,7 +55,13 @@ const repsRoutine = {
   routineLabel: 'Cardio',
   secondMetric: 'reps',
   sessions: [
-    { date: '2026-01-02T10:00:00Z', durationSeconds: 1800, totalWeightKg: 0, totalReps: 120 },
+    {
+      date: '2026-01-02T10:00:00Z',
+      durationSeconds: 1800,
+      totalWeightKg: 0,
+      totalReps: 120,
+      bodyAreaPercentages: {},
+    },
   ],
 };
 
@@ -52,7 +70,13 @@ const noMetricRoutine = {
   routineLabel: 'Stretching',
   secondMetric: null,
   sessions: [
-    { date: '2026-01-03T10:00:00Z', durationSeconds: 900, totalWeightKg: 0, totalReps: 0 },
+    {
+      date: '2026-01-03T10:00:00Z',
+      durationSeconds: 900,
+      totalWeightKg: 0,
+      totalReps: 0,
+      bodyAreaPercentages: {},
+    },
   ],
 };
 

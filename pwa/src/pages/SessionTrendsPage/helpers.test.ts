@@ -1,6 +1,8 @@
 import type { RoutineTrendData } from 'gym-pwa-api/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  BODY_AREA_COLOURS,
+  buildBodyAreaTrendChartData,
   buildChartData,
   buildChartOptions,
   buildMetricSubtitle,
@@ -111,6 +113,7 @@ describe('buildSessionPopup', () => {
     durationSeconds: 3600,
     totalWeightKg: 10954,
     totalReps: 0,
+    bodyAreaPercentages: {},
   };
 
   it('builds popup for weight metric', () => {
@@ -151,6 +154,7 @@ const baseSession = {
   durationSeconds: 3600,
   totalWeightKg: 1000,
   totalReps: 50,
+  bodyAreaPercentages: {},
 };
 
 describe('buildMetricSubtitle', () => {
@@ -315,8 +319,20 @@ describe('buildChartData', () => {
 describe('buildSessionsPerWeekData', () => {
   it('groups sessions in the same ISO week into one entry', () => {
     const sessions = [
-      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
-      { date: '2026-01-06T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      {
+        date: '2026-01-05T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-01-06T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
     ];
     const result = buildSessionsPerWeekData(sessions);
     expect(result).toHaveLength(1);
@@ -325,8 +341,20 @@ describe('buildSessionsPerWeekData', () => {
 
   it('produces separate entries for sessions in different weeks', () => {
     const sessions = [
-      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
-      { date: '2026-01-12T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      {
+        date: '2026-01-05T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-01-12T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
     ];
     const result = buildSessionsPerWeekData(sessions);
     expect(result).toHaveLength(2);
@@ -336,8 +364,20 @@ describe('buildSessionsPerWeekData', () => {
 
   it('fills in zero-count weeks between sessions in non-adjacent weeks', () => {
     const sessions = [
-      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
-      { date: '2026-01-26T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      {
+        date: '2026-01-05T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-01-26T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
     ];
     const result = buildSessionsPerWeekData(sessions);
     expect(result).toHaveLength(4);
@@ -349,8 +389,20 @@ describe('buildSessionsPerWeekData', () => {
 
   it('returns entries sorted by date ascending', () => {
     const sessions = [
-      { date: '2026-01-12T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
-      { date: '2026-01-05T10:00:00Z', durationSeconds: 0, totalWeightKg: 0, totalReps: 0 },
+      {
+        date: '2026-01-12T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-01-05T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
     ];
     const result = buildSessionsPerWeekData(sessions);
     expect(result[0].date < result[1].date).toBe(true);
@@ -367,8 +419,20 @@ describe('buildSessionsPerWeekChartData', () => {
     routineLabel: 'Push',
     secondMetric: null,
     sessions: [
-      { date: '2026-01-05T10:00:00Z', durationSeconds: 3600, totalWeightKg: 0, totalReps: 0 },
-      { date: '2026-01-12T10:00:00Z', durationSeconds: 3600, totalWeightKg: 0, totalReps: 0 },
+      {
+        date: '2026-01-05T10:00:00Z',
+        durationSeconds: 3600,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-01-12T10:00:00Z',
+        durationSeconds: 3600,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
     ],
   };
 
@@ -544,5 +608,131 @@ describe('prefetchSessionTrends', () => {
 
     expect(result).toEqual(mockTrendsResponse);
     expect(mockAuthFetchJson).toHaveBeenCalledOnce();
+  });
+});
+
+describe('BODY_AREA_COLOURS', () => {
+  it('defines a colour for each of the 6 body areas', () => {
+    expect(Object.keys(BODY_AREA_COLOURS)).toEqual([
+      'Chest',
+      'Back',
+      'Shoulders',
+      'Arms',
+      'Core',
+      'Legs',
+    ]);
+  });
+});
+
+describe('buildBodyAreaTrendChartData', () => {
+  function makeRoutine(sessions: RoutineTrendData['sessions']): RoutineTrendData {
+    return { routineId: 1, routineLabel: 'Push', secondMetric: 'weight', sessions };
+  }
+
+  it('returns empty datasets when fewer than 2 sessions', () => {
+    const routine = makeRoutine([
+      {
+        date: '2026-01-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Chest: 50 },
+      },
+    ]);
+    const result = buildBodyAreaTrendChartData(routine, '3m');
+    expect(result.datasets).toHaveLength(0);
+  });
+
+  it('omits body areas that appear in fewer than 2 sessions', () => {
+    const routine = makeRoutine([
+      {
+        date: '2026-01-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Chest: 60, Arms: 40 },
+      },
+      {
+        date: '2026-02-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Chest: 70 },
+      },
+    ]);
+    const result = buildBodyAreaTrendChartData(routine, '3m');
+    const labels = result.datasets.map((d) => d.label);
+    expect(labels).toContain('Chest');
+    expect(labels).not.toContain('Arms');
+  });
+
+  it('includes a dataset for each body area with 2+ data points', () => {
+    const sessions = [
+      {
+        date: '2026-01-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Chest: 60, Legs: 40 },
+      },
+      {
+        date: '2026-02-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Chest: 50, Legs: 50 },
+      },
+    ];
+    const result = buildBodyAreaTrendChartData(makeRoutine(sessions), '3m');
+    const labels = result.datasets.map((d) => d.label);
+    expect(labels).toContain('Chest');
+    expect(labels).toContain('Legs');
+    expect(labels).not.toContain('Back');
+  });
+
+  it('uses the correct colour for each body area', () => {
+    const sessions = [
+      {
+        date: '2026-01-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Core: 100 },
+      },
+      {
+        date: '2026-02-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Core: 100 },
+      },
+    ];
+    const result = buildBodyAreaTrendChartData(makeRoutine(sessions), '3m');
+    const coreDataset = result.datasets.find((d) => d.label === 'Core');
+    expect(coreDataset?.borderColor).toBe(BODY_AREA_COLOURS.Core);
+  });
+
+  it('datasets have no visible dots', () => {
+    const sessions = [
+      {
+        date: '2026-01-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Back: 100 },
+      },
+      {
+        date: '2026-02-01T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: { Back: 100 },
+      },
+    ];
+    const result = buildBodyAreaTrendChartData(makeRoutine(sessions), '3m');
+    for (const dataset of result.datasets) {
+      expect(dataset.pointRadius).toBe(0);
+      expect(dataset.pointHoverRadius).toBe(0);
+    }
   });
 });

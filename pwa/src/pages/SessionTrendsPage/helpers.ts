@@ -1,5 +1,9 @@
 import type { ChartData, ChartOptions, TooltipPositionerFunction } from 'chart.js';
-import type { RoutineTrendData, SessionTrendsResponse } from 'gym-pwa-api/types';
+import type {
+  BodyAreaDisplayName,
+  RoutineTrendData,
+  SessionTrendsResponse,
+} from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import { toLocalDateString } from '../../utils/time';
 
@@ -516,6 +520,139 @@ export function buildChartOptions(
     scales: {
       ...buildXAxis(period),
       y: buildYAxis('left', yTickCallback),
+    },
+  };
+}
+
+export const BODY_AREA_COLOURS: Record<BodyAreaDisplayName, string> = {
+  Chest: '#00f5ff',
+  Back: '#00ADB3',
+  Shoulders: '#8239AA',
+  Arms: '#C256D1',
+  Core: '#FF00A5',
+  Legs: '#00C734',
+};
+
+const ALL_BODY_AREAS: BodyAreaDisplayName[] = [
+  'Chest',
+  'Back',
+  'Shoulders',
+  'Arms',
+  'Core',
+  'Legs',
+];
+
+export function buildBodyAreaTrendChartData(
+  routine: RoutineTrendData,
+  period: TrendPeriod
+): ChartData<'line'> & { yMax: number } {
+  const sessions = routine.sessions;
+  if (sessions.length < 2) return { datasets: [], yMax: 100 };
+
+  const sessionsWithBodyData = sessions.filter(
+    (s) => Object.keys(s.bodyAreaPercentages).length > 0
+  );
+  if (sessionsWithBodyData.length < 2) return { datasets: [], yMax: 100 };
+
+  const sessionVolumes = sessionsWithBodyData.map((s) =>
+    s.totalWeightKg > 0 ? s.totalWeightKg : s.durationSeconds
+  );
+
+  const allTimestamps = sessionsWithBodyData.map((s) => new Date(s.date).getTime());
+  const origin = allTimestamps[0];
+  const span = allTimestamps[allTimestamps.length - 1] - origin;
+  if (span === 0) return { datasets: [], yMax: 100 };
+
+  const allXNorm = allTimestamps.map((t) => (t - origin) / span);
+  const gridXNorm = Array.from({ length: LOESS_GRID_SIZE }, (_, i) => i / (LOESS_GRID_SIZE - 1));
+  const gridTimestamps = gridXNorm.map((x) => origin + x * span);
+
+  const rawCurves = new Map<BodyAreaDisplayName, number[]>();
+
+  for (const bodyArea of ALL_BODY_AREAS) {
+    const pointsWithData = sessionsWithBodyData
+      .map((s, i) => {
+        const pct = s.bodyAreaPercentages[bodyArea];
+        if (pct === undefined) return null;
+        return { xNorm: allXNorm[i], value: (pct / 100) * sessionVolumes[i] };
+      })
+      .filter((p): p is { xNorm: number; value: number } => p !== null);
+
+    if (pointsWithData.length < 2) continue;
+
+    const trainX = pointsWithData.map((p) => p.xNorm);
+    const trainY = pointsWithData.map((p) => p.value);
+    const bandwidth = LOESS_NEIGHBOURS_BY_PERIOD[period] / trainX.length;
+    const curveValues = gridXNorm.map((qx) =>
+      Math.max(0, loessEval(trainX, trainY, qx, bandwidth))
+    );
+    rawCurves.set(bodyArea, curveValues);
+  }
+
+  if (rawCurves.size === 0) return { datasets: [], yMax: 100 };
+
+  const datasets: ChartData<'line'>['datasets'] = [];
+  let maxValue = 0;
+
+  for (const [bodyArea, curveValues] of rawCurves) {
+    const normalized = curveValues.map((val, i) => {
+      const sum = Array.from(rawCurves.values()).reduce((acc, c) => acc + c[i], 0);
+      return sum > 0 ? (val / sum) * 100 : 0;
+    });
+
+    const lineMax = Math.max(...normalized);
+    if (lineMax > maxValue) maxValue = lineMax;
+
+    datasets.push({
+      label: bodyArea,
+      data: gridTimestamps.map((x, i) => ({ x, y: Math.round(normalized[i] * 10) / 10 })),
+      borderColor: BODY_AREA_COLOURS[bodyArea],
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      tension: 0.4,
+      pointRadius: 0,
+      pointHoverRadius: 0,
+    });
+  }
+
+  const yMax = Math.min(100, Math.ceil(maxValue / 10) * 10);
+
+  return { datasets, yMax };
+}
+
+export function buildBodyAreaTrendChartOptions(
+  period: TrendPeriod,
+  sessions: RoutineTrendData['sessions'],
+  yMax: number
+): ChartOptions<'line'> {
+  const xScales = buildXAxis(period) as Record<string, Record<string, unknown>>;
+  const xConfig = { ...xScales.x };
+
+  if (sessions.length > 0) {
+    const since = getPeriodSince(period);
+    xConfig.min = since ? since.getTime() : new Date(sessions[0].date).getTime();
+    xConfig.max = new Date(sessions[sessions.length - 1].date).getTime();
+  }
+
+  return {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'nearest',
+      intersect: false,
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+    scales: {
+      x: xConfig,
+      y: {
+        ...buildYAxis('left', (value) => `${Math.round(Number(value))}%`),
+        min: 0,
+        max: yMax,
+      },
     },
   };
 }

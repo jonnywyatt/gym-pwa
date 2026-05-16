@@ -209,6 +209,7 @@ const workoutSummarySelect = {
   totalWeightKg: true,
   totalReps: true,
   bodyWeightKg: true,
+  muscleGroupStats: { select: { bodyArea: true, percentage: true } },
   _count: { select: { exercises: true } },
 } satisfies Prisma.UserWorkoutSelect;
 

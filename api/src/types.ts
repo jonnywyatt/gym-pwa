@@ -119,6 +119,7 @@ export type RoutineSessionPoint = {
   durationSeconds: number;
   totalWeightKg: number;
   totalReps: number;
+  bodyAreaPercentages: Partial<Record<BodyAreaDisplayName, number>>;
 };
 
 export type RoutineTrendData = {

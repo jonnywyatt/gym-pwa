@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
-import { RecordSetsType } from '../../prisma-client';
-import type { RoutineTrendData, SessionTrendsResponse } from '../../types';
+import { type BodyAreaLabel, RecordSetsType } from '../../prisma-client';
+import type { BodyAreaDisplayName, RoutineTrendData, SessionTrendsResponse } from '../../types';
+import { bodyAreaDisplayNames } from '../../utils/display-names';
 import { getRoutineWithExercises } from '../routines/queries';
 import { getUserWorkoutSummaries } from '../workouts/queries';
-import { transformUserWorkoutSummaries } from '../workouts/transforms';
 
 const router = Router();
 
@@ -42,38 +42,46 @@ router.get('/users/:userId/session-trends', authenticate, async (req, res) => {
     const since = sinceParam ? new Date(sinceParam) : undefined;
 
     const summaries = await getUserWorkoutSummaries(userId, since);
-    const workouts = transformUserWorkoutSummaries(summaries);
 
-    const routineIds = [...new Set(workouts.map((w) => w.routineId))];
+    const routineIds = [...new Set(summaries.map((s) => s.routineId))];
 
     const routineDetails = await Promise.all(routineIds.map((id) => getRoutineWithExercises(id)));
 
     const routineDetailMap = new Map(routineIds.map((id, i) => [id, routineDetails[i]]));
 
-    const workoutsByRoutine = new Map<number, typeof workouts>();
-    for (const workout of workouts) {
-      const existing = workoutsByRoutine.get(workout.routineId) ?? [];
-      existing.push(workout);
-      workoutsByRoutine.set(workout.routineId, existing);
+    const summariesByRoutine = new Map<number, typeof summaries>();
+    for (const summary of summaries) {
+      const existing = summariesByRoutine.get(summary.routineId) ?? [];
+      existing.push(summary);
+      summariesByRoutine.set(summary.routineId, existing);
     }
 
     const response: SessionTrendsResponse = routineIds.map((routineId): RoutineTrendData => {
       const detail = routineDetailMap.get(routineId);
-      const routineWorkouts = workoutsByRoutine.get(routineId) ?? [];
-      const firstWorkout = routineWorkouts[routineWorkouts.length - 1];
-      const routineLabel = detail?.label ?? firstWorkout?.routineLabel ?? 'Unnamed routine';
+      const routineSummaries = summariesByRoutine.get(routineId) ?? [];
+      const firstSummary = routineSummaries[routineSummaries.length - 1];
+      const routineLabel = detail?.label ?? firstSummary?.routineLabel ?? 'Unnamed routine';
 
       const recordSetsTypes = (detail?.routineExercises ?? []).map(
         (re) => re.exercise.recordSetsType
       );
       const secondMetric = determineSecondMetric(recordSetsTypes);
 
-      const sessions = [...routineWorkouts].reverse().map((w) => ({
-        date: w.startedAt,
-        durationSeconds: w.durationSeconds ?? 0,
-        totalWeightKg: w.totalWeightKg,
-        totalReps: w.totalReps,
-      }));
+      const sessions = [...routineSummaries].reverse().map((s) => {
+        const bodyAreaPercentages: Partial<Record<BodyAreaDisplayName, number>> = {};
+        for (const stat of s.muscleGroupStats) {
+          const bodyArea = bodyAreaDisplayNames[stat.bodyArea as BodyAreaLabel];
+          const existing = bodyAreaPercentages[bodyArea] ?? 0;
+          bodyAreaPercentages[bodyArea] = existing + Number(stat.percentage);
+        }
+        return {
+          date: s.startedAt.toISOString(),
+          durationSeconds: s.durationSeconds ?? 0,
+          totalWeightKg: s.totalWeightKg ?? 0,
+          totalReps: s.totalReps ?? 0,
+          bodyAreaPercentages,
+        };
+      });
 
       return { routineId, routineLabel, secondMetric, sessions };
     });
