@@ -1,5 +1,6 @@
 import type { RoutineSummary, UserPreferences } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
+import { invalidateSwCache } from '../../lib/sw-cache';
 
 export async function fetchRoutines(): Promise<RoutineSummary[]> {
   return await authFetchJson<RoutineSummary[]>('/routines');
@@ -22,6 +23,7 @@ export async function savePreferences(
 
 export async function createRoutine(): Promise<number> {
   const response = await authFetchJson<{ id: number }>('/routines', { method: 'POST' });
+  invalidateSwCache('routines-api', 'dashboard-api');
   return response.id;
 }
 
@@ -30,6 +32,7 @@ export async function deleteRoutineApi(routineId: number): Promise<void> {
   if (!response.ok) {
     throw new Error(`Failed to delete routine: ${response.status}`);
   }
+  invalidateSwCache('routines-api', 'dashboard-api');
 }
 
 export function filterRoutines(

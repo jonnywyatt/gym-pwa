@@ -1,6 +1,7 @@
 import type { DashboardResponse, RoutineSummary, UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
+import { invalidateSwCache } from '../../lib/sw-cache';
 import { toLocalDateString } from '../../utils/time';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
@@ -61,6 +62,7 @@ export function sortRoutinesByLastUsed(
 
 export async function createRoutine(): Promise<number> {
   const response = await authFetchJson<{ id: number }>('/routines', { method: 'POST' });
+  invalidateSwCache('routines-api', 'dashboard-api');
   return response.id;
 }
 

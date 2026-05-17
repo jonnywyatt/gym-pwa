@@ -187,6 +187,7 @@ model UserWorkout {
   exercises        WorkoutExercise[]
   muscleGroupStats WorkoutMuscleGroupStat[]
 
+  @@index([userId, startedAt])
   @@map("user_workouts")
 }
 

@@ -1,5 +1,6 @@
 import type { Exercise, RoutineDetail } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
+import { invalidateSwCache } from '../../lib/sw-cache';
 
 export async function fetchRoutineDetail(routineId: string | string[]): Promise<RoutineDetail> {
   return await authFetchJson<RoutineDetail>(`/routines/${routineId}`);
@@ -24,6 +25,7 @@ export async function saveRoutineLabel(routineId: string | string[], label: stri
   if (!response.ok) {
     throw new Error(`Failed to save routine name: ${response.status}`);
   }
+  invalidateSwCache('routine-detail-api', 'routines-api');
 }
 
 export async function addExercise(routineId: string | string[], exerciseId: number): Promise<void> {
@@ -35,6 +37,7 @@ export async function addExercise(routineId: string | string[], exerciseId: numb
   if (!response.ok) {
     throw new Error(`Failed to add exercise: ${response.status}`);
   }
+  invalidateSwCache('routine-detail-api', 'routines-api');
 }
 
 export async function removeExercise(
@@ -47,4 +50,5 @@ export async function removeExercise(
   if (!response.ok) {
     throw new Error(`Failed to remove exercise: ${response.status}`);
   }
+  invalidateSwCache('routine-detail-api', 'routines-api');
 }

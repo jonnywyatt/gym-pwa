@@ -3,7 +3,7 @@ import { authenticate } from '../../middleware/auth';
 import { type BodyAreaLabel, RecordSetsType } from '../../prisma-client';
 import type { BodyAreaDisplayName, RoutineTrendData, SessionTrendsResponse } from '../../types';
 import { bodyAreaDisplayNames } from '../../utils/display-names';
-import { getRoutineWithExercises } from '../routines/queries';
+import { getRoutinesWithExercisesByIds } from '../routines/queries';
 import { getUserWorkoutSummaries } from '../workouts/queries';
 
 const router = Router();
@@ -45,9 +45,9 @@ router.get('/users/:userId/session-trends', authenticate, async (req, res) => {
 
     const routineIds = [...new Set(summaries.map((s) => s.routineId))];
 
-    const routineDetails = await Promise.all(routineIds.map((id) => getRoutineWithExercises(id)));
+    const routineDetails = await getRoutinesWithExercisesByIds(routineIds);
 
-    const routineDetailMap = new Map(routineIds.map((id, i) => [id, routineDetails[i]]));
+    const routineDetailMap = new Map(routineDetails.map((r) => [r.id, r]));
 
     const summariesByRoutine = new Map<number, typeof summaries>();
     for (const summary of summaries) {

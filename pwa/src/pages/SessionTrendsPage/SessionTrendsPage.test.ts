@@ -1,9 +1,8 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/vue';
 import { delay, HttpResponse, http } from 'msw';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { server } from '../../test/msw';
-import { clearTrendsCache } from './helpers';
 import SessionTrendsPage from './SessionTrendsPage.vue';
 
 vi.mock('../../config', () => ({
@@ -92,10 +91,6 @@ function renderPage() {
 }
 
 describe('SessionTrendsPage', () => {
-  beforeEach(() => {
-    clearTrendsCache();
-  });
-
   it('should display navigation links with Trends highlighted', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1/session-trends`, () => {

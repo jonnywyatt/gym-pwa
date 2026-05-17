@@ -9,19 +9,22 @@ import type {
 } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout, LocalWorkoutExercise, WorkoutSet } from '../../lib/db';
+import { invalidateSwCache } from '../../lib/sw-cache';
 import { muscleGroupToBodyArea } from '../../utils/muscleGroups';
 
 export async function saveWorkout(
   userId: number,
   workout: CreateWorkoutRequest
 ): Promise<UserWorkout> {
-  return await authFetchJson<UserWorkout>(`/users/${userId}/workouts`, {
+  const result = await authFetchJson<UserWorkout>(`/users/${userId}/workouts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(workout),
   });
+  invalidateSwCache('workouts-api', 'dashboard-api', 'session-trends-api');
+  return result;
 }
 
 export function formatStartTime(startedAt: string): string {

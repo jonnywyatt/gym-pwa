@@ -36,13 +36,6 @@ export function getPeriodSince(period: TrendPeriod): Date | null {
   return d;
 }
 
-const trendsCache = new Map<TrendPeriod, { data: SessionTrendsResponse; fetchedAt: number }>();
-const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-
-export function clearTrendsCache(): void {
-  trendsCache.clear();
-}
-
 function fetchFromApi(userId: number, period: TrendPeriod): Promise<SessionTrendsResponse> {
   const since = getPeriodSince(period);
   const query = since ? `?since=${toLocalDateString(since)}` : '';
@@ -53,15 +46,8 @@ export async function fetchSessionTrends(
   userId: number,
   period: TrendPeriod
 ): Promise<SessionTrendsResponse> {
-  const cached = trendsCache.get(period);
-  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-    return cached.data;
-  }
-
   const prefetched = consumeTrendsPrefetch();
-  const data = prefetched ? await prefetched : await fetchFromApi(userId, period);
-  trendsCache.set(period, { data, fetchedAt: Date.now() });
-  return data;
+  return prefetched ? prefetched : fetchFromApi(userId, period);
 }
 
 let trendsPrefetch: Promise<SessionTrendsResponse> | null = null;

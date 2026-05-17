@@ -39,31 +39,42 @@ export async function getRoutinesWithExerciseCount(
   });
 }
 
+const routineWithExercisesInclude = {
+  routineExercises: {
+    orderBy: { position: 'asc' as const },
+    include: {
+      exercise: {
+        include: {
+          primaryMuscleGroups: {
+            include: { muscleGroup: true },
+          },
+          secondaryMuscleGroups: {
+            include: { muscleGroup: true },
+          },
+          tertiaryMuscleGroups: {
+            include: { muscleGroup: true },
+          },
+        },
+      },
+    },
+  },
+};
+
 export async function getRoutineWithExercises(
   routineId: number
 ): Promise<RoutineWithExercises | null> {
   return await prisma.routine.findUnique({
     where: { id: routineId },
-    include: {
-      routineExercises: {
-        orderBy: { position: 'asc' },
-        include: {
-          exercise: {
-            include: {
-              primaryMuscleGroups: {
-                include: { muscleGroup: true },
-              },
-              secondaryMuscleGroups: {
-                include: { muscleGroup: true },
-              },
-              tertiaryMuscleGroups: {
-                include: { muscleGroup: true },
-              },
-            },
-          },
-        },
-      },
-    },
+    include: routineWithExercisesInclude,
+  });
+}
+
+export async function getRoutinesWithExercisesByIds(
+  routineIds: number[]
+): Promise<RoutineWithExercises[]> {
+  return await prisma.routine.findMany({
+    where: { id: { in: routineIds } },
+    include: routineWithExercisesInclude,
   });
 }
 

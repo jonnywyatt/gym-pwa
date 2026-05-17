@@ -11,7 +11,6 @@ import {
   buildSessionsPerWeekChartOptions,
   buildSessionsPerWeekData,
   buildTrendlineData,
-  clearTrendsCache,
   fetchSessionTrends,
   formatDate,
   formatMinutes,
@@ -543,11 +542,10 @@ const mockTrendsResponse = [
 
 describe('fetchSessionTrends', () => {
   beforeEach(() => {
-    clearTrendsCache();
     mockAuthFetchJson.mockReset();
   });
 
-  it('fetches from API on first call', async () => {
+  it('fetches from API', async () => {
     mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
 
     const result = await fetchSessionTrends(1, '3m');
@@ -556,17 +554,7 @@ describe('fetchSessionTrends', () => {
     expect(mockAuthFetchJson).toHaveBeenCalledOnce();
   });
 
-  it('returns cached data on second call for same period', async () => {
-    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
-
-    await fetchSessionTrends(1, '3m');
-    const result = await fetchSessionTrends(1, '3m');
-
-    expect(result).toEqual(mockTrendsResponse);
-    expect(mockAuthFetchJson).toHaveBeenCalledOnce();
-  });
-
-  it('fetches from API for a different period', async () => {
+  it('fetches from API for each period', async () => {
     mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
 
     await fetchSessionTrends(1, '3m');
@@ -574,21 +562,10 @@ describe('fetchSessionTrends', () => {
 
     expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
   });
-
-  it('clearTrendsCache forces a fresh fetch', async () => {
-    mockAuthFetchJson.mockResolvedValue(mockTrendsResponse);
-
-    await fetchSessionTrends(1, '3m');
-    clearTrendsCache();
-    await fetchSessionTrends(1, '3m');
-
-    expect(mockAuthFetchJson).toHaveBeenCalledTimes(2);
-  });
 });
 
 describe('prefetchSessionTrends', () => {
   beforeEach(() => {
-    clearTrendsCache();
     mockAuthFetchJson.mockReset();
   });
 

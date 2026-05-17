@@ -1,5 +1,6 @@
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { authFetch, authFetchJson } from '../../lib/api/client';
+import { invalidateSwCache } from '../../lib/sw-cache';
 import { formatDateTime as formatDateTimeUtil, toLocalDateString } from '../../utils/time';
 
 export interface MonthGroup {
@@ -58,6 +59,8 @@ export async function deleteWorkoutApi(userId: number, workoutId: number): Promi
   if (!response.ok) {
     throw new Error(`Failed to delete workout: ${response.status}`);
   }
+
+  invalidateSwCache('workouts-api', 'dashboard-api', 'session-trends-api');
 }
 
 export function calculateDuration(startedAt: string, finishedAt: string): number {

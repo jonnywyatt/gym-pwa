@@ -12,6 +12,10 @@ import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 declare const self: ServiceWorkerGlobalScope & {
   skipWaiting(): void;
   clients: { matchAll(): Promise<{ postMessage(msg: unknown): void }[]> };
+  addEventListener(
+    type: 'message',
+    listener: (event: { data: unknown; waitUntil(p: Promise<unknown>): void }) => void
+  ): void;
 };
 
 self.skipWaiting();
@@ -24,111 +28,138 @@ cleanupOutdatedCaches();
 // SPA navigation
 registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')));
 
-// Dashboard API: stale-while-revalidate with manual cache.put() to bypass
-// the browser's restriction on caching responses to credentialed requests.
-const DASHBOARD_CACHE = 'dashboard-api';
-const DASHBOARD_TTL_MS = 48 * 60 * 60 * 1000;
+// ---------------------------------------------------------------------------
+// Stale-while-revalidate API cache helpers
+// ---------------------------------------------------------------------------
+// All API routes use manual cache.put() to bypass the browser's restriction
+// on caching responses to credentialed (Authorization header) requests.
 
-function isCachedResponseFresh(cachedResponse: Response): boolean {
+function isFresh(cachedResponse: Response, ttlMs: number): boolean {
   const cachedAt = cachedResponse.headers.get('x-cached-at');
   if (!cachedAt) return false;
-  return Date.now() - new Date(cachedAt).getTime() < DASHBOARD_TTL_MS;
+  return Date.now() - new Date(cachedAt).getTime() < ttlMs;
 }
 
-const DASHBOARD_CACHE_KEY = '/dashboard';
+interface ApiCacheRouteOptions {
+  cacheName: string;
+  ttlMs: number;
+  urlPattern: RegExp;
+  cacheKey: (requestUrl: string) => string;
+  notifyOnUpdate?: boolean;
+}
 
-const dashboardRoute = new Route(
-  ({ url }) => /\/dashboard(\?.*)?$/.test(url.href),
-  async ({ request }) => {
-    const cache = await caches.open(DASHBOARD_CACHE);
-    const cachedResponse = await cache.match(DASHBOARD_CACHE_KEY, { ignoreVary: true });
+function registerApiCacheRoute({
+  cacheName,
+  ttlMs,
+  urlPattern,
+  cacheKey: buildCacheKey,
+  notifyOnUpdate = false,
+}: ApiCacheRouteOptions): void {
+  const route = new Route(
+    ({ url }) => urlPattern.test(url.href),
+    async ({ request }) => {
+      const cache = await caches.open(cacheName);
+      const cacheKey = buildCacheKey(request.url);
+      const cachedResponse = await cache.match(cacheKey, { ignoreVary: true });
 
-    const fetchAndCache = fetch(new Request(request, { cache: 'no-cache' })).then(
-      async (networkResponse) => {
-        if (networkResponse.ok) {
-          const headers = new Headers(networkResponse.headers);
-          headers.set('x-cached-at', new Date().toISOString());
-          const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
-            status: networkResponse.status,
-            statusText: networkResponse.statusText,
-            headers,
-          });
-          await cache.put(DASHBOARD_CACHE_KEY, responseToCache);
+      const fetchAndCache = fetch(new Request(request, { cache: 'no-cache' })).then(
+        async (networkResponse) => {
+          if (networkResponse.ok) {
+            const headers = new Headers(networkResponse.headers);
+            headers.set('x-cached-at', new Date().toISOString());
+            const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
+              status: networkResponse.status,
+              statusText: networkResponse.statusText,
+              headers,
+            });
+            await cache.put(cacheKey, responseToCache);
 
-          if (cachedResponse) {
-            const clients = await self.clients.matchAll();
-            for (const client of clients) {
-              client.postMessage({ type: 'DASHBOARD_UPDATED' });
+            if (notifyOnUpdate && cachedResponse) {
+              const clients = await self.clients.matchAll();
+              for (const client of clients) {
+                client.postMessage({ type: 'DASHBOARD_UPDATED' });
+              }
             }
           }
+          return networkResponse;
         }
-        return networkResponse;
+      );
+
+      if (cachedResponse && isFresh(cachedResponse, ttlMs)) {
+        fetchAndCache.catch(() => {});
+        return cachedResponse;
       }
-    );
 
-    if (cachedResponse && isCachedResponseFresh(cachedResponse)) {
-      fetchAndCache.catch(() => {});
-      return cachedResponse;
-    }
-
-    return fetchAndCache;
-  },
-  'GET'
-);
-registerRoute(dashboardRoute);
-
-// Session Trends API: stale-while-revalidate with 1-week TTL.
-// Uses the same manual cache.put() approach as dashboard to bypass
-// the browser's restriction on caching responses to credentialed requests.
-const TRENDS_CACHE = 'session-trends-api';
-const TRENDS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-
-function isTrendsCacheFresh(cachedResponse: Response): boolean {
-  const cachedAt = cachedResponse.headers.get('x-cached-at');
-  if (!cachedAt) return false;
-  return Date.now() - new Date(cachedAt).getTime() < TRENDS_TTL_MS;
+      return fetchAndCache;
+    },
+    'GET'
+  );
+  registerRoute(route);
 }
 
-const trendsRoute = new Route(
-  ({ url }) => /\/session-trends(\?.*)?$/.test(url.href),
-  async ({ request }) => {
-    const cache = await caches.open(TRENDS_CACHE);
-    const cacheKey = new URL(request.url).pathname + new URL(request.url).search;
-    const cachedResponse = await cache.match(cacheKey, { ignoreVary: true });
+// ---------------------------------------------------------------------------
+// API cache routes
+// ---------------------------------------------------------------------------
 
-    const fetchAndCache = fetch(request).then(async (networkResponse) => {
-      if (networkResponse.ok) {
-        const headers = new Headers(networkResponse.headers);
-        headers.set('x-cached-at', new Date().toISOString());
-        const responseToCache = new Response(await networkResponse.clone().arrayBuffer(), {
-          status: networkResponse.status,
-          statusText: networkResponse.statusText,
-          headers,
-        });
-        await cache.put(cacheKey, responseToCache);
-      }
-      return networkResponse;
-    });
+const ONE_HOUR = 60 * 60 * 1000;
+const ONE_DAY = 24 * ONE_HOUR;
 
-    if (cachedResponse && isTrendsCacheFresh(cachedResponse)) {
-      fetchAndCache.catch(() => {});
-      return cachedResponse;
-    }
+registerApiCacheRoute({
+  cacheName: 'dashboard-api',
+  ttlMs: 2 * ONE_DAY,
+  urlPattern: /\/dashboard(\?.*)?$/,
+  cacheKey: () => '/dashboard',
+  notifyOnUpdate: true,
+});
 
-    return fetchAndCache;
-  },
-  'GET'
-);
-registerRoute(trendsRoute);
+registerApiCacheRoute({
+  cacheName: 'session-trends-api',
+  ttlMs: 7 * ONE_DAY,
+  urlPattern: /\/session-trends(\?.*)?$/,
+  cacheKey: (url) => new URL(url).pathname,
+});
 
-// Google Fonts stylesheets
+registerApiCacheRoute({
+  cacheName: 'workouts-api',
+  ttlMs: ONE_HOUR,
+  urlPattern: /\/users\/\d+\/workouts(\?.*)?$/,
+  cacheKey: (url) => new URL(url).pathname,
+});
+
+registerApiCacheRoute({
+  cacheName: 'routines-api',
+  ttlMs: ONE_DAY,
+  urlPattern: /\/routines(\?.*)?$/,
+  cacheKey: () => '/routines',
+});
+
+registerApiCacheRoute({
+  cacheName: 'routine-detail-api',
+  ttlMs: ONE_DAY,
+  urlPattern: /\/routines\/\d+$/,
+  cacheKey: (url) => new URL(url).pathname,
+});
+
+// ---------------------------------------------------------------------------
+// Cache invalidation via postMessage from the client
+// ---------------------------------------------------------------------------
+
+self.addEventListener('message', (event) => {
+  const data = event.data as { type?: string; cacheNames?: string[] } | undefined;
+  if (data?.type !== 'INVALIDATE_CACHE' || !Array.isArray(data.cacheNames)) return;
+  event.waitUntil(Promise.all(data.cacheNames.map((name: string) => caches.delete(name))));
+});
+
+// ---------------------------------------------------------------------------
+// Google Fonts
+// ---------------------------------------------------------------------------
+
 registerRoute(
   /^https:\/\/fonts\.googleapis\.com\//,
   new StaleWhileRevalidate({ cacheName: 'google-fonts-stylesheets' }),
   'GET'
 );
 
-// Google Fonts files
 registerRoute(
   /^https:\/\/fonts\.gstatic\.com\//,
   new CacheFirst({
