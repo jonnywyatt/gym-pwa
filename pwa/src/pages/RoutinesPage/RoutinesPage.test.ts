@@ -122,11 +122,9 @@ describe('RoutinesPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'My Routine' })).toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Strength' })).not.toBeInTheDocument();
     });
-
-    expect(screen.queryByRole('heading', { name: 'Strength' })).not.toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'My Routine' })).toBeInTheDocument();
   });
 
   it('shows Create routine button', async () => {

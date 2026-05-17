@@ -14,11 +14,13 @@ export async function savePreferences(
   userId: number,
   update: Partial<UserPreferences>
 ): Promise<UserPreferences> {
-  return await authFetchJson<UserPreferences>(`/users/${userId}/preferences`, {
+  const result = await authFetchJson<UserPreferences>(`/users/${userId}/preferences`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(update),
   });
+  invalidateSwCache('preferences-api');
+  return result;
 }
 
 export async function createRoutine(): Promise<number> {

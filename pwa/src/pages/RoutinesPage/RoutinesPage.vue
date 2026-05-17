@@ -28,17 +28,20 @@ const visibleRoutines = computed(() => {
 
 async function loadData() {
   try {
-    const routinesPromise = fetchRoutines();
-    const prefsPromise = userId ? fetchPreferences(userId) : Promise.resolve(null);
-    const [fetchedRoutines, prefs] = await Promise.all([routinesPromise, prefsPromise]);
-    routines.value = fetchedRoutines;
-    if (prefs) {
-      showRecommended.value = prefs.showRecommendedRoutines;
-    }
+    routines.value = await fetchRoutines();
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to load routines';
   } finally {
     loading.value = false;
+  }
+
+  if (userId) {
+    try {
+      const prefs = await fetchPreferences(userId);
+      showRecommended.value = prefs.showRecommendedRoutines;
+    } catch {
+      // preference fetch failure is non-critical
+    }
   }
 }
 

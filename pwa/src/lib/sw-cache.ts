@@ -3,7 +3,8 @@ export type InvalidatableCacheName =
   | 'session-trends-api'
   | 'workouts-api'
   | 'routines-api'
-  | 'routine-detail-api';
+  | 'routine-detail-api'
+  | 'preferences-api';
 
 export function invalidateSwCache(...cacheNames: InvalidatableCacheName[]): void {
   if (!navigator.serviceWorker?.controller) return;

@@ -140,6 +140,13 @@ registerApiCacheRoute({
   cacheKey: (url) => new URL(url).pathname,
 });
 
+registerApiCacheRoute({
+  cacheName: 'preferences-api',
+  ttlMs: ONE_DAY,
+  urlPattern: /\/users\/\d+\/preferences$/,
+  cacheKey: (url) => new URL(url).pathname,
+});
+
 // ---------------------------------------------------------------------------
 // Cache invalidation via postMessage from the client
 // ---------------------------------------------------------------------------
