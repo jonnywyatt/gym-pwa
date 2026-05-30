@@ -27,12 +27,12 @@ export const exercises: ExerciseSeed[] = [
     isIsometric: false,
     isUnilateral: false,
     bwFactor: null,
-    primaryMuscleGroupLabels: [
-      MuscleGroupLabel.PECTORALIS_MAJOR,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MAJOR],
+    secondaryMuscleGroupLabels: [
+      MuscleGroupLabel.PECTORALIS_MINOR,
       MuscleGroupLabel.FRONT_DELTOIDS,
       MuscleGroupLabel.TRICEPS,
     ],
-    secondaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MINOR],
     tertiaryMuscleGroupLabels: [],
   },
   {
@@ -65,11 +65,11 @@ export const exercises: ExerciseSeed[] = [
     isIsometric: false,
     isUnilateral: false,
     bwFactor: null,
-    primaryMuscleGroupLabels: [
-      MuscleGroupLabel.PECTORALIS_MAJOR,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MAJOR],
+    secondaryMuscleGroupLabels: [
       MuscleGroupLabel.PECTORALIS_MINOR,
+      MuscleGroupLabel.FRONT_DELTOIDS,
     ],
-    secondaryMuscleGroupLabels: [MuscleGroupLabel.FRONT_DELTOIDS],
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.BICEPS],
   },
   {

@@ -28,6 +28,10 @@
   line-height: 1.6;
 }
 
+.muscleName {
+  white-space: nowrap;
+}
+
 .closeButton {
   padding: var(--spacing-unit-2) var(--spacing-unit-4);
   font-size: var(--font-size-14);

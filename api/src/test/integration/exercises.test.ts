@@ -43,11 +43,11 @@ describe('Exercise Integration Tests', () => {
       chestPress?.primaryMuscleGroups
         .map((pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label])
         .sort()
-    ).toEqual(['Front Deltoids', 'Pectoralis Major', 'Triceps']);
+    ).toEqual(['Pectoralis Major']);
     expect(
       chestPress?.secondaryMuscleGroups
         .map((smg) => muscleGroupDisplayNames[smg.muscleGroup.label])
         .sort()
-    ).toEqual(['Pectoralis Minor']);
+    ).toEqual(['Front Deltoids', 'Pectoralis Minor', 'Triceps']);
   });
 });
