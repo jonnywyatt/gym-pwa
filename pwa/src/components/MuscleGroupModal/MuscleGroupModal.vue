@@ -28,7 +28,7 @@ function handleClose() {
       <h3 :class="styles.sectionHeading">Main muscles worked</h3>
       <p :class="styles.muscleList">
         <template v-for="(mg, i) in primaryMuscleGroups" :key="mg">
-          <span v-if="i > 0" class="pipeSeparator">|</span><span :class="styles.muscleName">{{ mg }}</span>
+          <span :class="styles.muscleItem"><span v-if="i > 0" class="pipeSeparator">|</span>{{ mg }}</span>
         </template>
       </p>
     </div>
@@ -36,7 +36,7 @@ function handleClose() {
       <h3 :class="styles.sectionHeading">Secondary muscles</h3>
       <p :class="styles.muscleList">
         <template v-for="(mg, i) in secondaryMuscleGroups" :key="mg">
-          <span v-if="i > 0" class="pipeSeparator">|</span><span :class="styles.muscleName">{{ mg }}</span>
+          <span :class="styles.muscleItem"><span v-if="i > 0" class="pipeSeparator">|</span>{{ mg }}</span>
         </template>
       </p>
     </div>
@@ -44,7 +44,7 @@ function handleClose() {
       <h3 :class="styles.sectionHeading">Stabilizing muscles</h3>
       <p :class="styles.muscleList">
         <template v-for="(mg, i) in tertiaryMuscleGroups" :key="mg">
-          <span v-if="i > 0" class="pipeSeparator">|</span><span :class="styles.muscleName">{{ mg }}</span>
+          <span :class="styles.muscleItem"><span v-if="i > 0" class="pipeSeparator">|</span>{{ mg }}</span>
         </template>
       </p>
     </div>

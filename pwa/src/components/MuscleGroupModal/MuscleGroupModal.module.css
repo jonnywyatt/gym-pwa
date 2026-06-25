@@ -26,9 +26,11 @@
   color: var(--text-primary);
   margin: 0;
   line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.muscleName {
+.muscleItem {
   white-space: nowrap;
 }
 
