@@ -316,6 +316,8 @@ describe('buildChartData', () => {
 });
 
 describe('buildSessionsPerWeekData', () => {
+  const pastNow = new Date('2026-03-01T10:00:00Z');
+
   it('groups sessions in the same ISO week into one entry', () => {
     const sessions = [
       {
@@ -333,7 +335,7 @@ describe('buildSessionsPerWeekData', () => {
         bodyAreaPercentages: {},
       },
     ];
-    const result = buildSessionsPerWeekData(sessions);
+    const result = buildSessionsPerWeekData(sessions, pastNow);
     expect(result).toHaveLength(1);
     expect(result[0].count).toBe(2);
   });
@@ -355,7 +357,7 @@ describe('buildSessionsPerWeekData', () => {
         bodyAreaPercentages: {},
       },
     ];
-    const result = buildSessionsPerWeekData(sessions);
+    const result = buildSessionsPerWeekData(sessions, pastNow);
     expect(result).toHaveLength(2);
     expect(result[0].count).toBe(1);
     expect(result[1].count).toBe(1);
@@ -378,7 +380,7 @@ describe('buildSessionsPerWeekData', () => {
         bodyAreaPercentages: {},
       },
     ];
-    const result = buildSessionsPerWeekData(sessions);
+    const result = buildSessionsPerWeekData(sessions, pastNow);
     expect(result).toHaveLength(4);
     expect(result[0].count).toBe(1);
     expect(result[1].count).toBe(0);
@@ -403,12 +405,80 @@ describe('buildSessionsPerWeekData', () => {
         bodyAreaPercentages: {},
       },
     ];
-    const result = buildSessionsPerWeekData(sessions);
+    const result = buildSessionsPerWeekData(sessions, pastNow);
     expect(result[0].date < result[1].date).toBe(true);
   });
 
+  it('excludes sessions from the current (incomplete) week', () => {
+    // Wednesday of the current week
+    const now = new Date('2026-06-24T10:00:00Z');
+    const sessions = [
+      {
+        date: '2026-06-08T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-06-09T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-06-15T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-06-16T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      // current week (Mon 22 Jun) — should be excluded
+      {
+        date: '2026-06-22T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+      {
+        date: '2026-06-23T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+    ];
+    const result = buildSessionsPerWeekData(sessions, now);
+    expect(result).toHaveLength(2);
+    expect(result[0].count).toBe(2);
+    expect(result[1].count).toBe(2);
+  });
+
+  it('returns empty array when all sessions are in the current week', () => {
+    const now = new Date('2026-06-24T10:00:00Z');
+    const sessions = [
+      {
+        date: '2026-06-22T10:00:00Z',
+        durationSeconds: 0,
+        totalWeightKg: 0,
+        totalReps: 0,
+        bodyAreaPercentages: {},
+      },
+    ];
+    expect(buildSessionsPerWeekData(sessions, now)).toEqual([]);
+  });
+
   it('returns empty array for no sessions', () => {
-    expect(buildSessionsPerWeekData([])).toEqual([]);
+    expect(buildSessionsPerWeekData([], pastNow)).toEqual([]);
   });
 });
 

@@ -250,15 +250,21 @@ function getMondayKey(date: Date): string {
 }
 
 export function buildSessionsPerWeekData(
-  sessions: RoutineTrendData['sessions']
+  sessions: RoutineTrendData['sessions'],
+  now: Date = new Date()
 ): { date: string; count: number }[] {
   if (sessions.length === 0) return [];
+
+  const currentWeekKey = getMondayKey(now);
 
   const weekCounts = new Map<string, number>();
   for (const session of sessions) {
     const key = getMondayKey(new Date(session.date));
+    if (key === currentWeekKey) continue;
     weekCounts.set(key, (weekCounts.get(key) ?? 0) + 1);
   }
+
+  if (weekCounts.size === 0) return [];
 
   const sortedKeys = Array.from(weekCounts.keys()).sort((a, b) => a.localeCompare(b));
   const firstMonday = new Date(`${sortedKeys[0]}T00:00:00.000Z`);
