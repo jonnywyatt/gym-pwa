@@ -25,6 +25,6 @@ export const routines: RoutineSeed[] = [
   },
   {
     label: 'Core',
-    exerciseLabels: ['Plank', 'Side plank', 'Reverse crunch', 'Superman'],
+    exerciseLabels: ['Plank', 'Side plank', 'Reverse crunch', 'Bird dog'],
   },
 ];
