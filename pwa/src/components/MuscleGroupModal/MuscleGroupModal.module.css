@@ -4,12 +4,18 @@
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.3em;
-  color: var(--em-accent-teal);
+  color: var(--em-text-primary-soft);
   margin: 0 0 var(--spacing-unit-4) 0;
+  padding-right: var(--spacing-unit-8);
+  line-height: 1.4;
 }
 
 .section {
   margin-bottom: var(--spacing-unit-3);
+}
+
+.section:last-of-type {
+  margin-bottom: 0;
 }
 
 .sectionHeading {
@@ -21,9 +27,20 @@
   padding-bottom: var(--spacing-unit-1);
 }
 
+.muscleListPrimary {
+  color: var(--muscle-primary);
+}
+
+.muscleListSecondary {
+  color: var(--muscle-secondary);
+}
+
+.muscleListTertiary {
+  color: var(--muscle-tertiary-text);
+}
+
 .muscleList {
   font-size: var(--font-size-14);
-  color: var(--text-primary);
   margin: 0;
   line-height: 1.6;
   display: flex;
@@ -34,16 +51,31 @@
   white-space: nowrap;
 }
 
+.muscleMap {
+  margin-bottom: var(--spacing-unit-5);
+}
+
 .closeButton {
-  padding: var(--spacing-unit-2) var(--spacing-unit-4);
-  font-size: var(--font-size-14);
-  background: var(--background-surface);
+  position: absolute;
+  top: var(--spacing-unit-3);
+  right: var(--spacing-unit-3);
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton svg {
+  width: 100%;
+  height: 100%;
 }
 
 .closeButton:hover {
-  background: var(--background-surface-hover);
+  color: var(--text-primary);
 }

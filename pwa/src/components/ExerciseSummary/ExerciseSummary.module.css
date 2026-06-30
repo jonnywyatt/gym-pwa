@@ -32,3 +32,22 @@
   font-size: var(--font-size-14);
   color: var(--text-secondary);
 }
+
+.actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-unit-3);
+}
+
+.muscleGroupsButton {
+  font-size: var(--font-size-14);
+  color: var(--accent-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.muscleGroupsButton:hover {
+  color: var(--text-primary);
+}

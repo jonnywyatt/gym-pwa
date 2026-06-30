@@ -1,0 +1,18 @@
+export type MuscleMapSvgId =
+  | 'abdominals'
+  | 'biceps'
+  | 'calves'
+  | 'chest'
+  | 'forearms'
+  | 'front-shoulders'
+  | 'glutes'
+  | 'hamstrings'
+  | 'hands'
+  | 'lats'
+  | 'lowerback'
+  | 'obliques'
+  | 'quads'
+  | 'rear-shoulders'
+  | 'traps'
+  | 'traps-middle'
+  | 'triceps';

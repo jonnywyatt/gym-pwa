@@ -1,0 +1,18 @@
+:root {
+  --muscle-primary: color-mix(in srgb, var(--em-accent-aqua) 40%, white);
+  --muscle-secondary: var(--em-accent-aqua);
+  --muscle-tertiary: color-mix(in srgb, var(--em-accent-aqua) 60%, black);
+  --muscle-tertiary-text: color-mix(in srgb, var(--em-accent-aqua) 70%, black);
+}
+
+.container {
+  display: flex;
+  gap: var(--spacing-unit-2);
+  justify-content: center;
+}
+
+.diagram {
+  width: auto;
+  height: 180px;
+  flex-shrink: 0;
+}

@@ -81,4 +81,10 @@ describe('MuscleGroupModal', () => {
 
     expect(emitted().close).toHaveLength(1);
   });
+
+  it('renders SVG anatomy diagrams', () => {
+    const { container } = renderModal();
+
+    expect(container.querySelectorAll('svg')).not.toHaveLength(0);
+  });
 });

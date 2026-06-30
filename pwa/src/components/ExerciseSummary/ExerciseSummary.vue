@@ -9,6 +9,7 @@ import {
 import { formatTotalTime } from '../ExerciseSets/helpers';
 import styles from './ExerciseSummary.module.css';
 import WeightKg from '../WeightKg/WeightKg.vue';
+import MuscleGroupModal from '../MuscleGroupModal/MuscleGroupModal.vue';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
 
@@ -20,6 +21,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const isOpen = ref(false);
+const showMuscleGroupModal = ref(false);
 
 const totalWeightKg = computed(() =>
   calculateCompletedSetsTotalWeightKg(
@@ -59,6 +61,21 @@ const totalTimeSummary = computed((): string | null => {
           {{ formatSetDetails(set, exercise.recordSetsType) }}
         </span>
       </div>
+      <div :class="styles.actionButtons">
+        <button type="button" :class="styles.muscleGroupsButton" @click="showMuscleGroupModal = true">
+          Muscle groups
+        </button>
+      </div>
     </div>
+
+    <MuscleGroupModal
+      v-if="showMuscleGroupModal"
+      :open="showMuscleGroupModal"
+      :exercise-label="exercise.label"
+      :primary-muscle-groups="exercise.primaryMuscleGroups"
+      :secondary-muscle-groups="exercise.secondaryMuscleGroups"
+      :tertiary-muscle-groups="exercise.tertiaryMuscleGroups"
+      @close="showMuscleGroupModal = false"
+    />
   </div>
 </template>
