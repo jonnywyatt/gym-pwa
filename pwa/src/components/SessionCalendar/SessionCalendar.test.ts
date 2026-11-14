@@ -191,8 +191,20 @@ describe('SessionCalendar', () => {
 
       await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
 
-      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Strength/ })).toBeInTheDocument();
       expect(screen.getByText('250 kg')).toBeInTheDocument();
+    });
+
+    it('wraps both the session name and weight in a single tappable link', async () => {
+      const sessions = [
+        { ...makeWorkout(99, 10, 'Strength', '2024-01-15T10:00:00Z'), totalWeightKg: 250 },
+      ];
+      renderCalendar(sessions);
+
+      await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
+
+      const link = screen.getByRole('link', { name: /Strength/ });
+      expect(link).toHaveTextContent('250 kg');
     });
 
     it('shows duration instead of weight when totalWeightKg is 0', async () => {
@@ -216,7 +228,7 @@ describe('SessionCalendar', () => {
 
       await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
 
-      expect(screen.getByRole('link', { name: 'Strength' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: /Strength/ })).toHaveAttribute(
         'href',
         expect.stringContaining('/sessions/99')
       );
@@ -231,8 +243,8 @@ describe('SessionCalendar', () => {
 
       await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
 
-      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: 'Cardio' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Strength/ })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Cardio/ })).toBeInTheDocument();
     });
 
     it('closes popup when clicking the close button', async () => {
@@ -265,11 +277,11 @@ describe('SessionCalendar', () => {
       renderCalendar(sessions);
 
       await userEvent.click(screen.getByText('15').parentElement as HTMLElement);
-      expect(screen.getByRole('link', { name: 'Strength' })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Strength/ })).toBeInTheDocument();
 
       await userEvent.click(screen.getByText('16').parentElement as HTMLElement);
-      expect(screen.queryByRole('link', { name: 'Strength' })).not.toBeInTheDocument();
-      expect(screen.getByRole('link', { name: 'Cardio' })).toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: /Strength/ })).not.toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Cardio/ })).toBeInTheDocument();
     });
 
     it('closes popup on Escape key', async () => {

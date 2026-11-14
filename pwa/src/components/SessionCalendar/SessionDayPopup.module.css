@@ -25,18 +25,23 @@
 
 .sessionItem {
   display: flex;
+}
+
+.sessionLink {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-unit-3);
+  width: 100%;
+  text-decoration: none;
 }
 
 .sessionName {
   font-size: var(--font-size-13);
   color: var(--em-text-primary);
-  text-decoration: none;
 }
 
-.sessionName:hover {
+.sessionLink:hover .sessionName {
   color: var(--accent-primary);
 }
 

@@ -40,10 +40,10 @@ onUnmounted(() => {
     <p class="uppercase uppercase--small marginBottom3">{{ formatPopupDate(date) }}</p>
     <ul :class="styles.sessionList">
       <li v-for="session in sessions" :key="session.id" :class="styles.sessionItem">
-        <router-link :to="`/sessions/${session.id}`" :class="styles.sessionName" @click="emit('close')">
-          {{ session.routineLabel }}
+        <router-link :to="`/sessions/${session.id}`" :class="styles.sessionLink" @click="emit('close')">
+          <span :class="styles.sessionName">{{ session.routineLabel }}</span>
+          <span :class="styles.sessionWeight">{{ formatSessionStat(session.totalWeightKg, session.durationSeconds) }}</span>
         </router-link>
-        <span :class="styles.sessionWeight">{{ formatSessionStat(session.totalWeightKg, session.durationSeconds) }}</span>
       </li>
     </ul>
   </div>
