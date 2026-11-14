@@ -40,6 +40,23 @@ describe('UserPage', () => {
     render(UserPage);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
+  });
+
+  it('should render the heading with the shared heading-l style', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({ id: 1, name: 'Test User', latestBodyWeight: null });
+      })
+    );
+
+    render(UserPage);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('heading', { name: 'Test User' })).toHaveClass('heading-l');
   });
 
   it('should display user name and empty weight input when no body weight exists', async () => {

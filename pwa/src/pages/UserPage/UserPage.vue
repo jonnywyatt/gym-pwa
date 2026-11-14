@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { UserProfile } from 'gym-pwa-api/types';
-import baseStyles from '../../styles/base-classes.module.css';
 import styles from './UserPage.module.css';
 import { fetchUserProfile, saveBodyWeight } from './helpers';
 import {authService} from "../../lib/auth/oauth";
@@ -68,11 +67,9 @@ onMounted(() => {
 
 <template>
   <main class="main">
-    <header class="header">
-      <div class="flexSpaceBetween">
-      <h1 v-if="profile" :class="baseStyles.heading">{{ profile.name }}</h1>
+    <header class="flexSpaceBetween marginBottom4">
+      <h1 class="heading-l">{{ profile?.name }}</h1>
       <button @click="handleLogout" class="buttonSecondary">Logout</button>
-      </div>
     </header>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
