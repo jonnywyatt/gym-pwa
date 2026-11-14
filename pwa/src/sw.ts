@@ -116,7 +116,7 @@ registerApiCacheRoute({
   cacheName: 'session-trends-api',
   ttlMs: 7 * ONE_DAY,
   urlPattern: /\/session-trends(\?.*)?$/,
-  cacheKey: (url) => new URL(url).pathname,
+  cacheKey: (url) => url,
 });
 
 registerApiCacheRoute({
