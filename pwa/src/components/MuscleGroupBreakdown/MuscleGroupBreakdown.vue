@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { MuscleGroupBreakdown } from '../../pages/WorkoutPage/helpers';
 import styles from './MuscleGroupBreakdown.module.css';
+import { calculateRelativeBarWidth } from './helpers';
 import chevronDownSvg from '../../assets/chevron-down.svg';
 import chevronUpSvg from '../../assets/chevron-up.svg';
 
-defineProps<{
+const props = defineProps<{
   breakdown: MuscleGroupBreakdown;
 }>();
+
+const maxMusclePercentage = computed(() =>
+  Math.max(...props.breakdown.muscleGroups.map((mg) => mg.percentage), 0)
+);
 
 const bodyAreaColours: Record<string, string> = {
   Chest: 'var(--em-accent-teal)',
@@ -66,7 +71,7 @@ const isExpanded = ref(false);
               <div
                 :class="styles.muscleBarFill"
                 :style="{
-                  width: `${mg.percentage}%`,
+                  width: `${calculateRelativeBarWidth(mg.percentage, maxMusclePercentage)}%`,
                   background: bodyAreaColours[mg.bodyArea] ?? 'var(--accent-primary)',
                 }"
               />
