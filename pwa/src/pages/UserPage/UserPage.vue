@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { UserProfile } from 'gym-pwa-api/types';
+import type { BodyWeightEntry, UserProfile } from 'gym-pwa-api/types';
 import styles from './UserPage.module.css';
-import { fetchUserProfile, saveBodyWeight } from './helpers';
+import {
+  buildBodyWeightChartData,
+  buildBodyWeightChartOptions,
+  fetchBodyWeightHistory,
+  fetchUserProfile,
+  saveBodyWeight,
+} from './helpers';
 import {authService} from "../../lib/auth/oauth";
+
+const LazyLineChart = defineAsyncComponent(() => import('../SessionTrendsPage/LazyLineChart.vue'));
 
 const route = useRoute();
 const router = useRouter();
@@ -15,6 +23,7 @@ const weight = ref('');
 const saving = ref(false);
 const saveSuccess = ref(false);
 const isFirstTimeUser = ref(false);
+const bodyWeightHistory = ref<BodyWeightEntry[]>([]);
 
 async function loadProfile() {
   try {
@@ -31,6 +40,14 @@ async function loadProfile() {
   }
 }
 
+async function loadBodyWeightHistory() {
+  try {
+    bodyWeightHistory.value = await fetchBodyWeightHistory(route.params.userId);
+  } catch {
+    bodyWeightHistory.value = [];
+  }
+}
+
 async function handleSaveWeight() {
   const weightNum = parseFloat(weight.value);
   if (Number.isNaN(weightNum) || weightNum <= 0) {
@@ -43,6 +60,7 @@ async function handleSaveWeight() {
   try {
     await saveBodyWeight(route.params.userId, weightNum);
     saveSuccess.value = true;
+    await loadBodyWeightHistory();
 
     // Redirect first-time users to home page after saving
     if (isFirstTimeUser.value) {
@@ -62,6 +80,7 @@ function handleLogout() {
 
 onMounted(() => {
   loadProfile();
+  loadBodyWeightHistory();
 });
 </script>
 
@@ -74,9 +93,10 @@ onMounted(() => {
     <p v-if="loading">Loading...</p>
     <p v-else-if="error" class="error">Error: {{ error }}</p>
     <template v-else-if="profile">
+      <h2 class="heading-m marginBottom2">{{ isFirstTimeUser ? 'Body weight' : 'Update bodyweight' }}</h2>
       <form :class="styles.weightForm" @submit.prevent="handleSaveWeight">
         <div v-if="isFirstTimeUser" class="textSecondary textSecondary--small marginBottom4">Your bodyweight will be used to calculate the weight moved for some exercises eg tricep dips, pull up.</div>
-        <label :class="styles.label" for="body-weight">{{ isFirstTimeUser ? 'Body weight' : 'Update bodyweight' }}</label>
+        <label class="visuallyHidden" for="body-weight">{{ isFirstTimeUser ? 'Body weight' : 'Update bodyweight' }}</label>
         <div class="flexVerticalCenter flexGap4Units">
           <div class="flexVerticalCenter flexGap1Unit">
           <input
@@ -100,6 +120,12 @@ onMounted(() => {
         <p v-if="saveSuccess" :class="styles.successMessage">Weight saved</p>
       </form>
 
+      <div v-if="bodyWeightHistory.length >= 2" data-testid="bodyweight-chart" :class="styles.chartWrapper">
+        <LazyLineChart
+          :data="buildBodyWeightChartData(bodyWeightHistory)"
+          :options="buildBodyWeightChartOptions()"
+        />
+      </div>
     </template>
   </main>
 </template>

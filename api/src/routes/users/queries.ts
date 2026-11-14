@@ -48,3 +48,10 @@ export async function createBodyWeight(userId: number, weightKg: number) {
     },
   });
 }
+
+export async function getBodyWeightHistory(userId: number) {
+  return await prisma.userBodyWeight.findMany({
+    where: { userId },
+    orderBy: { recordedAt: 'asc' },
+  });
+}

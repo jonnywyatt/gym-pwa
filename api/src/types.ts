@@ -55,6 +55,11 @@ export type UserProfile = Pick<PrismaUser, 'id' | 'name'> & {
   } | null;
 };
 
+export type BodyWeightEntry = {
+  weightKg: number;
+  recordedAt: string;
+};
+
 export type WorkoutExercise = Pick<
   Exercise,
   | 'id'

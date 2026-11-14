@@ -179,4 +179,57 @@ describe('User Routes', () => {
       expect(response.status).toBe(403);
     });
   });
+
+  describe('GET /users/:userId/body-weights', () => {
+    it('returns an empty list when no body weights exist', async () => {
+      const token = getToken(testUserId);
+
+      const response = await request(app)
+        .get(`/users/${testUserId}/body-weights`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('returns body weight history ordered oldest to newest', async () => {
+      const token = getToken(testUserId);
+      const prisma = getTestPrismaClient();
+
+      await prisma.userBodyWeight.createMany({
+        data: [
+          { userId: testUserId, weightKg: 71.25, recordedAt: new Date('2025-01-02') },
+          { userId: testUserId, weightKg: 70.5, recordedAt: new Date('2025-01-01') },
+        ],
+      });
+
+      const response = await request(app)
+        .get(`/users/${testUserId}/body-weights`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([
+        { weightKg: 70.5, recordedAt: new Date('2025-01-01').toISOString() },
+        { weightKg: 71.25, recordedAt: new Date('2025-01-02').toISOString() },
+      ]);
+    });
+
+    it('returns 403 when requesting another user history', async () => {
+      const otherToken = jwt.sign({ userId: 9999, email: 'other@example.com' }, JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      const response = await request(app)
+        .get(`/users/${testUserId}/body-weights`)
+        .set('Authorization', `Bearer ${otherToken}`);
+
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 401 without auth', async () => {
+      const response = await request(app).get(`/users/${testUserId}/body-weights`);
+
+      expect(response.status).toBe(401);
+    });
+  });
 });

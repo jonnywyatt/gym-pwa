@@ -86,6 +86,65 @@ describe('UserPage', () => {
     expect(input.value).toBe('');
   });
 
+  it('should show a heading above the input making it clear the user is updating their bodyweight', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({
+          id: 1,
+          name: 'Test User',
+          latestBodyWeight: { weightKg: 75.5 },
+        });
+      })
+    );
+
+    render(UserPage);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('heading', { name: 'Update bodyweight' })).toBeInTheDocument();
+  });
+
+  it('should not render the bodyweight chart when fewer than two history entries exist', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({ id: 1, name: 'Test User', latestBodyWeight: null });
+      }),
+      http.get(`${mockApiUrl}/users/1/body-weights`, () => {
+        return HttpResponse.json([{ weightKg: 75.5, recordedAt: '2026-01-01T00:00:00.000Z' }]);
+      })
+    );
+
+    render(UserPage);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.queryByTestId('bodyweight-chart')).not.toBeInTheDocument();
+  });
+
+  it('should render the bodyweight history chart when two or more entries exist', async () => {
+    server.use(
+      http.get(`${mockApiUrl}/users/1`, () => {
+        return HttpResponse.json({ id: 1, name: 'Test User', latestBodyWeight: { weightKg: 76 } });
+      }),
+      http.get(`${mockApiUrl}/users/1/body-weights`, () => {
+        return HttpResponse.json([
+          { weightKg: 75.5, recordedAt: '2026-01-01T00:00:00.000Z' },
+          { weightKg: 76, recordedAt: '2026-01-15T00:00:00.000Z' },
+        ]);
+      })
+    );
+
+    render(UserPage);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('bodyweight-chart')).toBeInTheDocument();
+    });
+  });
+
   it('should pre-populate weight input with latest body weight', async () => {
     server.use(
       http.get(`${mockApiUrl}/users/1`, ({ request }) => {

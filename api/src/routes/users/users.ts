@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
 import {
   createBodyWeight,
+  getBodyWeightHistory,
   getLatestBodyWeight,
   getUserById,
   getUserPreferences,
   updateUserPreferences,
 } from './queries';
-import { transformUserProfile } from './transforms';
+import { transformBodyWeightHistory, transformUserProfile } from './transforms';
 
 const router = Router();
 
@@ -65,6 +66,27 @@ router.post('/users/:userId/body-weights', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error saving body weight:', error);
     res.status(500).json({ error: 'Failed to save body weight' });
+  }
+});
+
+router.get('/users/:userId/body-weights', authenticate, async (req, res) => {
+  try {
+    const userId = parseInt(String(req.params.userId), 10);
+    if (Number.isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+
+    if (userId !== req.user?.userId) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+
+    const history = await getBodyWeightHistory(userId);
+    res.json(transformBodyWeightHistory(history));
+  } catch (error) {
+    console.error('Error fetching body weight history:', error);
+    res.status(500).json({ error: 'Failed to fetch body weight history' });
   }
 });
 

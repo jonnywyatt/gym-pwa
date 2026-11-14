@@ -1,5 +1,5 @@
 import type { User, UserBodyWeight } from '../../prisma-client';
-import type { UserProfile } from '../../types';
+import type { BodyWeightEntry, UserProfile } from '../../types';
 
 export function transformUserProfile(
   user: User,
@@ -14,4 +14,11 @@ export function transformUserProfile(
         }
       : null,
   };
+}
+
+export function transformBodyWeightHistory(history: UserBodyWeight[]): BodyWeightEntry[] {
+  return history.map((entry) => ({
+    weightKg: Number(entry.weightKg),
+    recordedAt: entry.recordedAt.toISOString(),
+  }));
 }
