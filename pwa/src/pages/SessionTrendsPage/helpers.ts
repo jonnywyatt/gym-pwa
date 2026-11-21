@@ -5,6 +5,7 @@ import type {
   SessionTrendsResponse,
 } from 'gym-pwa-api/types';
 import { authFetchJson } from '../../lib/api/client';
+import { compareByFixedRoutineOrder } from '../../utils/routineOrder';
 import { toLocalDateString } from '../../utils/time';
 
 declare module 'chart.js' {
@@ -42,12 +43,17 @@ function fetchFromApi(userId: number, period: TrendPeriod): Promise<SessionTrend
   return authFetchJson<SessionTrendsResponse>(`/users/${userId}/session-trends${query}`);
 }
 
+export function sortRoutineTrendsByFixedOrder(routines: RoutineTrendData[]): RoutineTrendData[] {
+  return [...routines].sort((a, b) => compareByFixedRoutineOrder(a.routineLabel, b.routineLabel));
+}
+
 export async function fetchSessionTrends(
   userId: number,
   period: TrendPeriod
 ): Promise<SessionTrendsResponse> {
   const prefetched = consumeTrendsPrefetch();
-  return prefetched ? prefetched : fetchFromApi(userId, period);
+  const response = prefetched ? await prefetched : await fetchFromApi(userId, period);
+  return sortRoutineTrendsByFixedOrder(response);
 }
 
 let trendsPrefetch: Promise<SessionTrendsResponse> | null = null;

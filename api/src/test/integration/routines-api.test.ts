@@ -46,7 +46,8 @@ describe('Routines API Routes', () => {
 
       expect(response.status).toBe(200);
       const labels = response.body.map((r: { label: string }) => r.label);
-      expect(labels).toContain('Strength');
+      expect(labels).toContain('Upper body');
+      expect(labels).toContain('Lower body');
       expect(labels).toContain('Core');
       expect(labels).toContain('My Test Routine');
     });
@@ -61,7 +62,7 @@ describe('Routines API Routes', () => {
       );
       expect(userRoutine.userId).toBe(testUserId);
 
-      const publicRoutine = response.body.find((r: { label: string }) => r.label === 'Strength');
+      const publicRoutine = response.body.find((r: { label: string }) => r.label === 'Upper body');
       expect(publicRoutine.userId).toBeNull();
     });
 

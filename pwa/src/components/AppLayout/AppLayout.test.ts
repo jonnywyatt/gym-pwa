@@ -88,6 +88,13 @@ describe('AppLayout', () => {
     expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
   });
 
+  it('should highlight the Sessions link when on the session trends page', async () => {
+    await renderWithRoute('session-trends', '/session-trends');
+
+    expect(screen.getByRole('link', { name: 'Sessions' }).className).toContain('navLinkActive');
+    expect(screen.getByRole('link', { name: 'Routines' }).className).not.toContain('navLinkActive');
+  });
+
   it('should not show nav links on the dashboard', async () => {
     await renderWithRoute('dashboard', '/');
 

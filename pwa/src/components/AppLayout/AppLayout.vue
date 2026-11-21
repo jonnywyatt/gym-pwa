@@ -23,7 +23,9 @@ const userId = computed(() => { route.path; return authService.getUserId(); });
 
 const isDashboard = computed(() => route.path === '/');
 const isRoutinesActive = computed(() => route.path.startsWith('/routines'));
-const isWorkoutsActive = computed(() => route.path.startsWith('/sessions'));
+const isWorkoutsActive = computed(
+  () => route.path.startsWith('/sessions') || route.path.startsWith('/session-trends')
+);
 
 </script>
 

@@ -13,11 +13,15 @@ describe('Routine Integration Tests', () => {
       },
     });
 
-    expect(routines).toHaveLength(2);
+    expect(routines).toHaveLength(3);
 
-    const strengthRoutine = routines.find((r) => r.label === 'Strength');
-    expect(strengthRoutine).toBeDefined();
-    expect(strengthRoutine?._count.routineExercises).toBe(13);
+    const upperBodyRoutine = routines.find((r) => r.label === 'Upper body');
+    expect(upperBodyRoutine).toBeDefined();
+    expect(upperBodyRoutine?._count.routineExercises).toBe(8);
+
+    const lowerBodyRoutine = routines.find((r) => r.label === 'Lower body');
+    expect(lowerBodyRoutine).toBeDefined();
+    expect(lowerBodyRoutine?._count.routineExercises).toBe(5);
 
     const coreRoutine = routines.find((r) => r.label === 'Core');
     expect(coreRoutine).toBeDefined();
@@ -28,7 +32,7 @@ describe('Routine Integration Tests', () => {
     const prisma = getTestPrismaClient();
 
     const routine = await prisma.routine.findFirst({
-      where: { label: 'Strength' },
+      where: { label: 'Upper body' },
       include: {
         routineExercises: {
           orderBy: { position: 'asc' },
@@ -40,7 +44,7 @@ describe('Routine Integration Tests', () => {
     });
 
     expect(routine).toBeDefined();
-    expect(routine?.routineExercises).toHaveLength(13);
+    expect(routine?.routineExercises).toHaveLength(8);
 
     // Verify exercises are in the correct order (matching seed data order)
     const exerciseLabels = routine?.routineExercises.map((re) => re.exercise.label);
@@ -53,11 +57,6 @@ describe('Routine Integration Tests', () => {
       'Lat pulldown',
       'Seated row',
       'Shoulder press (dumbell)',
-      'Single leg sit-to-stand',
-      'Bulgarian split squat',
-      'Reverse lunge',
-      'Box jump',
-      'Single leg box jump',
     ]);
   });
 
@@ -73,7 +72,7 @@ describe('Routine Integration Tests', () => {
     });
 
     const routine = await prisma.routine.findFirstOrThrow({
-      where: { label: 'Strength' },
+      where: { label: 'Upper body' },
     });
 
     await prisma.routineExercise.create({

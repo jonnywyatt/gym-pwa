@@ -180,6 +180,28 @@ describe('sortRoutinesByLastUsed', () => {
     expect(result[0].id).toBe(2);
     expect(result[1].id).toBe(1);
   });
+
+  it('should always place Upper body, Lower body and Core first in that order', () => {
+    const routines = [
+      makeRoutine(1, 'Core'),
+      makeRoutine(2, 'Lower body'),
+      makeRoutine(3, 'Upper body'),
+    ];
+    const workouts = [makeWorkout(1, '2024-01-15T10:00:00Z')];
+
+    const result = sortRoutinesByLastUsed(routines, workouts);
+
+    expect(result.map((r) => r.label)).toEqual(['Upper body', 'Lower body', 'Core']);
+  });
+
+  it('should place fixed-order routines before custom routines regardless of recency', () => {
+    const routines = [makeRoutine(1, 'Cardio'), makeRoutine(2, 'Core')];
+    const workouts = [makeWorkout(1, '2024-01-15T10:00:00Z')];
+
+    const result = sortRoutinesByLastUsed(routines, workouts);
+
+    expect(result.map((r) => r.label)).toEqual(['Core', 'Cardio']);
+  });
 });
 
 describe('loadDashboardData', () => {
@@ -238,7 +260,7 @@ describe('loadDashboardData', () => {
     expect(result.workoutError).toBeNull();
   });
 
-  it('should sort routines by most recently used and return up to 2', async () => {
+  it('should sort routines by most recently used without truncating the list', async () => {
     const routines: RoutineSummary[] = [
       { id: 1, label: 'Routine A', userId: null, exerciseCount: 3 },
       { id: 2, label: 'Routine B', userId: null, exerciseCount: 4 },
@@ -252,9 +274,10 @@ describe('loadDashboardData', () => {
 
     const result = await loadDashboardData(1);
 
-    expect(result.routines).toHaveLength(2);
+    expect(result.routines).toHaveLength(3);
     expect(result.routines[0].id).toBe(3);
     expect(result.routines[1].id).toBe(2);
+    expect(result.routines[2].id).toBe(1);
   });
 
   it('should return all workouts in session history without slicing', async () => {

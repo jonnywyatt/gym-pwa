@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {RoutineSummary} from 'gym-pwa-api/types';
+import {getFixedRoutineColour} from '../../utils/routineColours';
 import styles from './StartSessionBlock.module.css';
 
 const props = defineProps<{
@@ -25,10 +26,11 @@ const emit = defineEmits<{
       class="highlightCard"
       type="button"
       :class="props.startingRoutineId === routine.id ? styles.routineButtonLoading : ''"
+      :style="{ borderLeftColor: getFixedRoutineColour(routine.label) }"
       :disabled="props.startingRoutineId !== null"
       @click="emit('startSession', routine.id)"
     >
-      <span class="heading-m">{{ routine.label }}</span>
+      <span :class="['heading-m', styles.routineLabel]">{{ routine.label }}</span>
     </button>
   </div>
 </template>

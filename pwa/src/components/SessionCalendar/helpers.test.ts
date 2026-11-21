@@ -76,6 +76,33 @@ describe('buildRoutineColourMap', () => {
 
     expect(colourMap.size).toBe(0);
   });
+
+  it('assigns fixed colours to Upper body, Lower body and Core regardless of session count', () => {
+    const sessions = [
+      makeWorkout(1, 10, 'Upper body', '2024-01-01T10:00:00Z'),
+      makeWorkout(2, 20, 'Lower body', '2024-01-02T10:00:00Z'),
+      makeWorkout(3, 30, 'Core', '2024-01-03T10:00:00Z'),
+    ];
+
+    const colourMap = buildRoutineColourMap(sessions);
+
+    expect(colourMap.get(10)).toBe('var(--em-accent-teal)');
+    expect(colourMap.get(20)).toBe('var(--em-accent-emerald)');
+    expect(colourMap.get(30)).toBe('var(--em-accent-aqua)');
+  });
+
+  it('assigns dynamic colours to other routines around fixed ones without reusing dynamic slots', () => {
+    const sessions = [
+      makeWorkout(1, 10, 'Upper body', '2024-01-01T10:00:00Z'),
+      makeWorkout(2, 10, 'Upper body', '2024-01-02T10:00:00Z'),
+      makeWorkout(3, 20, 'Cardio', '2024-01-03T10:00:00Z'),
+    ];
+
+    const colourMap = buildRoutineColourMap(sessions);
+
+    expect(colourMap.get(10)).toBe('var(--em-accent-teal)');
+    expect(colourMap.get(20)).toBe(ROUTINE_COLOURS[0]);
+  });
 });
 
 describe('getRoutineSummaries', () => {

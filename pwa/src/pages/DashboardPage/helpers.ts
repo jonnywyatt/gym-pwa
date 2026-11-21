@@ -2,6 +2,7 @@ import type { DashboardResponse, RoutineSummary, UserWorkoutSummary } from 'gym-
 import { authFetchJson } from '../../lib/api/client';
 import type { LocalWorkout } from '../../lib/db';
 import { invalidateSwCache } from '../../lib/sw-cache';
+import { compareByFixedRoutineOrder } from '../../utils/routineOrder';
 import { toLocalDateString } from '../../utils/time';
 import { fetchRoutine, prepareWorkoutStart } from '../RoutinePage/helpers';
 
@@ -51,6 +52,9 @@ export function sortRoutinesByLastUsed(
   }
 
   return [...routines].sort((a, b) => {
+    const fixedOrderResult = compareByFixedRoutineOrder(a.label, b.label);
+    if (fixedOrderResult !== 0) return fixedOrderResult;
+
     const aDate = lastUsedMap.get(a.id);
     const bDate = lastUsedMap.get(b.id);
     if (aDate && bDate) return bDate.localeCompare(aDate);
@@ -84,7 +88,7 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
     try {
       const data = await fetchDashboard(since);
       return {
-        routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts).slice(0, 2),
+        routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts),
         sessionHistory: [],
         routinesError: null,
         workoutError: null,
@@ -102,7 +106,7 @@ export async function loadDashboardData(userId: number | null): Promise<Dashboar
   try {
     const data = await fetchDashboard(since);
     return {
-      routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts).slice(0, 2),
+      routines: sortRoutinesByLastUsed(data.routines, data.recentWorkouts),
       sessionHistory: data.recentWorkouts,
       routinesError: null,
       workoutError: null,

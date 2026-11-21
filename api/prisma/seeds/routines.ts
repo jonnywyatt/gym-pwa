@@ -6,7 +6,7 @@ type RoutineSeed = Pick<Routine, 'label'> & {
 
 export const routines: RoutineSeed[] = [
   {
-    label: 'Strength',
+    label: 'Upper body',
     exerciseLabels: [
       'Pull up (assisted)',
       'Chest press machine',
@@ -16,6 +16,11 @@ export const routines: RoutineSeed[] = [
       'Lat pulldown',
       'Seated row',
       'Shoulder press (dumbell)',
+    ],
+  },
+  {
+    label: 'Lower body',
+    exerciseLabels: [
       'Single leg sit-to-stand',
       'Bulgarian split squat',
       'Reverse lunge',

@@ -3,6 +3,7 @@ import {ref, onMounted, computed} from 'vue';
 import {useRouter} from 'vue-router';
 import type {RoutineSummary} from 'gym-pwa-api/types';
 import {authService} from '../../lib/auth/oauth';
+import {getFixedRoutineColour} from '../../utils/routineColours';
 import styles from './RoutinesPage.module.css';
 import {
   fetchRoutines,
@@ -104,6 +105,7 @@ onMounted(() => {
           v-for="routine in visibleRoutines"
           :key="routine.id"
           class="highlightCard"
+          :style="{ borderLeftColor: getFixedRoutineColour(routine.label) }"
       >
         <router-link :to="`/routines/${routine.id}`" :class="styles.routineLink">
           <p v-if="routine.userId === null" class="labelCaps labelCaps--small marginBottom2">Recommended</p>

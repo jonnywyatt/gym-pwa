@@ -1,14 +1,9 @@
 .calendar {
   width: 100%;
 }
-@media (min-width: 400px) {
+@media (min-width: 768px) {
     .calendar {
         width: 80%;
-    }
-}
-@media (min-width: 580px) {
-    .calendar {
-        width: 70%;
     }
 }
 

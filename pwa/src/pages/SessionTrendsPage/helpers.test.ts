@@ -19,6 +19,7 @@ import {
   getMetricLabel,
   getPeriodSince,
   prefetchSessionTrends,
+  sortRoutineTrendsByFixedOrder,
 } from './helpers';
 
 describe('getPeriodSince', () => {
@@ -609,6 +610,35 @@ const mockTrendsResponse = [
     sessions: [baseSession],
   },
 ];
+
+describe('sortRoutineTrendsByFixedOrder', () => {
+  const makeRoutine = (routineId: number, routineLabel: string): RoutineTrendData => ({
+    routineId,
+    routineLabel,
+    secondMetric: null,
+    sessions: [],
+  });
+
+  it('orders Upper body, Lower body then Core first', () => {
+    const routines = [
+      makeRoutine(1, 'Core'),
+      makeRoutine(2, 'Lower body'),
+      makeRoutine(3, 'Upper body'),
+    ];
+
+    const result = sortRoutineTrendsByFixedOrder(routines);
+
+    expect(result.map((r) => r.routineLabel)).toEqual(['Upper body', 'Lower body', 'Core']);
+  });
+
+  it('places fixed-order routines before other routines, preserving their relative order', () => {
+    const routines = [makeRoutine(1, 'Cardio'), makeRoutine(2, 'Core'), makeRoutine(3, 'Yoga')];
+
+    const result = sortRoutineTrendsByFixedOrder(routines);
+
+    expect(result.map((r) => r.routineLabel)).toEqual(['Core', 'Cardio', 'Yoga']);
+  });
+});
 
 describe('fetchSessionTrends', () => {
   beforeEach(() => {

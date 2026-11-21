@@ -35,6 +35,10 @@
   animation: sweepRight 2s linear forwards;
 }
 
+.routineLabel {
+  font-size: var(--font-size-14);
+}
+
 .loading {
   color: var(--text-muted);
 }

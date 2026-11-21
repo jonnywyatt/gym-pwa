@@ -1,5 +1,6 @@
 import type { UserWorkoutSummary } from 'gym-pwa-api/types';
 import { formatDuration } from '../../pages/WorkoutsListPage/helpers';
+import { getFixedRoutineColour } from '../../utils/routineColours';
 
 export const ROUTINE_COLOURS = [
   'var(--em-accent-mint)',
@@ -44,14 +45,25 @@ export function formatSessionStat(
 
 export function buildRoutineColourMap(sessions: UserWorkoutSummary[]): Map<number, string> {
   const countMap = new Map<number, number>();
+  const labelMap = new Map<number, string>();
   for (const session of sessions) {
     countMap.set(session.routineId, (countMap.get(session.routineId) ?? 0) + 1);
+    labelMap.set(session.routineId, session.routineLabel);
   }
 
   const sorted = [...countMap.entries()].sort((a, b) => b[1] - a[1]);
 
+  let dynamicIndex = 0;
   return new Map(
-    sorted.map(([routineId], index) => [routineId, ROUTINE_COLOURS[index % ROUTINE_COLOURS.length]])
+    sorted.map(([routineId]) => {
+      const fixedColour = getFixedRoutineColour(labelMap.get(routineId) ?? '');
+      if (fixedColour) {
+        return [routineId, fixedColour];
+      }
+      const colour = ROUTINE_COLOURS[dynamicIndex % ROUTINE_COLOURS.length];
+      dynamicIndex++;
+      return [routineId, colour];
+    })
   );
 }
 

@@ -97,10 +97,10 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display the two most recently used routines', async () => {
+  it('should display Upper body, Lower body and Core before other routines', async () => {
     const routines = [
-      { id: 1, label: 'Upper Body', exerciseCount: 5 },
-      { id: 2, label: 'Lower Body', exerciseCount: 4 },
+      { id: 1, label: 'Upper body', exerciseCount: 5 },
+      { id: 2, label: 'Lower body', exerciseCount: 4 },
       { id: 3, label: 'Core', exerciseCount: 3 },
       { id: 4, label: 'Cardio', exerciseCount: 2 },
     ];
@@ -137,10 +137,12 @@ describe('DashboardPage', () => {
       expect(screen.getByRole('button', { name: 'Cardio' })).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: 'Cardio' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Core' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Upper Body' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Lower Body' })).not.toBeInTheDocument();
+    const routineButtonNames = screen
+      .getAllByRole('button')
+      .filter((button) => button.className.includes('highlightCard'))
+      .map((button) => button.textContent?.trim());
+
+    expect(routineButtonNames).toEqual(['Upper body', 'Lower body', 'Core', 'Cardio']);
   });
 
   it('should display a create routine link when there are no routines', async () => {
@@ -168,10 +170,10 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display up to 2 routines as clickable cards', async () => {
+  it('should display all routines as clickable cards without truncation', async () => {
     const routines = [
-      { id: 1, label: 'Upper Body', exerciseCount: 5 },
-      { id: 2, label: 'Lower Body', exerciseCount: 4 },
+      { id: 1, label: 'Upper body', exerciseCount: 5 },
+      { id: 2, label: 'Lower body', exerciseCount: 4 },
       { id: 3, label: 'Core', exerciseCount: 3 },
       { id: 4, label: 'Cardio', exerciseCount: 2 },
     ];
@@ -179,13 +181,13 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Upper body' })).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: 'Upper Body' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Lower Body' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Core' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Cardio' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Upper body' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Lower body' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Core' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cardio' })).toBeInTheDocument();
   });
 
   it('should display routine summaries when sessions exist', async () => {
