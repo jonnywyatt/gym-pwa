@@ -113,6 +113,7 @@ onUnmounted(() => {
           :loading="routinesLoading"
           :error="routinesError"
           :startingRoutineId="startingRoutineId"
+          :compact="true"
           @startSession="onNewWorkout"
         />
         <div v-if="!routinesLoading && !routinesError" class="flexVerticalCenter flexGap3Units">

@@ -12,6 +12,7 @@ function renderBlock(props: {
   loading?: boolean;
   error?: string | null;
   startingRoutineId?: number | null;
+  compact?: boolean;
 }) {
   return render(StartSessionBlock, {
     props: {
@@ -19,6 +20,7 @@ function renderBlock(props: {
       loading: props.loading ?? false,
       error: props.error ?? null,
       startingRoutineId: props.startingRoutineId ?? null,
+      compact: props.compact,
     },
   });
 }
@@ -62,5 +64,21 @@ describe('StartSessionBlock', () => {
     await user.click(screen.getByRole('button', { name: 'Upper Body' }));
 
     expect(emitted('startSession')).toBeUndefined();
+  });
+
+  it('should apply compact styling classes when compact is true', () => {
+    renderBlock({ routines: [routineA], compact: true });
+
+    expect(screen.getByRole('button', { name: 'Upper Body' }).className).toContain(
+      'routineCardCompact'
+    );
+  });
+
+  it('should not apply compact styling classes by default', () => {
+    renderBlock({ routines: [routineA] });
+
+    expect(screen.getByRole('button', { name: 'Upper Body' }).className).not.toContain(
+      'routineCardCompact'
+    );
   });
 });

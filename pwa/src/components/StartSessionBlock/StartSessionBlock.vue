@@ -9,6 +9,7 @@ const props = defineProps<{
   error: string | null;
   startingRoutineId: number | null;
   vertical?: boolean;
+  compact?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -19,13 +20,23 @@ const emit = defineEmits<{
 <template>
   <p v-if="props.loading" :class="styles.loading">Loading...</p>
   <p v-else-if="props.error" :class="styles.error">Error: {{ props.error }}</p>
-  <div v-else :class="[styles.routineList, props.vertical && styles.routineListVertical]">
+  <div
+    v-else
+    :class="[
+      styles.routineList,
+      props.vertical && styles.routineListVertical,
+      props.compact && styles.routineListCompact,
+    ]"
+  >
     <button
       v-for="routine in props.routines"
       :key="routine.id"
       class="highlightCard"
       type="button"
-      :class="props.startingRoutineId === routine.id ? styles.routineButtonLoading : ''"
+      :class="[
+        props.startingRoutineId === routine.id && styles.routineButtonLoading,
+        props.compact && styles.routineCardCompact,
+      ]"
       :style="{ borderLeftColor: getFixedRoutineColour(routine.label) }"
       :disabled="props.startingRoutineId !== null"
       @click="emit('startSession', routine.id)"

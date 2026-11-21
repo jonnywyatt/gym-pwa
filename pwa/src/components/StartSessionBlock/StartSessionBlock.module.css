@@ -16,6 +16,15 @@
   }
 }
 
+.routineListCompact {
+  gap: var(--spacing-unit-2);
+}
+
+button.routineCardCompact {
+  padding-left: var(--spacing-unit-2);
+  padding-right: var(--spacing-unit-2);
+}
+
 @keyframes sweepRight {
   from { background-size: 0% 100%; }
   to { background-size: 100% 100%; }

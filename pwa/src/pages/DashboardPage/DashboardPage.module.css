@@ -14,13 +14,13 @@
 .summariesRow {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-unit-6);
+  gap: var(--spacing-unit-4);
 }
 
 .summaryItem {
   display: flex;
-  align-items: flex-end;
-  gap: var(--spacing-unit-2);
+  align-items: baseline;
+  gap: 7px;
 }
 
 .summaryCount {
@@ -31,7 +31,7 @@
 }
 
 .summaryLabel {
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-14);
   color: var(--text-primary);
 }
 
