@@ -1,0 +1,100 @@
+@value bp-medium from '../../styles/breakpoints.css';
+
+.homePage {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.homeHeader {
+  flex-shrink: 0;
+  padding: var(--spacing-unit-3) var(--spacing-unit-4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brandLogo {
+  display: flex;
+}
+
+.slides {
+  flex: 1;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-marker-group: after;
+}
+
+.slides::scroll-marker-group {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--spacing-unit-4);
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-unit-2);
+}
+
+.slide {
+  scroll-snap-align: start;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-unit-6);
+  padding: var(--spacing-unit-6) var(--spacing-unit-4);
+  text-align: center;
+}
+
+.slide:not(:first-child) {
+  border-top: 1px solid var(--border-color);
+}
+
+.slide::scroll-marker {
+  content: '';
+  width: var(--spacing-unit-2);
+  height: var(--spacing-unit-2);
+  border-radius: 50%;
+  background: var(--em-border);
+}
+
+.slide::scroll-marker:target-current {
+  background: var(--accent-primary);
+}
+
+.slideImage {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 45vh;
+  border-radius: var(--border-radius-lg);
+}
+
+.slideCopy {
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-unit-2);
+}
+
+.slideCopy .slideHeading {
+  text-align: center;
+}
+
+.slideSubheading {
+  text-align: center;
+    line-height: 1.4;
+}
+
+@media bp-medium {
+  .slide {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .slideReverse {
+    flex-direction: row-reverse;
+  }
+
+  .slideCopy {
+    text-align: left;
+  }
+}
