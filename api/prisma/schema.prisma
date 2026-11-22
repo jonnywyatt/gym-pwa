@@ -14,6 +14,7 @@ enum RecordSetsType {
   WEIGHT_AND_TIME
   BODYWEIGHT_PLUS_WEIGHT
   REPS
+  REPS_AND_HEIGHT
 }
 
 enum SetType {
@@ -223,6 +224,7 @@ model WorkoutSet {
   weightKg          Decimal?        @db.Decimal(5, 2) @map("weight_kg")
   reps              Int?
   timeSeconds       Int?            @map("time_seconds")
+  heightIn          Decimal?        @db.Decimal(5, 2) @map("height_in")
   workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
 
   @@map("workout_sets")

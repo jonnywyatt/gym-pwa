@@ -31,14 +31,17 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   start: [exerciseId: number];
-  updateSet: [exerciseId: number, setId: string, updates: { weightKg?: number; reps?: number; timeSeconds?: number }];
+  updateSet: [exerciseId: number, setId: string, updates: { weightKg?: number; reps?: number; timeSeconds?: number; heightIn?: number }];
   addSet: [exerciseId: number];
   changeSetType: [exerciseId: number, setId: string, setType: SetType];
 }>();
 
 const inputFields = computed(() => getSetInputFields(props.exercise.recordSetsType));
 
-const useShortSetTypeLabels = computed(() => props.exercise.recordSetsType === 'WEIGHT_AND_TIME');
+const useShortSetTypeLabels = computed(() =>
+  props.exercise.recordSetsType === 'WEIGHT_AND_TIME' ||
+  props.exercise.recordSetsType === 'REPS_AND_HEIGHT'
+);
 
 const exerciseTotalWeightKg = computed(() => {
   if (!props.exercise.sets) return 0;
@@ -161,6 +164,20 @@ function closeMuscleGroupModal() {
             @input="(e) => {
               const value = (e.target as HTMLInputElement).value;
               emit('updateSet', exercise.id, set.id, { reps: value === '' ? undefined : Number(value) });
+            }"
+          />
+
+          <input
+            v-if="inputFields.showHeight"
+            type="number"
+            :class="['inputCompact', styles.heightInput]"
+            placeholder="Height (in)"
+            :aria-label="`Height (in) for set ${index + 1}`"
+            :value="set.heightIn ?? ''"
+            min="0"
+            @input="(e) => {
+              const value = (e.target as HTMLInputElement).value;
+              emit('updateSet', exercise.id, set.id, { heightIn: value === '' ? undefined : Number(value) });
             }"
           />
 

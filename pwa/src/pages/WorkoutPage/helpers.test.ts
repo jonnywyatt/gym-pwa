@@ -165,6 +165,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: true,
         showReps: true,
         showTime: false,
+        showHeight: false,
         weightLabel: 'Kg',
       });
     });
@@ -175,6 +176,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: true,
         showReps: true,
         showTime: false,
+        showHeight: false,
         weightLabel: 'Kg',
       });
     });
@@ -185,6 +187,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: true,
         showReps: true,
         showTime: false,
+        showHeight: false,
         weightLabel: 'Kg',
       });
     });
@@ -195,6 +198,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: true,
         showReps: false,
         showTime: true,
+        showHeight: false,
         weightLabel: 'Kg',
       });
     });
@@ -205,6 +209,7 @@ describe('WorkoutPage helpers', () => {
         showWeight: false,
         showReps: false,
         showTime: true,
+        showHeight: false,
         weightLabel: '',
       });
     });
@@ -215,6 +220,18 @@ describe('WorkoutPage helpers', () => {
         showWeight: false,
         showReps: true,
         showTime: false,
+        showHeight: false,
+        weightLabel: '',
+      });
+    });
+
+    it('returns reps and height for REPS_AND_HEIGHT', () => {
+      const result = getSetInputFields('REPS_AND_HEIGHT');
+      expect(result).toEqual({
+        showWeight: false,
+        showReps: true,
+        showTime: false,
+        showHeight: true,
         weightLabel: '',
       });
     });

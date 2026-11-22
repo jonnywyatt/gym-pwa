@@ -42,6 +42,7 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
         weightKg: set.weightKg !== null ? Number(set.weightKg) : undefined,
         reps: set.reps ?? undefined,
         timeSeconds: set.timeSeconds ?? undefined,
+        heightIn: set.heightIn !== null ? Number(set.heightIn) : undefined,
       })),
     })),
     muscleGroupStats: workout.muscleGroupStats.map((stat) => ({

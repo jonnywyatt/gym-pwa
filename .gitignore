@@ -40,3 +40,6 @@ coverage/
 # Database backups
 api/backups/
 *.dump
+
+# Playwright MCP tool artifacts
+.playwright-mcp/

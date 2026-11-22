@@ -94,7 +94,8 @@ export namespace $Enums {
   TIME: 'TIME',
   WEIGHT_AND_TIME: 'WEIGHT_AND_TIME',
   BODYWEIGHT_PLUS_WEIGHT: 'BODYWEIGHT_PLUS_WEIGHT',
-  REPS: 'REPS'
+  REPS: 'REPS',
+  REPS_AND_HEIGHT: 'REPS_AND_HEIGHT'
 };
 
 export type RecordSetsType = (typeof RecordSetsType)[keyof typeof RecordSetsType]
@@ -204,7 +205,7 @@ export class PrismaClient<
    * Read more in our [docs](https://pris.ly/d/client).
    */
 
-  constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
+  constructor(optionsArg ?: Prisma.PrismaClientConstructorArgs<ClientOptions>);
   $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
 
   /**
@@ -474,8 +475,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.8.0
-   * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
+   * Prisma Client JS version: 7.10.1
+   * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
    */
   export type PrismaVersion = {
     client: string
@@ -610,6 +611,19 @@ export namespace Prisma {
   };
 
   /**
+   * Resolved type of the argument passed to the `PrismaClient` constructor.
+   *
+   * When called without a narrower options type (the common case), this resolves
+   * to `PrismaClientOptions` directly, which produces a clear TypeScript error
+   * message (`not assignable to parameter of type 'PrismaClientOptions'`) when
+   * the argument is missing or incomplete. When the user supplies a narrower
+   * options type (e.g. via a literal), it falls back to `Subset` to keep
+   * filtering out unknown properties.
+   */
+  export type PrismaClientConstructorArgs<Options extends PrismaClientOptions> =
+    [PrismaClientOptions] extends [Options] ? PrismaClientOptions : Subset<Options, PrismaClientOptions>;
+
+  /**
    * SelectSubset
    * @desc From `T` pick properties that exist in `U`. Simple version of Intersection.
    * Additionally, it validates, if both select and include are present. If the case, it errors.
@@ -641,7 +655,7 @@ export namespace Prisma {
   type XOR<T, U> =
     T extends object ?
     U extends object ?
-      (Without<T, U> & U) | (Without<U, T> & T)
+      ((Without<T, U> & U) | (Without<U, T> & T)) & object
     : U : T
 
 
@@ -1995,11 +2009,26 @@ export namespace Prisma {
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
     /**
-     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     * A driver adapter that PrismaClient uses to connect to your database, such as the ones provided by `@prisma/adapter-pg`, `@prisma/adapter-libsql`, `@prisma/adapter-planetscale`, etc.
+     * 
+     * A driver adapter is **required** unless you connect to your database through Prisma Accelerate (in which case use `accelerateUrl` instead).
+     * 
+     * Learn more: https://pris.ly/d/driver-adapters
+     * 
+     * @example
+     * ```ts
+     * import { PrismaPg } from '@prisma/adapter-pg'
+     * import { PrismaClient } from './generated/prisma/client'
+     * 
+     * const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+     * const prisma = new PrismaClient({ adapter })
+     * ```
      */
     adapter?: runtime.SqlDriverAdapterFactory
     /**
-     * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
+     * The Prisma Accelerate connection URL. Use this option to connect to your database through Prisma Accelerate instead of using a driver adapter to connect directly.
+     * 
+     * Learn more: https://pris.ly/d/accelerate
      */
     accelerateUrl?: string
     /**
@@ -17097,6 +17126,7 @@ export namespace Prisma {
     weightKg: Decimal | null
     reps: number | null
     timeSeconds: number | null
+    heightIn: Decimal | null
   }
 
   export type WorkoutSetSumAggregateOutputType = {
@@ -17106,6 +17136,7 @@ export namespace Prisma {
     weightKg: Decimal | null
     reps: number | null
     timeSeconds: number | null
+    heightIn: Decimal | null
   }
 
   export type WorkoutSetMinAggregateOutputType = {
@@ -17116,6 +17147,7 @@ export namespace Prisma {
     weightKg: Decimal | null
     reps: number | null
     timeSeconds: number | null
+    heightIn: Decimal | null
   }
 
   export type WorkoutSetMaxAggregateOutputType = {
@@ -17126,6 +17158,7 @@ export namespace Prisma {
     weightKg: Decimal | null
     reps: number | null
     timeSeconds: number | null
+    heightIn: Decimal | null
   }
 
   export type WorkoutSetCountAggregateOutputType = {
@@ -17136,6 +17169,7 @@ export namespace Prisma {
     weightKg: number
     reps: number
     timeSeconds: number
+    heightIn: number
     _all: number
   }
 
@@ -17147,6 +17181,7 @@ export namespace Prisma {
     weightKg?: true
     reps?: true
     timeSeconds?: true
+    heightIn?: true
   }
 
   export type WorkoutSetSumAggregateInputType = {
@@ -17156,6 +17191,7 @@ export namespace Prisma {
     weightKg?: true
     reps?: true
     timeSeconds?: true
+    heightIn?: true
   }
 
   export type WorkoutSetMinAggregateInputType = {
@@ -17166,6 +17202,7 @@ export namespace Prisma {
     weightKg?: true
     reps?: true
     timeSeconds?: true
+    heightIn?: true
   }
 
   export type WorkoutSetMaxAggregateInputType = {
@@ -17176,6 +17213,7 @@ export namespace Prisma {
     weightKg?: true
     reps?: true
     timeSeconds?: true
+    heightIn?: true
   }
 
   export type WorkoutSetCountAggregateInputType = {
@@ -17186,6 +17224,7 @@ export namespace Prisma {
     weightKg?: true
     reps?: true
     timeSeconds?: true
+    heightIn?: true
     _all?: true
   }
 
@@ -17283,6 +17322,7 @@ export namespace Prisma {
     weightKg: Decimal | null
     reps: number | null
     timeSeconds: number | null
+    heightIn: Decimal | null
     _count: WorkoutSetCountAggregateOutputType | null
     _avg: WorkoutSetAvgAggregateOutputType | null
     _sum: WorkoutSetSumAggregateOutputType | null
@@ -17312,6 +17352,7 @@ export namespace Prisma {
     weightKg?: boolean
     reps?: boolean
     timeSeconds?: boolean
+    heightIn?: boolean
     workoutExercise?: boolean | WorkoutExerciseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workoutSet"]>
 
@@ -17323,6 +17364,7 @@ export namespace Prisma {
     weightKg?: boolean
     reps?: boolean
     timeSeconds?: boolean
+    heightIn?: boolean
     workoutExercise?: boolean | WorkoutExerciseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workoutSet"]>
 
@@ -17334,6 +17376,7 @@ export namespace Prisma {
     weightKg?: boolean
     reps?: boolean
     timeSeconds?: boolean
+    heightIn?: boolean
     workoutExercise?: boolean | WorkoutExerciseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workoutSet"]>
 
@@ -17345,9 +17388,10 @@ export namespace Prisma {
     weightKg?: boolean
     reps?: boolean
     timeSeconds?: boolean
+    heightIn?: boolean
   }
 
-  export type WorkoutSetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workoutExerciseId" | "position" | "setType" | "weightKg" | "reps" | "timeSeconds", ExtArgs["result"]["workoutSet"]>
+  export type WorkoutSetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workoutExerciseId" | "position" | "setType" | "weightKg" | "reps" | "timeSeconds" | "heightIn", ExtArgs["result"]["workoutSet"]>
   export type WorkoutSetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workoutExercise?: boolean | WorkoutExerciseDefaultArgs<ExtArgs>
   }
@@ -17371,6 +17415,7 @@ export namespace Prisma {
       weightKg: Prisma.Decimal | null
       reps: number | null
       timeSeconds: number | null
+      heightIn: Prisma.Decimal | null
     }, ExtArgs["result"]["workoutSet"]>
     composites: {}
   }
@@ -17802,6 +17847,7 @@ export namespace Prisma {
     readonly weightKg: FieldRef<"WorkoutSet", 'Decimal'>
     readonly reps: FieldRef<"WorkoutSet", 'Int'>
     readonly timeSeconds: FieldRef<"WorkoutSet", 'Int'>
+    readonly heightIn: FieldRef<"WorkoutSet", 'Decimal'>
   }
     
 
@@ -18373,7 +18419,8 @@ export namespace Prisma {
     setType: 'setType',
     weightKg: 'weightKg',
     reps: 'reps',
-    timeSeconds: 'timeSeconds'
+    timeSeconds: 'timeSeconds',
+    heightIn: 'heightIn'
   };
 
   export type WorkoutSetScalarFieldEnum = (typeof WorkoutSetScalarFieldEnum)[keyof typeof WorkoutSetScalarFieldEnum]
@@ -19327,6 +19374,7 @@ export namespace Prisma {
     weightKg?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     reps?: IntNullableFilter<"WorkoutSet"> | number | null
     timeSeconds?: IntNullableFilter<"WorkoutSet"> | number | null
+    heightIn?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     workoutExercise?: XOR<WorkoutExerciseScalarRelationFilter, WorkoutExerciseWhereInput>
   }
 
@@ -19338,6 +19386,7 @@ export namespace Prisma {
     weightKg?: SortOrderInput | SortOrder
     reps?: SortOrderInput | SortOrder
     timeSeconds?: SortOrderInput | SortOrder
+    heightIn?: SortOrderInput | SortOrder
     workoutExercise?: WorkoutExerciseOrderByWithRelationInput
   }
 
@@ -19352,6 +19401,7 @@ export namespace Prisma {
     weightKg?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     reps?: IntNullableFilter<"WorkoutSet"> | number | null
     timeSeconds?: IntNullableFilter<"WorkoutSet"> | number | null
+    heightIn?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     workoutExercise?: XOR<WorkoutExerciseScalarRelationFilter, WorkoutExerciseWhereInput>
   }, "id">
 
@@ -19363,6 +19413,7 @@ export namespace Prisma {
     weightKg?: SortOrderInput | SortOrder
     reps?: SortOrderInput | SortOrder
     timeSeconds?: SortOrderInput | SortOrder
+    heightIn?: SortOrderInput | SortOrder
     _count?: WorkoutSetCountOrderByAggregateInput
     _avg?: WorkoutSetAvgOrderByAggregateInput
     _max?: WorkoutSetMaxOrderByAggregateInput
@@ -19381,6 +19432,7 @@ export namespace Prisma {
     weightKg?: DecimalNullableWithAggregatesFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     reps?: IntNullableWithAggregatesFilter<"WorkoutSet"> | number | null
     timeSeconds?: IntNullableWithAggregatesFilter<"WorkoutSet"> | number | null
+    heightIn?: DecimalNullableWithAggregatesFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type BodyAreaCreateInput = {
@@ -20058,6 +20110,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
     workoutExercise: WorkoutExerciseCreateNestedOneWithoutSetsInput
   }
 
@@ -20069,6 +20122,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUpdateInput = {
@@ -20077,6 +20131,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     workoutExercise?: WorkoutExerciseUpdateOneRequiredWithoutSetsNestedInput
   }
 
@@ -20088,6 +20143,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetCreateManyInput = {
@@ -20098,6 +20154,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUpdateManyMutationInput = {
@@ -20106,6 +20163,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUncheckedUpdateManyInput = {
@@ -20116,6 +20174,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -21050,6 +21109,7 @@ export namespace Prisma {
     weightKg?: SortOrder
     reps?: SortOrder
     timeSeconds?: SortOrder
+    heightIn?: SortOrder
   }
 
   export type WorkoutSetAvgOrderByAggregateInput = {
@@ -21059,6 +21119,7 @@ export namespace Prisma {
     weightKg?: SortOrder
     reps?: SortOrder
     timeSeconds?: SortOrder
+    heightIn?: SortOrder
   }
 
   export type WorkoutSetMaxOrderByAggregateInput = {
@@ -21069,6 +21130,7 @@ export namespace Prisma {
     weightKg?: SortOrder
     reps?: SortOrder
     timeSeconds?: SortOrder
+    heightIn?: SortOrder
   }
 
   export type WorkoutSetMinOrderByAggregateInput = {
@@ -21079,6 +21141,7 @@ export namespace Prisma {
     weightKg?: SortOrder
     reps?: SortOrder
     timeSeconds?: SortOrder
+    heightIn?: SortOrder
   }
 
   export type WorkoutSetSumOrderByAggregateInput = {
@@ -21088,6 +21151,7 @@ export namespace Prisma {
     weightKg?: SortOrder
     reps?: SortOrder
     timeSeconds?: SortOrder
+    heightIn?: SortOrder
   }
 
   export type EnumSetTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -23846,6 +23910,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUncheckedCreateWithoutWorkoutExerciseInput = {
@@ -23855,6 +23920,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetCreateOrConnectWithoutWorkoutExerciseInput = {
@@ -23970,6 +24036,7 @@ export namespace Prisma {
     weightKg?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
     reps?: IntNullableFilter<"WorkoutSet"> | number | null
     timeSeconds?: IntNullableFilter<"WorkoutSet"> | number | null
+    heightIn?: DecimalNullableFilter<"WorkoutSet"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutExerciseCreateWithoutSetsInput = {
@@ -24354,6 +24421,7 @@ export namespace Prisma {
     weightKg?: Decimal | DecimalJsLike | number | string | null
     reps?: number | null
     timeSeconds?: number | null
+    heightIn?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUpdateWithoutWorkoutExerciseInput = {
@@ -24362,6 +24430,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUncheckedUpdateWithoutWorkoutExerciseInput = {
@@ -24371,6 +24440,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type WorkoutSetUncheckedUpdateManyWithoutWorkoutExerciseInput = {
@@ -24380,6 +24450,7 @@ export namespace Prisma {
     weightKg?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reps?: NullableIntFieldUpdateOperationsInput | number | null
     timeSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    heightIn?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
 

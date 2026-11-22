@@ -113,7 +113,7 @@ export const exercises: ExerciseSeed[] = [
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.PECTORALIS_MINOR],
   },
   {
-    label: 'Single leg sit-to-stand',
+    label: 'Sit-to-stand (single leg)',
     recordSetsType: RecordSetsType.WEIGHT,
     isIsometric: false,
     isUnilateral: true,
@@ -279,7 +279,7 @@ export const exercises: ExerciseSeed[] = [
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.ERECTOR_SPINAE, MuscleGroupLabel.FOREARMS],
   },
   {
-    label: 'Concentration curls',
+    label: 'Concentration curl',
     recordSetsType: RecordSetsType.WEIGHT,
     isIsometric: false,
     isUnilateral: true,
@@ -400,7 +400,7 @@ export const exercises: ExerciseSeed[] = [
   },
   {
     label: 'Box jump',
-    recordSetsType: RecordSetsType.REPS,
+    recordSetsType: RecordSetsType.REPS_AND_HEIGHT,
     isIsometric: false,
     isUnilateral: false,
     bwFactor: 1.0,
@@ -414,8 +414,8 @@ export const exercises: ExerciseSeed[] = [
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
   },
   {
-    label: 'Single leg box jump',
-    recordSetsType: RecordSetsType.REPS,
+    label: 'Box jump (single leg)',
+    recordSetsType: RecordSetsType.REPS_AND_HEIGHT,
     isIsometric: false,
     isUnilateral: true,
     bwFactor: 1.0,
@@ -427,6 +427,16 @@ export const exercises: ExerciseSeed[] = [
     ],
     secondaryMuscleGroupLabels: [MuscleGroupLabel.HIP_FLEXORS],
     tertiaryMuscleGroupLabels: [MuscleGroupLabel.ABDOMINALS, MuscleGroupLabel.OBLIQUES],
+  },
+  {
+    label: 'Calf raise (single leg)',
+    recordSetsType: RecordSetsType.WEIGHT,
+    isIsometric: false,
+    isUnilateral: true,
+    bwFactor: 1.0,
+    primaryMuscleGroupLabels: [MuscleGroupLabel.CALVES],
+    secondaryMuscleGroupLabels: [],
+    tertiaryMuscleGroupLabels: [],
   },
   {
     label: 'Seated squat',

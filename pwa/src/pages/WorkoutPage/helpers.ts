@@ -39,7 +39,7 @@ export function createDefaultSets(recordSetsType: RecordSetsType): WorkoutSet[] 
     completed: false,
   });
 
-  if (recordSetsType === 'REPS') {
+  if (recordSetsType === 'REPS' || recordSetsType === 'REPS_AND_HEIGHT') {
     return [standardSet(), standardSet()];
   }
 
@@ -82,21 +82,66 @@ export function getSetInputFields(recordSetsType: RecordSetsType): {
   showWeight: boolean;
   showReps: boolean;
   showTime: boolean;
+  showHeight: boolean;
   weightLabel: string;
 } {
   switch (recordSetsType) {
     case 'WEIGHT':
-      return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Kg' };
+      return {
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        showHeight: false,
+        weightLabel: 'Kg',
+      };
     case 'BODYWEIGHT_PLUS_WEIGHT':
-      return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Kg' };
+      return {
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        showHeight: false,
+        weightLabel: 'Kg',
+      };
     case 'BODYWEIGHT_MINUS_OFFSET':
-      return { showWeight: true, showReps: true, showTime: false, weightLabel: 'Kg' };
+      return {
+        showWeight: true,
+        showReps: true,
+        showTime: false,
+        showHeight: false,
+        weightLabel: 'Kg',
+      };
     case 'WEIGHT_AND_TIME':
-      return { showWeight: true, showReps: false, showTime: true, weightLabel: 'Kg' };
+      return {
+        showWeight: true,
+        showReps: false,
+        showTime: true,
+        showHeight: false,
+        weightLabel: 'Kg',
+      };
     case 'TIME':
-      return { showWeight: false, showReps: false, showTime: true, weightLabel: '' };
+      return {
+        showWeight: false,
+        showReps: false,
+        showTime: true,
+        showHeight: false,
+        weightLabel: '',
+      };
     case 'REPS':
-      return { showWeight: false, showReps: true, showTime: false, weightLabel: '' };
+      return {
+        showWeight: false,
+        showReps: true,
+        showTime: false,
+        showHeight: false,
+        weightLabel: '',
+      };
+    case 'REPS_AND_HEIGHT':
+      return {
+        showWeight: false,
+        showReps: true,
+        showTime: false,
+        showHeight: true,
+        weightLabel: '',
+      };
   }
 }
 
@@ -123,14 +168,17 @@ export function calculateSetWeightKg(
       return 0;
     case 'REPS':
       return bwContribution * reps;
+    case 'REPS_AND_HEIGHT':
+      return bwContribution * reps;
   }
 }
 
 export function isSetFilledIn(set: WorkoutSet, recordSetsType: RecordSetsType): boolean {
-  const { showWeight, showReps, showTime } = getSetInputFields(recordSetsType);
+  const { showWeight, showReps, showTime, showHeight } = getSetInputFields(recordSetsType);
   if (showWeight && set.weightKg === undefined) return false;
   if (showReps && set.reps === undefined) return false;
   if (showTime && set.timeSeconds === undefined) return false;
+  if (showHeight && set.heightIn === undefined) return false;
   return true;
 }
 
@@ -180,6 +228,7 @@ const REPS_RECORD_TYPES: RecordSetsType[] = [
   'BODYWEIGHT_PLUS_WEIGHT',
   'BODYWEIGHT_MINUS_OFFSET',
   'REPS',
+  'REPS_AND_HEIGHT',
 ];
 
 export function calculateWorkoutTotalReps(exercises: LocalWorkoutExercise[]): number {
@@ -392,6 +441,10 @@ export function formatSetDetails(set: CompletedSet, recordSetsType: RecordSetsTy
       break;
     case 'REPS':
       parts.push(`${set.reps ?? 0} reps`);
+      break;
+    case 'REPS_AND_HEIGHT':
+      parts.push(`${set.reps ?? 0} reps`);
+      parts.push(`${set.heightIn ?? 0}in`);
       break;
   }
 

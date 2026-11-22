@@ -163,6 +163,7 @@ export async function createUserWorkout(
                 weightKg: set.weightKg,
                 reps: set.reps,
                 timeSeconds: set.timeSeconds,
+                heightIn: set.heightIn,
               })),
             },
           })),

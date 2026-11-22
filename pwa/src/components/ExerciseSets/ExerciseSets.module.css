@@ -40,6 +40,10 @@
   gap: var(--spacing-unit-2);
 }
 
+.heightInput {
+  width: calc(var(--spacing-unit-12) + 80px);
+}
+
 .timeInputGroup {
   display: flex;
   align-items: center;

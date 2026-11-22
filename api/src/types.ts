@@ -80,6 +80,7 @@ export type CompletedSet = {
   weightKg?: number;
   reps?: number;
   timeSeconds?: number;
+  heightIn?: number;
 };
 
 export type CompletedWorkoutExercise = WorkoutExercise & {

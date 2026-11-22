@@ -17,11 +17,11 @@ describe('Routine Integration Tests', () => {
 
     const upperBodyRoutine = routines.find((r) => r.label === 'Upper body');
     expect(upperBodyRoutine).toBeDefined();
-    expect(upperBodyRoutine?._count.routineExercises).toBe(8);
+    expect(upperBodyRoutine?._count.routineExercises).toBe(9);
 
     const lowerBodyRoutine = routines.find((r) => r.label === 'Lower body');
     expect(lowerBodyRoutine).toBeDefined();
-    expect(lowerBodyRoutine?._count.routineExercises).toBe(5);
+    expect(lowerBodyRoutine?._count.routineExercises).toBe(6);
 
     const coreRoutine = routines.find((r) => r.label === 'Core');
     expect(coreRoutine).toBeDefined();
@@ -44,19 +44,20 @@ describe('Routine Integration Tests', () => {
     });
 
     expect(routine).toBeDefined();
-    expect(routine?.routineExercises).toHaveLength(8);
+    expect(routine?.routineExercises).toHaveLength(9);
 
     // Verify exercises are in the correct order (matching seed data order)
     const exerciseLabels = routine?.routineExercises.map((re) => re.exercise.label);
     expect(exerciseLabels).toEqual([
       'Pull up (assisted)',
       'Chest press machine',
-      'Dead hang',
-      "Farmer's carry",
       'Butterfly machine',
       'Lat pulldown',
       'Seated row',
       'Shoulder press (dumbell)',
+      'Concentration curl',
+      'Dead hang',
+      "Farmer's carry",
     ]);
   });
 
@@ -84,7 +85,7 @@ describe('Routine Integration Tests', () => {
     });
 
     const initialCount = await prisma.routineExercise.count();
-    expect(initialCount).toBe(18);
+    expect(initialCount).toBe(20);
 
     // Delete the temporary exercise
     await prisma.exercise.delete({
@@ -93,6 +94,6 @@ describe('Routine Integration Tests', () => {
 
     // Verify routine exercise was also deleted
     const afterDeleteCount = await prisma.routineExercise.count();
-    expect(afterDeleteCount).toBe(17);
+    expect(afterDeleteCount).toBe(19);
   });
 });

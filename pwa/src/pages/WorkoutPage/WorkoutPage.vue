@@ -162,7 +162,7 @@ function handleStartExercise(exerciseId: number) {
 function handleUpdateSet(
     exerciseId: number,
     setId: string,
-    updates: { weightKg?: number; reps?: number; timeSeconds?: number }
+    updates: { weightKg?: number; reps?: number; timeSeconds?: number; heightIn?: number }
 ) {
   if (!workout.value) return;
 
