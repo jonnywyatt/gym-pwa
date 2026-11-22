@@ -60,7 +60,6 @@ describe('LoginPage', () => {
     render(LoginPage);
 
     expect(screen.getByRole('heading', { name: 'Take Duro with you' })).toBeInTheDocument();
-    expect(screen.getByAltText('Duro app icon')).toBeInTheDocument();
     expect(
       await screen.findByRole('button', { name: 'Add Duro to your home screen' })
     ).toBeInTheDocument();

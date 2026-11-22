@@ -5,11 +5,10 @@ import duroLogo from '../../assets/duro-logo.svg';
 import dashboardScreenshot from '/screenshot-dashboard.svg';
 import muscleGroupTrendsScreenshot from '/screenshot-muscle-group-trends.svg';
 import sessionTrendsScreenshot from '/screenshot-session-trends.svg';
-import pwaIcon from '/pwa-512x512.png';
 import InstallPrompt from '../../components/InstallPrompt/InstallPrompt.vue';
 
 interface FeatureSlide {
-  image: string;
+  image?: string | null;
   alt: string;
   heading: string;
   body: string[];
@@ -22,7 +21,7 @@ const featureSlides: FeatureSlide[] = [
     image: dashboardScreenshot,
     alt: 'Dashboard showing recent sessions and progress',
     heading: 'A mobile app for building a gym habit',
-    body: ['Duro\'s home screen emphasises regular training, not how heavy you\'re lifting.', 'Cadence is the key to building a gym habit that lasts.'],
+    body: ['Duro\'s main dashboard emphasises regular training, not how heavy you\'re lifting.', 'Cadence is the key to building a gym habit that lasts.'],
     reverse: false,
   },
   {
@@ -40,7 +39,7 @@ const featureSlides: FeatureSlide[] = [
     reverse: true,
   },
   {
-    image: pwaIcon,
+    image: null,
     alt: 'Duro app icon',
     heading: 'Take Duro with you',
     body: ['Add Duro to your mobile home screen for the full app experience. No app store needed.'],
@@ -78,7 +77,7 @@ function handleLogin() {
           >{{ paragraph }}</p>
           <InstallPrompt v-if="slide.install" />
         </div>
-        <img :src="slide.image" :alt="slide.alt" :class="styles.slideImage" />
+        <img v-if="slide.image" :src="slide.image" :alt="slide.alt" :class="styles.slideImage" />
       </section>
     </main>
   </div>
