@@ -44,10 +44,6 @@
   text-align: center;
 }
 
-.slide:not(:first-child) {
-  border-top: 1px solid var(--border-color);
-}
-
 .slide::scroll-marker {
   content: '';
   width: var(--spacing-unit-2);
@@ -64,7 +60,7 @@
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 45vh;
+  max-height: 55vh;
   border-radius: var(--border-radius-lg);
 }
 

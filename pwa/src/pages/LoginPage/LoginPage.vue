@@ -5,28 +5,47 @@ import duroLogo from '../../assets/duro-logo.svg';
 import dashboardScreenshot from '/screenshot-dashboard.svg';
 import muscleGroupTrendsScreenshot from '/screenshot-muscle-group-trends.svg';
 import sessionTrendsScreenshot from '/screenshot-session-trends.svg';
+import pwaIcon from '/pwa-512x512.png';
+import InstallPrompt from '../../components/InstallPrompt/InstallPrompt.vue';
 
-const featureSlides = [
+interface FeatureSlide {
+  image: string;
+  alt: string;
+  heading: string;
+  body: string[];
+  reverse: boolean;
+  install?: boolean;
+}
+
+const featureSlides: FeatureSlide[] = [
   {
     image: dashboardScreenshot,
-    alt: 'Duro dashboard showing recent sessions and progress',
+    alt: 'Dashboard showing recent sessions and progress',
     heading: 'Build a gym habit',
-    body: ['Duro\'s home screen emphasises regular training, not how heavy you\'re lifting, which is the key to building a gym habit that lasts.'],
+    body: ['Duro\'s home screen emphasises regular training, not how heavy you\'re lifting.', 'Cadence is the key to building a gym habit that lasts.'],
     reverse: false,
   },
   {
     image: sessionTrendsScreenshot,
-    alt: 'Duro session trends chart showing lift progress over time',
-    heading: 'Watch your strength climb',
+    alt: 'Session trends chart showing lift progress over time',
+    heading: 'Track weight moved per session',
     body: ['If you focus on session frequency, and push close to your limit while avoiding injury, then the strength gains will follow.'],
     reverse: false,
   },
   {
     image: muscleGroupTrendsScreenshot,
-    alt: 'Duro muscle group breakdown chart',
-    heading: 'Train smarter, not lopsided',
-    body: ['Spot which muscle groups are getting the love, and which ones need more.'],
+    alt: 'Muscle group breakdown chart',
+    heading: 'Balance your training',
+    body: ['Track which muscle groups are getting the attention, and which ones need more.'],
     reverse: true,
+  },
+  {
+    image: pwaIcon,
+    alt: 'Duro app icon',
+    heading: 'Take Duro with you',
+    body: ['Add Duro to your mobile home screen for the full app experience. No app store needed.'],
+    reverse: false,
+    install: true,
   },
 ];
 
@@ -57,6 +76,7 @@ function handleLogin() {
             :key="paragraph"
             :class="[styles.slideSubheading, 'textSecondary']"
           >{{ paragraph }}</p>
+          <InstallPrompt v-if="slide.install" />
         </div>
         <img :src="slide.image" :alt="slide.alt" :class="styles.slideImage" />
       </section>
