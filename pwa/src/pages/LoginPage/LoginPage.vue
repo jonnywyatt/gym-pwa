@@ -21,7 +21,7 @@ const featureSlides: FeatureSlide[] = [
   {
     image: dashboardScreenshot,
     alt: 'Dashboard showing recent sessions and progress',
-    heading: 'Build a gym habit',
+    heading: 'A mobile app for building a gym habit',
     body: ['Duro\'s home screen emphasises regular training, not how heavy you\'re lifting.', 'Cadence is the key to building a gym habit that lasts.'],
     reverse: false,
   },

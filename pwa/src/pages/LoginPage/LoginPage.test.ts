@@ -36,7 +36,9 @@ describe('LoginPage', () => {
   it('should advertise each app feature with a heading and screenshot', () => {
     render(LoginPage);
 
-    expect(screen.getByRole('heading', { name: 'Build a gym habit' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'A mobile app for building a gym habit' })
+    ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Balance your training' })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Track weight moved per session' })
