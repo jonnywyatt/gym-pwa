@@ -129,15 +129,15 @@ onUnmounted(() => {
       <p v-if="workoutLoading" :class="styles.loading">Loading sessions...</p>
       <p v-else-if="workoutError" :class="styles.error">Error: {{ workoutError }}</p>
       <template v-else-if="sessionHistory.length > 0">
-        <div :class="styles.habitLayout">
-          <div :class="styles.summariesRow">
+        <div class="habitLayout">
+          <div class="summariesRow">
             <div
               v-for="summary in routineSummaries"
               :key="summary.routineId"
-              :class="styles.summaryItem"
+              class="summaryItem"
             >
-              <span :class="styles.summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
-              <span :class="styles.summaryLabel">{{ summary.label }}</span>
+              <span class="summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
+              <span :class="['summaryLabel', styles.summaryLabel]">{{ summary.label }}</span>
             </div>
           </div>
           <SessionCalendar

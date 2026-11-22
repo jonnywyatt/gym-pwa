@@ -70,15 +70,15 @@ onMounted(() => {
       >
         <h2 :class="[styles.monthHeading, 'uppercase', 'marginBottom4']">{{ month.label }}</h2>
         <template v-if="month.sessions.length > 0">
-          <div :class="styles.habitLayout">
-            <div :class="styles.summariesRow">
+          <div class="habitLayout">
+            <div class="summariesRow">
               <div
                 v-for="summary in getMonthSummaries(month.sessions)"
                 :key="summary.routineId"
-                :class="styles.summaryItem"
+                class="summaryItem"
               >
-                <span :class="styles.summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
-                <span :class="styles.summaryLabel">{{ summary.label }}</span>
+                <span class="summaryCount" :style="{ color: summary.colour }">{{ summary.count }}</span>
+                <span :class="['summaryLabel', styles.summaryLabel]">{{ summary.label }}</span>
               </div>
             </div>
             <SessionCalendar
