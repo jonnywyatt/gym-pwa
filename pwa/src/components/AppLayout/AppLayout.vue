@@ -34,7 +34,7 @@ const isWorkoutsActive = computed(
     <nav v-if="showUserNav" :class="styles.nav">
       <div :class="styles.navLeft">
         <router-link to="/" :class="styles.brandLogo">
-          <img :src="duroLogo" alt="Duro" width="78" height="17" />
+          <img :src="duroLogo" alt="Duro" width="78" height="16.7" />
         </router-link>
         <template v-if="!isDashboard">
           <router-link to="/sessions" :class="[styles.navLink, isWorkoutsActive && styles.navLinkActive]">Sessions</router-link>

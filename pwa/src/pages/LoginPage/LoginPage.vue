@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 import { authService } from '../../lib/auth/oauth';
 import styles from './LoginPage.module.css';
 import duroLogo from '../../assets/duro-logo.svg';
-import dashboardScreenshot from '/screenshot-dashboard.svg';
-import muscleGroupTrendsScreenshot from '/screenshot-muscle-group-trends.svg';
-import sessionTrendsScreenshot from '/screenshot-session-trends.svg';
+import dashboardScreenshot from '/screenshot-dashboard.png';
+import muscleGroupTrendsScreenshot from '/screenshot-muscle-group-trends.png';
+import sessionTrendsScreenshot from '/screenshot-session-trends.png';
 import InstallPrompt from '../../components/InstallPrompt/InstallPrompt.vue';
 
 interface FeatureSlide {
@@ -36,7 +37,7 @@ const featureSlides: FeatureSlide[] = [
     alt: 'Muscle group breakdown chart',
     heading: 'Balance your training',
     body: ['Track which muscle groups are getting the attention, and which ones need more.'],
-    reverse: true,
+    reverse: false,
   },
   {
     image: null,
@@ -51,13 +52,23 @@ const featureSlides: FeatureSlide[] = [
 function handleLogin() {
   authService.initiateLogin();
 }
+
+// reset.css reserves a scrollbar gutter on <html> to avoid layout shift elsewhere in the app,
+// but it leaves dead space beside this page's own full-bleed scroll container.
+onMounted(() => {
+  document.documentElement.style.scrollbarGutter = 'auto';
+});
+
+onUnmounted(() => {
+  document.documentElement.style.scrollbarGutter = '';
+});
 </script>
 
 <template>
   <div :class="styles.homePage">
     <header :class="[styles.homeHeader, 'flexSpaceBetween']">
       <span :class="styles.brandLogo">
-        <img :src="duroLogo" alt="Duro" width="117" height="26" />
+        <img :src="duroLogo" alt="Duro" width="117" height="25" />
       </span>
       <button @click="handleLogin" class="buttonPrimary">Sign in with Google</button>
     </header>
