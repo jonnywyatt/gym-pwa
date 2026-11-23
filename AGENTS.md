@@ -18,6 +18,7 @@
 - do not use `any` in typescript
 - Run the `lint` and `type-check` NPM tasks after completing code changes
 - Always run tests using a subagent (Agent tool) rather than running them directly with Bash
+- Don't start new dev servers (`npm run dev`, etc.) for investigations or browser checks. Check for an already-running server first (e.g. `lsof -i :5173`, `ps aux | grep vite`) and use that. Only start one if none is running, and stop it when done
 
 ### API
 - after any changes to the Prisma schema, regenerate the Prisma Client
