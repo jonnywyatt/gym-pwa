@@ -5,6 +5,7 @@ import { server } from '../../test/msw';
 import {
   buildMonthGroups,
   calculateDuration,
+  calculateMonthCount,
   deleteWorkoutApi,
   fetchWorkouts,
   formatDateTime,
@@ -225,6 +226,41 @@ describe('buildMonthGroups', () => {
     expect(groups[0].key).toBe('2026-01');
     expect(groups[1].key).toBe('2025-12');
     expect(groups[2].key).toBe('2025-11');
+  });
+});
+
+describe('calculateMonthCount', () => {
+  const today = new Date('2026-04-06T12:00:00');
+
+  it('returns 1 when there are no sessions', () => {
+    expect(calculateMonthCount([], today)).toBe(1);
+  });
+
+  it('returns 1 when the earliest session is in the current month', () => {
+    const sessions = [makeWorkout(1, 1, 'Strength', '2026-04-01T10:00:00Z')];
+
+    expect(calculateMonthCount(sessions, today)).toBe(1);
+  });
+
+  it('counts the number of months spanning the earliest session to today', () => {
+    const sessions = [makeWorkout(1, 1, 'Strength', '2026-02-10T10:00:00Z')];
+
+    expect(calculateMonthCount(sessions, today)).toBe(3);
+  });
+
+  it('uses the earliest session regardless of array order', () => {
+    const sessions = [
+      makeWorkout(1, 1, 'Strength', '2026-03-10T10:00:00Z'),
+      makeWorkout(2, 1, 'Strength', '2024-11-20T10:00:00Z'),
+    ];
+
+    expect(calculateMonthCount(sessions, today)).toBe(18);
+  });
+
+  it('spans year boundaries correctly', () => {
+    const sessions = [makeWorkout(1, 1, 'Strength', '2025-12-01T10:00:00Z')];
+
+    expect(calculateMonthCount(sessions, today)).toBe(5);
   });
 });
 

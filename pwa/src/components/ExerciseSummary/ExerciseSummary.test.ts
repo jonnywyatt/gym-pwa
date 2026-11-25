@@ -9,7 +9,6 @@ const baseExercise: CompletedWorkoutExercise = {
   label: 'Bench Press',
   recordSetsType: 'WEIGHT',
   isIsometric: false,
-  isUnilateral: false,
   bwFactor: null,
   primaryMuscleGroups: ['Pectoralis Major'],
   secondaryMuscleGroups: ['Triceps'],

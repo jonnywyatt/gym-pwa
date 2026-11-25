@@ -3,11 +3,9 @@ import {ref, computed, onMounted} from 'vue';
 import type {UserWorkoutSummary} from 'gym-pwa-api/types';
 import styles from './WorkoutsListPage.module.css';
 import {authService} from '../../lib/auth/oauth';
-import {fetchWorkouts, buildMonthGroups} from './helpers';
+import {fetchWorkouts, buildMonthGroups, calculateMonthCount} from './helpers';
 import SessionCalendar from '../../components/SessionCalendar/SessionCalendar.vue';
 import {buildRoutineColourMap, getRoutineSummaries} from '../../components/SessionCalendar/helpers';
-
-const MONTH_COUNT = 12;
 
 const workouts = ref<UserWorkoutSummary[]>([]);
 const loading = ref(true);
@@ -15,7 +13,9 @@ const error = ref<string | null>(null);
 
 const colourMap = computed(() => buildRoutineColourMap(workouts.value));
 
-const monthGroups = computed(() => buildMonthGroups(workouts.value, MONTH_COUNT));
+const monthGroups = computed(() =>
+  buildMonthGroups(workouts.value, calculateMonthCount(workouts.value))
+);
 
 async function loadWorkouts() {
   const userId = authService.getUserId();
@@ -28,11 +28,7 @@ async function loadWorkouts() {
   loading.value = true;
   error.value = null;
   try {
-    const since = new Date();
-    since.setMonth(since.getMonth() - (MONTH_COUNT - 1));
-    since.setDate(1);
-    since.setHours(0, 0, 0, 0);
-    workouts.value = await fetchWorkouts(userId, since);
+    workouts.value = await fetchWorkouts(userId);
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to fetch workouts';
   } finally {

@@ -86,7 +86,44 @@ describe('WorkoutsListPage', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('should display month headings when data loads', async () => {
+  it('should display month headings spanning from the earliest session to today', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
+
+    server.use(
+      http.get(`${mockApiUrl}/users/1/workouts`, () => {
+        return HttpResponse.json([
+          {
+            id: 1,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Strength',
+            startedAt: '2025-05-10T10:00:00Z',
+            finishedAt: '2025-05-10T11:00:00Z',
+            durationSeconds: 3600,
+            exerciseCount: 3,
+            bodyWeightKg: 80,
+            totalWeightKg: 1500,
+            totalReps: 50,
+          },
+        ]);
+      })
+    );
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('heading', { name: 'April 2026' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'March 2026' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'May 2025' })).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it('should display only the current month heading when there is no session data', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-04-06T12:00:00'));
 
@@ -103,8 +140,7 @@ describe('WorkoutsListPage', () => {
     });
 
     expect(screen.getByRole('heading', { name: 'April 2026' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'March 2026' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'May 2025' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'March 2026' })).not.toBeInTheDocument();
 
     vi.useRealTimers();
   });
@@ -239,6 +275,19 @@ describe('WorkoutsListPage', () => {
             totalWeightKg: 1500,
             totalReps: 50,
           },
+          {
+            id: 2,
+            userId: 1,
+            routineId: 1,
+            routineLabel: 'Strength',
+            startedAt: '2026-02-01T10:00:00Z',
+            finishedAt: '2026-02-01T11:00:00Z',
+            durationSeconds: 3600,
+            exerciseCount: 3,
+            bodyWeightKg: 80,
+            totalWeightKg: 1500,
+            totalReps: 50,
+          },
         ]);
       })
     );
@@ -275,10 +324,7 @@ describe('WorkoutsListPage', () => {
     expect(screen.getByText(/Error:/)).toBeInTheDocument();
   });
 
-  it('should fetch workouts with since param for 12 months', async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-04-06T12:00:00'));
-
+  it('should fetch workouts without a since param', async () => {
     let capturedUrl = '';
     server.use(
       http.get(`${mockApiUrl}/users/1/workouts`, ({ request }) => {
@@ -293,9 +339,6 @@ describe('WorkoutsListPage', () => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-    const sinceParam = new URL(capturedUrl).searchParams.get('since');
-    expect(sinceParam).toBe('2025-05-01');
-
-    vi.useRealTimers();
+    expect(new URL(capturedUrl).searchParams.has('since')).toBe(false);
   });
 });

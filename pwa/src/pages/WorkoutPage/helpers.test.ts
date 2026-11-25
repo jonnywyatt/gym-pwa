@@ -416,7 +416,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -429,7 +428,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Squats',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -442,7 +440,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Curls',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -460,7 +457,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -478,7 +474,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -500,7 +495,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Lunge',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: true,
           bwFactor: 1.0,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -540,7 +534,6 @@ describe('WorkoutPage helpers', () => {
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
         isIsometric: false,
-        isUnilateral: false,
         bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
@@ -562,7 +555,6 @@ describe('WorkoutPage helpers', () => {
         label: 'Sit Ups',
         recordSetsType: 'REPS',
         isIsometric: false,
-        isUnilateral: false,
         bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
@@ -582,7 +574,6 @@ describe('WorkoutPage helpers', () => {
         label: 'Plank Hold',
         recordSetsType: 'WEIGHT_AND_TIME',
         isIsometric: false,
-        isUnilateral: false,
         bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
@@ -601,7 +592,6 @@ describe('WorkoutPage helpers', () => {
         label: 'Plank',
         recordSetsType: 'TIME',
         isIsometric: false,
-        isUnilateral: false,
         bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
@@ -620,7 +610,6 @@ describe('WorkoutPage helpers', () => {
         label: 'Bench Press',
         recordSetsType: 'WEIGHT',
         isIsometric: false,
-        isUnilateral: false,
         bwFactor: null,
         primaryMuscleGroups: [],
         secondaryMuscleGroups: [],
@@ -641,7 +630,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: ['Pectoralis Major'],
           secondaryMuscleGroups: ['Triceps'],
@@ -655,7 +643,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Squats',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: ['Quadriceps'],
           secondaryMuscleGroups: ['Glutes'],
@@ -678,7 +665,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -702,7 +688,6 @@ describe('WorkoutPage helpers', () => {
           label: 'Bench Press',
           recordSetsType: 'WEIGHT',
           isIsometric: false,
-          isUnilateral: false,
           bwFactor: null,
           primaryMuscleGroups: [],
           secondaryMuscleGroups: [],
@@ -732,7 +717,6 @@ describe('WorkoutPage helpers', () => {
             secondaryMuscleGroups: ['Triceps'],
             tertiaryMuscleGroups: [],
             isIsometric: false,
-            isUnilateral: false,
             bwFactor: null,
             completed: true,
             sets: [{ id: 's1', setType: 'Standard', weightKg: 60, reps: 10, completed: true }],
@@ -745,7 +729,6 @@ describe('WorkoutPage helpers', () => {
             secondaryMuscleGroups: ['Glutes'],
             tertiaryMuscleGroups: [],
             isIsometric: false,
-            isUnilateral: false,
             bwFactor: null,
             completed: false,
           },
@@ -992,7 +975,6 @@ describe('WorkoutPage helpers', () => {
       label: 'Bench Press',
       recordSetsType: 'WEIGHT' as const,
       isIsometric: false,
-      isUnilateral: false,
       bwFactor: null,
       completed: true,
     };
@@ -1253,32 +1235,6 @@ describe('WorkoutPage helpers', () => {
       if (!abs || !quads) throw new Error('Expected both muscle groups');
       // isometric: 90s / 45 = 2 effective sets; regular: 1 set → ratio 2:1
       expect(abs.percentage / quads.percentage).toBeCloseTo(2, 1);
-    });
-
-    it('doubles set count for unilateral exercises', () => {
-      const unilateralExercise: LocalWorkoutExercise = {
-        ...baseExercise,
-        isUnilateral: true,
-        primaryMuscleGroups: ['Quadriceps'],
-        secondaryMuscleGroups: [],
-        tertiaryMuscleGroups: [],
-        sets: [{ id: 'a', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
-      };
-      const bilateralExercise: LocalWorkoutExercise = {
-        ...baseExercise,
-        id: 2,
-        label: 'Leg Press',
-        primaryMuscleGroups: ['Glutes'],
-        secondaryMuscleGroups: [],
-        tertiaryMuscleGroups: [],
-        sets: [{ id: 'b', setType: 'Standard', completed: true, weightKg: 20, reps: 10 }],
-      };
-      const result = calculateMuscleGroupBreakdown([unilateralExercise, bilateralExercise]);
-      const quads = result.muscleGroups.find((mg) => mg.muscleGroup === 'Quadriceps');
-      const glutes = result.muscleGroups.find((mg) => mg.muscleGroup === 'Glutes');
-      if (!quads || !glutes) throw new Error('Expected both muscle groups');
-      // unilateral: 2 effective sets; bilateral: 1 set → ratio 2:1
-      expect(quads.percentage / glutes.percentage).toBeCloseTo(2, 1);
     });
 
     it('calculates correct score for REPS type exercises', () => {

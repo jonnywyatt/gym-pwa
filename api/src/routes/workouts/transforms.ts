@@ -26,7 +26,6 @@ export function transformUserWorkout(workout: UserWorkoutFromDB): UserWorkout {
       label: we.exercise.label,
       recordSetsType: we.exercise.recordSetsType,
       isIsometric: we.exercise.isIsometric,
-      isUnilateral: we.exercise.isUnilateral,
       bwFactor: we.exercise.bwFactor !== null ? Number(we.exercise.bwFactor) : null,
       primaryMuscleGroups: we.exercise.primaryMuscleGroups.map(
         (pmg) => muscleGroupDisplayNames[pmg.muscleGroup.label as MuscleGroupLabel]

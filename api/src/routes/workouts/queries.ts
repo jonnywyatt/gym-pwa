@@ -44,10 +44,9 @@ type MuscleGroupStat = {
 
 const ISOMETRIC_SECONDS_PER_EFFECTIVE_SET = 45;
 
-const exerciseMuscleGroupSelect = {
+export const exerciseMuscleGroupSelect = {
   id: true,
   isIsometric: true,
-  isUnilateral: true,
   primaryMuscleGroups: muscleGroupInclude,
   secondaryMuscleGroups: muscleGroupInclude,
   tertiaryMuscleGroups: muscleGroupInclude,
@@ -55,7 +54,7 @@ const exerciseMuscleGroupSelect = {
 
 type ExerciseForStats = Prisma.ExerciseGetPayload<{ select: typeof exerciseMuscleGroupSelect }>;
 
-function calculateMuscleGroupStats(
+export function calculateMuscleGroupStats(
   exercises: CreateWorkoutRequest['exercisesCompleted'],
   exerciseData: ExerciseForStats[]
 ): MuscleGroupStat[] {
@@ -66,9 +65,9 @@ function calculateMuscleGroupStats(
     const exercise = exerciseMap.get(workoutExercise.id);
     if (!exercise) continue;
 
-    const { isIsometric, isUnilateral } = exercise;
+    const { isIsometric } = exercise;
 
-    const effectiveSets = workoutExercise.sets.reduce((total, set) => {
+    const setCount = workoutExercise.sets.reduce((total, set) => {
       const qualityMultiplier = set.setType === 'Warmup' ? 0.5 : 1.0;
       const rawValue = isIsometric
         ? (set.timeSeconds ?? 0) / ISOMETRIC_SECONDS_PER_EFFECTIVE_SET
@@ -76,7 +75,6 @@ function calculateMuscleGroupStats(
       return total + rawValue * qualityMultiplier;
     }, 0);
 
-    const setCount = isUnilateral ? effectiveSets * 2 : effectiveSets;
     if (setCount === 0) continue;
 
     const primaryGroups = exercise.primaryMuscleGroups;

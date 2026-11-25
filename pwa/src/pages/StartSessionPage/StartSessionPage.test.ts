@@ -111,7 +111,6 @@ describe('StartSessionPage', () => {
               label: 'Bench Press',
               recordSetsType: 'WEIGHT',
               isIsometric: false,
-              isUnilateral: false,
               primaryMuscleGroups: ['Pectoralis Major'],
               secondaryMuscleGroups: ['Triceps'],
               tertiaryMuscleGroups: [],

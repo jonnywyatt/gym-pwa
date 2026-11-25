@@ -16,10 +16,7 @@ import type { BodyAreaDisplayName, MuscleGroupDisplayName } from './utils/displa
  * Exercise type returned by the API with muscle groups as display name strings
  */
 export type Exercise = Omit<
-  Pick<
-    PrismaExercise,
-    'id' | 'label' | 'recordSetsType' | 'isIsometric' | 'isUnilateral' | 'bwFactor'
-  >,
+  Pick<PrismaExercise, 'id' | 'label' | 'recordSetsType' | 'isIsometric' | 'bwFactor'>,
   'bwFactor'
 > & {
   bwFactor: number | null;
@@ -66,7 +63,6 @@ export type WorkoutExercise = Pick<
   | 'label'
   | 'recordSetsType'
   | 'isIsometric'
-  | 'isUnilateral'
   | 'bwFactor'
   | 'primaryMuscleGroups'
   | 'secondaryMuscleGroups'

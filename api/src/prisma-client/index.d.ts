@@ -4713,7 +4713,6 @@ export namespace Prisma {
     label: string | null
     recordSetsType: $Enums.RecordSetsType | null
     isIsometric: boolean | null
-    isUnilateral: boolean | null
     bwFactor: Decimal | null
     createdAt: Date | null
   }
@@ -4723,7 +4722,6 @@ export namespace Prisma {
     label: string | null
     recordSetsType: $Enums.RecordSetsType | null
     isIsometric: boolean | null
-    isUnilateral: boolean | null
     bwFactor: Decimal | null
     createdAt: Date | null
   }
@@ -4733,7 +4731,6 @@ export namespace Prisma {
     label: number
     recordSetsType: number
     isIsometric: number
-    isUnilateral: number
     bwFactor: number
     createdAt: number
     _all: number
@@ -4755,7 +4752,6 @@ export namespace Prisma {
     label?: true
     recordSetsType?: true
     isIsometric?: true
-    isUnilateral?: true
     bwFactor?: true
     createdAt?: true
   }
@@ -4765,7 +4761,6 @@ export namespace Prisma {
     label?: true
     recordSetsType?: true
     isIsometric?: true
-    isUnilateral?: true
     bwFactor?: true
     createdAt?: true
   }
@@ -4775,7 +4770,6 @@ export namespace Prisma {
     label?: true
     recordSetsType?: true
     isIsometric?: true
-    isUnilateral?: true
     bwFactor?: true
     createdAt?: true
     _all?: true
@@ -4872,7 +4866,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric: boolean
-    isUnilateral: boolean
     bwFactor: Decimal | null
     createdAt: Date
     _count: ExerciseCountAggregateOutputType | null
@@ -4901,7 +4894,6 @@ export namespace Prisma {
     label?: boolean
     recordSetsType?: boolean
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: boolean
     createdAt?: boolean
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
@@ -4917,7 +4909,6 @@ export namespace Prisma {
     label?: boolean
     recordSetsType?: boolean
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
@@ -4927,7 +4918,6 @@ export namespace Prisma {
     label?: boolean
     recordSetsType?: boolean
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["exercise"]>
@@ -4937,12 +4927,11 @@ export namespace Prisma {
     label?: boolean
     recordSetsType?: boolean
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: boolean
     createdAt?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "isIsometric" | "isUnilateral" | "bwFactor" | "createdAt", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "recordSetsType" | "isIsometric" | "bwFactor" | "createdAt", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryMuscleGroups?: boolean | Exercise$primaryMuscleGroupsArgs<ExtArgs>
     secondaryMuscleGroups?: boolean | Exercise$secondaryMuscleGroupsArgs<ExtArgs>
@@ -4968,7 +4957,6 @@ export namespace Prisma {
       label: string
       recordSetsType: $Enums.RecordSetsType
       isIsometric: boolean
-      isUnilateral: boolean
       bwFactor: Prisma.Decimal | null
       createdAt: Date
     }, ExtArgs["result"]["exercise"]>
@@ -5403,7 +5391,6 @@ export namespace Prisma {
     readonly label: FieldRef<"Exercise", 'String'>
     readonly recordSetsType: FieldRef<"Exercise", 'RecordSetsType'>
     readonly isIsometric: FieldRef<"Exercise", 'Boolean'>
-    readonly isUnilateral: FieldRef<"Exercise", 'Boolean'>
     readonly bwFactor: FieldRef<"Exercise", 'Decimal'>
     readonly createdAt: FieldRef<"Exercise", 'DateTime'>
   }
@@ -18303,7 +18290,6 @@ export namespace Prisma {
     label: 'label',
     recordSetsType: 'recordSetsType',
     isIsometric: 'isIsometric',
-    isUnilateral: 'isUnilateral',
     bwFactor: 'bwFactor',
     createdAt: 'createdAt'
   };
@@ -18728,7 +18714,6 @@ export namespace Prisma {
     label?: StringFilter<"Exercise"> | string
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolFilter<"Exercise"> | boolean
-    isUnilateral?: BoolFilter<"Exercise"> | boolean
     bwFactor?: DecimalNullableFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
@@ -18743,7 +18728,6 @@ export namespace Prisma {
     label?: SortOrder
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
-    isUnilateral?: SortOrder
     bwFactor?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupOrderByRelationAggregateInput
@@ -18761,7 +18745,6 @@ export namespace Prisma {
     NOT?: ExerciseWhereInput | ExerciseWhereInput[]
     recordSetsType?: EnumRecordSetsTypeFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolFilter<"Exercise"> | boolean
-    isUnilateral?: BoolFilter<"Exercise"> | boolean
     bwFactor?: DecimalNullableFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Exercise"> | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupListRelationFilter
@@ -18776,7 +18759,6 @@ export namespace Prisma {
     label?: SortOrder
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
-    isUnilateral?: SortOrder
     bwFactor?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ExerciseCountOrderByAggregateInput
@@ -18794,7 +18776,6 @@ export namespace Prisma {
     label?: StringWithAggregatesFilter<"Exercise"> | string
     recordSetsType?: EnumRecordSetsTypeWithAggregatesFilter<"Exercise"> | $Enums.RecordSetsType
     isIsometric?: BoolWithAggregatesFilter<"Exercise"> | boolean
-    isUnilateral?: BoolWithAggregatesFilter<"Exercise"> | boolean
     bwFactor?: DecimalNullableWithAggregatesFilter<"Exercise"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Exercise"> | Date | string
   }
@@ -19525,7 +19506,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -19540,7 +19520,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -19554,7 +19533,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -19569,7 +19547,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -19584,7 +19561,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
   }
@@ -19593,7 +19569,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19603,7 +19578,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20413,7 +20387,6 @@ export namespace Prisma {
     label?: SortOrder
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
-    isUnilateral?: SortOrder
     bwFactor?: SortOrder
     createdAt?: SortOrder
   }
@@ -20428,7 +20401,6 @@ export namespace Prisma {
     label?: SortOrder
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
-    isUnilateral?: SortOrder
     bwFactor?: SortOrder
     createdAt?: SortOrder
   }
@@ -20438,7 +20410,6 @@ export namespace Prisma {
     label?: SortOrder
     recordSetsType?: SortOrder
     isIsometric?: SortOrder
-    isUnilateral?: SortOrder
     bwFactor?: SortOrder
     createdAt?: SortOrder
   }
@@ -22967,7 +22938,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -22981,7 +22951,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23032,7 +23001,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23046,7 +23014,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23059,7 +23026,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23073,7 +23039,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23122,7 +23087,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23136,7 +23100,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     secondaryMuscleGroups?: ExerciseSecondaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23175,7 +23138,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23189,7 +23151,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23238,7 +23199,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23252,7 +23212,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23291,7 +23250,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23305,7 +23263,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23354,7 +23311,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -23368,7 +23324,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput
@@ -23876,7 +23831,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupCreateNestedManyWithoutExerciseInput
@@ -23890,7 +23844,6 @@ export namespace Prisma {
     label: string
     recordSetsType: $Enums.RecordSetsType
     isIsometric?: boolean
-    isUnilateral?: boolean
     bwFactor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedCreateNestedManyWithoutExerciseInput
@@ -23986,7 +23939,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUpdateManyWithoutExerciseNestedInput
@@ -24000,7 +23952,6 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     recordSetsType?: EnumRecordSetsTypeFieldUpdateOperationsInput | $Enums.RecordSetsType
     isIsometric?: BoolFieldUpdateOperationsInput | boolean
-    isUnilateral?: BoolFieldUpdateOperationsInput | boolean
     bwFactor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     primaryMuscleGroups?: ExercisePrimaryMuscleGroupUncheckedUpdateManyWithoutExerciseNestedInput

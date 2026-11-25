@@ -334,7 +334,7 @@ const ISOMETRIC_SECONDS_PER_EFFECTIVE_SET = 45;
 
 function calculateEffectiveSetCount(exercise: LocalWorkoutExercise): number {
   const sets = exercise.sets ?? [];
-  const effectiveSets = sets.reduce((total, set) => {
+  return sets.reduce((total, set) => {
     if (!isSetFilledIn(set, exercise.recordSetsType)) return total;
     const qualityMultiplier = set.setType === 'Warmup' ? 0.5 : 1.0;
     const rawValue = exercise.isIsometric
@@ -342,7 +342,6 @@ function calculateEffectiveSetCount(exercise: LocalWorkoutExercise): number {
       : 1;
     return total + rawValue * qualityMultiplier;
   }, 0);
-  return exercise.isUnilateral ? effectiveSets * 2 : effectiveSets;
 }
 
 export function calculateMuscleGroupBreakdown(

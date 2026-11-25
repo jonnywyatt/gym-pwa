@@ -44,7 +44,6 @@ export function mapExercisesToWorkoutExercises(routine: RoutineDetail): LocalWor
       label: rawEx.label,
       recordSetsType: rawEx.recordSetsType,
       isIsometric: rawEx.isIsometric,
-      isUnilateral: rawEx.isUnilateral,
       bwFactor: rawEx.bwFactor,
       primaryMuscleGroups: [...rawEx.primaryMuscleGroups],
       secondaryMuscleGroups: [...rawEx.secondaryMuscleGroups],

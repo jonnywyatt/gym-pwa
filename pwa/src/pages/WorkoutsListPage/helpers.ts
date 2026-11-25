@@ -11,6 +11,23 @@ export interface MonthGroup {
   sessions: UserWorkoutSummary[];
 }
 
+export function calculateMonthCount(sessions: UserWorkoutSummary[], today = new Date()): number {
+  if (sessions.length === 0) {
+    return 1;
+  }
+
+  const earliestStartedAt = sessions.reduce(
+    (earliest, session) => (session.startedAt < earliest ? session.startedAt : earliest),
+    sessions[0].startedAt
+  );
+  const earliest = new Date(earliestStartedAt);
+
+  const monthsBetween =
+    (today.getFullYear() - earliest.getFullYear()) * 12 + (today.getMonth() - earliest.getMonth());
+
+  return monthsBetween + 1;
+}
+
 export function buildMonthGroups(
   sessions: UserWorkoutSummary[],
   monthCount: number,
